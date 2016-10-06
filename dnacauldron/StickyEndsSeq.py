@@ -1,0 +1,207 @@
+from Bio.Seq import Seq
+from Bio.SeqRecord import SeqRecord
+from Bio.SeqFeature import SeqFeature, FeatureLocation
+from Bio.Alphabet import DNAAlphabet
+from copy import deepcopy
+from Bio import Restriction
+
+
+class StickyEnd(Seq):
+
+    def __init__(self, data, strand, **k):
+        Seq.__init__(self, str(data), **k)
+        self.strand = strand
+
+    def reverse_complement(self):
+        return StickyEnd(
+            str(Seq.reverse_complement(self)),
+            strand=-self.strand,
+            alphabet=self.alphabet
+        )
+
+    def __repr__(self):
+        return "%s(%s)" % (Seq.__str__(self),
+                           {1: "+", -1: "-"}[self.strand])
+
+    def will_clip_directly_with(self, other):
+        return ((other is not None) and
+                (self.strand == -other.strand) and
+                (str(self) == str(other)))
+
+
+class StickyEndsSeq(Seq):
+
+    def __init__(self, data, left_end=None, right_end=None, **k):
+        Seq.__init__(self, str(data), **k)
+        self.left_end = left_end
+        self.right_end = right_end
+
+    def reverse_complement(self):
+        return StickyEndsSeq(
+            str(Seq.reverse_complement(self)),
+            left_end=None if self.right_end is None else
+            self.right_end.reverse_complement(),
+            right_end=None if self.left_end is None else
+            self.left_end.reverse_complement(),
+            alphabet=self.alphabet
+        )
+
+    def will_clip_in_this_order_with(self, other):
+        return ((self.right_end is not None) and
+                self.right_end.will_clip_directly_with(other.left_end))
+
+    def circularized(self):
+        if not self.will_clip_in_this_order_with(self):
+            raise ValueError("Only constructs with two compatible sticky ends"
+                             " can be circularized")
+        result = Seq(str(self.left_end)) + self
+        result.linear = False
+        return result
+
+    def __repr__(self):
+        content = Seq.__str__(self)
+        if len(content) > 15:
+            content = (content[:5].lower() +
+                       ("(%d)" % len(content)) +
+                       content[-5:].lower())
+        return "(%s-%s-%s)" % (repr(self.left_end),
+                               content,
+                               repr(self.right_end))
+
+    def __add__(self, other):
+        assert self.will_clip_in_this_order_with(other)
+        return StickyEndsSeq(
+            str(self) + str(self.right_end) + str(other),
+            left_end=self.left_end,
+            right_end=other.right_end
+        )
+
+
+class StickyEndsSeqRecord(SeqRecord):
+
+    def will_clip_in_this_order_with(self, other):
+        right_end = self.seq.right_end
+        return ((right_end is not None) and
+                right_end.will_clip_directly_with(other.seq.left_end))
+
+    def circularized(self):
+        if not self.will_clip_in_this_order_with(self):
+            raise ValueError("Only constructs with two compatible sticky ends"
+                             " can be circularized")
+        result = SeqRecord(Seq(str(self.seq.left_end))) + self
+        result.linear = False
+        return result
+
+    @staticmethod
+    def assemble(fragments, circularize=False):
+        result = sum(fragments[1:], fragments[0])
+        if circularize:
+            result = result.circularized()
+        result.seq.alphabet = DNAAlphabet()
+        return result
+
+    def reverse_complement(self):
+        new_record = SeqRecord.reverse_complement(self)
+        new_record.__class__ = StickyEndsSeqRecord
+        return new_record
+
+    def __add__(self, other):
+        connector = SeqRecord(Seq(str(self.seq.right_end)))
+        selfc = SeqRecord(seq=Seq(str(self.seq)),
+                          features=self.features,
+                          annotations=self.annotations)
+        new_record = SeqRecord.__add__(selfc, connector).__add__(other)
+        new_record.seq = self.seq + other.seq
+        new_record.__class__ = StickyEndsSeqRecord
+        return new_record
+
+
+def digest_sequence_with_sticky_ends(sequence, enzyme, linear=True):
+    if enzyme.search(sequence, linear=linear) == []:
+        return sequence
+    overhang = abs(enzyme.ovhg)
+    right_end_sign = +1 if enzyme.is_3overhang() else -1
+    fragments = enzyme.catalyse(sequence, linear=linear)
+    if right_end_sign == -1:
+        if not linear:
+            overhang_bit = fragments[0][:overhang]
+            new_fragment_seq = fragments[0][overhang:]
+            last_right_end = StickyEnd(overhang_bit, right_end_sign)
+            first_left_end = StickyEnd(overhang_bit, -right_end_sign)
+            sticky_fragments = [StickyEndsSeq(new_fragment_seq,
+                                              left_end=first_left_end)]
+        else:
+            sticky_fragments = [StickyEndsSeq(fragments[0])]
+        for f in fragments[1:]:
+            overhang_bit, new_fragment_seq = f[:overhang], f[overhang:]
+            sticky_fragments[-1].right_end = StickyEnd(
+                overhang_bit, right_end_sign)
+            new_fragment = StickyEndsSeq(new_fragment_seq,
+                                         left_end=StickyEnd(overhang_bit,
+                                                            -right_end_sign))
+            sticky_fragments.append(new_fragment)
+        if not linear:
+            sticky_fragments[-1].right_end = last_right_end
+    else:
+        left_end = None
+        for f in fragments[:-1]:
+            new_fragment_seq, overhang_bit = f[:-overhang], f[-overhang:]
+            right_end = StickyEnd(overhang_bit, right_end_sign)
+            new_fragment = StickyEndsSeqRecord(new_fragment_seq,
+                                               left_end=left_end,
+                                               right_end=right_end)
+            sticky_fragments.append(new_fragment)
+            left_end = StickyEnd(overhang_bit, -right_end_sign)
+        if not linear:
+            new_fragment_seq = fragments[-1][:-overhang]
+            overhang_bit = fragments[-1][-overhang:]
+
+            first_left_end = StickyEnd(overhang_bit, -right_end_sign)
+            last_right_end = StickyEnd(overhang_bit, right_end_sign)
+            sticky_fragments[0].left_end = first_left_end
+            sticky_fragments = [StickyEndsSeq(new_fragment_seq,
+                                              left_end=left_end,
+                                              right_end=last_right_end
+                                              )]
+        else:
+            sticky_fragments.append(StickyEndsSeqRecord(fragments[-1],
+                                                        left_end=left_end))
+    return sticky_fragments
+
+
+def digest_seqrecord_with_sticky_ends(seqrecord, enzyme, linear=True):
+    if enzyme.search(seqrecord.seq, linear=linear) == []:
+        return [seqrecord]
+    fragments = digest_sequence_with_sticky_ends(
+        seqrecord.seq, enzyme, linear=linear)
+    record_fragments = []
+    for fragment in fragments:
+        index = seqrecord.seq.find(fragment)
+        if index == -1:
+            continue
+        subrecord = seqrecord[index:index + len(fragment)]
+        new_stickyend_record = StickyEndsSeqRecord(
+            seq=fragment, features=subrecord.features,
+            annotations=subrecord.annotations
+        )
+        record_fragments.append(new_stickyend_record)
+    if not linear:
+        digest = digest_sequence_with_sticky_ends(
+            seqrecord.seq, enzyme, linear=True)
+        first_fragment, last_fragment = digest[0], digest[-1]
+        if (len(last_fragment) > 0) and (len(first_fragment) > 0):
+            first_record = StickyEndsSeqRecord(fragments[0])
+            first_record.features = []
+            index = seqrecord.seq.find(last_fragment)
+            subrecord = seqrecord[index:index + len(last_fragment)]
+            for feature in subrecord.features:
+                feature.location = feature.location
+                first_record.features.append(feature)
+
+            index = seqrecord.seq.find(first_fragment)
+            subrecord = seqrecord[index:index + len(first_fragment)]
+            for feature in subrecord.features:
+                feature.location = feature.location + len(last_fragment)
+                first_record.features.append(feature)
+            record_fragments = [first_record] + record_fragments
+    return record_fragments
