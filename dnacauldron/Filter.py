@@ -42,7 +42,6 @@ class TextSearchFilter:
 
     def __call__(self, seqrecord):
         all_texts = self.gather_all_texts(seqrecord)
-        print all_texts
         text_found = self.text in all_texts
         if self.is_forbidden:
             return not text_found

@@ -43,9 +43,11 @@ def annotate_record(seqrecord, location="full", feature_type="source",
                     margin=0, **qualifiers):
     if location == "full":
         location = (margin, len(seqrecord)-margin)
+
+    strand = location[2] if len(location)==3 else 1
     seqrecord.features.append(
         SeqFeature(
-            FeatureLocation(location[0], location[1], 1),
+            FeatureLocation(location[0], location[1], strand),
             qualifiers=qualifiers,
             type=feature_type
         )

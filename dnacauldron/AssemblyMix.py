@@ -3,13 +3,16 @@
 
 import itertools as itt
 from copy import deepcopy
+from collections import OrderedDict
 
 import networkx as nx
+import numpy as np
 from Bio import Restriction
 from Bio.Alphabet import DNAAlphabet
 
 from .StickyEndsSeq import (StickyEndsSeqRecord,
                             digest_seqrecord_with_sticky_ends)
+from .utils import annotate_record
 
 
 class FragmentsCycle:
@@ -80,7 +83,9 @@ class AssemblyMix:
             if self.will_clip_in_this_order(fragment2, fragment1):
                 self.connections_graph.add_edge(fragment2, fragment1)
 
-    def compute_circular_fragments_sets(self, fragments_set_filters=()):
+    def compute_circular_fragments_sets(self, fragments_set_filters=(),
+                                        randomize=False,
+                                        randomization_staling_cutoff=100):
         """Return all lists of fragments [f1, f2, f3...fn] that can assemble
         into a circular construct.
 
@@ -92,24 +97,71 @@ class AssemblyMix:
         If all fragments in
         """
 
-        def circular_fragments_generators():
-            seen_hashes = set()
-            for cycle in nx.simple_cycles(self.connections_graph):
-                cycle = FragmentsCycle(cycle).standardized()
-                if cycle.hash in seen_hashes:
-                    continue
-                seen_hashes.add(cycle.hash)
-                if all(fl(cycle.fragments) for fl in fragments_set_filters):
-                    yield cycle.fragments
-        return circular_fragments_generators()
+        def shuffle_graph_nodes_and_edges(graph):
+            items = graph.adj.items()
+            np.random.shuffle(items)
+            graph.adj = OrderedDict(items)
+            for node, d in graph.adj.items():
+                items = d.items()
+                np.random.shuffle(items)
+                graph.adj[node] = OrderedDict(items)
+
+        if randomize:
+            def circular_fragments_generator():
+                graph = nx.DiGraph(self.connections_graph)
+                seen_hashes = set()
+                while True:
+                    shuffle_graph_nodes_and_edges(graph)
+                    counter = 0
+                    for cycle in nx.simple_cycles(graph):
+                        cycle = FragmentsCycle(cycle).standardized()
+                        if cycle.hash in seen_hashes:
+                            counter += 1
+                            if counter > randomization_staling_cutoff:
+                                raise ValueError(
+                                    "Randomization staled. Only randomize when"
+                                    " the search space is huge."
+                                )
+                            continue
+                        seen_hashes.add(cycle.hash)
+                        if all(fl(cycle.fragments)
+                               for fl in fragments_set_filters):
+                            yield cycle.fragments
+                            break
+                    else:
+                        # The for loop went through all cycles
+                        break
+        else:
+            def circular_fragments_generator():
+                seen_hashes = set()
+                for cycle in nx.simple_cycles(self.connections_graph):
+                    cycle = FragmentsCycle(cycle).standardized()
+                    if cycle.hash in seen_hashes:
+                        continue
+                    seen_hashes.add(cycle.hash)
+                    if all(fl(cycle.fragments) for fl in fragments_set_filters):
+                        yield cycle.fragments
+
+        return circular_fragments_generator()
 
     def compute_circular_assemblies(self, fragments_set_filters=(),
-                                    seqrecord_filters=()):
+                                    seqrecord_filters=(),
+                                    annotate_homologies=False,
+                                    randomize=False,
+                                    randomization_staling_cutoff=100):
 
         def assemblies_generator():
-            for fragments in self.compute_circular_fragments_sets(
-                    fragments_set_filters):
-                construct = self.assemble(fragments, circularize=True)
+            circular_fragments_sets = self.compute_circular_fragments_sets(
+                fragments_set_filters,
+                randomize=randomize,
+                randomization_staling_cutoff=randomization_staling_cutoff
+            )
+            for fragments in circular_fragments_sets:
+                construct = self.assemble(
+                    fragments,
+                    circularize=True,
+                    annotate_homologies=annotate_homologies
+                )
                 if all(fl(construct) for fl in seqrecord_filters):
                     yield construct
         return assemblies_generator()
@@ -149,15 +201,20 @@ class RestrictionLigationMix(AssemblyMix):
                 construct, self.enzyme, linear=construct.linear)
             for fragment in digest:
                 fragment.original_construct = construct
+                annotate_record(
+                    fragment,
+                    feature_type="source",
+                    source=construct.name
+                )
                 self.fragments.append(fragment)
 
     @staticmethod
-    def assemble(fragments, circularize=False):
-        result = sum(fragments[1:], fragments[0])
-        if circularize:
-            result = result.circularized()
-        result.seq.alphabet = DNAAlphabet()
-        return result
+    def assemble(fragments, circularize=False, annotate_homologies=False):
+        return StickyEndsSeqRecord.assemble(
+            fragments,
+            circularize=circularize,
+            annotate_homologies=annotate_homologies
+        )
 
     @staticmethod
     def will_clip_in_this_order(fragment1, fragment2):
@@ -177,5 +234,9 @@ class GibsonAssemblyMix(AssemblyMix):
         self.fragments = list(self.constructs)
 
     @staticmethod
-    def assemble(fragments, circularize=False):
-        return StickyEndsSeqRecord.assemble(fragments, circularize=False)
+    def assemble(fragments, circularize=False, annotate_homologies=False):
+        return StickyEndsSeqRecord.assemble(
+            fragments,
+            circularize=False,
+            annotate_homologies=annotate_homologies
+        )

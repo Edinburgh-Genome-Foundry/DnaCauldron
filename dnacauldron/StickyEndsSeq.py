@@ -84,21 +84,50 @@ class StickyEndsSeqRecord(SeqRecord):
         return ((right_end is not None) and
                 right_end.will_clip_directly_with(other.seq.left_end))
 
-    def circularized(self):
+    def circularized(self, annotate_homology=False, annotation_type="Feature",
+                     qualifiers=None):
         if not self.will_clip_in_this_order_with(self):
             raise ValueError("Only constructs with two compatible sticky ends"
                              " can be circularized")
-        result = SeqRecord(Seq(str(self.seq.left_end))) + self
+        connector = SeqRecord(Seq(str(self.seq.left_end)))
+        if annotate_homology:
+            connector.features = [
+                SeqFeature(FeatureLocation(0, len(connector), 1),
+                           type=annotation_type,
+                           qualifiers={"label": "homology"})
+            ]
+        result = connector + self
         result.linear = False
         return result
 
     @staticmethod
-    def assemble(fragments, circularize=False):
-        result = sum(fragments[1:], fragments[0])
+    def assemble(fragments, circularize=False, annotate_homologies=False):
+        def f(f1, f2):
+            return f1.assemble_with(f2, annotate_homology=annotate_homologies)
+        result = reduce(f, fragments)
+        # result = sum(fragments[1:], fragments[0])
         if circularize:
-            result = result.circularized()
+            result = result.circularized(annotate_homology=annotate_homologies)
         result.seq.alphabet = DNAAlphabet()
         return result
+
+    def assemble_with(self, other, annotate_homology=False,
+                      annotation_type="Feature", qualifiers=None):
+        connector = SeqRecord(Seq(str(self.seq.right_end)))
+        if annotate_homology:
+            connector.features = [
+                SeqFeature(FeatureLocation(0, len(connector), 1),
+                           type=annotation_type,
+                           qualifiers={"label": "homology"})
+            ]
+        selfc = SeqRecord(seq=Seq(str(self.seq)),
+                          features=self.features,
+                          annotations=self.annotations)
+        new_record = SeqRecord.__add__(selfc, connector).__add__(other)
+        new_record.seq = self.seq + other.seq
+        new_record.__class__ = StickyEndsSeqRecord
+        new_record.seq.alphabet = DNAAlphabet()
+        return new_record
 
     def reverse_complement(self):
         new_record = SeqRecord.reverse_complement(self)
@@ -106,14 +135,7 @@ class StickyEndsSeqRecord(SeqRecord):
         return new_record
 
     def __add__(self, other):
-        connector = SeqRecord(Seq(str(self.seq.right_end)))
-        selfc = SeqRecord(seq=Seq(str(self.seq)),
-                          features=self.features,
-                          annotations=self.annotations)
-        new_record = SeqRecord.__add__(selfc, connector).__add__(other)
-        new_record.seq = self.seq + other.seq
-        new_record.__class__ = StickyEndsSeqRecord
-        return new_record
+        return self.assemble_with(other)
 
 
 def digest_sequence_with_sticky_ends(sequence, enzyme, linear=True):
