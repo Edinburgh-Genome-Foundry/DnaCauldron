@@ -1,54 +1,33 @@
-import numpy as np
 from Bio import SeqIO
-from Bio.SeqFeature import SeqFeature, FeatureLocation
+from .Filter import NoRestrictionSiteFilter
+from AssemblyMix import RestrictionLigationMix
 
+def genbank_files_to_assembly(parts_files, outfile, receptor_name_contains,
+                              enzyme="BsmBI"):
 
-def random_dna_sequence(length, probas=None, seed=None):
-    """Return a random DNA sequence ("ATGGCGT...") with the specified length.
+    parts_records = []
+    for filename in parts_files:
+        record = SeqIO.read(filename, "genbank")
+        record.linear = False
+        record.name = filename.split("/")[-1].split(".")[0].lower()
+        parts_records.append(record)
 
-    Parameters
-    ----------
+    def exactly_one_receptor_vector(fragments):
+        receptor_fragments = [
+            fragment for fragment in fragments
+            if receptor_name_contains in fragment.original_construct.name
+        ]
+        return len(receptor_fragments) == 1
 
-    length
-      Length of the DNA sequence.
-
-    proba
-      Frequencies for the different nucleotides, for instance
-      ``probas={"A":0.2, "T":0.3, "G":0.3, "C":0.2}``.
-      If not specified, all nucleotides are equiprobable (p=0.25).
-
-    seed
-      The seed to feed to the random number generator. When a seed is provided
-      the random results depend deterministically on the seed, thus enabling
-      reproducibility
-
-    """
-    if seed is not None:
-        np.random.seed(seed)
-    if probas is None:
-        sequence = np.random.choice(list("ATCG"), length)
-    else:
-        bases, probas = zip(*probas.items())
-        sequence = np.random.choice(bases, length, p=probas)
-    return "".join(sequence)
-
-
-def load_genbank(filename, linear=True, annotation=None):
-    record = SeqIO.read(filename, "genbank")
-    record.linear = linear
-    return record
-
-
-def annotate_record(seqrecord, location="full", feature_type="source",
-                    margin=0, **qualifiers):
-    if location == "full":
-        location = (margin, len(seqrecord)-margin)
-
-    strand = location[2] if len(location)==3 else 1
-    seqrecord.features.append(
-        SeqFeature(
-            FeatureLocation(location[0], location[1], strand),
-            qualifiers=qualifiers,
-            type=feature_type
-        )
+    fragments_filters = [NoRestrictionSiteFilter(enzyme)]
+    mix = RestrictionLigationMix(parts_records, enzyme)
+    assemblies = mix.compute_circular_assemblies(
+        fragments_sets_filters=[exactly_one_receptor_vector],
+        fragments_filters=fragments_filters,
+        annotate_homologies=True
     )
+    assemblies = list(assemblies)
+    assert len(assemblies) == 1
+    assembly = assemblies[0]
+    SeqIO.write(assembly, outfile, "genbank")
+    return assembly

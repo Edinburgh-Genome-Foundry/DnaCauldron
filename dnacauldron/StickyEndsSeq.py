@@ -2,8 +2,6 @@ from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 from Bio.Alphabet import DNAAlphabet
-from copy import deepcopy
-from Bio import Restriction
 
 
 class StickyEnd(Seq):
@@ -25,6 +23,7 @@ class StickyEnd(Seq):
 
     def will_clip_directly_with(self, other):
         return ((other is not None) and
+                (len(self) > 0) and
                 (self.strand == -other.strand) and
                 (str(self) == str(other)))
 
@@ -76,6 +75,10 @@ class StickyEndsSeq(Seq):
             right_end=other.right_end
         )
 
+    def to_standard_sequence(self, discard_sticky_ends=False):
+        if discard_sticky_ends:
+            return Seq(str(self))
+
 
 class StickyEndsSeqRecord(SeqRecord):
 
@@ -102,9 +105,12 @@ class StickyEndsSeqRecord(SeqRecord):
 
     @staticmethod
     def assemble(fragments, circularize=False, annotate_homologies=False):
-        def f(f1, f2):
-            return f1.assemble_with(f2, annotate_homology=annotate_homologies)
-        result = reduce(f, fragments)
+        result = fragments[0]
+        for fragment in fragments[1:]:
+            result = result.assemble_with(
+                fragment,
+                annotate_homology=annotate_homologies
+            )
         # result = sum(fragments[1:], fragments[0])
         if circularize:
             result = result.circularized(annotate_homology=annotate_homologies)
@@ -137,13 +143,22 @@ class StickyEndsSeqRecord(SeqRecord):
     def __add__(self, other):
         return self.assemble_with(other)
 
+    # def __hash__(self):
+    #     return hash("StickyEndSeqRecord"+str(self.seq))
+
 
 def digest_sequence_with_sticky_ends(sequence, enzyme, linear=True):
-    if enzyme.search(sequence, linear=linear) == []:
+    n_cuts = len(enzyme.search(sequence, linear=linear))
+    if n_cuts == 0:
         return sequence
     overhang = abs(enzyme.ovhg)
     right_end_sign = +1 if enzyme.is_3overhang() else -1
     fragments = enzyme.catalyse(sequence, linear=linear)
+    if linear:
+        fragments = enzyme.catalyse(sequence, linear=True)
+    else:
+        fragments = enzyme.catalyse(
+            sequence + sequence, linear=True)[1:n_cuts + 1]
     if right_end_sign == -1:
         if not linear:
             overhang_bit = fragments[0][:overhang]
@@ -152,6 +167,7 @@ def digest_sequence_with_sticky_ends(sequence, enzyme, linear=True):
             first_left_end = StickyEnd(overhang_bit, -right_end_sign)
             sticky_fragments = [StickyEndsSeq(new_fragment_seq,
                                               left_end=first_left_end)]
+
         else:
             sticky_fragments = [StickyEndsSeq(fragments[0])]
         for f in fragments[1:]:
@@ -192,8 +208,16 @@ def digest_sequence_with_sticky_ends(sequence, enzyme, linear=True):
 
 
 def digest_seqrecord_with_sticky_ends(seqrecord, enzyme, linear=True):
-    if enzyme.search(seqrecord.seq, linear=linear) == []:
+    n_cuts = len(enzyme.search(seqrecord.seq, linear=linear))
+    if n_cuts == 0:
         return [seqrecord]
+    if not linear:
+        record_fragments = digest_seqrecord_with_sticky_ends(
+            seqrecord + seqrecord,
+            enzyme,
+            linear=True
+        )[1:n_cuts + 1]
+        return record_fragments
     fragments = digest_sequence_with_sticky_ends(
         seqrecord.seq, enzyme, linear=linear)
     record_fragments = []
@@ -207,23 +231,23 @@ def digest_seqrecord_with_sticky_ends(seqrecord, enzyme, linear=True):
             annotations=subrecord.annotations
         )
         record_fragments.append(new_stickyend_record)
-    if not linear:
-        digest = digest_sequence_with_sticky_ends(
-            seqrecord.seq, enzyme, linear=True)
-        first_fragment, last_fragment = digest[0], digest[-1]
-        if (len(last_fragment) > 0) and (len(first_fragment) > 0):
-            first_record = StickyEndsSeqRecord(fragments[0])
-            first_record.features = []
-            index = seqrecord.seq.find(last_fragment)
-            subrecord = seqrecord[index:index + len(last_fragment)]
-            for feature in subrecord.features:
-                feature.location = feature.location
-                first_record.features.append(feature)
-
-            index = seqrecord.seq.find(first_fragment)
-            subrecord = seqrecord[index:index + len(first_fragment)]
-            for feature in subrecord.features:
-                feature.location = feature.location + len(last_fragment)
-                first_record.features.append(feature)
-            record_fragments = [first_record] + record_fragments
     return record_fragments
+    # if not linear:
+    #     digest = digest_sequence_with_sticky_ends(
+    #         seqrecord.seq, enzyme, linear=True)
+    #     first_fragment, last_fragment = digest[0], digest[-1]
+    #     if (len(last_fragment) > 0) and (len(first_fragment) > 0):
+    #         first_record = StickyEndsSeqRecord(fragments[0])
+    #         first_record.features = []
+    #         index = seqrecord.seq.find(last_fragment)
+    #         subrecord = seqrecord[index:index + len(last_fragment)]
+    #         for feature in subrecord.features:
+    #             feature.location = feature.location
+    #             first_record.features.append(feature)
+    #
+    #         index = seqrecord.seq.find(first_fragment)
+    #         subrecord = seqrecord[index:index + len(first_fragment)]
+    #         for feature in subrecord.features:
+    #             feature.location = feature.location + len(last_fragment)
+    #             first_record.features.append(feature)
+    #         record_fragments = [first_record] + record_fragments

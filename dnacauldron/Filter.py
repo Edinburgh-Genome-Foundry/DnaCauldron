@@ -1,4 +1,5 @@
 from Bio import Restriction
+from Bio.Seq import Seq
 
 
 class NoRestrictionSiteFilter:
@@ -9,7 +10,13 @@ class NoRestrictionSiteFilter:
 
     def __call__(self, seqrecord):
         linear = seqrecord.linear if hasattr(seqrecord, "linear") else True
-        return (self.enzyme.search(seqrecord.seq, linear=linear) == [])
+        if linear:
+            # Shameful hack so that enzyme sites of ensymes cutting outside
+            # of the sequence (but have their site inside) will be detected
+            seq = "AAAAAA" + Seq(str(seqrecord.seq)) + "AAAAAA"
+        else:
+            seq = seqrecord.seq
+        return (self.enzyme.search(seq, linear=linear) == [])
 
 
 class NoPatternFilter:
