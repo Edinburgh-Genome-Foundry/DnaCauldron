@@ -2,6 +2,20 @@ Dna Cauldron
 =============
 
 
+Usage
+-----
+
+The simplest way to assemble Genbank files is with ``:
+
+from dnachisel.utils import single_assembly
+genbank_files_assembly(
+    parts_filenames=["partA.gb", "partB.gb", "partC.gb", "partD.gb"],
+    receptor="receptor.gb", # Receptor plasmid for the final assembly
+    outfile="final_construct.gb", # Name of the output
+    enzyme="BsmBI" # enzyme used for the assembly
+)
+
+
 Installation
 --------------
 

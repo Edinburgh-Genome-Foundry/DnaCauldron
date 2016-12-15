@@ -5,6 +5,10 @@ from Bio.Alphabet import DNAAlphabet
 
 
 class StickyEnd(Seq):
+    """A class to represent the sticky end of a sequence.
+
+    It is used exactly like a Biopython sequence.
+    """
 
     def __init__(self, data, strand, **k):
         Seq.__init__(self, str(data), **k)
@@ -29,6 +33,12 @@ class StickyEnd(Seq):
 
 
 class StickyEndsSeq(Seq):
+    """Represent sequences with sticky ends.
+
+    It is used like a Biopython Seq, but with additional flanking sequences
+    `left_end` and `right_end`, which are `StickyEnd` objects.
+
+    """
 
     def __init__(self, data, left_end=None, right_end=None, **k):
         Seq.__init__(self, str(data), **k)
@@ -232,22 +242,3 @@ def digest_seqrecord_with_sticky_ends(seqrecord, enzyme, linear=True):
         )
         record_fragments.append(new_stickyend_record)
     return record_fragments
-    # if not linear:
-    #     digest = digest_sequence_with_sticky_ends(
-    #         seqrecord.seq, enzyme, linear=True)
-    #     first_fragment, last_fragment = digest[0], digest[-1]
-    #     if (len(last_fragment) > 0) and (len(first_fragment) > 0):
-    #         first_record = StickyEndsSeqRecord(fragments[0])
-    #         first_record.features = []
-    #         index = seqrecord.seq.find(last_fragment)
-    #         subrecord = seqrecord[index:index + len(last_fragment)]
-    #         for feature in subrecord.features:
-    #             feature.location = feature.location
-    #             first_record.features.append(feature)
-    #
-    #         index = seqrecord.seq.find(first_fragment)
-    #         subrecord = seqrecord[index:index + len(first_fragment)]
-    #         for feature in subrecord.features:
-    #             feature.location = feature.location + len(last_fragment)
-    #             first_record.features.append(feature)
-    #         record_fragments = [first_record] + record_fragments

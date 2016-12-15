@@ -1,33 +1,59 @@
-from Bio import SeqIO
+from Bio import SeqIO, Restriction
 from .Filter import NoRestrictionSiteFilter
-from AssemblyMix import RestrictionLigationMix
+from .AssemblyMix import RestrictionLigationMix
 
-def genbank_files_to_assembly(parts_files, outfile, receptor_name_contains,
-                              enzyme="BsmBI"):
+def single_assembly(parts, receptor, outfile=None,
+                    enzyme="BsmBI", annotate_homologies=True):
+    """Return the single assembly obtained by assembling together different
+    parts on a receptor vector.
 
-    parts_records = []
-    for filename in parts_files:
+    Parameters
+    ----------
+
+    parts
+      A list of either filenames or Biopython records or parts. They are
+      assumed circular (i.e. parts on backbones) but linear parts should
+      work too as long as the receptor is circular.
+
+    outfile
+      Name of a genbank file where to output the result
+
+    enzyme
+      Name of the enzyme used for the assembly.
+    """
+    def load_genbank(filename):
         record = SeqIO.read(filename, "genbank")
         record.linear = False
         record.name = filename.split("/")[-1].split(".")[0].lower()
-        parts_records.append(record)
+        if isinstance(receptor, str) and (filename == receptor):
+            record.name += " (RECEPTOR)"
+        return record
+
+    parts_records = [
+        load_genbank(part) if isinstance(part, str) else part
+        for part in parts + [receptor]
+    ]
+    biopython_enzyme = Restriction.__dict__[enzyme]
+    sites_in_receptor = \
+        len(biopython_enzyme.search(parts_records[-1].seq, linear=False))
 
     def exactly_one_receptor_vector(fragments):
         receptor_fragments = [
             fragment for fragment in fragments
-            if receptor_name_contains in fragment.original_construct.name
+            if "(RECEPTOR)" in fragment.original_construct.name
         ]
-        return len(receptor_fragments) == 1
+        return len(receptor_fragments) == sites_in_receptor - 1
 
-    fragments_filters = [NoRestrictionSiteFilter(enzyme)]
     mix = RestrictionLigationMix(parts_records, enzyme)
     assemblies = mix.compute_circular_assemblies(
         fragments_sets_filters=[exactly_one_receptor_vector],
-        fragments_filters=fragments_filters,
-        annotate_homologies=True
+        fragments_filters=[] if (sites_in_receptor > 2) else
+                          [NoRestrictionSiteFilter(enzyme)],
+        annotate_homologies=annotate_homologies
     )
     assemblies = list(assemblies)
     assert len(assemblies) == 1
     assembly = assemblies[0]
-    SeqIO.write(assembly, outfile, "genbank")
+    if outfile is not None:
+        SeqIO.write(assembly, outfile, "genbank")
     return assembly

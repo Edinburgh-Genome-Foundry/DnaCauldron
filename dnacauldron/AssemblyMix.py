@@ -328,7 +328,9 @@ class RestrictionLigationMix(AssemblyMix):
                 annotate_record(
                     fragment,
                     feature_type="source",
-                    source=construct.name
+                    source=construct.name,
+                    note="From " + construct.name,
+
                 )
                 self.fragments.append(fragment)
 
