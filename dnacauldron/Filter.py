@@ -1,3 +1,10 @@
+"""
+Filters applied in methods such as ``mix.compute_circular_assemblies`` in order
+to filter out circular assemblies which would have the wrong marker, or
+restriction sites of the digestion enzyme (these are unstable)
+"""
+
+
 from Bio import Restriction
 from Bio.Seq import Seq
 
@@ -13,7 +20,7 @@ class NoRestrictionSiteFilter:
     def __call__(self, seqrecord):
         linear = seqrecord.linear if hasattr(seqrecord, "linear") else True
         if linear:
-            # Shameful hack so that enzyme sites of ensymes cutting outside
+            # Shameful hack so that enzyme sites of enzymes cutting outside
             # of the sequence (but have their site inside) will be detected
             seq = "AAAAAA" + Seq(str(seqrecord.seq)) + "AAAAAA"
         else:

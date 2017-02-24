@@ -3,7 +3,6 @@ from Bio.SeqRecord import SeqRecord
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 from Bio.Alphabet import DNAAlphabet
 
-
 class StickyEnd(Seq):
     """A class to represent the sticky end of a sequence.
 

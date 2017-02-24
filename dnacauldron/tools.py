@@ -33,14 +33,35 @@ def random_dna_sequence(length, probas=None, seed=None):
     return "".join(sequence)
 
 
-def load_genbank(filename, linear=True, annotation=None):
+def load_genbank(filename, linear=True, name="unnamed"):
     record = SeqIO.read(filename, "genbank")
     record.linear = linear
+    record.name = name
     return record
 
 
-def annotate_record(seqrecord, location="full", feature_type="source",
+def annotate_record(seqrecord, location="full", feature_type="feature",
                     margin=0, **qualifiers):
+    """Add a feature to a Biopython SeqRecord.
+
+    Parameters
+    ----------
+
+    seqrecord
+      The biopython seqrecord to be annotated.
+
+    location
+      Either (start, end) or (start, end, strand). (strand defaults to +1)
+
+    feature_type
+      The type associated with the feature
+
+    margin
+      Number of extra bases added on each side of the given location.
+
+    qualifiers
+      Dictionnary that will be the Biopython feature's `qualifiers` attribute.
+    """
     if location == "full":
         location = (margin, len(seqrecord)-margin)
 

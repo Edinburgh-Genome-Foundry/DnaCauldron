@@ -265,6 +265,7 @@ class AssemblyMix:
                     annotate_homologies=annotate_homologies
                 )
                 if all(fl(construct) for fl in seqrecord_filters):
+                    construct.fragments = fragments
                     yield construct
         return assemblies_generator()
 
@@ -303,6 +304,15 @@ class RestrictionLigationMix(AssemblyMix):
 
     Parameters
     ----------
+
+    constructs
+      List of Biopython Seqrecords. Each seqrecord should have an attribute
+      `linear` set to true or false (for circular constructs). It is advised to
+      use method `load_genbank(filename, linear=True)` from `dnacauldron.tools`
+      to load the constructs.
+
+    enzyme
+      Name of the ligation enzyme to use, e.g. 'BsmBI'
     """
 
     def __init__(self, constructs, enzyme):
@@ -327,7 +337,7 @@ class RestrictionLigationMix(AssemblyMix):
                 fragment.original_construct = construct
                 annotate_record(
                     fragment,
-                    feature_type="source",
+                    feature_type="misc_feature",
                     source=construct.name,
                     note="From " + construct.name,
 
