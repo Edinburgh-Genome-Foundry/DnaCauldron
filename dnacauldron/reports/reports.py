@@ -52,7 +52,7 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
     # GRAPH
 
     ax, graph = plot_assembly_graph(mix, fragments_filters=fragments_filters)
-    ax.figure.savefig(graph_dir._file('graph.pdf').open('w'),
+    ax.figure.savefig(graph_dir._file('graph.pdf').open('wb'),
                       format='pdf', bbox_inches='tight')
     data = [
         dict(end_1=end_1, end_2=end_2,
@@ -81,7 +81,7 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
             SeqIO.write(asm, f, 'genbank')
         ax, gr = AssemblyTranslator().translate_record(asm).plot()
         ax.set_title(name)
-        ax.figure.savefig(assemblies_dir._file(name + '.pdf').open('w'),
+        ax.figure.savefig(assemblies_dir._file(name + '.pdf').open('wb'),
                           format='pdf', bbox_inches='tight')
         plt.close(ax.figure)
     df = pandas.DataFrame.from_records(

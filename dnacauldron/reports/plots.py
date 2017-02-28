@@ -87,15 +87,20 @@ def plot_assembly_graph(mix, ax=None, fragments_display_lim=3,
         f for f in (mix.fragments + mix.reverse_fragments)
         if all([fl(f) for fl in fragments_filters])
     ]
-
+    def fragments_are_equal(f1, f2):
+        '''loose equality for the purpose of this method'''
+        return str(f1.seq) == str(f2.seq) # and
+                #(f1.original_construct.name == f2.original_construct.name) and
+                #(f1.is_reverse == f2.is_reverse))
     for fragment in all_fragments:
         left = normalized_end(fragment.seq.left_end)
         right = normalized_end(fragment.seq.right_end)
         if not g.has_edge(left, right):
-            g.add_edge(left, right, {'fragments': []})
+            g.add_edge(left, right, fragments=[])
         fragments = g[left][right]['fragments']
-        if ((fragment not in fragments) and
-            (fragment.reverse_fragment not in fragments)):
+        if ((not any([fragments_are_equal(fragment, f) for f in fragments])) and
+            (not any([fragments_are_equal(fragment.reverse_fragment, f)
+                     for f in fragments]))):
             fragments.append(fragment)
 
 
@@ -103,8 +108,10 @@ def plot_assembly_graph(mix, ax=None, fragments_display_lim=3,
         fig, ax = plt.subplots(1, figsize=figure_size)
     ax.axis("off")
     layout = nx.layout.circular_layout(g)
-    all_x = [p[0] for p in layout.values()]
-    all_y = [p[1] for p in layout.values()]
+    # layout = nx.layout.graphviz_layout()
+    values = list(layout.values())
+    all_x = [p[0] for p in values]
+    all_y = [p[1] for p in values]
     xmin, xmax = min(all_x), max(all_x)
     ymin, ymax = min(all_y), max(all_y)
     dx = 0.1 * (xmax - xmin)

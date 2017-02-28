@@ -32,6 +32,11 @@ Alternatively, you can unzip the sources in a folder and type
 
     sudo python setup.py install
 
+It works better with the Networkx development version, that you install with
+
+.. code:: shell
+
+    sudo pip3 install git+https://github.com/networkx/networkx.git
 
 Usage
 ------
