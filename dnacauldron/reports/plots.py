@@ -1,13 +1,18 @@
 from copy import deepcopy
 
 import networkx as nx
+import numpy as np
 import matplotlib.pyplot as plt
 from Bio import Restriction
 from dna_features_viewer import (BiopythonTranslator, CircularGraphicRecord,
                                  GraphicRecord)
 
 from dnacauldron.tools import annotate_record
-
+try:
+    from networkx.drawing.nx_agraph import graphviz_layout
+    GRAPHVIZ_AVAILABLE = True
+except ImportError:
+    GRAPHVIZ_AVAILABLE = False
 
 class AssemblyTranslator(BiopythonTranslator):
 
@@ -89,9 +94,7 @@ def plot_assembly_graph(mix, ax=None, fragments_display_lim=3,
     ]
     def fragments_are_equal(f1, f2):
         '''loose equality for the purpose of this method'''
-        return str(f1.seq) == str(f2.seq) # and
-                #(f1.original_construct.name == f2.original_construct.name) and
-                #(f1.is_reverse == f2.is_reverse))
+        return str(f1.seq) == str(f2.seq)
     for fragment in all_fragments:
         left = normalized_end(fragment.seq.left_end)
         right = normalized_end(fragment.seq.right_end)
@@ -107,8 +110,10 @@ def plot_assembly_graph(mix, ax=None, fragments_display_lim=3,
     if ax is None:
         fig, ax = plt.subplots(1, figsize=figure_size)
     ax.axis("off")
-    layout = nx.layout.circular_layout(g)
-    # layout = nx.layout.graphviz_layout()
+    if GRAPHVIZ_AVAILABLE:
+        layout = graphviz_layout(g, 'circo')
+    else:
+        layout = nx.layout.circular_layout(g)
     values = list(layout.values())
     all_x = [p[0] for p in values]
     all_y = [p[1] for p in values]
@@ -121,8 +126,8 @@ def plot_assembly_graph(mix, ax=None, fragments_display_lim=3,
 
     for (end1, end2, data) in list(g.edges(data=True)):
 
-        x1, y1 = p1 = layout[end1]
-        x2, y2 = p2 = layout[end2]
+        x1, y1 = p1 = np.array(layout[end1])
+        x2, y2 = p2 = np.array(layout[end2])
         center = 0.5 * (p1+p2)
         ax.plot([x1, x2], [y1, y2], color='gray')
         fragments = data['fragments']

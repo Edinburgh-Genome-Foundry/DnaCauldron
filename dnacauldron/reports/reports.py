@@ -55,8 +55,10 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
     ax.figure.savefig(graph_dir._file('graph.pdf').open('wb'),
                       format='pdf', bbox_inches='tight')
     data = [
-        dict(end_1=end_1, end_2=end_2,
-             parts=" & ".join([name_fragment(f) for f in data["fragments"]])
+        dict(
+            end_1=end_1, end_2=end_2,
+            parts=" & ".join([name_fragment(f)
+                              for f in data["fragments"]])
         )
         for end_1, end_2, data in graph.edges(data=True)
     ]
@@ -89,5 +91,7 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
         columns=['name', 'number_of_parts', 'assembly_size', 'parts']
     )
     df.to_csv(report._file('report.csv'), index=False)
-
-    return report._close()
+    if target == '@memory':
+        return len(df), report._close()
+    else:
+        return len(df)
