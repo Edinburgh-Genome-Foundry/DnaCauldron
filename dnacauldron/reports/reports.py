@@ -30,8 +30,8 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
     for part in parts:
         linear = part.linear if hasattr(part, 'linear') else False
         ax, gr = plot_cuts(part, enzyme, linear=linear)
-        with provided_parts_dir._file(part.name + ".pdf").open('wb') as f:
-            ax.figure.savefig(f, format='pdf', bbox_inches="tight")
+        f = provided_parts_dir._file(part.name + ".pdf").open('wb')
+        ax.figure.savefig(f, format='pdf', bbox_inches="tight")
         plt.close(ax.figure)
         gb_file = provided_parts_dir._file(part.name + ".gb")
         SeqIO.write(part, gb_file, 'genbank')
@@ -45,8 +45,8 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
         name = name_fragment(fragment)
         seenfragments[name] += 1
         file_name = "%s_%02d.pdf" % (name, seenfragments[name])
-        with fragments_dir._file(file_name).open('wb') as f:
-            ax.figure.savefig(f, format='pdf', bbox_inches="tight")
+        ax.figure.savefig(fragments_dir._file(file_name).open('wb'),
+                          format='pdf', bbox_inches="tight")
         plt.close(ax.figure)
 
     # GRAPH
@@ -79,8 +79,8 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
             number_of_parts=len(asm.fragments),
             assembly_size=len(asm)
         ))
-        with assemblies_dir._file(name + '.gb').open('w') as f:
-            SeqIO.write(asm, f, 'genbank')
+        SeqIO.write(asm, assemblies_dir._file(name + '.gb').open('w'),
+                    'genbank')
         ax, gr = AssemblyTranslator().translate_record(asm).plot()
         ax.set_title(name)
         ax.figure.savefig(assemblies_dir._file(name + '.pdf').open('wb'),

@@ -46,6 +46,10 @@ def test_full_report(tmpdir):
                         "partC.gb", "receptor.gb", "connector_A2C.gb")
     ]
     target = os.path.join(str(tmpdir), 'my_report')
+    n, _ = dc.full_assembly_report(parts, '@memory', enzyme="BsmBI",
+                                   max_assemblies=40, fragments_filters='auto',
+                                   assemblies_prefix='asm')
+    assert n == 5
     dc.full_assembly_report(parts, target, enzyme="BsmBI",
                             max_assemblies=40, fragments_filters='auto',
                             assemblies_prefix='asm')
