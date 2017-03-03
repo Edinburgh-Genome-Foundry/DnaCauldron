@@ -2,7 +2,7 @@
 
 from Bio import SeqIO, Restriction
 from .Filter import NoRestrictionSiteFilter
-from .AssemblyMix import RestrictionLigationMix
+from .AssemblyMix import RestrictionLigationMix, AssemblyError
 
 def single_assembly(parts, receptor, outfile=None,
                     enzyme="BsmBI", annotate_homologies=True):
@@ -57,7 +57,9 @@ def single_assembly(parts, receptor, outfile=None,
         annotate_homologies=annotate_homologies
     )
     assemblies = list(assemblies)
-    assert len(assemblies) == 1
+    N = len(assemblies)
+    if N != 1:
+        raise AssemblyError('Found %d assemblies instead of 1 expected' % N)
     assembly = assemblies[0]
     if outfile is not None:
         SeqIO.write(assembly, outfile, "genbank")

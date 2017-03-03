@@ -12,6 +12,8 @@ from .StickyEndsSeq import (StickyEndsSeqRecord,
                             digest_seqrecord_with_sticky_ends)
 from .tools import annotate_record
 
+class AssemblyError(Exception):
+    pass
 
 class FragmentsCycle:
     """Class to represent a set of DNA fragments that can assemble into
@@ -175,7 +177,7 @@ class AssemblyMix:
         graph = self.compute_filtered_connections_graph(fragments_filters)
 
         if randomize:
-            def circular_fragments_generator():
+            def circular_fragments_sets_generator():
                 """Return random cycles from the connections graph.
 
                 The randomness is introduced by permuting the nodes names,
@@ -218,7 +220,7 @@ class AssemblyMix:
                     else:
                         break
         else:
-            def circular_fragments_generator():
+            def circular_fragments_sets_generator():
                 """Iterate over all circular paths in the connexion graph
                 using Networkx's `simple_paths`."""
                 seen_hashes = set()
@@ -233,7 +235,7 @@ class AssemblyMix:
                            for fl in fragments_sets_filters):
                         yield cycle.fragments
 
-        return circular_fragments_generator()
+        return circular_fragments_sets_generator()
 
     def compute_filtered_connections_graph(self, fragments_filters):
         graph = nx.DiGraph(self.connections_graph)
@@ -334,6 +336,8 @@ class RestrictionLigationMix(AssemblyMix):
             digest = digest_seqrecord_with_sticky_ends(
                 construct, self.enzyme, linear=construct.linear)
             for fragment in digest:
+                if not isinstance(fragment, StickyEndsSeqRecord):
+                    continue
                 fragment.original_construct = construct
                 annotate_record(
                     fragment,

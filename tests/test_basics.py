@@ -1,4 +1,5 @@
 import os
+import pytest
 import dnacauldron as dc
 from Bio import SeqIO
 
@@ -13,6 +14,18 @@ def test_single_assembly(tmpdir):
                        receptor=receptor_file, enzyme="BsmBI",
                        outfile=os.path.join(str(tmpdir), "final_sequence.gb"))
 
+def test_single_assembly_with_wrong_enzyme(tmpdir):
+    parts_files = [
+        os.path.join('tests', 'data', partfile)
+        for partfile in ["partA.gb", "partB.gb", "partC.gb"]
+    ]
+    receptor_file = os.path.join('tests', 'data', 'receptor.gb')
+    with pytest.raises(dc.AssemblyError) as exc:
+        dc.single_assembly(
+            parts=parts_files, receptor=receptor_file, enzyme="BsaI",
+            outfile=os.path.join(str(tmpdir), "final_sequence.gb")
+        )
+    assert "0 assemblies" in str(exc.value)
 
 def test_combinatorial_assembly(tmpdir):
 
