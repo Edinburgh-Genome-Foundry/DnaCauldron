@@ -81,7 +81,8 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
         ))
         SeqIO.write(asm, assemblies_dir._file(name + '.gb').open('w'),
                     'genbank')
-        ax, gr = AssemblyTranslator().translate_record(asm).plot()
+        gr_record = AssemblyTranslator().translate_record(asm)
+        ax, gr = gr_record.plot(figure_width=16)
         ax.set_title(name)
         ax.figure.savefig(assemblies_dir._file(name + '.pdf').open('wb'),
                           format='pdf', bbox_inches='tight')

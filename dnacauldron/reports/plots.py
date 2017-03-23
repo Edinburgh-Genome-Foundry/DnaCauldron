@@ -33,7 +33,7 @@ class AssemblyTranslator(BiopythonTranslator):
     def compute_feature_label(feature):
         if AssemblyTranslator.is_source(feature):
             return feature.qualifiers['source']
-        elif len(feature.location) > 100:
+        elif abs(feature.location.end - feature.location.start) > 100:
             label = BiopythonTranslator.compute_feature_label(feature)
             return abreviate_string(label, 30)
         else:
@@ -54,7 +54,7 @@ def plot_cuts(record, enzyme_name, linear=True, figure_width=5, ax=None):
 
         @staticmethod
         def compute_feature_label(feature):
-            if len(feature.location) > 100:
+            if abs(feature.location.end - feature.location.start) > 100:
                 label = BiopythonTranslator.compute_feature_label(feature)
                 return abreviate_string(label, 10)
             else:
@@ -96,6 +96,9 @@ def plot_assembly_graph(mix, ax=None, fragments_display_lim=3,
         '''loose equality for the purpose of this method'''
         return str(f1.seq) == str(f2.seq)
     for fragment in all_fragments:
+        # print fragment.seq.left_end, fragment.seq.right_end
+        if None in [fragment.seq.left_end, fragment.seq.right_end]:
+            continue
         left = normalized_end(fragment.seq.left_end)
         right = normalized_end(fragment.seq.right_end)
         if not g.has_edge(left, right):

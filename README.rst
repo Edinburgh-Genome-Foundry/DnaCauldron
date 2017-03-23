@@ -1,7 +1,7 @@
 Dna Cauldron
 =============
 
-.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Flametree/master/docs/logo.png
+.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaCauldron/master/docs/logo.png
    :alt: [logo]
    :align: center
    :width: 600px
