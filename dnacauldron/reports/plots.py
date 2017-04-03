@@ -16,6 +16,7 @@ except ImportError:
     GRAPHVIZ_AVAILABLE = False
 
 class AssemblyTranslator(BiopythonTranslator):
+    """Custom theme for plotting GENBANK assemblies w. Dna Features Viewer."""
 
     @staticmethod
     def is_source(feature):
@@ -41,9 +42,33 @@ class AssemblyTranslator(BiopythonTranslator):
             return None
 
 def abreviate_string(string, max_length=30):
+    """Truncate and add '...' if the string is too long"""
     return string[:max_length] + ('' if len(string) < max_length else '...')
 
 def plot_cuts(record, enzyme_name, linear=True, figure_width=5, ax=None):
+    """Plot a construct and highlight where an enzyme cuts.
+
+    Parameters
+    ----------
+
+    record
+      The biopython record to be plotted
+
+    enzyme_name
+      Name of the enzyme, e.g. "EcoRI"
+
+    linear
+      True for a linear construct, False for a circular construct
+
+    figure_width
+      Width of the figure in inches.
+
+    ax
+      Matplotlib ax on which to plot the construct. If None is provided, one
+      will be created an returned.
+
+
+    """
     enzyme = Restriction.__dict__[enzyme_name]
     record = deepcopy(record)
     cuts = enzyme.search(record.seq, linear=linear)
@@ -77,12 +102,36 @@ def plot_cuts(record, enzyme_name, linear=True, figure_width=5, ax=None):
 
 
 def name_fragment(fragment):
+    """Return the name of the fragment, or `r_NAME` if the fragment is the
+    reverse of another framgnet."""
     return (fragment.original_construct.name +
             ("_r" if fragment.is_reverse else ""))
 
-def plot_assembly_graph(mix, ax=None, fragments_display_lim=3,
+def plot_assembly_graph(assembly_mix, ax=None, fragments_display_lim=3,
                         fragments_filters=None, figure_size=(8, 6)):
-    """Plot a map of the different assemblies"""
+    """Plot a map of the different assemblies.
+
+    Parameters
+    ----------
+
+    assembly_mix
+      A DnaCauldron AssemblyMix object.
+
+    ax
+      A matplotlib ax on which to plot. If none is provided, one is created.
+
+    fragments_display_lim
+      Maximum number of fragments names to write in a slot. If a "slot" has
+      more fragments than this it will display "N fragments" instead of the
+      list of fragments names.
+
+    fragments_filters
+      List of functions f(fragment)=>true/false than can be used to remove
+      some fragments from the list of fragments.
+
+    figure_size
+      Size (width, height) in inches of the final figure
+    """
 
     def normalized_end(end):
         return min(str(end), str(end.reverse_complement()))
@@ -90,7 +139,7 @@ def plot_assembly_graph(mix, ax=None, fragments_display_lim=3,
 
     g = nx.Graph()
     all_fragments = [
-        f for f in (mix.fragments + mix.reverse_fragments)
+        f for f in (assembly_mix.fragments + assembly_mix.reverse_fragments)
         if all([fl(f) for fl in fragments_filters])
     ]
     def fragments_are_equal(f1, f2):

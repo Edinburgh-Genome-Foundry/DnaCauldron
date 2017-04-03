@@ -25,7 +25,24 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
 
     target
       Either a path to a folder, or to a zip file, or ``@memory`` to return
-      a string representing
+      a string representing zip data.
+
+    enzyme
+      Name of the enzyme to be used in the assembly
+
+    max_assemblies
+      Maximal number of assemblies to consider. If there are more than this
+      the additional ones won't be returned.
+
+    fragments_filters
+      Fragments filters to be used to filter out fragments before looking for
+      assemblies. If left to auto, fragments containing the enzyme site will
+      be filtered out.
+
+    assemblies_prefix
+      Prefix for the file names of all assemblies. They will be named
+      ``PRE01.gb``,``PRE02.gb``, ``PRE03.gb`` where ``PRE`` is the prefix.
+
 
     """
     if (len(set(p.name for p in parts)) < len(parts)):

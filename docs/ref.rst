@@ -9,6 +9,17 @@ High-level functions
 .. automodule:: dnacauldron.utils
    :members:
 
+Reporting
+---------
+
+.. automodule:: dnacauldron.reports.reports
+  :members:
+
+
+.. automodule:: dnacauldron.reports.plots
+ :members:
+
+
 AssemblyMix
 -----------
 
@@ -28,10 +39,3 @@ StickyEndsSeq
 
 .. automodule:: dnacauldron.StickyEndsSeq
   :members:
-
-
-Reporting
----------
-
- .. automodule:: dnacauldron.Reporting
-   :members:

@@ -350,6 +350,23 @@ class RestrictionLigationMix(AssemblyMix):
 
     @staticmethod
     def assemble(fragments, circularize=False, annotate_homologies=False):
+        """Assemble sticky-end fragments into a single one (sticky or not).
+
+        Parameters
+        ----------
+
+        fragments
+          List of StickyEndsSeqRecord fragments
+
+        circularize
+          If True and if the two ends of the final assembly are compatible,
+          circularize the construct, i.e. return a non-sticky record
+          representing the circular assembly of the fragments.
+
+        annotate_homologies
+          If True, all homology regions that where formerly sticky ends will
+          be annotated in the final record.
+        """
         return StickyEndsSeqRecord.assemble(
             fragments,
             circularize=circularize,
