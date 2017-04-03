@@ -53,7 +53,7 @@ final assembly, and (optionally) writes it to a Genbank file.
 
     from dnacauldron.utils import single_assembly
     final_construct = single_assembly(
-        parts_filenames=["partA.gb", "partB.gb", "partC.gb", "partD.gb"],
+        parts=["partA.gb", "partB.gb", "partC.gb", "partD.gb"],
         receptor="receptor.gb", # Receptor plasmid for the final assembly
         outfile="final_construct.gb", # Name of the output
         enzyme="BsmBI" # enzyme used for the assembly

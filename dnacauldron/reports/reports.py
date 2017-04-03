@@ -1,4 +1,3 @@
-
 from flametree import file_tree
 import matplotlib.pyplot as plt
 from Bio import SeqIO
@@ -14,6 +13,23 @@ from .plots import (name_fragment, plot_cuts, plot_assembly_graph,
 def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
                          fragments_filters='auto',
                          assemblies_prefix='assembly'):
+    """Write a full assembly report in a folder or a zip.
+
+    Parameters
+    ----------
+
+    parts
+      List of Biopython records representing the parts, potentially on entry
+      vectors. All the parts provided should have different attributes ``name``
+      as it is used to name the files.
+
+    target
+      Either a path to a folder, or to a zip file, or ``@memory`` to return
+      a string representing
+
+    """
+    if (len(set(p.name for p in parts)) < len(parts)):
+        raise ValueError("All parts provided should have different names")
     if fragments_filters == 'auto':
         fragments_filters = [NoRestrictionSiteFilter(enzyme)]
 
@@ -92,7 +108,8 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
         columns=['name', 'number_of_parts', 'assembly_size', 'parts']
     )
     df.to_csv(report._file('report.csv'), index=False)
+    n_constructs = len(df)
     if target == '@memory':
-        return len(df), report._close()
+        return n_constructs, report._close()
     else:
-        return len(df)
+        return n_constructs

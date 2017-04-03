@@ -58,12 +58,17 @@ def test_full_report(tmpdir):
         for partfile in("partA.gb", "partA2.gb", "partB.gb", "partB2.gb",
                         "partC.gb", "receptor.gb", "connector_A2C.gb")
     ]
-    target = os.path.join(str(tmpdir), 'my_report')
+    target1 = os.path.join(str(tmpdir), 'my_report')
+    target2 = os.path.join(str(tmpdir), 'my_report.zip')
     n, _ = dc.full_assembly_report(parts, '@memory', enzyme="BsmBI",
                                    max_assemblies=40, fragments_filters='auto',
                                    assemblies_prefix='asm')
     assert n == 5
-    dc.full_assembly_report(parts, target, enzyme="BsmBI",
+    dc.full_assembly_report(parts, target1, enzyme="BsmBI",
                             max_assemblies=40, fragments_filters='auto',
                             assemblies_prefix='asm')
-    assert os.path.exists(os.path.join(target, 'assemblies', 'asm_05.gb'))
+    dc.full_assembly_report(parts, target2, enzyme="BsmBI",
+                            max_assemblies=40, fragments_filters='auto',
+                            assemblies_prefix='asm')
+    assert os.path.exists(os.path.join(target1, 'assemblies', 'asm_05.gb'))
+    assert os.path.exists(target2)

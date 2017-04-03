@@ -25,6 +25,7 @@ def single_assembly(parts, receptor, outfile=None,
     enzyme
       Name of the enzyme used for the assembly.
     """
+
     def load_genbank(filename):
         """Specific loag_genbank flavor"""
         record = SeqIO.read(filename, "genbank")
@@ -33,7 +34,6 @@ def single_assembly(parts, receptor, outfile=None,
         if isinstance(receptor, str) and (filename == receptor):
             record.name += " (RECEPTOR)"
         return record
-
     parts_records = [
         load_genbank(part) if isinstance(part, str) else part
         for part in parts + [receptor]

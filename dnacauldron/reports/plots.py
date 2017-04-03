@@ -9,6 +9,7 @@ from dna_features_viewer import (BiopythonTranslator, CircularGraphicRecord,
 
 from dnacauldron.tools import annotate_record
 try:
+    import pygraphviz
     from networkx.drawing.nx_agraph import graphviz_layout
     GRAPHVIZ_AVAILABLE = True
 except ImportError:
