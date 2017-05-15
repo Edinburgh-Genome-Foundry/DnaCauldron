@@ -36,7 +36,7 @@ def random_dna_sequence(length, probas=None, seed=None):
 def load_genbank(filename, linear=True, name="unnamed"):
     record = SeqIO.read(filename, "genbank")
     record.linear = linear
-    record.name = name
+    record.name = name.replace(" ", "_")
     return record
 
 
@@ -65,7 +65,7 @@ def annotate_record(seqrecord, location="full", feature_type="feature",
     if location == "full":
         location = (margin, len(seqrecord)-margin)
 
-    strand = location[2] if len(location)==3 else 1
+    strand = location[2] if len(location) == 3 else 1
     seqrecord.features.append(
         SeqFeature(
             FeatureLocation(location[0], location[1], strand),

@@ -38,4 +38,4 @@ StickyEndsSeq
 --------------
 
 .. automodule:: dnacauldron.StickyEndsSeq
-  :members:
+   :members:

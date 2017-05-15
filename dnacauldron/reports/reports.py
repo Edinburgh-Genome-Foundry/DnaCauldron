@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from Bio import SeqIO
 from dna_features_viewer import BiopythonTranslator
 import pandas
-from collections import defaultdict
+from collections import defaultdict, Counter
 
 from ..Filter import NoRestrictionSiteFilter
 from ..AssemblyMix import RestrictionLigationMix
@@ -45,8 +45,12 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
 
 
     """
-    if (len(set(p.name for p in parts)) < len(parts)):
-        raise ValueError("All parts provided should have different names")
+    part_names = [p.name for p in parts]
+    non_unique = [e for (e, count) in Counter(part_names).items() if count > 1]
+    if len(non_unique) > 0:
+        raise ValueError("All parts provided should have different names. "
+                         "Assembly (%s) contains several times the parts %s " %
+                         (" ".join(part_names), ", ".join(non_unique)))
     if fragments_filters == 'auto':
         fragments_filters = [NoRestrictionSiteFilter(enzyme)]
 
