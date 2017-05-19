@@ -22,6 +22,11 @@ It is simple to use, plays well with BioPython, can import and export Genbank
 (it conserves all features), and provides ways to select particular
 constructs when dealing with large combinatorial assemblies.
 
+**Try it online !** Too lazy to use the library programmatically ?
+It is available
+`here <http://cuba.genomefoundry.org/#/simulate_gg_assemblies>`_
+as a web service.
+
 Installation
 -------------
 

@@ -1,5 +1,7 @@
 import os
 import pytest
+import matplotlib
+matplotlib.use("Agg")
 import dnacauldron as dc
 from Bio import SeqIO
 
