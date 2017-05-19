@@ -1,7 +1,7 @@
 Dna Cauldron
 =============
 
-.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaCauldron/master/docs/logo.png
+.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaCauldron/master/docs/_static/images/title.png
    :alt: [logo]
    :align: center
    :width: 600px
@@ -107,6 +107,10 @@ The following code produces a structured directory with various reports:
                             assemblies_prefix='asm')
 Result:
 
+.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaCauldron/master/docs/_static/images/report_screenshot.jpg
+   :alt: [logo]
+   :align: center
+   :width: 600px
 
 
 How it works
