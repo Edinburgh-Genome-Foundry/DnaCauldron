@@ -92,7 +92,7 @@ def plot_cuts(record, enzyme_name, linear=True, figure_width=5, ax=None):
                 (feature.type == 'misc_feature')):
                 return '#f5eaff'
             else:
-                return '#ffffff'
+                return '#fefefe'
     translator = MyTranslator()
     grecord_class = GraphicRecord if linear else CircularGraphicRecord
     graphic_record = translator.translate_record(record,
