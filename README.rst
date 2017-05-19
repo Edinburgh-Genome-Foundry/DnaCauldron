@@ -7,7 +7,8 @@ Dna Cauldron
    :width: 600px
 
 
-Dna Cauldron is a Python library to simulate restriction-based assembly operations.
+Dna Cauldron (complete documentation `here <https://edinburgh-genome-foundry.github.io/DnaCauldron/>`_)
+is a Python library to simulate restriction-based assembly operations.
 You provide a set of parts and receptor vectors and Dna Cauldron will compute the
 assembli(es) that could result from the mix.
 
@@ -96,6 +97,7 @@ if necessary.
 The following code produces a structured directory with various reports:
 
 .. code:: python
+
     import dnacauldron as dc
     parts = [
         dc.load_genbank("partA.gb", linear=False, name="PartA"),
