@@ -4,8 +4,11 @@ Dna Cauldron
 .. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaCauldron/master/docs/_static/images/title.png
    :alt: [logo]
    :align: center
-   :width: 600px
+   :width: 500px
 
+.. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaCauldron.svg?branch=master
+  :target: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaCauldron
+  :alt: Travis CI build status
 
 Dna Cauldron (complete documentation `here <https://edinburgh-genome-foundry.github.io/DnaCauldron/>`_)
 is a Python library to simulate restriction-based assembly operations.
