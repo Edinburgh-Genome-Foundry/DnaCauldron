@@ -1,0 +1,409 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dnacauldron.reports.plots &mdash; DnaCauldron 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/main.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="DnaCauldron 0.1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DnaCauldron
+          
+
+          
+            
+            <img src="../../../_static/html_logo.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Dna Cauldron Documentation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../ref.html">DnaCauldron Reference manual</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">DnaCauldron</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>dnacauldron.reports.plots</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dnacauldron.reports.plots</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
+
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">Restriction</span>
+<span class="kn">from</span> <span class="nn">dna_features_viewer</span> <span class="k">import</span> <span class="p">(</span><span class="n">BiopythonTranslator</span><span class="p">,</span> <span class="n">CircularGraphicRecord</span><span class="p">,</span>
+                                 <span class="n">GraphicRecord</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">dnacauldron.tools</span> <span class="k">import</span> <span class="n">annotate_record</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pygraphviz</span>
+    <span class="kn">from</span> <span class="nn">networkx.drawing.nx_agraph</span> <span class="k">import</span> <span class="n">graphviz_layout</span>
+    <span class="n">GRAPHVIZ_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">GRAPHVIZ_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="AssemblyTranslator"><a class="viewcode-back" href="../../../ref.html#dnacauldron.reports.plots.AssemblyTranslator">[docs]</a><span class="k">class</span> <span class="nc">AssemblyTranslator</span><span class="p">(</span><span class="n">BiopythonTranslator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Custom theme for plotting GENBANK assemblies w. Dna Features Viewer.&quot;&quot;&quot;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_source</span><span class="p">(</span><span class="n">feature</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">((</span><span class="n">feature</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;misc_feature&#39;</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="n">feature</span><span class="o">.</span><span class="n">qualifiers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">compute_feature_color</span><span class="p">(</span><span class="n">feature</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">feature</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">AssemblyTranslator</span><span class="o">.</span><span class="n">is_source</span><span class="p">(</span><span class="n">feature</span><span class="p">):</span>
+                <span class="k">return</span> <span class="s1">&#39;#ff4c4c&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s1">&#39;#f9edbb&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">compute_feature_label</span><span class="p">(</span><span class="n">feature</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">AssemblyTranslator</span><span class="o">.</span><span class="n">is_source</span><span class="p">(</span><span class="n">feature</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">feature</span><span class="o">.</span><span class="n">qualifiers</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">abs</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="n">BiopythonTranslator</span><span class="o">.</span><span class="n">compute_feature_label</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">abreviate_string</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="abreviate_string"><a class="viewcode-back" href="../../../ref.html#dnacauldron.reports.plots.abreviate_string">[docs]</a><span class="k">def</span> <span class="nf">abreviate_string</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Truncate and add &#39;...&#39; if the string is too long&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">string</span><span class="p">[:</span><span class="n">max_length</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">max_length</span> <span class="k">else</span> <span class="s1">&#39;...&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="plot_cuts"><a class="viewcode-back" href="../../../ref.html#dnacauldron.reports.plots.plot_cuts">[docs]</a><span class="k">def</span> <span class="nf">plot_cuts</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">enzyme_name</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figure_width</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot a construct and highlight where an enzyme cuts.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    record</span>
+<span class="sd">      The biopython record to be plotted</span>
+
+<span class="sd">    enzyme_name</span>
+<span class="sd">      Name of the enzyme, e.g. &quot;EcoRI&quot;</span>
+
+<span class="sd">    linear</span>
+<span class="sd">      True for a linear construct, False for a circular construct</span>
+
+<span class="sd">    figure_width</span>
+<span class="sd">      Width of the figure in inches.</span>
+
+<span class="sd">    ax</span>
+<span class="sd">      Matplotlib ax on which to plot the construct. If None is provided, one</span>
+<span class="sd">      will be created an returned.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">enzyme</span> <span class="o">=</span> <span class="n">Restriction</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">enzyme_name</span><span class="p">]</span>
+    <span class="n">record</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+    <span class="n">cuts</span> <span class="o">=</span> <span class="n">enzyme</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="n">linear</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">cut</span> <span class="ow">in</span> <span class="n">cuts</span><span class="p">:</span>
+        <span class="n">annotate_record</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="p">(</span><span class="n">cut</span><span class="p">,</span> <span class="n">cut</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
+                        <span class="n">feature_type</span><span class="o">=</span><span class="s1">&#39;misc_feature&#39;</span><span class="p">,</span>
+                        <span class="n">enzyme</span><span class="o">=</span><span class="n">enzyme_name</span><span class="p">)</span>
+    <span class="k">class</span> <span class="nc">MyTranslator</span><span class="p">(</span><span class="n">BiopythonTranslator</span><span class="p">):</span>
+
+        <span class="nd">@staticmethod</span>
+        <span class="k">def</span> <span class="nf">compute_feature_label</span><span class="p">(</span><span class="n">feature</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">BiopythonTranslator</span><span class="o">.</span><span class="n">compute_feature_label</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">abreviate_string</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">feature</span><span class="o">.</span><span class="n">qualifiers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;enzyme&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@staticmethod</span>
+        <span class="k">def</span> <span class="nf">compute_feature_color</span><span class="p">(</span><span class="n">feature</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">qualifiers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;enzyme&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;misc_feature&#39;</span><span class="p">)):</span>
+                <span class="k">return</span> <span class="s1">&#39;#f5eaff&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s1">&#39;#ffffff&#39;</span>
+    <span class="n">translator</span> <span class="o">=</span> <span class="n">MyTranslator</span><span class="p">()</span>
+    <span class="n">grecord_class</span> <span class="o">=</span> <span class="n">GraphicRecord</span> <span class="k">if</span> <span class="n">linear</span> <span class="k">else</span> <span class="n">CircularGraphicRecord</span>
+    <span class="n">graphic_record</span> <span class="o">=</span> <span class="n">translator</span><span class="o">.</span><span class="n">translate_record</span><span class="p">(</span><span class="n">record</span><span class="p">,</span>
+                                                 <span class="n">grecord_class</span><span class="o">=</span><span class="n">grecord_class</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">graphic_record</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">figure_width</span><span class="o">=</span><span class="n">figure_width</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="name_fragment"><a class="viewcode-back" href="../../../ref.html#dnacauldron.reports.plots.name_fragment">[docs]</a><span class="k">def</span> <span class="nf">name_fragment</span><span class="p">(</span><span class="n">fragment</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the name of the fragment, or `r_NAME` if the fragment is the</span>
+<span class="sd">    reverse of another framgnet.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">fragment</span><span class="o">.</span><span class="n">original_construct</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span>
+            <span class="p">(</span><span class="s2">&quot;_r&quot;</span> <span class="k">if</span> <span class="n">fragment</span><span class="o">.</span><span class="n">is_reverse</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="plot_assembly_graph"><a class="viewcode-back" href="../../../ref.html#dnacauldron.reports.plots.plot_assembly_graph">[docs]</a><span class="k">def</span> <span class="nf">plot_assembly_graph</span><span class="p">(</span><span class="n">assembly_mix</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fragments_display_lim</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                        <span class="n">fragments_filters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figure_size</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;Plot a map of the different assemblies.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    assembly_mix</span>
+<span class="sd">      A DnaCauldron AssemblyMix object.</span>
+
+<span class="sd">    ax</span>
+<span class="sd">      A matplotlib ax on which to plot. If none is provided, one is created.</span>
+
+<span class="sd">    fragments_display_lim</span>
+<span class="sd">      Maximum number of fragments names to write in a slot. If a &quot;slot&quot; has</span>
+<span class="sd">      more fragments than this it will display &quot;N fragments&quot; instead of the</span>
+<span class="sd">      list of fragments names.</span>
+
+<span class="sd">    fragments_filters</span>
+<span class="sd">      List of functions f(fragment)=&gt;true/false than can be used to remove</span>
+<span class="sd">      some fragments from the list of fragments.</span>
+
+<span class="sd">    figure_size</span>
+<span class="sd">      Size (width, height) in inches of the final figure</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">normalized_end</span><span class="p">(</span><span class="n">end</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">end</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">end</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()))</span>
+
+
+    <span class="n">g</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+    <span class="n">all_fragments</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">(</span><span class="n">assembly_mix</span><span class="o">.</span><span class="n">fragments</span> <span class="o">+</span> <span class="n">assembly_mix</span><span class="o">.</span><span class="n">reverse_fragments</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">fl</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span> <span class="n">fragments_filters</span><span class="p">])</span>
+    <span class="p">]</span>
+    <span class="k">def</span> <span class="nf">fragments_are_equal</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;loose equality for the purpose of this method&#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">f1</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">f2</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">fragment</span> <span class="ow">in</span> <span class="n">all_fragments</span><span class="p">:</span>
+        <span class="c1"># print fragment.seq.left_end, fragment.seq.right_end</span>
+        <span class="k">if</span> <span class="kc">None</span> <span class="ow">in</span> <span class="p">[</span><span class="n">fragment</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">left_end</span><span class="p">,</span> <span class="n">fragment</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">right_end</span><span class="p">]:</span>
+            <span class="k">continue</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="n">normalized_end</span><span class="p">(</span><span class="n">fragment</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">left_end</span><span class="p">)</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="n">normalized_end</span><span class="p">(</span><span class="n">fragment</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">right_end</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">g</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">fragments</span><span class="o">=</span><span class="p">[])</span>
+        <span class="n">fragments</span> <span class="o">=</span> <span class="n">g</span><span class="p">[</span><span class="n">left</span><span class="p">][</span><span class="n">right</span><span class="p">][</span><span class="s1">&#39;fragments&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="p">((</span><span class="ow">not</span> <span class="nb">any</span><span class="p">([</span><span class="n">fragments_are_equal</span><span class="p">(</span><span class="n">fragment</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fragments</span><span class="p">]))</span> <span class="ow">and</span>
+            <span class="p">(</span><span class="ow">not</span> <span class="nb">any</span><span class="p">([</span><span class="n">fragments_are_equal</span><span class="p">(</span><span class="n">fragment</span><span class="o">.</span><span class="n">reverse_fragment</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+                     <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fragments</span><span class="p">]))):</span>
+            <span class="n">fragments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fragment</span><span class="p">)</span>
+
+
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figure_size</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">GRAPHVIZ_AVAILABLE</span><span class="p">:</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">graphviz_layout</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s1">&#39;circo&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">circular_layout</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">layout</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="n">all_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
+    <span class="n">all_y</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
+    <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">all_x</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">all_x</span><span class="p">)</span>
+    <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">all_y</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">all_y</span><span class="p">)</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span>
+    <span class="n">dy</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="p">(</span><span class="n">ymax</span> <span class="o">-</span> <span class="n">ymin</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xmin</span> <span class="o">-</span> <span class="n">dx</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">+</span> <span class="n">dx</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ymin</span> <span class="o">-</span> <span class="n">dy</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">+</span> <span class="n">dy</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">end1</span><span class="p">,</span> <span class="n">end2</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)):</span>
+
+        <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">p1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">layout</span><span class="p">[</span><span class="n">end1</span><span class="p">])</span>
+        <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">p2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">layout</span><span class="p">[</span><span class="n">end2</span><span class="p">])</span>
+        <span class="n">center</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">p1</span><span class="o">+</span><span class="n">p2</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">],</span> <span class="p">[</span><span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+        <span class="n">fragments</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;fragments&#39;</span><span class="p">]</span>
+        <span class="n">g</span><span class="p">[</span><span class="n">end1</span><span class="p">][</span><span class="n">end2</span><span class="p">][</span><span class="s1">&#39;fragments&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fragments</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fragments</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">fragments_display_lim</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+                <span class="n">name_fragment</span><span class="p">(</span><span class="n">fragment</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">fragment</span> <span class="ow">in</span> <span class="n">fragments</span><span class="p">[:</span><span class="n">fragments_display_lim</span><span class="p">]</span>
+            <span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> parts&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">fragments</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+                    <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+                    <span class="n">xycoords</span><span class="o">=</span><span class="s2">&quot;data&quot;</span><span class="p">,</span>
+                    <span class="n">bbox</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;facecolor&#39;</span><span class="p">:</span> <span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="s1">&#39;linewidth&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+                    <span class="n">family</span><span class="o">=</span><span class="s1">&#39;Open Sans&#39;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span> <span class="ow">in</span> <span class="n">layout</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+                    <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+                    <span class="n">xycoords</span><span class="o">=</span><span class="s2">&quot;data&quot;</span><span class="p">,</span>
+                    <span class="n">bbox</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;facecolor&#39;</span><span class="p">:</span> <span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="s1">&#39;linewidth&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+                    <span class="n">family</span><span class="o">=</span><span class="s1">&#39;Open Sans&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ax</span><span class="p">,</span> <span class="n">g</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Edinburgh Genome Foundry.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

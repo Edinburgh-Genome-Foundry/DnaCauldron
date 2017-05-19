@@ -1,0 +1,349 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dnacauldron.reports.reports &mdash; DnaCauldron 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/main.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="DnaCauldron 0.1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DnaCauldron
+          
+
+          
+            
+            <img src="../../../_static/html_logo.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Dna Cauldron Documentation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../ref.html">DnaCauldron Reference manual</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">DnaCauldron</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>dnacauldron.reports.reports</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dnacauldron.reports.reports</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">flametree</span> <span class="k">import</span> <span class="n">file_tree</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">SeqIO</span>
+<span class="kn">from</span> <span class="nn">dna_features_viewer</span> <span class="k">import</span> <span class="n">BiopythonTranslator</span>
+<span class="kn">import</span> <span class="nn">pandas</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">Counter</span>
+
+<span class="kn">from</span> <span class="nn">..Filter</span> <span class="k">import</span> <span class="n">NoRestrictionSiteFilter</span>
+<span class="kn">from</span> <span class="nn">..AssemblyMix</span> <span class="k">import</span> <span class="n">RestrictionLigationMix</span>
+<span class="kn">from</span> <span class="nn">.plots</span> <span class="k">import</span> <span class="p">(</span><span class="n">name_fragment</span><span class="p">,</span> <span class="n">plot_cuts</span><span class="p">,</span> <span class="n">plot_assembly_graph</span><span class="p">,</span>
+                    <span class="n">AssemblyTranslator</span><span class="p">)</span>
+
+<div class="viewcode-block" id="full_assembly_report"><a class="viewcode-back" href="../../../ref.html#dnacauldron.reports.reports.full_assembly_report">[docs]</a><span class="k">def</span> <span class="nf">full_assembly_report</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">enzyme</span><span class="o">=</span><span class="s2">&quot;BsmBI&quot;</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+                         <span class="n">fragments_filters</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+                         <span class="n">assemblies_prefix</span><span class="o">=</span><span class="s1">&#39;assembly&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Write a full assembly report in a folder or a zip.</span>
+
+<span class="sd">    The report contains the final sequence(s) of the assembly in Genbank format</span>
+<span class="sd">    as well as a .csv report on all assemblies produced and PDF figures</span>
+<span class="sd">    to allow a quick overview or diagnostic.</span>
+
+<span class="sd">    Folder ``assemblies`` contains the final assemblies, ``assembly_graph``</span>
+<span class="sd">    contains a schematic view of how the parts assemble together, folder</span>
+<span class="sd">    ``fragments`` contains the details of all fragments produced by the enzyme</span>
+<span class="sd">    digestion, and folder ``provided_parts`` contains the original input</span>
+<span class="sd">    (genbanks of all parts provided for the assembly mix).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    parts</span>
+<span class="sd">      List of Biopython records representing the parts, potentially on entry</span>
+<span class="sd">      vectors. All the parts provided should have different attributes ``name``</span>
+<span class="sd">      as it is used to name the files.</span>
+
+<span class="sd">    target</span>
+<span class="sd">      Either a path to a folder, or to a zip file, or ``@memory`` to return</span>
+<span class="sd">      a string representing zip data (the latter is particularly useful for</span>
+<span class="sd">      website backends).</span>
+
+<span class="sd">    enzyme</span>
+<span class="sd">      Name of the enzyme to be used in the assembly</span>
+
+<span class="sd">    max_assemblies</span>
+<span class="sd">      Maximal number of assemblies to consider. If there are more than this</span>
+<span class="sd">      the additional ones won&#39;t be returned.</span>
+
+<span class="sd">    fragments_filters</span>
+<span class="sd">      Fragments filters to be used to filter out fragments before looking for</span>
+<span class="sd">      assemblies. If left to auto, fragments containing the enzyme site will</span>
+<span class="sd">      be filtered out.</span>
+
+<span class="sd">    assemblies_prefix</span>
+<span class="sd">      Prefix for the file names of all assemblies. They will be named</span>
+<span class="sd">      ``PRE01.gb``,``PRE02.gb``, ``PRE03.gb`` where ``PRE`` is the prefix.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">part_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">]</span>
+    <span class="n">non_unique</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span> <span class="ow">in</span> <span class="n">Counter</span><span class="p">(</span><span class="n">part_names</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">non_unique</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;All parts provided should have different names. &quot;</span>
+                         <span class="s2">&quot;Assembly (</span><span class="si">%s</span><span class="s2">) contains several times the parts </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span>
+                         <span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">part_names</span><span class="p">),</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">non_unique</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="n">fragments_filters</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+        <span class="n">fragments_filters</span> <span class="o">=</span> <span class="p">[</span><span class="n">NoRestrictionSiteFilter</span><span class="p">(</span><span class="n">enzyme</span><span class="p">)]</span>
+
+    <span class="n">report</span> <span class="o">=</span> <span class="n">file_tree</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">provided_parts_dir</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">_dir</span><span class="p">(</span><span class="s2">&quot;provided_parts&quot;</span><span class="p">)</span>
+    <span class="n">fragments_dir</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">_dir</span><span class="p">(</span><span class="s2">&quot;fragments&quot;</span><span class="p">)</span>
+    <span class="n">graph_dir</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">_dir</span><span class="p">(</span><span class="s2">&quot;assembly_graph&quot;</span><span class="p">)</span>
+    <span class="n">assemblies_dir</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">_dir</span><span class="p">(</span><span class="s2">&quot;assemblies&quot;</span><span class="p">)</span>
+
+    <span class="n">mix</span> <span class="o">=</span> <span class="n">RestrictionLigationMix</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="n">enzyme</span><span class="p">)</span>
+
+    <span class="c1"># PROVIDED PARTS</span>
+
+    <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
+        <span class="n">linear</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">linear</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="s1">&#39;linear&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">False</span>
+        <span class="n">ax</span><span class="p">,</span> <span class="n">gr</span> <span class="o">=</span> <span class="n">plot_cuts</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">enzyme</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="n">linear</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">provided_parts_dir</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.pdf&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">)</span>
+        <span class="n">gb_file</span> <span class="o">=</span> <span class="n">provided_parts_dir</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.gb&quot;</span><span class="p">)</span>
+        <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">gb_file</span><span class="p">,</span> <span class="s1">&#39;genbank&#39;</span><span class="p">)</span>
+
+    <span class="c1"># FRAGMENTS</span>
+
+    <span class="n">seenfragments</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span> <span class="o">*</span><span class="n">a</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">fragment</span> <span class="ow">in</span> <span class="n">mix</span><span class="o">.</span><span class="n">fragments</span><span class="p">:</span>
+        <span class="n">gr</span> <span class="o">=</span> <span class="n">BiopythonTranslator</span><span class="p">()</span><span class="o">.</span><span class="n">translate_record</span><span class="p">(</span><span class="n">fragment</span><span class="p">)</span>
+        <span class="n">ax</span><span class="p">,</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">name_fragment</span><span class="p">(</span><span class="n">fragment</span><span class="p">)</span>
+        <span class="n">seenfragments</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%02d</span><span class="s2">.pdf&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">seenfragments</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fragments_dir</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;wb&#39;</span><span class="p">),</span>
+                          <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">)</span>
+
+    <span class="c1"># GRAPH</span>
+
+    <span class="n">ax</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="n">plot_assembly_graph</span><span class="p">(</span><span class="n">mix</span><span class="p">,</span> <span class="n">fragments_filters</span><span class="o">=</span><span class="n">fragments_filters</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">graph_dir</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="s1">&#39;graph.pdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;wb&#39;</span><span class="p">),</span>
+                      <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">end_1</span><span class="o">=</span><span class="n">end_1</span><span class="p">,</span> <span class="n">end_2</span><span class="o">=</span><span class="n">end_2</span><span class="p">,</span>
+            <span class="n">parts</span><span class="o">=</span><span class="s2">&quot; &amp; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">name_fragment</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                              <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;fragments&quot;</span><span class="p">]])</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">end_1</span><span class="p">,</span> <span class="n">end_2</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">data</span><span class="p">,</span>
+                                       <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;end_1&#39;</span><span class="p">,</span> <span class="s1">&#39;end_2&#39;</span><span class="p">,</span> <span class="s1">&#39;parts&#39;</span><span class="p">])</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">graph_dir</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="s1">&#39;parts_per_slot.csv&#39;</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">)</span>
+
+    <span class="c1"># ASSEMBLIES</span>
+    <span class="n">assemblies</span> <span class="o">=</span> <span class="n">mix</span><span class="o">.</span><span class="n">compute_circular_assemblies</span><span class="p">(</span>
+        <span class="n">fragments_filters</span><span class="o">=</span><span class="n">fragments_filters</span><span class="p">)</span>
+    <span class="n">assemblies_data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">asm</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">max_assemblies</span><span class="p">),</span> <span class="n">assemblies</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_</span><span class="si">%02d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">assemblies_prefix</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">assemblies_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">parts</span><span class="o">=</span><span class="s2">&quot; &amp; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">name_fragment</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">asm</span><span class="o">.</span><span class="n">fragments</span><span class="p">]),</span>
+            <span class="n">number_of_parts</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">asm</span><span class="o">.</span><span class="n">fragments</span><span class="p">),</span>
+            <span class="n">assembly_size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">asm</span><span class="p">)</span>
+        <span class="p">))</span>
+        <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">asm</span><span class="p">,</span> <span class="n">assemblies_dir</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.gb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;w&#39;</span><span class="p">),</span>
+                    <span class="s1">&#39;genbank&#39;</span><span class="p">)</span>
+        <span class="n">gr_record</span> <span class="o">=</span> <span class="n">AssemblyTranslator</span><span class="p">()</span><span class="o">.</span><span class="n">translate_record</span><span class="p">(</span><span class="n">asm</span><span class="p">)</span>
+        <span class="n">ax</span><span class="p">,</span> <span class="n">gr</span> <span class="o">=</span> <span class="n">gr_record</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figure_width</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">assemblies_dir</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.pdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;wb&#39;</span><span class="p">),</span>
+                          <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span>
+        <span class="n">assemblies_data</span><span class="p">,</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;number_of_parts&#39;</span><span class="p">,</span> <span class="s1">&#39;assembly_size&#39;</span><span class="p">,</span> <span class="s1">&#39;parts&#39;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">report</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="s1">&#39;report.csv&#39;</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">n_constructs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="s1">&#39;@memory&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">n_constructs</span><span class="p">,</span> <span class="n">report</span><span class="o">.</span><span class="n">_close</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">n_constructs</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Edinburgh Genome Foundry.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

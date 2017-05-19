@@ -1,0 +1,320 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Dna Cauldron Documentation &mdash; DnaCauldron 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/css/main.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="DnaCauldron 0.1.0 documentation" href="#"/>
+        <link rel="next" title="DnaCauldron Reference manual" href="ref.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="#" class="icon icon-home"> DnaCauldron
+          
+
+          
+            
+            <img src="_static/html_logo.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Dna Cauldron Documentation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ref.html">DnaCauldron Reference manual</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="#">DnaCauldron</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="#">Docs</a> &raquo;</li>
+      
+    <li>Dna Cauldron Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dna-cauldron-documentation">
+<h1>Dna Cauldron Documentation<a class="headerlink" href="#dna-cauldron-documentation" title="Permalink to this headline">¶</a></h1>
+<a class="reference internal image-reference" href="_images/title.png"><img alt="_images/title.png" class="align-center" src="_images/title.png" style="width: 500px;" /></a>
+<p>Dna Cauldron is a Python library to simulate restriction-based assembly operations.
+You provide a set of parts and receptor vectors and Dna Cauldron will compute the
+assembli(es) that could result from the mix.</p>
+<a class="reference internal image-reference" href="_images/principle.png"><img alt="_images/principle.png" class="align-center" src="_images/principle.png" style="width: 600px;" /></a>
+<p>Dna Cauldron was written with Synthetic Biology applications in mind (typically,
+batches of parts-based assemblies).</p>
+<p>It is simple to use, plays well with BioPython, can import and export Genbank
+(it conserves all features), and provides ways to select particular
+constructs when dealing with large combinatorial assemblies.</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>You can install DnaCauldron through PIP</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">dnacauldron</span>
+</pre></div>
+</div>
+<p>Alternatively, you can unzip the sources in a folder and type</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="single-assembly">
+<h3>Single assembly<a class="headerlink" href="#single-assembly" title="Permalink to this headline">¶</a></h3>
+<p>To assemble several parts and a receptor plasmid into a single construct,
+use <cite>single_assembly</cite>. The parts can be provided either as paths to genbank
+files or as Biopython records. Dna Cauldron returns a Biopython record of the
+final assembly, and (optionally) writes it to a Genbank file.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dnacauldron.utils</span> <span class="k">import</span> <span class="n">single_assembly</span>
+<span class="n">final_construct</span> <span class="o">=</span> <span class="n">single_assembly</span><span class="p">(</span>
+    <span class="n">parts_filenames</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;partA.gb&quot;</span><span class="p">,</span> <span class="s2">&quot;partB.gb&quot;</span><span class="p">,</span> <span class="s2">&quot;partC.gb&quot;</span><span class="p">,</span> <span class="s2">&quot;partD.gb&quot;</span><span class="p">],</span>
+    <span class="n">receptor</span><span class="o">=</span><span class="s2">&quot;receptor.gb&quot;</span><span class="p">,</span> <span class="c1"># Receptor plasmid for the final assembly</span>
+    <span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;final_construct.gb&quot;</span><span class="p">,</span> <span class="c1"># Name of the output</span>
+    <span class="n">enzyme</span><span class="o">=</span><span class="s2">&quot;BsmBI&quot;</span> <span class="c1"># enzyme used for the assembly</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="combinatorial-assembly">
+<h3>Combinatorial assembly<a class="headerlink" href="#combinatorial-assembly" title="Permalink to this headline">¶</a></h3>
+<p>The following example imports parts from Genbank files and outputs all
+possible outcomes of BsmBI-based Golden-Gate assembly as new genbank files
+<cite>001.gb</cite>, <cite>002.gb</cite>, etc. We ignore the final assemblies containing a BsmBI site
+as these are unstable.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">SeqIO</span> <span class="c1"># for exporting to Genbank</span>
+<span class="kn">from</span> <span class="nn">dnacauldron</span> <span class="k">import</span> <span class="p">(</span><span class="n">RestrictionLigationMix</span><span class="p">,</span> <span class="n">NoRestrictionSiteFilter</span><span class="p">,</span>
+                         <span class="n">load_genbank</span><span class="p">)</span>
+<span class="n">enzyme</span> <span class="o">=</span> <span class="s2">&quot;BsmBI&quot;</span>
+<span class="n">filters</span> <span class="o">=</span> <span class="p">[</span><span class="n">NoRestrictionSiteFilter</span><span class="p">(</span><span class="n">enzyme</span><span class="p">)]</span>
+<span class="n">parts_files</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;partA.gb&quot;</span><span class="p">,</span> <span class="s2">&quot;partA2.gb&quot;</span><span class="p">,</span> <span class="s2">&quot;partB.gb&quot;</span><span class="p">,</span> <span class="s2">&quot;partB2.gb&quot;</span><span class="p">,</span> <span class="s2">&quot;partC.gb&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;receptor.gb&quot;</span><span class="p">]</span>
+<span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">load_genbank</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">parts_files</span><span class="p">]</span>
+<span class="n">mix</span> <span class="o">=</span> <span class="n">RestrictionLigationMix</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="n">enzyme</span><span class="p">)</span>
+<span class="n">assemblies</span> <span class="o">=</span> <span class="n">mix</span><span class="o">.</span><span class="n">compute_circular_assemblies</span><span class="p">(</span><span class="n">seqrecord_filters</span><span class="o">=</span><span class="n">filters</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">assembly</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">assemblies</span><span class="p">):</span>
+    <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">assembly</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%03d</span><span class="s2">.gb&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">),</span> <span class="s2">&quot;genbank&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="full-assembly-report">
+<h3>Full Assembly report<a class="headerlink" href="#full-assembly-report" title="Permalink to this headline">¶</a></h3>
+<p>DNA Cauldron also implements routine to generate reports on the assemblies,
+featuring the resulting constructs (in genbank and PDF format) as well as
+figures for verifying that the parts assembled as expected and help troubleshoot
+if necessary.</p>
+<p>The following code produces a structured directory with various reports:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dnacauldron</span> <span class="k">as</span> <span class="nn">dc</span>
+<span class="n">parts</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">dc</span><span class="o">.</span><span class="n">load_genbank</span><span class="p">(</span><span class="s2">&quot;partA.gb&quot;</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;PartA&quot;</span><span class="p">),</span>
+    <span class="n">dc</span><span class="o">.</span><span class="n">load_genbank</span><span class="p">(</span><span class="s2">&quot;partB.gb&quot;</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;PartB&quot;</span><span class="p">),</span>
+    <span class="n">dc</span><span class="o">.</span><span class="n">load_genbank</span><span class="p">(</span><span class="s2">&quot;receptor.gb&quot;</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Receptor&quot;</span><span class="p">),</span>
+<span class="p">]</span>
+<span class="n">dc</span><span class="o">.</span><span class="n">full_assembly_report</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s2">&quot;./my_report&quot;</span><span class="p">,</span> <span class="n">enzyme</span><span class="o">=</span><span class="s2">&quot;BsmBI&quot;</span><span class="p">,</span>
+                        <span class="n">max_assemblies</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">fragments_filters</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+                        <span class="n">assemblies_prefix</span><span class="o">=</span><span class="s1">&#39;asm&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Result:</p>
+<a class="reference internal image-reference" href="_images/report_screenshot.jpg"><img alt="_images/report_screenshot.jpg" class="align-center" src="_images/report_screenshot.jpg" style="width: 600px;" /></a>
+</div>
+</div>
+<div class="section" id="how-it-works">
+<h2>How it works<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h2>
+<p>Dna Cauldron simulates enzyme digestions and computes sticky ends, then generates
+a graph of the fragments that bind together, and explores circular paths in this graph
+(which correspond to circular constructs), an idea also used in
+<a class="reference external" href="https://github.com/BjornFJohansson/pydna">PyDNA</a> and first
+described in <a class="reference external" href="http://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0544-x">Pereira et al. Bioinf. 2015</a> .
+DNA Cauldron adds methods to deal with combinatorial assemblies, selecting constructs based on a marker, etc.</p>
+</div>
+<div class="section" id="contribute">
+<h2>Contribute<a class="headerlink" href="#contribute" title="Permalink to this headline">¶</a></h2>
+<p>DnaCauldron is an open-source library originally written at the
+Edinburgh Genome Foundry by <a class="reference external" href="https://github.com/Zulko/">Zulko</a> and is released on <a class="reference external" href="https://github.com/EdinburghGenomeFoundry/dnacauldron">Github</a> under the MIT
+licence (¢ Edinburgh Genome Foundry), everyone is welcome to contribute.</p>
+<a href="https://twitter.com/share" class="twitter-share-button"
+data-text="DnaCauldron - A Python module for printing with living matter" data-size="large" data-hashtags="Bioprinting">Tweet
+</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
+fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script>
+<iframe src="http://ghbtns.com/github-btn.html?user=Edinburgh-Genome-Foundry&repo=dnacauldron&type=watch&count=true&size=large"
+allowtransparency="true" frameborder="0" scrolling="0" width="152px" height="30px" margin-bottom="30px"></iframe><div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ref.html" class="btn btn-neutral float-right" title="DnaCauldron Reference manual" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Edinburgh Genome Foundry.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

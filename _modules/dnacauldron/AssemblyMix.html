@@ -1,0 +1,602 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dnacauldron.AssemblyMix &mdash; DnaCauldron 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/main.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="DnaCauldron 0.1.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> DnaCauldron
+          
+
+          
+            
+            <img src="../../_static/html_logo.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Dna Cauldron Documentation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ref.html">DnaCauldron Reference manual</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">DnaCauldron</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>dnacauldron.AssemblyMix</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dnacauldron.AssemblyMix</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">itt</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
+
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">Restriction</span>
+
+<span class="kn">from</span> <span class="nn">.StickyEndsSeq</span> <span class="k">import</span> <span class="p">(</span><span class="n">StickyEndsSeqRecord</span><span class="p">,</span>
+                            <span class="n">digest_seqrecord_with_sticky_ends</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.tools</span> <span class="k">import</span> <span class="n">annotate_record</span>
+
+<span class="k">class</span> <span class="nc">AssemblyError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<div class="viewcode-block" id="FragmentsCycle"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.FragmentsCycle">[docs]</a><span class="k">class</span> <span class="nc">FragmentsCycle</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Class to represent a set of DNA fragments that can assemble into</span>
+<span class="sd">    a circular construct.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    fragments</span>
+<span class="sd">      A list of fragments that can be assembled into a cicular construct.</span>
+
+<span class="sd">    is_standardized</span>
+<span class="sd">      Indicates whether the fragment is in standardized form, which saves time</span>
+<span class="sd">      by avoiding to standardize the fragment more than once.</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    Importantly these objects are not meant to be modified inplace as their</span>
+<span class="sd">    hashes are cached to accelerate computations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fragments</span><span class="p">,</span> <span class="n">is_standardized</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span> <span class="o">=</span> <span class="n">fragments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_standardized</span> <span class="o">=</span> <span class="n">is_standardized</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">reverse_complement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">FragmentsCycle</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">reverse_fragment</span>
+                               <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<div class="viewcode-block" id="FragmentsCycle.standardized"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.FragmentsCycle.standardized">[docs]</a>    <span class="k">def</span> <span class="nf">standardized</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a standardized version of the cycle.</span>
+
+<span class="sd">        Useful for spotting cycles that may look different but are just</span>
+<span class="sd">        two representations of a same circular DNA construct.</span>
+
+<span class="sd">        For instance, a cycle with fragments A-B-C represents the same</span>
+<span class="sd">        construct as C-A-B, or even rev(C)-rev(B)-rev(A) (reverse complement).</span>
+
+<span class="sd">        The standardization works as follows:</span>
+
+<span class="sd">        - If more than half of the fragments in the cycle are</span>
+<span class="sd">          &quot;reverse complement&quot; fragments, consider the reverse version of</span>
+<span class="sd">          the cycle. This way all standardized cycles have less than 50%</span>
+<span class="sd">          rev-complement fragments</span>
+<span class="sd">        - The cycle is &quot;rotated&quot; so that the first fragment of the cycle is</span>
+<span class="sd">          the largest fragment. If there are several fragments of same largest</span>
+<span class="sd">          size we choose the first one in alphabetical order of the sequence.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_standardized</span><span class="p">:</span>
+            <span class="c1"># Note: return a copy but don&#39;t use deepcopy here</span>
+            <span class="c1"># it&#39;s a computing bottleneck</span>
+            <span class="n">new_cycle</span> <span class="o">=</span> <span class="n">FragmentsCycle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_standardized</span><span class="p">)</span>
+            <span class="n">new_cycle</span><span class="o">.</span><span class="n">_hash</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span>
+            <span class="k">return</span> <span class="n">new_cycle</span>
+
+        <span class="n">reverse_proportion</span> <span class="o">=</span> <span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                                  <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span>
+                                  <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">is_reverse</span><span class="p">)</span> <span class="o">/</span>
+                              <span class="nb">float</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="n">reverse_proportion</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="n">std_fragments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span><span class="o">.</span><span class="n">fragments</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">std_fragments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span>
+
+        <span class="n">sequences</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%s%s%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">left_end</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">right_end</span><span class="p">)</span>
+                     <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">std_fragments</span><span class="p">]</span>
+        <span class="n">len_sequences</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span> <span class="k">for</span> <span class="n">sequence</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">]</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sequences</span><span class="p">)),</span>
+                    <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="n">len_sequences</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">sequences</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="n">std_fragments</span> <span class="o">=</span> <span class="n">std_fragments</span><span class="p">[</span><span class="n">index</span><span class="p">:]</span> <span class="o">+</span> <span class="n">std_fragments</span><span class="p">[:</span><span class="n">index</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">FragmentsCycle</span><span class="p">(</span><span class="n">std_fragments</span><span class="p">,</span> <span class="n">is_standardized</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The hash of the cycle is the hash of the concatenation of the</span>
+<span class="sd">        fragments in the standardized version of the cycle.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+                <span class="s2">&quot;</span><span class="si">%s%s%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">left_end</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">right_end</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">standardized</span><span class="p">()</span><span class="o">.</span><span class="n">fragments</span>
+            <span class="p">]))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span></div>
+
+
+<div class="viewcode-block" id="AssemblyMix"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.AssemblyMix">[docs]</a><span class="k">class</span> <span class="nc">AssemblyMix</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;General class for assembly mixes.</span>
+
+<span class="sd">    The subclasses (RestrictionLigationMix and GibsonAssemblyMix) implement</span>
+<span class="sd">    their own version of how the original constructs are broken into</span>
+<span class="sd">    fragments, when two fragments will clip together, etc.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AssemblyMix.compute_connections_graph"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.AssemblyMix.compute_connections_graph">[docs]</a>    <span class="k">def</span> <span class="nf">compute_connections_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute a graph where nodes are fragments and edges indicate</span>
+<span class="sd">        which fragments can clip together.</span>
+
+<span class="sd">        The graph (stored in self.connection_graph) is directed, an edge</span>
+<span class="sd">        f1-&gt;f2 indicating that fragments f1 and f2 will clip in this order.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">all_fragments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_fragments</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">all_fragments</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fragments_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connections_graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">i1</span><span class="p">,</span> <span class="n">fragment1</span><span class="p">),</span> <span class="p">(</span><span class="n">i2</span><span class="p">,</span> <span class="n">fragment2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">itt</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">will_clip_in_this_order</span><span class="p">(</span><span class="n">fragment1</span><span class="p">,</span> <span class="n">fragment2</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connections_graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">i1</span><span class="p">,</span> <span class="n">i2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">will_clip_in_this_order</span><span class="p">(</span><span class="n">fragment2</span><span class="p">,</span> <span class="n">fragment1</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connections_graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">i2</span><span class="p">,</span> <span class="n">i1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AssemblyMix.compute_circular_fragments_sets"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.AssemblyMix.compute_circular_fragments_sets">[docs]</a>    <span class="k">def</span> <span class="nf">compute_circular_fragments_sets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fragments_sets_filters</span><span class="o">=</span><span class="p">(),</span>
+                                        <span class="n">fragments_filters</span><span class="o">=</span><span class="p">(),</span>
+                                        <span class="n">randomize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                        <span class="n">randomization_staling_cutoff</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return an iterator over all the lists of fragments [f1, f2, f3...fn]</span>
+<span class="sd">        that can assemble into a circular construct.</span>
+
+<span class="sd">        This means that fragment f1 will clip with f2 (in this order),</span>
+<span class="sd">        f2 with f3... and fn with f1.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+
+<span class="sd">        &gt;&gt;&gt;</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        fragments_sets_filters</span>
+<span class="sd">          A list of test functions of the form (set-&gt;True/False) where &quot;set&quot; is</span>
+<span class="sd">          a list of fragments from the mix (which assemble into a circular</span>
+<span class="sd">          construct). Only circular fragments sets passing all these tests</span>
+<span class="sd">          will be returned</span>
+
+<span class="sd">        fragments_filters</span>
+<span class="sd">          A list of test functions of the form (fragment-&gt;True/False) where</span>
+<span class="sd">          fragment is a fragment of the mix (potentially with sticky ends)</span>
+<span class="sd">          Only fragments passing all these tests are considered. Filtering</span>
+<span class="sd">          out fragments can dramatically decrease computing times. Use it.</span>
+
+<span class="sd">        randomize</span>
+<span class="sd">          If set to False, the circular fragments sets will be returned one by</span>
+<span class="sd">          one until the last one, in an order implemented by</span>
+<span class="sd">          networkx.simple_cycles.</span>
+<span class="sd">          True, the circular sets returned will be drawn randomly</span>
+<span class="sd">          (a circular set will only be returned once). This is very practical</span>
+<span class="sd">          to obtain a sample out of a combinatorial assembly mix. However this</span>
+<span class="sd">          feature is a bit experimental, and the iteration will certainly stale</span>
+<span class="sd">          before all cycles have been found, because the randomizer can&#39;t find</span>
+<span class="sd">          any new cycle.</span>
+
+<span class="sd">        randomization_staling_cutoff</span>
+<span class="sd">          If randomize is True, the randomizer will throw an error if the</span>
+<span class="sd">          latest C cycles it has drawn had already been seen before, where C</span>
+<span class="sd">          is the randomization staling cutoff.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_filtered_connections_graph</span><span class="p">(</span><span class="n">fragments_filters</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">randomize</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">circular_fragments_sets_generator</span><span class="p">():</span>
+                <span class="sd">&quot;&quot;&quot;Return random cycles from the connections graph.</span>
+
+<span class="sd">                The randomness is introduced by permuting the nodes names,</span>
+<span class="sd">                running `networkx.circular_paths` once, permuting the nodes</span>
+<span class="sd">                names again, etc.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+
+                <span class="n">original_adj</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">adj</span><span class="p">)</span>
+                <span class="n">seen_hashes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+                <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="n">permutation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connections_graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()))</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">permutation</span><span class="p">)</span>
+                    <span class="n">antipermutation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">permutation</span><span class="p">)</span>
+                    <span class="n">graph</span><span class="o">.</span><span class="n">adj</span> <span class="o">=</span> <span class="p">{</span>
+                        <span class="n">permutation</span><span class="p">[</span><span class="n">node</span><span class="p">]:</span> <span class="p">{</span>
+                            <span class="n">permutation</span><span class="p">[</span><span class="n">n</span><span class="p">]:</span> <span class="n">v</span>
+                            <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">children</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                        <span class="p">}</span>
+                        <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">children</span> <span class="ow">in</span> <span class="n">original_adj</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                    <span class="p">}</span>
+                    <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">for</span> <span class="n">cycle</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">simple_cycles</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
+                        <span class="n">cycle</span> <span class="o">=</span> <span class="p">[</span><span class="n">antipermutation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cycle</span><span class="p">]</span>
+                        <span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cycle</span><span class="p">]</span>
+                        <span class="n">cycle</span> <span class="o">=</span> <span class="n">FragmentsCycle</span><span class="p">(</span><span class="n">fragments</span><span class="p">)</span><span class="o">.</span><span class="n">standardized</span><span class="p">()</span>
+                        <span class="n">cycle_hash</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="n">cycle</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">cycle_hash</span> <span class="ow">in</span> <span class="n">seen_hashes</span><span class="p">:</span>
+                            <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+                            <span class="k">if</span> <span class="n">counter</span> <span class="o">&gt;</span> <span class="n">randomization_staling_cutoff</span><span class="p">:</span>
+                                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                                    <span class="s2">&quot;Randomization staled. Only randomize when&quot;</span>
+                                    <span class="s2">&quot; the search space is huge.&quot;</span>
+                                <span class="p">)</span>
+                            <span class="k">continue</span>
+                        <span class="n">seen_hashes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cycle_hash</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">fl</span><span class="p">(</span><span class="n">cycle</span><span class="o">.</span><span class="n">fragments</span><span class="p">)</span>
+                               <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span> <span class="n">fragments_sets_filters</span><span class="p">):</span>
+                            <span class="k">yield</span> <span class="n">cycle</span><span class="o">.</span><span class="n">fragments</span>
+                            <span class="k">break</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">circular_fragments_sets_generator</span><span class="p">():</span>
+                <span class="sd">&quot;&quot;&quot;Iterate over all circular paths in the connexion graph</span>
+<span class="sd">                using Networkx&#39;s `simple_paths`.&quot;&quot;&quot;</span>
+                <span class="n">seen_hashes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">cycle</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">simple_cycles</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
+                    <span class="n">cycle</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cycle</span><span class="p">]</span>
+                    <span class="n">cycle</span> <span class="o">=</span> <span class="n">FragmentsCycle</span><span class="p">(</span><span class="n">cycle</span><span class="p">)</span><span class="o">.</span><span class="n">standardized</span><span class="p">()</span>
+                    <span class="n">cycle_hash</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="n">cycle</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">cycle_hash</span> <span class="ow">in</span> <span class="n">seen_hashes</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="n">seen_hashes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cycle_hash</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">fl</span><span class="p">(</span><span class="n">cycle</span><span class="o">.</span><span class="n">fragments</span><span class="p">)</span>
+                           <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span> <span class="n">fragments_sets_filters</span><span class="p">):</span>
+                        <span class="k">yield</span> <span class="n">cycle</span><span class="o">.</span><span class="n">fragments</span>
+
+        <span class="k">return</span> <span class="n">circular_fragments_sets_generator</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">compute_filtered_connections_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fragments_filters</span><span class="p">):</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connections_graph</span><span class="p">)</span>
+        <span class="n">graph</span><span class="o">.</span><span class="n">remove_nodes_from</span><span class="p">([</span>
+            <span class="n">node</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="n">fl</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments_dict</span><span class="p">[</span><span class="n">node</span><span class="p">])</span>
+                        <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span> <span class="n">fragments_filters</span><span class="p">])</span>
+        <span class="p">])</span>
+        <span class="k">return</span> <span class="n">graph</span>
+
+
+    <span class="k">def</span> <span class="nf">compute_circular_assemblies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fragments_sets_filters</span><span class="o">=</span><span class="p">(),</span>
+                                    <span class="n">fragments_filters</span><span class="o">=</span><span class="p">(),</span>
+                                    <span class="n">seqrecord_filters</span><span class="o">=</span><span class="p">(),</span>
+                                    <span class="n">annotate_homologies</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                    <span class="n">randomize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                    <span class="n">randomization_staling_cutoff</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+
+        <span class="k">def</span> <span class="nf">assemblies_generator</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">fragments</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_circular_fragments_sets</span><span class="p">(</span>
+                <span class="n">fragments_sets_filters</span><span class="o">=</span><span class="n">fragments_sets_filters</span><span class="p">,</span>
+                <span class="n">fragments_filters</span><span class="o">=</span><span class="n">fragments_filters</span><span class="p">,</span>
+                <span class="n">randomize</span><span class="o">=</span><span class="n">randomize</span><span class="p">,</span>
+                <span class="n">randomization_staling_cutoff</span><span class="o">=</span><span class="n">randomization_staling_cutoff</span>
+            <span class="p">):</span>
+                <span class="n">construct</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span>
+                    <span class="n">fragments</span><span class="p">,</span>
+                    <span class="n">circularize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">annotate_homologies</span><span class="o">=</span><span class="n">annotate_homologies</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">fl</span><span class="p">(</span><span class="n">construct</span><span class="p">)</span> <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span> <span class="n">seqrecord_filters</span><span class="p">):</span>
+                    <span class="n">construct</span><span class="o">.</span><span class="n">fragments</span> <span class="o">=</span> <span class="n">fragments</span>
+                    <span class="k">yield</span> <span class="n">construct</span>
+        <span class="k">return</span> <span class="n">assemblies_generator</span><span class="p">()</span>
+
+<div class="viewcode-block" id="AssemblyMix.compute_reverse_fragments"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.AssemblyMix.compute_reverse_fragments">[docs]</a>    <span class="k">def</span> <span class="nf">compute_reverse_fragments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Precompute self.reverse_fragments.</span>
+
+<span class="sd">        This method also marks all &quot;direct&quot; fragments in the mix as</span>
+<span class="sd">        `fragment.is_reverse=True` and all &quot;reverse&quot; fragments as</span>
+<span class="sd">        `fragment.is_reverse=False`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reverse_fragments</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">fragment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">:</span>
+            <span class="n">fragment</span><span class="o">.</span><span class="n">is_reverse</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">new_fragment</span> <span class="o">=</span> <span class="n">fragment</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
+            <span class="n">new_fragment</span><span class="o">.</span><span class="n">is_reverse</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">new_fragment</span><span class="o">.</span><span class="n">reverse_fragment</span> <span class="o">=</span> <span class="n">fragment</span>
+            <span class="n">fragment</span><span class="o">.</span><span class="n">reverse_fragment</span> <span class="o">=</span> <span class="n">new_fragment</span>
+            <span class="n">new_fragment</span><span class="o">.</span><span class="n">original_construct</span> <span class="o">=</span> <span class="n">fragment</span><span class="o">.</span><span class="n">original_construct</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reverse_fragments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_fragment</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AssemblyMix.initialize"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.AssemblyMix.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Precompute the fragments and connections graph of the mix.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">construct</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constructs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">construct</span><span class="p">,</span> <span class="s2">&quot;linear&quot;</span><span class="p">):</span>
+                <span class="n">construct</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># constructs assumed linear by default</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_fragments</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_reverse_fragments</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_connections_graph</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="RestrictionLigationMix"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.RestrictionLigationMix">[docs]</a><span class="k">class</span> <span class="nc">RestrictionLigationMix</span><span class="p">(</span><span class="n">AssemblyMix</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Assembly mix for an enzymatic Restriction Ligation assembly.</span>
+
+<span class="sd">    This includes modern assembly techniques such as Golden Gate as well as</span>
+<span class="sd">    classical enzyme-based assembly.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    constructs</span>
+<span class="sd">      List of Biopython Seqrecords. Each seqrecord should have an attribute</span>
+<span class="sd">      `linear` set to true or false (for circular constructs). It is advised to</span>
+<span class="sd">      use method `load_genbank(filename, linear=True)` from `dnacauldron.tools`</span>
+<span class="sd">      to load the constructs.</span>
+
+<span class="sd">    enzyme</span>
+<span class="sd">      Name of the ligation enzyme to use, e.g. &#39;BsmBI&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">constructs</span><span class="p">,</span> <span class="n">enzyme</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">constructs</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">constructs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span> <span class="o">=</span> <span class="n">Restriction</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">enzyme</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+
+<div class="viewcode-block" id="RestrictionLigationMix.compute_fragments"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.RestrictionLigationMix.compute_fragments">[docs]</a>    <span class="k">def</span> <span class="nf">compute_fragments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the (sticky-ended) fragments resulting from the digestion of</span>
+<span class="sd">        the mix&#39;s constructs by the mix&#39;s enzyme.</span>
+
+<span class="sd">        Note that all fragments receive an annotation (feature) of type</span>
+<span class="sd">        &quot;source&quot; that will show in the genbank of final constructs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">construct</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constructs</span><span class="p">:</span>
+
+            <span class="n">digest</span> <span class="o">=</span> <span class="n">digest_seqrecord_with_sticky_ends</span><span class="p">(</span>
+                <span class="n">construct</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="n">construct</span><span class="o">.</span><span class="n">linear</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">fragment</span> <span class="ow">in</span> <span class="n">digest</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fragment</span><span class="p">,</span> <span class="n">StickyEndsSeqRecord</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="n">fragment</span><span class="o">.</span><span class="n">original_construct</span> <span class="o">=</span> <span class="n">construct</span>
+                <span class="n">annotate_record</span><span class="p">(</span>
+                    <span class="n">fragment</span><span class="p">,</span>
+                    <span class="n">feature_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">,</span>
+                    <span class="n">source</span><span class="o">=</span><span class="n">construct</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">note</span><span class="o">=</span><span class="s2">&quot;From &quot;</span> <span class="o">+</span> <span class="n">construct</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fragment</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RestrictionLigationMix.assemble"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.RestrictionLigationMix.assemble">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">assemble</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">circularize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">annotate_homologies</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Assemble sticky-end fragments into a single one (sticky or not).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        fragments</span>
+<span class="sd">          List of StickyEndsSeqRecord fragments</span>
+
+<span class="sd">        circularize</span>
+<span class="sd">          If True and if the two ends of the final assembly are compatible,</span>
+<span class="sd">          circularize the construct, i.e. return a non-sticky record</span>
+<span class="sd">          representing the circular assembly of the fragments.</span>
+
+<span class="sd">        annotate_homologies</span>
+<span class="sd">          If True, all homology regions that where formerly sticky ends will</span>
+<span class="sd">          be annotated in the final record.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">StickyEndsSeqRecord</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span>
+            <span class="n">fragments</span><span class="p">,</span>
+            <span class="n">circularize</span><span class="o">=</span><span class="n">circularize</span><span class="p">,</span>
+            <span class="n">annotate_homologies</span><span class="o">=</span><span class="n">annotate_homologies</span>
+        <span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">will_clip_in_this_order</span><span class="p">(</span><span class="n">fragment1</span><span class="p">,</span> <span class="n">fragment2</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">fragment1</span><span class="o">.</span><span class="n">will_clip_in_this_order_with</span><span class="p">(</span><span class="n">fragment2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GibsonAssemblyMix"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.GibsonAssemblyMix">[docs]</a><span class="k">class</span> <span class="nc">GibsonAssemblyMix</span><span class="p">(</span><span class="n">AssemblyMix</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;In construction. Do not use.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">constructs</span><span class="p">,</span> <span class="n">min_homology</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">max_homology</span><span class="o">=</span><span class="mi">200</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">constructs</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">constructs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_homology</span> <span class="o">=</span> <span class="n">min_homology</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_homology</span> <span class="o">=</span> <span class="n">max_homology</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">compute_fragments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constructs</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">assemble</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">circularize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">annotate_homologies</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">StickyEndsSeqRecord</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span>
+            <span class="n">fragments</span><span class="p">,</span>
+            <span class="n">circularize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">annotate_homologies</span><span class="o">=</span><span class="n">annotate_homologies</span>
+        <span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Edinburgh Genome Foundry.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
