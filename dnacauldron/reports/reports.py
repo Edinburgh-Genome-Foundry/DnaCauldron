@@ -82,7 +82,7 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
         ax.figure.savefig(f, format='pdf', bbox_inches="tight")
         plt.close(ax.figure)
         gb_file = provided_parts_dir._file(part.name + ".gb")
-        SeqIO.write(part, gb_file, 'genbank')
+        SeqIO.write(part, gb_file.open('w'), 'genbank')
 
     # FRAGMENTS
 
