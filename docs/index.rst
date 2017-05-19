@@ -14,9 +14,13 @@ assembli(es) that could result from the mix.
    :width: 600px
    :align: center
 
-Dna Cauldron can import and export from Genbank, plays well with BioPython, and provides
-ways to select or randomize certain assemblies when dealing with large combinatorial
-assemblies.
+
+Dna Cauldron was written with Synthetic Biology applications in mind (typically,
+batches of parts-based assemblies).
+
+It is simple to use, plays well with BioPython, can import and export Genbank
+(it conserves all features), and provides ways to select particular
+constructs when dealing with large combinatorial assemblies.
 
 Installation
 -------------
@@ -80,6 +84,33 @@ as these are unstable.
     for i, assembly in enumerate(assemblies):
         SeqIO.write(assembly, os.path.join("..", "%03d.gb" % i), "genbank")
 
+Full Assembly report
+~~~~~~~~~~~~~~~~~~~~
+
+DNA Cauldron also implements routine to generate reports on the assemblies,
+featuring the resulting constructs (in genbank and PDF format) as well as
+figures for verifying that the parts assembled as expected and help troubleshoot
+if necessary.
+
+The following code produces a structured directory with various reports:
+
+.. code:: python
+
+    import dnacauldron as dc
+    parts = [
+        dc.load_genbank("partA.gb", linear=False, name="PartA"),
+        dc.load_genbank("partB.gb", linear=False, name="PartB"),
+        dc.load_genbank("receptor.gb", linear=False, name="Receptor"),
+    ]
+    dc.full_assembly_report(parts, target="./my_report", enzyme="BsmBI",
+                            max_assemblies=40, fragments_filters='auto',
+                            assemblies_prefix='asm')
+Result:
+
+.. image:: _static/images/report_screenshot.jpg
+   :width: 600px
+   :align: center
+
 How it works
 ------------
 
@@ -94,7 +125,7 @@ Contribute
 ----------
 
 DnaCauldron is an open-source library originally written at the
-Edinburgh Genome Foundry by Zulko_. It is released on Github under the MIT
+Edinburgh Genome Foundry by Zulko_ and is released on Github_ under the MIT
 licence (¢ Edinburgh Genome Foundry), everyone is welcome to contribute.
 
 .. raw:: html
@@ -110,8 +141,6 @@ licence (¢ Edinburgh Genome Foundry), everyone is welcome to contribute.
        allowtransparency="true" frameborder="0" scrolling="0" width="152px" height="30px" margin-bottom="30px"></iframe>
 
 
-
-
 .. toctree::
     :hidden:
     :maxdepth: 3
@@ -124,14 +153,6 @@ licence (¢ Edinburgh Genome Foundry), everyone is welcome to contribute.
     :maxdepth: 3
 
     ref
-
-.. toctree::
-    :caption: Examples
-
-    examples/plasmid_optimization
-    examples/non_unique_kmers_minimization
-    examples/pattern_instertion
-
 
 .. _Zulko: https://github.com/Zulko/
 .. _Github: https://github.com/EdinburghGenomeFoundry/dnacauldron

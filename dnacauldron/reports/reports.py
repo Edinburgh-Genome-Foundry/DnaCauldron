@@ -15,6 +15,16 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
                          assemblies_prefix='assembly'):
     """Write a full assembly report in a folder or a zip.
 
+    The report contains the final sequence(s) of the assembly in Genbank format
+    as well as a .csv report on all assemblies produced and PDF figures
+    to allow a quick overview or diagnostic.
+
+    Folder ``assemblies`` contains the final assemblies, ``assembly_graph``
+    contains a schematic view of how the parts assemble together, folder
+    ``fragments`` contains the details of all fragments produced by the enzyme
+    digestion, and folder ``provided_parts`` contains the original input
+    (genbanks of all parts provided for the assembly mix).
+
     Parameters
     ----------
 
@@ -25,7 +35,8 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
 
     target
       Either a path to a folder, or to a zip file, or ``@memory`` to return
-      a string representing zip data.
+      a string representing zip data (the latter is particularly useful for
+      website backends).
 
     enzyme
       Name of the enzyme to be used in the assembly

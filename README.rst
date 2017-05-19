@@ -11,9 +11,12 @@ Dna Cauldron is a Python library to simulate restriction-based assembly operatio
 You provide a set of parts and receptor vectors and Dna Cauldron will compute the
 assembli(es) that could result from the mix.
 
-Dna Cauldron can import and export from Genbank, plays well with BioPython, and provides
-ways to select or randomize certain assemblies when dealing with large combinatorial
-assemblies.
+Dna Cauldron was written with Synthetic Biology applications in mind (typically,
+batches of parts-based assemblies).
+
+It is simple to use, plays well with BioPython, can import and export Genbank
+(it conserves all features), and provides ways to select particular
+constructs when dealing with large combinatorial assemblies.
 
 Installation
 -------------
@@ -82,6 +85,30 @@ as these are unstable.
     for i, assembly in enumerate(assemblies):
         SeqIO.write(assembly, os.path.join("..", "%03d.gb" % i), "genbank")
 
+Full Assembly report
+~~~~~~~~~~~~~~~~~~~~
+
+DNA Cauldron also implements routine to generate reports on the assemblies,
+featuring the resulting constructs (in genbank and PDF format) as well as
+figures for verifying that the parts assembled as expected and help troubleshoot
+if necessary.
+
+The following code produces a structured directory with various reports:
+
+.. code:: python
+    import dnacauldron as dc
+    parts = [
+        dc.load_genbank("partA.gb", linear=False, name="PartA"),
+        dc.load_genbank("partB.gb", linear=False, name="PartB"),
+        dc.load_genbank("receptor.gb", linear=False, name="Receptor"),
+    ]
+    dc.full_assembly_report(parts, target="./my_report", enzyme="BsmBI",
+                            max_assemblies=40, fragments_filters='auto',
+                            assemblies_prefix='asm')
+Result:
+
+
+
 How it works
 ------------
 
@@ -90,7 +117,8 @@ a graph of the fragments that bind together, and explores circular paths in this
 (which correspond to circular constructs), an idea also used in
 `PyDNA <https://github.com/BjornFJohansson/pydna>`_ and first
 described in `Pereira et al. Bioinf. 2015 <http://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0544-x>`_ .
-DNA Cauldron adds methods to deal with combinatorial assemblies, selecting constructs based on a marker, etc.
+DNA Cauldron adds methods to deal with combinatorial assemblies,
+selecting constructs based on a marker, routines for report generation, etc.
 
 
 Licence
