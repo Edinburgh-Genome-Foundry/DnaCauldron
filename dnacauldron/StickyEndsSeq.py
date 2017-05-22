@@ -7,6 +7,18 @@ class StickyEnd(Seq):
     """A class to represent the sticky end of a sequence.
 
     It is used exactly like a Biopython sequence.
+
+    Parameters
+    ----------
+
+    data
+      A DNA sequence in ATGC format
+
+    strand
+      The strand (+1 or -1) on which the protusion is
+
+    **k
+      Optional keyword arguments for the sequence, such as ``alphabet`` etc.
     """
 
     def __init__(self, data, strand, **k):
@@ -35,7 +47,7 @@ class StickyEndsSeq(Seq):
     """Represent sequences with sticky ends.
 
     It is used like a Biopython Seq, but with additional flanking sequences
-    `left_end` and `right_end`, which are `StickyEnd` objects.
+    ``left_end`` and ``right_end``, which are ``StickyEnd`` objects.
 
     """
 
@@ -90,6 +102,7 @@ class StickyEndsSeq(Seq):
 
 
 class StickyEndsSeqRecord(SeqRecord):
+    """Biopython SeqRecord whose sequence has sticky ends."""
 
     def will_clip_in_this_order_with(self, other):
         right_end = self.seq.right_end

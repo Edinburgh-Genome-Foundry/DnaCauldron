@@ -13,28 +13,28 @@ FEATURES             Location/Qualifiers
                      /label="KanR"
      rep._origin     2005..2504
                      /label="RepO_2"
-     source          5..3004
+     misc_feature    5..3004
                      /note="From receptor (RECEPTOR)"
                      /source="receptor (RECEPTOR)"
      Feature         3005..3008
                      /label="homology"
      annotation      3019..3998
                      /label="pA"
-     source          3009..4008
+     misc_feature    3009..4008
                      /note="From parta"
                      /source="parta"
      Feature         4009..4012
                      /label="homology"
      annotation      4023..6002
                      /label="pB"
-     source          4013..6012
+     misc_feature    4013..6012
                      /note="From partb"
                      /source="partb"
      Feature         6013..6016
                      /label="homology"
      annotation      6027..8006
                      /label="pC"
-     source          6017..8016
+     misc_feature    6017..8016
                      /note="From partc"
                      /source="partc"
 ORIGIN

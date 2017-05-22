@@ -10,7 +10,8 @@ from Bio.Seq import Seq
 
 
 class NoRestrictionSiteFilter:
-    """Filters to ignore fragments and final assemblies containing a given site
+    """Filters to ignore fragments and final assemblies containing a given
+    restriction site
     """
 
     def __init__(self, enzyme_name):
@@ -29,7 +30,8 @@ class NoRestrictionSiteFilter:
 
 
 class NoPatternFilter:
-    """Filters to ignore fragments and final assemblies containing a pattern.
+    """Filters to ignore fragments and final assemblies whose DNA sequence
+    contains the given pattern.
 
     The pattern must be an exact sequence of DNA.
     """
@@ -46,6 +48,9 @@ class TextSearchFilter:
     """Filters to ignore assemblies containing or not containing some text.
 
     The text will be looked for in every feature of the construct.
+    Constructs which do NOT have the text pattern in at least one feature will
+    be filtered out, unless ``is_forbidden`` is set to True, at which case
+    constructs which DO have the text pattern will be filtered out.
     """
 
     def __init__(self, text, is_forbidden=False):
