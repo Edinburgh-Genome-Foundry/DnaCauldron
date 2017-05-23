@@ -5,7 +5,8 @@ from .Filter import NoRestrictionSiteFilter
 from .AssemblyMix import RestrictionLigationMix, AssemblyError
 
 def single_assembly(parts, receptor, outfile=None,
-                    enzyme="BsmBI", annotate_homologies=True):
+                    enzyme="BsmBI", annotate_homologies=True,
+                    mix_class="restriction"):
     """Return the single assembly obtained by assembling together different
     parts on a receptor vector.
 
@@ -25,6 +26,9 @@ def single_assembly(parts, receptor, outfile=None,
     enzyme
       Name of the enzyme used for the assembly.
     """
+
+    if mix_class == "restriction":
+        mix_class = RestrictionLigationMix
 
     def load_genbank(filename):
         """Specific loag_genbank flavor"""
@@ -49,7 +53,7 @@ def single_assembly(parts, receptor, outfile=None,
         ]
         return len(receptor_fragments) == sites_in_receptor - 1
 
-    mix = RestrictionLigationMix(parts_records, enzyme)
+    mix = mix_class(parts_records, enzyme)
     assemblies = mix.compute_circular_assemblies(
         fragments_sets_filters=[exactly_one_receptor_vector],
         fragments_filters=[] if (sites_in_receptor > 2) else

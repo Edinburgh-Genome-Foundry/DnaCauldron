@@ -24,8 +24,8 @@ constructs when dealing with large combinatorial assemblies.
 
 **Try it online !** Too lazy to use the library programmatically ?
 It is available
-`here <http://cuba.genomefoundry.org/#/simulate_gg_assemblies>`_
-as a web service.
+`there as a web service <http://cuba.genomefoundry.org/#/simulate_gg_assemblies>`_
+.
 
 Installation
 -------------
@@ -125,6 +125,7 @@ The following code produces a structured directory with various reports:
     dc.full_assembly_report(parts, target="./my_report", enzyme="BsmBI",
                             max_assemblies=40, fragments_filters='auto',
                             assemblies_prefix='asm')
+
 Result:
 
 .. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaCauldron/master/docs/_static/images/report_screenshot.jpg

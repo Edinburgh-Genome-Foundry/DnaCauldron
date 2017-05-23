@@ -12,7 +12,8 @@ from .plots import (name_fragment, plot_cuts, plot_assembly_graph,
 
 def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
                          fragments_filters='auto',
-                         assemblies_prefix='assembly'):
+                         assemblies_prefix='assembly',
+                         mix_class="restriction"):
     """Write a full assembly report in a folder or a zip.
 
     The report contains the final sequence(s) of the assembly in Genbank format
@@ -56,6 +57,9 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
 
 
     """
+
+    if mix_class == "restriction":
+        mix_class = RestrictionLigationMix
     part_names = [p.name for p in parts]
     non_unique = [e for (e, count) in Counter(part_names).items() if count > 1]
     if len(non_unique) > 0:
@@ -71,7 +75,7 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
     graph_dir = report._dir("assembly_graph")
     assemblies_dir = report._dir("assemblies")
 
-    mix = RestrictionLigationMix(parts, enzyme)
+    mix = mix_class(parts, enzyme)
 
     # PROVIDED PARTS
 

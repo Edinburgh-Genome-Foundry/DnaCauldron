@@ -140,13 +140,15 @@ class StickyEndsSeqRecord(SeqRecord):
         return result
 
     def assemble_with(self, other, annotate_homology=False,
-                      annotation_type="Feature", qualifiers=None):
+                      annotation_type="misc_feature", **qualifiers):
         connector = SeqRecord(Seq(str(self.seq.right_end)))
+        if len(qualifiers) == 0:
+            qualifiers = {"label": "homology"}
         if annotate_homology:
             connector.features = [
                 SeqFeature(FeatureLocation(0, len(connector), 1),
                            type=annotation_type,
-                           qualifiers={"label": "homology"})
+                           qualifiers=qualifiers)
             ]
         selfc = SeqRecord(seq=Seq(str(self.seq)),
                           features=self.features,

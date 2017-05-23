@@ -36,7 +36,9 @@ def random_dna_sequence(length, probas=None, seed=None):
 def load_genbank(filename, linear=True, name="unnamed"):
     record = SeqIO.read(filename, "genbank")
     record.linear = linear
-    record.name = name.replace(" ", "_")
+    record.id = name
+    record.name = name.replace(" ", "_")[:20]
+
     return record
 
 

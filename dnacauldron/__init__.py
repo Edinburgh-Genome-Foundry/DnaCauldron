@@ -3,8 +3,9 @@
 # __all__ = []
 
 from .Filter import NoPatternFilter, TextSearchFilter, NoRestrictionSiteFilter
-from .AssemblyMix import RestrictionLigationMix, AssemblyError
-from .StickyEndsSeq import StickyEndsSeq, StickyEndsSeqRecord
+from .AssemblyMix import (RestrictionLigationMix, BASICLigationMix,
+                          AssemblyError)
+from .StickyEndsSeq import StickyEndsSeq, StickyEndsSeqRecord, StickyEnd
 from .tools import random_dna_sequence, load_genbank
 from .utils import single_assembly
 from .version import __version__
