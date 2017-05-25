@@ -16,6 +16,14 @@ def test_single_assembly(tmpdir):
                        receptor=receptor_file, enzyme="BsmBI",
                        outfile=os.path.join(str(tmpdir), "final_sequence.gb"))
 
+def test_autoselect_enzyme():
+    parts = [
+        dc.load_genbank(os.path.join('tests', 'data', partfile))
+        for partfile in ["partA.gb", "partB.gb", "partC.gb"]
+    ]
+    selected = dc.autoselect_enzyme(parts, enzymes=["BsaI", "BsmBI", "BbsI"])
+    assert selected == "BsmBI"
+
 def test_single_assembly_with_wrong_enzyme(tmpdir):
     parts_files = [
         os.path.join('tests', 'data', partfile)

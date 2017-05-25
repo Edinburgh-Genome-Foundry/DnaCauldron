@@ -4,6 +4,29 @@ from Bio import SeqIO, Restriction
 from .Filter import NoRestrictionSiteFilter
 from .AssemblyMix import RestrictionLigationMix, AssemblyError
 
+
+def autoselect_enzyme(parts, enzymes):
+    """Finds the enzyme that the parts were probably meant to be assembled with
+
+    Parameters
+    ----------
+
+    parts
+      A list of SeqRecord files. They should have a "linear" attribute set to
+      True or False, otherwise
+
+    This finds the enzyme that
+
+    """
+    def enzyme_fit_score(enzyme_name):
+        enz = Restriction.__dict__[enzyme_name]
+        return sum([
+            abs(2-len(enz.search(part.seq,
+                                 linear=part.__dict__.get('linear', False))))
+            for part in parts
+        ])
+    return min(enzymes, key=enzyme_fit_score)
+
 def single_assembly(parts, receptor, outfile=None,
                     enzyme="BsmBI", annotate_homologies=True,
                     mix_class="restriction"):
