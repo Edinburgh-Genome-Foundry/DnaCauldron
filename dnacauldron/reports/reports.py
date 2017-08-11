@@ -122,6 +122,10 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
     # ASSEMBLIES
     assemblies = mix.compute_circular_assemblies(
         fragments_filters=fragments_filters)
+    assemblies = sorted(
+        [asm for (i, asm) in zip(range(max_assemblies), assemblies)],
+        key=lambda asm: str(asm.seq)
+    )
     assemblies_data = []
     for i, asm in zip(range(max_assemblies), assemblies):
         name = '%s_%02d' % (assemblies_prefix, (i+1))

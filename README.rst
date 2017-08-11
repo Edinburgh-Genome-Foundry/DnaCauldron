@@ -84,20 +84,20 @@ as these are unstable.
     from Bio import SeqIO # for exporting to Genbank
     from dnacauldron import (RestrictionLigationMix, NoRestrictionSiteFilter,
                              load_genbank)
-    
+
     # Load all the parts (including the receptor)
     parts_files = ["partA.gb", "partA2.gb", "partB.gb", "partB2.gb", "partC.gb",
                    "receptor.gb"]
     parts = [load_genbank(filename, linear=False) for filename in parts_files]
-    
+
     # Create the "reaction mix"
     enzyme = "BsmBI"
     mix = RestrictionLigationMix(parts, enzyme)
-    
+
     # Find all final assemblies (containing no sites from the restriction enzyme)
     filters = [NoRestrictionSiteFilter(enzyme)]
     assemblies = mix.compute_circular_assemblies(seqrecord_filters=filters)
-    
+
     # Iter through all possible constructs and write them on disk as Genbanks.
     for i, assembly in enumerate(assemblies):
         SeqIO.write(assembly, os.path.join("..", "%03d.gb" % i), "genbank")
@@ -150,6 +150,6 @@ Licence
 --------
 
 Dna Cauldron is an open-source software originally written at the `Edinburgh Genome Foundry
-<http://edinburgh-genome-foundry.github.io/home.html>`_ by `Zulko <https://github.com/Zulko>`_
+<http://www.genomefoundry.io>`_ by `Zulko <https://github.com/Zulko>`_
 and `released on Github <https://github.com/Edinburgh-Genome-Foundry/DnaCauldron>`_ under the MIT licence (¢ Edinburgh Genome Foundry).
 Everyone is welcome to contribute !

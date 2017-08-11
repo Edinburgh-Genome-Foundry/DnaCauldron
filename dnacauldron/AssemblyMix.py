@@ -40,11 +40,12 @@ class FragmentsChain:
     hashes are cached to accelerate computations
     """
 
-    def __init__(self, fragments, is_standardized=False, is_cycle=False):
+    def __init__(self, fragments, is_standardized=False, is_cycle=False,
+                 precomputed_hash=None):
         self.fragments = fragments
         self.is_standardized = is_standardized
         self.is_cycle = is_cycle
-        self._hash = None
+        self._hash = precomputed_hash
 
     def reverse_complement(self):
         return FragmentsChain([f.reverse_fragment
@@ -75,10 +76,37 @@ class FragmentsChain:
         if self.is_standardized:
             # Note: return a copy but don't use deepcopy here
             # it's a computing bottleneck
-            new_chain = FragmentsChain(self.fragments, self.is_standardized,
-                                       is_cycle=self.is_cycle)
-            new_chain._hash = self._hash
-            return new_chain
+            return FragmentsChain(self.fragments, self.is_standardized,
+                                  is_cycle=self.is_cycle,
+                                  precomputed_hash=self._hash)
+
+        # If some backbone is detected in the chain, the standardization
+        # is done relatively to this backbone, which will be in direct sense
+        # and the first part of the chain if the chain is a cycle
+        backbones = [
+           (i, fragment)
+           for i, fragment in enumerate(self.fragments)
+           if fragment.__dict__.get("is_backbone", False)
+        ]
+        if len(backbones) == 1:
+            backbone_index, backbone = backbones[0]
+            if backbone.is_reverse:
+                return self.reverse_complement().standardized()
+            elif not self.is_cycle:
+                return FragmentsChain(self.fragments,
+                                      is_standardized=True,
+                                      is_cycle=self.is_cycle,
+                                      precomputed_hash=self._hash)
+            else:
+                std_fragments = (self.fragments[backbone_index:] +
+                                 self.fragments[:backbone_index])
+                return FragmentsChain(std_fragments,
+                                      is_standardized=True,
+                                      is_cycle=self.is_cycle)
+
+        # If no backbone is detected in the chain, the standardization
+        # is done relatively to this backbone, which will be in direct sense
+        # and the first part of the chain if the chain is a cycle
 
         reverse_proportion = (sum(len(f)
                                   for f in self.fragments

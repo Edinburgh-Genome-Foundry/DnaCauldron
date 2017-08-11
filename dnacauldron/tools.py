@@ -42,7 +42,7 @@ def load_genbank(filename, linear=True, name="unnamed"):
     return record
 
 
-def annotate_record(seqrecord, location="full", feature_type="feature",
+def annotate_record(seqrecord, location="full", feature_type="misc_feature",
                     margin=0, **qualifiers):
     """Add a feature to a Biopython SeqRecord.
 

@@ -158,6 +158,7 @@ def plot_assembly_graph(assembly_mix, ax=None, fragments_display_lim=3,
             (not any([fragments_are_equal(fragment.reverse_fragment, f)
                      for f in fragments]))):
             fragments.append(fragment)
+    print (len(g))
 
 
     if ax is None:

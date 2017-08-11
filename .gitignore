@@ -43,3 +43,5 @@ nosetests.xml
 # Pipy codes
 
 .pypirc
+
+examples/generated_data
