@@ -28,6 +28,12 @@ class NoRestrictionSiteFilter:
             seq = seqrecord.seq
         return (self.enzyme.search(seq, linear=linear) == [])
 
+    def __repr__(self):
+        return ("NoRestriction(%s)" % self.enzyme_name)
+
+    def __str__(self):
+        return ("NoRestriction(%s)" % self.enzyme_name)
+
 
 class NoPatternFilter:
     """Filters to ignore fragments and final assemblies whose DNA sequence

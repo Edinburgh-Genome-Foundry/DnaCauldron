@@ -11,6 +11,7 @@ from .plots import (name_fragment, plot_cuts, plot_assembly_graph,
                     AssemblyTranslator)
 
 def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
+                         connector_records = (),
                          fragments_filters='auto',
                          assemblies_prefix='assembly',
                          mix_class="restriction"):
@@ -75,7 +76,9 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
     graph_dir = report._dir("assembly_graph")
     assemblies_dir = report._dir("assemblies")
 
-    mix = mix_class(parts, enzyme)
+    mix = mix_class(parts, enzyme, fragments_filters=fragments_filters)
+    if len(connector_records):
+        mix.autoselect_connectors(connector_records)
 
     # PROVIDED PARTS
 
@@ -103,7 +106,7 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
 
     # GRAPH
 
-    ax, graph = plot_assembly_graph(mix, fragments_filters=fragments_filters)
+    ax, graph = plot_assembly_graph(mix)
     ax.figure.savefig(graph_dir._file('graph.pdf').open('wb'),
                       format='pdf', bbox_inches='tight')
     data = [
@@ -120,8 +123,7 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
     plt.close(ax.figure)
 
     # ASSEMBLIES
-    assemblies = mix.compute_circular_assemblies(
-        fragments_filters=fragments_filters)
+    assemblies = mix.compute_circular_assemblies()
     assemblies = sorted(
         [asm for (i, asm) in zip(range(max_assemblies), assemblies)],
         key=lambda asm: str(asm.seq)

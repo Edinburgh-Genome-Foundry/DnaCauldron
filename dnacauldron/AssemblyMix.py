@@ -14,8 +14,10 @@ from .StickyEndsSeq import (StickyEndsSeqRecord, StickyEndsSeq, StickyEnd,
 from .Filter import NoRestrictionSiteFilter, TextSearchFilter
 from .tools import annotate_record
 
+
 class AssemblyError(Exception):
     pass
+
 
 class FragmentsChain:
     """Class to represent a set of DNA fragments that can assemble into
@@ -49,7 +51,7 @@ class FragmentsChain:
 
     def reverse_complement(self):
         return FragmentsChain([f.reverse_fragment
-                              for f in self.fragments][::-1],
+                               for f in self.fragments][::-1],
                               is_cycle=self.is_cycle)
 
     def standardized(self):
@@ -84,9 +86,9 @@ class FragmentsChain:
         # is done relatively to this backbone, which will be in direct sense
         # and the first part of the chain if the chain is a cycle
         backbones = [
-           (i, fragment)
-           for i, fragment in enumerate(self.fragments)
-           if fragment.__dict__.get("is_backbone", False)
+            (i, fragment)
+            for i, fragment in enumerate(self.fragments)
+            if fragment.original_construct.__dict__.get("is_backbone", False)
         ]
         if len(backbones) == 1:
             backbone_index, backbone = backbones[0]
@@ -123,7 +125,6 @@ class FragmentsChain:
             std_fragments = self.reverse_complement().fragments
         else:
             std_fragments = self.fragments
-
 
         if self.is_cycle:
             sequences = ["%s%s%s" % (f.seq.left_end, f.seq, f.seq.right_end)
@@ -174,12 +175,12 @@ class AssemblyMix:
             if self.will_clip_in_this_order(fragment2, fragment1):
                 self.connections_graph.add_edge(i2, i1)
 
-    def compute_filtered_connections_graph(self, fragments_filters):
+    def compute_filtered_connections_graph(self):
         graph = nx.DiGraph(self.connections_graph)
         graph.remove_nodes_from([
             node for node in graph.nodes()
             if not all([fl(self.fragments_dict[node])
-                        for fl in fragments_filters])
+                        for fl in self.fragments_filters])
         ])
         return graph
 
@@ -212,7 +213,6 @@ class AssemblyMix:
         self.compute_connections_graph()
 
     def compute_circular_fragments_sets(self, fragments_sets_filters=(),
-                                        fragments_filters=(),
                                         randomize=False,
                                         randomization_staling_cutoff=100):
         """Return an iterator over all the lists of fragments [f1, f2, f3...fn]
@@ -258,7 +258,7 @@ class AssemblyMix:
           is the randomization staling cutoff.
 
         """
-        graph = self.compute_filtered_connections_graph(fragments_filters)
+        graph = self.compute_filtered_connections_graph()
 
         if randomize:
             def circular_fragments_sets_generator():
@@ -272,7 +272,8 @@ class AssemblyMix:
                 original_adj = deepcopy(graph.adj)
                 seen_hashes = set()
                 while True:
-                    permutation = np.arange(len(self.connections_graph.nodes()))
+                    permutation = np.arange(
+                        len(self.connections_graph.nodes()))
                     np.random.shuffle(permutation)
                     antipermutation = np.argsort(permutation)
                     graph.adj = {
@@ -322,10 +323,7 @@ class AssemblyMix:
 
         return circular_fragments_sets_generator()
 
-
-
     def compute_circular_assemblies(self, fragments_sets_filters=(),
-                                    fragments_filters=(),
                                     seqrecord_filters=(),
                                     annotate_homologies=False,
                                     randomize=False,
@@ -334,7 +332,6 @@ class AssemblyMix:
         def assemblies_generator():
             for fragments in self.compute_circular_fragments_sets(
                 fragments_sets_filters=fragments_sets_filters,
-                fragments_filters=fragments_filters,
                 randomize=randomize,
                 randomization_staling_cutoff=randomization_staling_cutoff
             ):
@@ -351,12 +348,11 @@ class AssemblyMix:
     def compute_linear_assemblies(self,
                                   fragments_sets_filters=(),
                                   min_parts=2,
-                                  fragments_filters=(),
                                   seqrecord_filters=(),
                                   annotate_homologies=False):
-        self.compute_filtered_connections_graph(fragments_filters)
+        self.compute_filtered_connections_graph()
         seen_hashes = set()
-        g = self.compute_filtered_connections_graph(fragments_filters)
+        g = self.compute_filtered_connections_graph()
         for source, targets in nx.shortest_path(g).items():
             for target, path in targets.items():
                 if (len(path) < min_parts):
@@ -374,7 +370,88 @@ class AssemblyMix:
                 if all([fl(fragments_assembly) for fl in seqrecord_filters]):
                     yield(fragments_assembly)
 
+    @property
+    def filtered_fragments(self):
+        return [
+            f for f in (self.fragments + self.reverse_fragments)
+            if all([fl(f) for fl in self.fragments_filters])
+        ]
 
+    def slots_graph(self):
+        def normalized_end(end):
+            return min(str(end), str(end.reverse_complement()))
+
+        def fragments_are_equal(f1, f2):
+            '''loose equality for the purpose of this method'''
+            return str(f1.seq) == str(f2.seq)
+
+        graph = nx.Graph()
+        for fragment in self.filtered_fragments:
+            if None in [fragment.seq.left_end, fragment.seq.right_end]:
+                continue
+            left = normalized_end(fragment.seq.left_end)
+            right = normalized_end(fragment.seq.right_end)
+            if not graph.has_edge(left, right):
+                graph.add_edge(left, right, fragments=[])
+            fragments = graph[left][right]['fragments']
+            if ((not any([fragments_are_equal(fragment, f)
+                          for f in fragments])) and
+                (not any([fragments_are_equal(fragment.reverse_fragment, f)
+                          for f in fragments]))):
+                fragments.append(fragment)
+        return graph
+
+    def autoselect_connectors(self, connectors_records):
+        original_constructs = self.constructs
+        slotted_parts_records = [
+            data['fragments'][0].original_construct
+            for (n1, n2, data) in self.slots_graph().edges(data=True)
+        ]
+        self.constructs = slotted_parts_records + connectors_records
+        self.compute_fragments()
+        self.initialize()
+        graph = self.compute_filtered_connections_graph()
+        main_component = max(
+            nx.components.connected_component_subgraphs(graph.to_undirected()),
+            key=lambda graph_: len(graph_)
+        )
+        graph.remove_nodes_from(
+            set(graph.nodes()).difference(main_component.nodes())
+        )
+        all_paths = nx.all_pairs_shortest_path(graph)
+        parts_ids = set([rec.id for rec in slotted_parts_records])
+        parts_nodes = [
+            n for n in graph.nodes()
+            if self.fragments_dict[n].original_construct.id in parts_ids
+        ]
+
+        parts_graph = nx.DiGraph()
+        parts_graph.add_edges_from([
+            (node, other_node)
+            for node in parts_nodes
+            for other_node, path in all_paths[node].items()
+            if (other_node != node)
+            if (other_node in parts_nodes)
+            if len(set(path[1: -1]).intersection(set(parts_nodes))) == 0
+        ])
+        cycle = []
+        for cycle in nx.cycles.simple_cycles(parts_graph):
+            if len(cycle) == len(parts_graph):
+                break
+        if not (len(cycle) == len(parts_graph)):
+            raise ValueError("No construct found involving all parts")
+
+        selected_connectors = [
+            self.fragments_dict[n].original_construct
+            for (node1, node2) in zip(cycle, cycle[1:] + [cycle[0]])
+            for n in all_paths[node1][node2][1:-1]
+        ]
+
+        # initialize the mix with the selected connectors
+        self.constructs = original_constructs + selected_connectors
+        self.compute_fragments()
+        self.initialize()
+        return selected_connectors
 
 
 class RestrictionLigationMix(AssemblyMix):
@@ -396,13 +473,19 @@ class RestrictionLigationMix(AssemblyMix):
       Name of the ligation enzyme to use, e.g. 'BsmBI'
     """
 
-    def __init__(self, constructs=None, enzyme=None, fragments=None):
+    def __init__(self, constructs=None, enzyme=None, fragments=None,
+                 fragments_filters='default'):
 
         self.constructs = deepcopy(constructs) if constructs else constructs
         self.fragments = deepcopy(fragments) if fragments else fragments
         self.enzyme = None if enzyme is None else Restriction.__dict__[enzyme]
+        if fragments_filters == 'default':
+            if enzyme is not None:
+                fragments_filters = [NoRestrictionSiteFilter(str(self.enzyme))]
+            else:
+                fragments_filters = ()
+        self.fragments_filters = fragments_filters
         self.initialize()
-
 
     def compute_digest(self, construct):
         """Compute the fragments resulting from the digestion"""
@@ -461,21 +544,28 @@ class RestrictionLigationMix(AssemblyMix):
     def will_clip_in_this_order(fragment1, fragment2):
         return fragment1.will_clip_in_this_order_with(fragment2)
 
+
 class BASICLigationMix(RestrictionLigationMix):
 
     @staticmethod
     def find_adapter(record):
         for feature in record.features:
-                label = feature.qualifiers.get("label", "")
-                if isinstance(label, list):
-                    label = label[0]
-                if label == "adapter":
-                    return (
-                        int(feature.location.start),
-                        int(feature.location.end),
-                        feature.location.strand
-                    )
+            label = feature.qualifiers.get("label", "")
+            if isinstance(label, list):
+                label = label[0]
+            if label == "adapter":
+                return (
+                    int(feature.location.start),
+                    int(feature.location.end),
+                    feature.location.strand
+                )
         return None
+
+    def fragments_filters(self):
+        enzyme_filter = NoRestrictionSiteFilter(str(self.enzyme))
+        return [
+            lambda frag: (self.find_adapter(frag) or enzyme_filter(frag))
+        ]
 
     def compute_digest(self, construct):
 
@@ -498,10 +588,6 @@ class BASICLigationMix(RestrictionLigationMix):
 
     @staticmethod
     def assemble_constructs_and_linkers(records_list, enzyme="BsaI"):
-        enzyme_filter = NoRestrictionSiteFilter(enzyme)
-        def fragments_filter(fragment):
-            return (BASICLigationMix.find_adapter(fragment) or
-                    enzyme_filter(fragment))
         fragments = []
         for linker_left, part, linker_right in records_list:
             linker_left.linear = True
@@ -516,7 +602,6 @@ class BASICLigationMix(RestrictionLigationMix):
                 new_fragment = list(mix.compute_linear_assemblies(
                     fragments_sets_filters=(),
                     min_parts=3,
-                    fragments_filters=[fragments_filter],
                     seqrecord_filters=[TextSearchFilter("adapter")],
                     annotate_homologies=False
                 ))

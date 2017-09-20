@@ -79,8 +79,6 @@ def single_assembly(parts, receptor, outfile=None,
     mix = mix_class(parts_records, enzyme)
     assemblies = mix.compute_circular_assemblies(
         fragments_sets_filters=[exactly_one_receptor_vector],
-        fragments_filters=[] if (sites_in_receptor > 2) else
-                          [NoRestrictionSiteFilter(enzyme)],
         annotate_homologies=annotate_homologies
     )
     assemblies = list(assemblies)

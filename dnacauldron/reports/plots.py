@@ -108,7 +108,7 @@ def name_fragment(fragment):
             ("_r" if fragment.is_reverse else ""))
 
 def plot_assembly_graph(assembly_mix, ax=None, fragments_display_lim=3,
-                        fragments_filters=None, figure_size=(8, 6)):
+                        figure_size=(10, 8)):
     """Plot a map of the different assemblies.
 
     Parameters
@@ -140,7 +140,7 @@ def plot_assembly_graph(assembly_mix, ax=None, fragments_display_lim=3,
     g = nx.Graph()
     all_fragments = [
         f for f in (assembly_mix.fragments + assembly_mix.reverse_fragments)
-        if all([fl(f) for fl in fragments_filters])
+        if all([fl(f) for fl in assembly_mix.fragments_filters])
     ]
     def fragments_are_equal(f1, f2):
         '''loose equality for the purpose of this method'''
@@ -158,7 +158,6 @@ def plot_assembly_graph(assembly_mix, ax=None, fragments_display_lim=3,
             (not any([fragments_are_equal(fragment.reverse_fragment, f)
                      for f in fragments]))):
             fragments.append(fragment)
-    print (len(g))
 
 
     if ax is None:
@@ -171,12 +170,13 @@ def plot_assembly_graph(assembly_mix, ax=None, fragments_display_lim=3,
     values = list(layout.values())
     all_x = [p[0] for p in values]
     all_y = [p[1] for p in values]
-    xmin, xmax = min(all_x), max(all_x)
-    ymin, ymax = min(all_y), max(all_y)
-    dx = 0.1 * (xmax - xmin)
-    dy = 0.1 * (ymax - ymin)
-    ax.set_xlim(xmin - dx, xmax + dx)
-    ax.set_ylim(ymin - dy, ymax + dy)
+    if all_x != []:
+        xmin, xmax = min(all_x), max(all_x)
+        ymin, ymax = min(all_y), max(all_y)
+        dx = 0.1 * (xmax - xmin)
+        dy = 0.1 * (ymax - ymin)
+        ax.set_xlim(xmin - dx, xmax + dx)
+        ax.set_ylim(ymin - dy, ymax + dy)
 
     for (end1, end2, data) in list(g.edges(data=True)):
 
@@ -197,12 +197,13 @@ def plot_assembly_graph(assembly_mix, ax=None, fragments_display_lim=3,
                     horizontalalignment="center",
                     xycoords="data",
                     bbox={'facecolor': 'white', 'linewidth': 0},
-                    family='Open Sans', weight='bold')
+                    family='Open Sans', weight='bold',
+                    size=10)
 
     for (end, pos) in layout.items():
         ax.annotate(end, pos, verticalalignment="center",
                     horizontalalignment="center",
                     xycoords="data",
                     bbox={'facecolor': 'white', 'linewidth': 0},
-                    family='Open Sans')
+                    family='Open Sans', size=10)
     return ax, g

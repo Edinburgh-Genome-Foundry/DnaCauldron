@@ -38,7 +38,6 @@ def load_genbank(filename, linear=True, name="unnamed"):
     record.linear = linear
     record.id = name
     record.name = name.replace(" ", "_")[:20]
-
     return record
 
 
