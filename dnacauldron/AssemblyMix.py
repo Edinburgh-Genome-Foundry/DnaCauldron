@@ -418,7 +418,7 @@ class AssemblyMix:
         graph.remove_nodes_from(
             set(graph.nodes()).difference(main_component.nodes())
         )
-        all_paths = nx.all_pairs_shortest_path(graph)
+        all_paths = dict(nx.all_pairs_shortest_path(graph))
         parts_ids = set([rec.id for rec in slotted_parts_records])
         parts_nodes = [
             n for n in graph.nodes()

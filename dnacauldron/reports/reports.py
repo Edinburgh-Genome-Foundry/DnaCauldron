@@ -11,7 +11,7 @@ from .plots import (name_fragment, plot_cuts, plot_assembly_graph,
                     AssemblyTranslator)
 
 def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
-                         connector_records = (),
+                         connector_records=(),
                          fragments_filters='auto',
                          assemblies_prefix='assembly',
                          mix_class="restriction"):
