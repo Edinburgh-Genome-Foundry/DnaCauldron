@@ -88,15 +88,14 @@ as these are unstable.
     # Load all the parts (including the receptor)
     parts_files = ["partA.gb", "partA2.gb", "partB.gb", "partB2.gb", "partC.gb",
                    "receptor.gb"]
-    parts = [load_genbank(filename, linear=False) for filename in parts_files]
+    parts = [load_genbank(filename, linear=False, name=filename)
+             for filename in parts_files]
 
     # Create the "reaction mix"
-    enzyme = "BsmBI"
-    mix = RestrictionLigationMix(parts, enzyme)
+    mix = RestrictionLigationMix(parts, enzyme='BsmBI')
 
     # Find all final assemblies (containing no sites from the restriction enzyme)
-    filters = [NoRestrictionSiteFilter(enzyme)]
-    assemblies = mix.compute_circular_assemblies(seqrecord_filters=filters)
+    assemblies = mix.compute_circular_assemblies()
 
     # Iter through all possible constructs and write them on disk as Genbanks.
     for i, assembly in enumerate(assemblies):
@@ -115,12 +114,12 @@ The following code produces a structured directory with various reports:
 
 .. code:: python
 
-    import dnacauldron as dc
+    from dnacauldron import load_genbank, full_assembly_report
     parts = [
-        dc.load_genbank("partA.gb", linear=False, name="PartA"),
-        dc.load_genbank("partB.gb", linear=False, name="PartB"),
-        dc.load_genbank("partC.gb", linear=False, name="PartC"),
-        dc.load_genbank("receptor.gb", linear=False, name="Receptor"),
+        load_genbank("partA.gb", linear=False, name="PartA"),
+        load_genbank("partB.gb", linear=False, name="PartB"),
+        load_genbank("partC.gb", linear=False, name="PartC"),
+        load_genbank("receptor.gb", linear=False, name="Receptor")
     ]
     dc.full_assembly_report(parts, target="./my_report", enzyme="BsmBI",
                             max_assemblies=40, fragments_filters='auto',

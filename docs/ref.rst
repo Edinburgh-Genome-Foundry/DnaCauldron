@@ -3,7 +3,11 @@
 DnaCauldron Reference manual
 ==========================
 
+Classes dependencies:
+----------------------
+
 .. mermaid::
+   :align: center
 
     graph TD;
         StickyEnd["StickyEnd<br/>(DNA fragment protusion)"]
@@ -11,13 +15,12 @@ DnaCauldron Reference manual
         StickyEndRecord["StickyEndRecord<br/>(BioPython record with StickyEndSeq sequence)"]
         AssemblyMix
         RestrictionLigationMix
-        FragmentsCycles
         StickyEnd-->|can be found at the end of...| StickyEndSeq;
         StickyEndSeq-->StickyEndRecord;
-        StickyEndRecord -->|several can be grouped into...| FragmentsCycle
+        StickyEndRecord -->|several can be grouped into...| FragmentsChain
         AssemblyMix  --> |is base class of...| RestrictionLigationMix
         RestrictionLigationMix -->|computes digestions resulting in...| StickyEndRecord
-        FragmentsCycle --> |fragments are assembled together into a...| Biopython-SeqRecord
+        FragmentsChain --> |fragments are assembled together into a...| Biopython-SeqRecord
         style Biopython-SeqRecord fill:#fff;
 
 

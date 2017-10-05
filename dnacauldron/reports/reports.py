@@ -12,6 +12,8 @@ from .plots import (name_fragment, plot_cuts, plot_assembly_graph,
 
 def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
                          connector_records=(),
+                         include_fragments=True,
+                         include_parts=True,
                          fragments_filters='auto',
                          assemblies_prefix='assembly',
                          mix_class="restriction"):
@@ -52,6 +54,11 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
       assemblies. If left to auto, fragments containing the enzyme site will
       be filtered out.
 
+    connector_records
+      List of connector records (a connector is a part that can bridge a gap
+      between two other parts), from which only the essential elements to form
+      an assembly will be automatically selected and added to the other parts.
+
     assemblies_prefix
       Prefix for the file names of all assemblies. They will be named
       ``PRE01.gb``,``PRE02.gb``, ``PRE03.gb`` where ``PRE`` is the prefix.
@@ -71,8 +78,7 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
         fragments_filters = [NoRestrictionSiteFilter(enzyme)]
 
     report = file_tree(target, replace=True)
-    provided_parts_dir = report._dir("provided_parts")
-    fragments_dir = report._dir("fragments")
+
     graph_dir = report._dir("assembly_graph")
     assemblies_dir = report._dir("assemblies")
 
@@ -81,28 +87,30 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
         mix.autoselect_connectors(connector_records)
 
     # PROVIDED PARTS
-
-    for part in parts:
-        linear = part.linear if hasattr(part, 'linear') else False
-        ax, gr = plot_cuts(part, enzyme, linear=linear)
-        f = provided_parts_dir._file(part.name + ".pdf").open('wb')
-        ax.figure.savefig(f, format='pdf', bbox_inches="tight")
-        plt.close(ax.figure)
-        gb_file = provided_parts_dir._file(part.name + ".gb")
-        SeqIO.write(part, gb_file.open('w'), 'genbank')
+    if include_parts:
+        provided_parts_dir = report._dir("provided_parts")
+        for part in parts:
+            linear = part.linear if hasattr(part, 'linear') else False
+            ax, gr = plot_cuts(part, enzyme, linear=linear)
+            f = provided_parts_dir._file(part.name + ".pdf").open('wb')
+            ax.figure.savefig(f, format='pdf', bbox_inches="tight")
+            plt.close(ax.figure)
+            gb_file = provided_parts_dir._file(part.name + ".gb")
+            SeqIO.write(part, gb_file.open('w'), 'genbank')
 
     # FRAGMENTS
-
-    seenfragments = defaultdict(lambda *a: 0)
-    for fragment in mix.fragments:
-        gr = BiopythonTranslator().translate_record(fragment)
-        ax, pos = gr.plot()
-        name = name_fragment(fragment)
-        seenfragments[name] += 1
-        file_name = "%s_%02d.pdf" % (name, seenfragments[name])
-        ax.figure.savefig(fragments_dir._file(file_name).open('wb'),
-                          format='pdf', bbox_inches="tight")
-        plt.close(ax.figure)
+    if include_fragments:
+        fragments_dir = report._dir("fragments")
+        seenfragments = defaultdict(lambda *a: 0)
+        for fragment in mix.fragments:
+            gr = BiopythonTranslator().translate_record(fragment)
+            ax, pos = gr.plot()
+            name = name_fragment(fragment)
+            seenfragments[name] += 1
+            file_name = "%s_%02d.pdf" % (name, seenfragments[name])
+            ax.figure.savefig(fragments_dir._file(file_name).open('wb'),
+                              format='pdf', bbox_inches="tight")
+            plt.close(ax.figure)
 
     # GRAPH
 
@@ -129,8 +137,12 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
         key=lambda asm: str(asm.seq)
     )
     assemblies_data = []
-    for i, asm in zip(range(max_assemblies), assemblies):
-        name = '%s_%02d' % (assemblies_prefix, (i+1))
+    i_asm = list(zip(range(max_assemblies), assemblies))
+    for i, asm in i_asm:
+        if len(i_asm) == 1:
+            name = assemblies_prefix
+        else:
+            name = '%s_%03d' % (assemblies_prefix, (i+1))
         assemblies_data.append(dict(
             name=name,
             parts=" & ".join([name_fragment(f) for f in asm.fragments]),

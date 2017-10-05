@@ -47,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'DnaCauldron'
-copyright = u'2016, Edinburgh Genome Foundry'
+copyright = u'2017, Edinburgh Genome Foundry'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -273,7 +273,7 @@ texinfo_documents = [
 epub_title = u'DnaCauldron'
 epub_author = u'Zulko'
 epub_publisher = u'Zulko'
-epub_copyright = u'2016, Zulko'
+epub_copyright = u'2017, Edinburgh Genome Foundry'
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.

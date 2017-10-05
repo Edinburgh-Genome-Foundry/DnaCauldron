@@ -409,36 +409,41 @@ class AssemblyMix:
         ]
         self.constructs = slotted_parts_records + connectors_records
         self.compute_fragments()
+        # print ('FRAGMENTS:', len(self.fragments))
         self.initialize()
         graph = self.compute_filtered_connections_graph()
-        main_component = max(
+        components = sorted(
             nx.components.connected_component_subgraphs(graph.to_undirected()),
-            key=lambda graph_: len(graph_)
+            key=lambda graph_: -len(graph_)
         )
-        graph.remove_nodes_from(
-            set(graph.nodes()).difference(main_component.nodes())
-        )
-        all_paths = dict(nx.all_pairs_shortest_path(graph))
-        parts_ids = set([rec.id for rec in slotted_parts_records])
-        parts_nodes = [
-            n for n in graph.nodes()
-            if self.fragments_dict[n].original_construct.id in parts_ids
-        ]
 
-        parts_graph = nx.DiGraph()
-        parts_graph.add_edges_from([
-            (node, other_node)
-            for node in parts_nodes
-            for other_node, path in all_paths[node].items()
-            if (other_node != node)
-            if (other_node in parts_nodes)
-            if len(set(path[1: -1]).intersection(set(parts_nodes))) == 0
-        ])
-        cycle = []
-        for cycle in nx.cycles.simple_cycles(parts_graph):
-            if len(cycle) == len(parts_graph):
+        for component in components:
+            newgraph = deepcopy(graph)
+            newgraph.remove_nodes_from(
+                set(newgraph.nodes()).difference(component.nodes())
+            )
+            all_paths = dict(nx.all_pairs_shortest_path(graph))
+            parts_ids = set([rec.id for rec in slotted_parts_records])
+            parts_nodes = [
+                n for n in newgraph.nodes()
+                if self.fragments_dict[n].original_construct.id in parts_ids
+            ]
+            parts_graph = nx.DiGraph()
+            parts_graph.add_edges_from([
+                (node, other_node)
+                for node in parts_nodes
+                for other_node, path in all_paths[node].items()
+                if (other_node != node)
+                and (other_node in parts_nodes)
+                and len(set(path[1: -1]).intersection(set(parts_nodes))) == 0
+            ])
+            cycle = []
+            for cycle in nx.cycles.simple_cycles(parts_graph):
+                if len(cycle) == len(parts_graph):
+                    break
+            if (len(cycle) == len(parts_graph)):
                 break
-        if not (len(cycle) == len(parts_graph)):
+        else:
             raise ValueError("No construct found involving all parts")
 
         selected_connectors = [
