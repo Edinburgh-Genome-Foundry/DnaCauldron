@@ -14,6 +14,8 @@
 
   
   
+  
+  
 
   
 
@@ -31,6 +33,8 @@
   
     <link rel="stylesheet" href="_static/css/main.css" type="text/css" />
   
+    <link rel="stylesheet" href="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -45,6 +49,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -88,7 +93,10 @@
           
             
             
-                <ul>
+              
+            
+            
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="index.html">Dna Cauldron Documentation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
@@ -106,8 +114,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">DnaCauldron</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DnaCauldron</a>
+        
       </nav>
 
 
@@ -120,17 +130,34 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
-    <li>Index</li>
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Index</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -166,6 +193,8 @@
 </li>
       <li><a href="ref.html#dnacauldron.reports.plots.AssemblyTranslator">AssemblyTranslator (class in dnacauldron.reports.plots)</a>
 </li>
+      <li><a href="ref.html#dnacauldron.utils.autoselect_enzyme">autoselect_enzyme() (in module dnacauldron.utils)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -178,6 +207,8 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref.html#dnacauldron.AssemblyMix.RestrictionLigationMix.compute_digest">compute_digest() (dnacauldron.AssemblyMix.RestrictionLigationMix method)</a>
+</li>
       <li><a href="ref.html#dnacauldron.AssemblyMix.RestrictionLigationMix.compute_fragments">compute_fragments() (dnacauldron.AssemblyMix.RestrictionLigationMix method)</a>
 </li>
       <li><a href="ref.html#dnacauldron.AssemblyMix.AssemblyMix.compute_reverse_fragments">compute_reverse_fragments() (dnacauldron.AssemblyMix.AssemblyMix method)</a>
@@ -208,7 +239,7 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.AssemblyMix.FragmentsCycle">FragmentsCycle (class in dnacauldron.AssemblyMix)</a>
+      <li><a href="ref.html#dnacauldron.AssemblyMix.FragmentsChain">FragmentsChain (class in dnacauldron.AssemblyMix)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -272,13 +303,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ref.html#dnacauldron.utils.single_assembly">single_assembly() (in module dnacauldron.utils)</a>
 </li>
-      <li><a href="ref.html#dnacauldron.AssemblyMix.FragmentsCycle.standardized">standardized() (dnacauldron.AssemblyMix.FragmentsCycle method)</a>
+      <li><a href="ref.html#dnacauldron.AssemblyMix.FragmentsChain.standardized">standardized() (dnacauldron.AssemblyMix.FragmentsChain method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ref.html#dnacauldron.StickyEndsSeq.StickyEnd">StickyEnd (class in dnacauldron.StickyEndsSeq)</a>
 </li>
       <li><a href="ref.html#dnacauldron.StickyEndsSeq.StickyEndsSeq">StickyEndsSeq (class in dnacauldron.StickyEndsSeq)</a>
+</li>
+      <li><a href="ref.html#dnacauldron.StickyEndsSeq.StickyEndsSeqRecord">StickyEndsSeqRecord (class in dnacauldron.StickyEndsSeq)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -294,6 +327,9 @@
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -302,7 +338,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Edinburgh Genome Foundry.
+        &copy; Copyright 2017, Edinburgh Genome Foundry.
 
     </p>
   </div>
@@ -327,12 +363,14 @@
             VERSION:'0.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
 
   
 

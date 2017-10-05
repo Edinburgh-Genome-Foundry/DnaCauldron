@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -30,6 +32,8 @@
   
     <link rel="stylesheet" href="../../_static/css/main.css" type="text/css" />
   
+    <link rel="stylesheet" href="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -45,6 +49,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -88,7 +93,10 @@
           
             
             
-                <ul>
+              
+            
+            
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Dna Cauldron Documentation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
@@ -106,8 +114,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">DnaCauldron</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DnaCauldron</a>
+        
       </nav>
 
 
@@ -120,19 +130,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../index.html">Module code</a> &raquo;</li>
-      
-    <li>dnacauldron.AssemblyMix</li>
+        
+      <li>dnacauldron.AssemblyMix</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -148,27 +175,34 @@
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">Restriction</span>
+<span class="kn">from</span> <span class="nn">Bio.Alphabet</span> <span class="k">import</span> <span class="n">DNAAlphabet</span>
 
-<span class="kn">from</span> <span class="nn">.StickyEndsSeq</span> <span class="k">import</span> <span class="p">(</span><span class="n">StickyEndsSeqRecord</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">.StickyEndsSeq</span> <span class="k">import</span> <span class="p">(</span><span class="n">StickyEndsSeqRecord</span><span class="p">,</span> <span class="n">StickyEndsSeq</span><span class="p">,</span> <span class="n">StickyEnd</span><span class="p">,</span>
                             <span class="n">digest_seqrecord_with_sticky_ends</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.Filter</span> <span class="k">import</span> <span class="n">NoRestrictionSiteFilter</span><span class="p">,</span> <span class="n">TextSearchFilter</span>
 <span class="kn">from</span> <span class="nn">.tools</span> <span class="k">import</span> <span class="n">annotate_record</span>
+
 
 <span class="k">class</span> <span class="nc">AssemblyError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">pass</span>
 
-<div class="viewcode-block" id="FragmentsCycle"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.FragmentsCycle">[docs]</a><span class="k">class</span> <span class="nc">FragmentsCycle</span><span class="p">:</span>
+
+<div class="viewcode-block" id="FragmentsChain"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.FragmentsChain">[docs]</a><span class="k">class</span> <span class="nc">FragmentsChain</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Class to represent a set of DNA fragments that can assemble into</span>
-<span class="sd">    a circular construct.</span>
+<span class="sd">    a linear or circular construct.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 
 <span class="sd">    fragments</span>
-<span class="sd">      A list of fragments that can be assembled into a cicular construct.</span>
+<span class="sd">      A list of fragments that can be assembled into a linear/cicular construct.</span>
 
 <span class="sd">    is_standardized</span>
 <span class="sd">      Indicates whether the fragment is in standardized form, which saves time</span>
 <span class="sd">      by avoiding to standardize the fragment more than once.</span>
+
+<span class="sd">    is_cycle</span>
+<span class="sd">      Indicates whether the fragments are expected to assemble circularly</span>
 
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>
@@ -176,16 +210,19 @@
 <span class="sd">    hashes are cached to accelerate computations</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fragments</span><span class="p">,</span> <span class="n">is_standardized</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fragments</span><span class="p">,</span> <span class="n">is_standardized</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_cycle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">precomputed_hash</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span> <span class="o">=</span> <span class="n">fragments</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_standardized</span> <span class="o">=</span> <span class="n">is_standardized</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_cycle</span> <span class="o">=</span> <span class="n">is_cycle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span> <span class="o">=</span> <span class="n">precomputed_hash</span>
 
     <span class="k">def</span> <span class="nf">reverse_complement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">FragmentsCycle</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">reverse_fragment</span>
-                               <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">FragmentsChain</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">reverse_fragment</span>
+                               <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                              <span class="n">is_cycle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_cycle</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FragmentsCycle.standardized"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.FragmentsCycle.standardized">[docs]</a>    <span class="k">def</span> <span class="nf">standardized</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FragmentsChain.standardized"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.FragmentsChain.standardized">[docs]</a>    <span class="k">def</span> <span class="nf">standardized</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a standardized version of the cycle.</span>
 
 <span class="sd">        Useful for spotting cycles that may look different but are just</span>
@@ -200,34 +237,73 @@
 <span class="sd">          &quot;reverse complement&quot; fragments, consider the reverse version of</span>
 <span class="sd">          the cycle. This way all standardized cycles have less than 50%</span>
 <span class="sd">          rev-complement fragments</span>
-<span class="sd">        - The cycle is &quot;rotated&quot; so that the first fragment of the cycle is</span>
-<span class="sd">          the largest fragment. If there are several fragments of same largest</span>
-<span class="sd">          size we choose the first one in alphabetical order of the sequence.</span>
+<span class="sd">        - If the chaing is a cycle it is &quot;rotated&quot; so that the first fragment</span>
+<span class="sd">          of the cycle is the largest fragment. If there are several fragments</span>
+<span class="sd">          of same largest size we choose the first one in alphabetical order of</span>
+<span class="sd">          the sequence.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_standardized</span><span class="p">:</span>
             <span class="c1"># Note: return a copy but don&#39;t use deepcopy here</span>
             <span class="c1"># it&#39;s a computing bottleneck</span>
-            <span class="n">new_cycle</span> <span class="o">=</span> <span class="n">FragmentsCycle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_standardized</span><span class="p">)</span>
-            <span class="n">new_cycle</span><span class="o">.</span><span class="n">_hash</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hash</span>
-            <span class="k">return</span> <span class="n">new_cycle</span>
+            <span class="k">return</span> <span class="n">FragmentsChain</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_standardized</span><span class="p">,</span>
+                                  <span class="n">is_cycle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_cycle</span><span class="p">,</span>
+                                  <span class="n">precomputed_hash</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_hash</span><span class="p">)</span>
+
+        <span class="c1"># If some backbone is detected in the chain, the standardization</span>
+        <span class="c1"># is done relatively to this backbone, which will be in direct sense</span>
+        <span class="c1"># and the first part of the chain if the chain is a cycle</span>
+        <span class="n">backbones</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">fragment</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">fragment</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">fragment</span><span class="o">.</span><span class="n">original_construct</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_backbone&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">backbones</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">backbone_index</span><span class="p">,</span> <span class="n">backbone</span> <span class="o">=</span> <span class="n">backbones</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">backbone</span><span class="o">.</span><span class="n">is_reverse</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span><span class="o">.</span><span class="n">standardized</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_cycle</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">FragmentsChain</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">,</span>
+                                      <span class="n">is_standardized</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                      <span class="n">is_cycle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_cycle</span><span class="p">,</span>
+                                      <span class="n">precomputed_hash</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_hash</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">std_fragments</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">[</span><span class="n">backbone_index</span><span class="p">:]</span> <span class="o">+</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">[:</span><span class="n">backbone_index</span><span class="p">])</span>
+                <span class="k">return</span> <span class="n">FragmentsChain</span><span class="p">(</span><span class="n">std_fragments</span><span class="p">,</span>
+                                      <span class="n">is_standardized</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                      <span class="n">is_cycle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_cycle</span><span class="p">)</span>
+
+        <span class="c1"># If no backbone is detected in the chain, the standardization</span>
+        <span class="c1"># is done relatively to this backbone, which will be in direct sense</span>
+        <span class="c1"># and the first part of the chain if the chain is a cycle</span>
 
         <span class="n">reverse_proportion</span> <span class="o">=</span> <span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
                                   <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span>
                                   <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">is_reverse</span><span class="p">)</span> <span class="o">/</span>
                               <span class="nb">float</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">)))</span>
-        <span class="k">if</span> <span class="n">reverse_proportion</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">reverse_proportion</span> <span class="o">==</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%s%s%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">left_end</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">right_end</span><span class="p">)</span>
+                      <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]]</span>
+            <span class="k">if</span> <span class="n">f1</span> <span class="o">&gt;</span> <span class="n">f2</span><span class="p">:</span>
+                <span class="n">std_fragments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span><span class="o">.</span><span class="n">fragments</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">std_fragments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">reverse_proportion</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">):</span>
             <span class="n">std_fragments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span><span class="o">.</span><span class="n">fragments</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">std_fragments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span>
 
-        <span class="n">sequences</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%s%s%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">left_end</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">right_end</span><span class="p">)</span>
-                     <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">std_fragments</span><span class="p">]</span>
-        <span class="n">len_sequences</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span> <span class="k">for</span> <span class="n">sequence</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">]</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sequences</span><span class="p">)),</span>
-                    <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="n">len_sequences</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">sequences</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
-        <span class="n">std_fragments</span> <span class="o">=</span> <span class="n">std_fragments</span><span class="p">[</span><span class="n">index</span><span class="p">:]</span> <span class="o">+</span> <span class="n">std_fragments</span><span class="p">[:</span><span class="n">index</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">FragmentsCycle</span><span class="p">(</span><span class="n">std_fragments</span><span class="p">,</span> <span class="n">is_standardized</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_cycle</span><span class="p">:</span>
+            <span class="n">sequences</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%s%s%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">left_end</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">right_end</span><span class="p">)</span>
+                         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">std_fragments</span><span class="p">]</span>
+            <span class="n">len_sequences</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span> <span class="k">for</span> <span class="n">sequence</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">]</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sequences</span><span class="p">)),</span>
+                        <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="n">len_sequences</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">sequences</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+            <span class="n">std_fragments</span> <span class="o">=</span> <span class="n">std_fragments</span><span class="p">[</span><span class="n">index</span><span class="p">:]</span> <span class="o">+</span> <span class="n">std_fragments</span><span class="p">[:</span><span class="n">index</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">FragmentsChain</span><span class="p">(</span><span class="n">std_fragments</span><span class="p">,</span> <span class="n">is_standardized</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                              <span class="n">is_cycle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_cycle</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;The hash of the cycle is the hash of the concatenation of the</span>
@@ -247,7 +323,6 @@
 <span class="sd">    The subclasses (RestrictionLigationMix and GibsonAssemblyMix) implement</span>
 <span class="sd">    their own version of how the original constructs are broken into</span>
 <span class="sd">    fragments, when two fragments will clip together, etc.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="AssemblyMix.compute_connections_graph"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.AssemblyMix.compute_connections_graph">[docs]</a>    <span class="k">def</span> <span class="nf">compute_connections_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -268,8 +343,44 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">will_clip_in_this_order</span><span class="p">(</span><span class="n">fragment2</span><span class="p">,</span> <span class="n">fragment1</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">connections_graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">i2</span><span class="p">,</span> <span class="n">i1</span><span class="p">)</span></div>
 
+    <span class="k">def</span> <span class="nf">compute_filtered_connections_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connections_graph</span><span class="p">)</span>
+        <span class="n">graph</span><span class="o">.</span><span class="n">remove_nodes_from</span><span class="p">([</span>
+            <span class="n">node</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="n">fl</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments_dict</span><span class="p">[</span><span class="n">node</span><span class="p">])</span>
+                        <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments_filters</span><span class="p">])</span>
+        <span class="p">])</span>
+        <span class="k">return</span> <span class="n">graph</span>
+
+<div class="viewcode-block" id="AssemblyMix.compute_reverse_fragments"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.AssemblyMix.compute_reverse_fragments">[docs]</a>    <span class="k">def</span> <span class="nf">compute_reverse_fragments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Precompute self.reverse_fragments.</span>
+
+<span class="sd">        This method also marks all &quot;direct&quot; fragments in the mix as</span>
+<span class="sd">        `fragment.is_reverse=True` and all &quot;reverse&quot; fragments as</span>
+<span class="sd">        `fragment.is_reverse=False`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reverse_fragments</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">fragment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">:</span>
+            <span class="n">fragment</span><span class="o">.</span><span class="n">is_reverse</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">new_fragment</span> <span class="o">=</span> <span class="n">fragment</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
+            <span class="n">new_fragment</span><span class="o">.</span><span class="n">is_reverse</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">new_fragment</span><span class="o">.</span><span class="n">reverse_fragment</span> <span class="o">=</span> <span class="n">fragment</span>
+            <span class="n">fragment</span><span class="o">.</span><span class="n">reverse_fragment</span> <span class="o">=</span> <span class="n">new_fragment</span>
+            <span class="n">new_fragment</span><span class="o">.</span><span class="n">original_construct</span> <span class="o">=</span> <span class="n">fragment</span><span class="o">.</span><span class="n">original_construct</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reverse_fragments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_fragment</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AssemblyMix.initialize"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.AssemblyMix.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Precompute the fragments and connections graph of the mix.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">constructs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">construct</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constructs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">construct</span><span class="p">,</span> <span class="s2">&quot;linear&quot;</span><span class="p">):</span>
+                    <span class="n">construct</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># assumed linear by default</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;fragments&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compute_fragments</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_reverse_fragments</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_connections_graph</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="AssemblyMix.compute_circular_fragments_sets"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.AssemblyMix.compute_circular_fragments_sets">[docs]</a>    <span class="k">def</span> <span class="nf">compute_circular_fragments_sets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fragments_sets_filters</span><span class="o">=</span><span class="p">(),</span>
-                                        <span class="n">fragments_filters</span><span class="o">=</span><span class="p">(),</span>
                                         <span class="n">randomize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                         <span class="n">randomization_staling_cutoff</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return an iterator over all the lists of fragments [f1, f2, f3...fn]</span>
@@ -315,7 +426,7 @@
 <span class="sd">          is the randomization staling cutoff.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_filtered_connections_graph</span><span class="p">(</span><span class="n">fragments_filters</span><span class="p">)</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_filtered_connections_graph</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">randomize</span><span class="p">:</span>
             <span class="k">def</span> <span class="nf">circular_fragments_sets_generator</span><span class="p">():</span>
@@ -329,7 +440,8 @@
                 <span class="n">original_adj</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">adj</span><span class="p">)</span>
                 <span class="n">seen_hashes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
                 <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-                    <span class="n">permutation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connections_graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()))</span>
+                    <span class="n">permutation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
+                        <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connections_graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()))</span>
                     <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">permutation</span><span class="p">)</span>
                     <span class="n">antipermutation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">permutation</span><span class="p">)</span>
                     <span class="n">graph</span><span class="o">.</span><span class="n">adj</span> <span class="o">=</span> <span class="p">{</span>
@@ -343,7 +455,8 @@
                     <span class="k">for</span> <span class="n">cycle</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">simple_cycles</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
                         <span class="n">cycle</span> <span class="o">=</span> <span class="p">[</span><span class="n">antipermutation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cycle</span><span class="p">]</span>
                         <span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cycle</span><span class="p">]</span>
-                        <span class="n">cycle</span> <span class="o">=</span> <span class="n">FragmentsCycle</span><span class="p">(</span><span class="n">fragments</span><span class="p">)</span><span class="o">.</span><span class="n">standardized</span><span class="p">()</span>
+                        <span class="n">cycle</span> <span class="o">=</span> <span class="n">FragmentsChain</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span>
+                                               <span class="n">is_cycle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">standardized</span><span class="p">()</span>
                         <span class="n">cycle_hash</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="n">cycle</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">cycle_hash</span> <span class="ow">in</span> <span class="n">seen_hashes</span><span class="p">:</span>
                             <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -367,7 +480,7 @@
                 <span class="n">seen_hashes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
                 <span class="k">for</span> <span class="n">cycle</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">simple_cycles</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
                     <span class="n">cycle</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cycle</span><span class="p">]</span>
-                    <span class="n">cycle</span> <span class="o">=</span> <span class="n">FragmentsCycle</span><span class="p">(</span><span class="n">cycle</span><span class="p">)</span><span class="o">.</span><span class="n">standardized</span><span class="p">()</span>
+                    <span class="n">cycle</span> <span class="o">=</span> <span class="n">FragmentsChain</span><span class="p">(</span><span class="n">cycle</span><span class="p">,</span> <span class="n">is_cycle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">standardized</span><span class="p">()</span>
                     <span class="n">cycle_hash</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="n">cycle</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">cycle_hash</span> <span class="ow">in</span> <span class="n">seen_hashes</span><span class="p">:</span>
                         <span class="k">continue</span>
@@ -378,18 +491,7 @@
 
         <span class="k">return</span> <span class="n">circular_fragments_sets_generator</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">compute_filtered_connections_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fragments_filters</span><span class="p">):</span>
-        <span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connections_graph</span><span class="p">)</span>
-        <span class="n">graph</span><span class="o">.</span><span class="n">remove_nodes_from</span><span class="p">([</span>
-            <span class="n">node</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="n">fl</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments_dict</span><span class="p">[</span><span class="n">node</span><span class="p">])</span>
-                        <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span> <span class="n">fragments_filters</span><span class="p">])</span>
-        <span class="p">])</span>
-        <span class="k">return</span> <span class="n">graph</span>
-
-
     <span class="k">def</span> <span class="nf">compute_circular_assemblies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fragments_sets_filters</span><span class="o">=</span><span class="p">(),</span>
-                                    <span class="n">fragments_filters</span><span class="o">=</span><span class="p">(),</span>
                                     <span class="n">seqrecord_filters</span><span class="o">=</span><span class="p">(),</span>
                                     <span class="n">annotate_homologies</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                     <span class="n">randomize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -398,7 +500,6 @@
         <span class="k">def</span> <span class="nf">assemblies_generator</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">fragments</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_circular_fragments_sets</span><span class="p">(</span>
                 <span class="n">fragments_sets_filters</span><span class="o">=</span><span class="n">fragments_sets_filters</span><span class="p">,</span>
-                <span class="n">fragments_filters</span><span class="o">=</span><span class="n">fragments_filters</span><span class="p">,</span>
                 <span class="n">randomize</span><span class="o">=</span><span class="n">randomize</span><span class="p">,</span>
                 <span class="n">randomization_staling_cutoff</span><span class="o">=</span><span class="n">randomization_staling_cutoff</span>
             <span class="p">):</span>
@@ -412,31 +513,118 @@
                     <span class="k">yield</span> <span class="n">construct</span>
         <span class="k">return</span> <span class="n">assemblies_generator</span><span class="p">()</span>
 
-<div class="viewcode-block" id="AssemblyMix.compute_reverse_fragments"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.AssemblyMix.compute_reverse_fragments">[docs]</a>    <span class="k">def</span> <span class="nf">compute_reverse_fragments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Precompute self.reverse_fragments.</span>
+    <span class="k">def</span> <span class="nf">compute_linear_assemblies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                  <span class="n">fragments_sets_filters</span><span class="o">=</span><span class="p">(),</span>
+                                  <span class="n">min_parts</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                  <span class="n">seqrecord_filters</span><span class="o">=</span><span class="p">(),</span>
+                                  <span class="n">annotate_homologies</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_filtered_connections_graph</span><span class="p">()</span>
+        <span class="n">seen_hashes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_filtered_connections_graph</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">source</span><span class="p">,</span> <span class="n">targets</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">targets</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">min_parts</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments_dict</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">path</span><span class="p">]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="n">fl</span><span class="p">(</span><span class="n">fragments</span><span class="p">)</span> <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span> <span class="n">fragments_sets_filters</span><span class="p">]):</span>
+                    <span class="k">continue</span>
+                <span class="n">chain</span> <span class="o">=</span> <span class="n">FragmentsChain</span><span class="p">(</span><span class="n">fragments</span><span class="p">)</span><span class="o">.</span><span class="n">standardized</span><span class="p">()</span>
+                <span class="n">chain_hash</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="n">chain</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">chain_hash</span> <span class="ow">in</span> <span class="n">seen_hashes</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">seen_hashes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">chain_hash</span><span class="p">)</span>
+                <span class="n">fragments_assembly</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span>
+                    <span class="n">fragments</span><span class="p">,</span> <span class="n">annotate_homologies</span><span class="o">=</span><span class="n">annotate_homologies</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">fl</span><span class="p">(</span><span class="n">fragments_assembly</span><span class="p">)</span> <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span> <span class="n">seqrecord_filters</span><span class="p">]):</span>
+                    <span class="k">yield</span><span class="p">(</span><span class="n">fragments_assembly</span><span class="p">)</span>
 
-<span class="sd">        This method also marks all &quot;direct&quot; fragments in the mix as</span>
-<span class="sd">        `fragment.is_reverse=True` and all &quot;reverse&quot; fragments as</span>
-<span class="sd">        `fragment.is_reverse=False`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reverse_fragments</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">fragment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span><span class="p">:</span>
-            <span class="n">fragment</span><span class="o">.</span><span class="n">is_reverse</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="n">new_fragment</span> <span class="o">=</span> <span class="n">fragment</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
-            <span class="n">new_fragment</span><span class="o">.</span><span class="n">is_reverse</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">new_fragment</span><span class="o">.</span><span class="n">reverse_fragment</span> <span class="o">=</span> <span class="n">fragment</span>
-            <span class="n">fragment</span><span class="o">.</span><span class="n">reverse_fragment</span> <span class="o">=</span> <span class="n">new_fragment</span>
-            <span class="n">new_fragment</span><span class="o">.</span><span class="n">original_construct</span> <span class="o">=</span> <span class="n">fragment</span><span class="o">.</span><span class="n">original_construct</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">reverse_fragments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_fragment</span><span class="p">)</span></div>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">filtered_fragments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fragments</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse_fragments</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">fl</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments_filters</span><span class="p">])</span>
+        <span class="p">]</span>
 
-<div class="viewcode-block" id="AssemblyMix.initialize"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.AssemblyMix.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Precompute the fragments and connections graph of the mix.&quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">construct</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constructs</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">construct</span><span class="p">,</span> <span class="s2">&quot;linear&quot;</span><span class="p">):</span>
-                <span class="n">construct</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># constructs assumed linear by default</span>
+    <span class="k">def</span> <span class="nf">slots_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">normalized_end</span><span class="p">(</span><span class="n">end</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">end</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">end</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()))</span>
+
+        <span class="k">def</span> <span class="nf">fragments_are_equal</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">):</span>
+            <span class="sd">&#39;&#39;&#39;loose equality for the purpose of this method&#39;&#39;&#39;</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">f1</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">f2</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">fragment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">filtered_fragments</span><span class="p">:</span>
+            <span class="k">if</span> <span class="kc">None</span> <span class="ow">in</span> <span class="p">[</span><span class="n">fragment</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">left_end</span><span class="p">,</span> <span class="n">fragment</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">right_end</span><span class="p">]:</span>
+                <span class="k">continue</span>
+            <span class="n">left</span> <span class="o">=</span> <span class="n">normalized_end</span><span class="p">(</span><span class="n">fragment</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">left_end</span><span class="p">)</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="n">normalized_end</span><span class="p">(</span><span class="n">fragment</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">right_end</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">graph</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+                <span class="n">graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">fragments</span><span class="o">=</span><span class="p">[])</span>
+            <span class="n">fragments</span> <span class="o">=</span> <span class="n">graph</span><span class="p">[</span><span class="n">left</span><span class="p">][</span><span class="n">right</span><span class="p">][</span><span class="s1">&#39;fragments&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">((</span><span class="ow">not</span> <span class="nb">any</span><span class="p">([</span><span class="n">fragments_are_equal</span><span class="p">(</span><span class="n">fragment</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+                          <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fragments</span><span class="p">]))</span> <span class="ow">and</span>
+                <span class="p">(</span><span class="ow">not</span> <span class="nb">any</span><span class="p">([</span><span class="n">fragments_are_equal</span><span class="p">(</span><span class="n">fragment</span><span class="o">.</span><span class="n">reverse_fragment</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+                          <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fragments</span><span class="p">]))):</span>
+                <span class="n">fragments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fragment</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">graph</span>
+
+    <span class="k">def</span> <span class="nf">autoselect_connectors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connectors_records</span><span class="p">):</span>
+        <span class="n">original_constructs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">constructs</span>
+        <span class="n">slotted_parts_records</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;fragments&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">original_construct</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">slots_graph</span><span class="p">()</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">constructs</span> <span class="o">=</span> <span class="n">slotted_parts_records</span> <span class="o">+</span> <span class="n">connectors_records</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">compute_fragments</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">compute_reverse_fragments</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">compute_connections_graph</span><span class="p">()</span></div></div>
+        <span class="c1"># print (&#39;FRAGMENTS:&#39;, len(self.fragments))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_filtered_connections_graph</span><span class="p">()</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="n">nx</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">connected_component_subgraphs</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">to_undirected</span><span class="p">()),</span>
+            <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">graph_</span><span class="p">:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">graph_</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">components</span><span class="p">:</span>
+            <span class="n">newgraph</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+            <span class="n">newgraph</span><span class="o">.</span><span class="n">remove_nodes_from</span><span class="p">(</span>
+                <span class="nb">set</span><span class="p">(</span><span class="n">newgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">())</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">component</span><span class="o">.</span><span class="n">nodes</span><span class="p">())</span>
+            <span class="p">)</span>
+            <span class="n">all_paths</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">all_pairs_shortest_path</span><span class="p">(</span><span class="n">graph</span><span class="p">))</span>
+            <span class="n">parts_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">rec</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">slotted_parts_records</span><span class="p">])</span>
+            <span class="n">parts_nodes</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">newgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fragments_dict</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">original_construct</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="n">parts_ids</span>
+            <span class="p">]</span>
+            <span class="n">parts_graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+            <span class="n">parts_graph</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">([</span>
+                <span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">other_node</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">parts_nodes</span>
+                <span class="k">for</span> <span class="n">other_node</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">all_paths</span><span class="p">[</span><span class="n">node</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">other_node</span> <span class="o">!=</span> <span class="n">node</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="p">(</span><span class="n">other_node</span> <span class="ow">in</span> <span class="n">parts_nodes</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">parts_nodes</span><span class="p">)))</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="p">])</span>
+            <span class="n">cycle</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">cycle</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">cycles</span><span class="o">.</span><span class="n">simple_cycles</span><span class="p">(</span><span class="n">parts_graph</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cycle</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts_graph</span><span class="p">):</span>
+                    <span class="k">break</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cycle</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts_graph</span><span class="p">)):</span>
+                <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No construct found involving all parts&quot;</span><span class="p">)</span>
+
+        <span class="n">selected_connectors</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fragments_dict</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">original_construct</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cycle</span><span class="p">,</span> <span class="n">cycle</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="p">[</span><span class="n">cycle</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">all_paths</span><span class="p">[</span><span class="n">node1</span><span class="p">][</span><span class="n">node2</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="p">]</span>
+
+        <span class="c1"># initialize the mix with the selected connectors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">constructs</span> <span class="o">=</span> <span class="n">original_constructs</span> <span class="o">+</span> <span class="n">selected_connectors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_fragments</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">selected_connectors</span></div>
 
 
 <div class="viewcode-block" id="RestrictionLigationMix"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.RestrictionLigationMix">[docs]</a><span class="k">class</span> <span class="nc">RestrictionLigationMix</span><span class="p">(</span><span class="n">AssemblyMix</span><span class="p">):</span>
@@ -458,11 +646,24 @@
 <span class="sd">      Name of the ligation enzyme to use, e.g. &#39;BsmBI&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">constructs</span><span class="p">,</span> <span class="n">enzyme</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">constructs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">enzyme</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fragments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">fragments_filters</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">):</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">constructs</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">constructs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span> <span class="o">=</span> <span class="n">Restriction</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">enzyme</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">constructs</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">constructs</span><span class="p">)</span> <span class="k">if</span> <span class="n">constructs</span> <span class="k">else</span> <span class="n">constructs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">fragments</span><span class="p">)</span> <span class="k">if</span> <span class="n">fragments</span> <span class="k">else</span> <span class="n">fragments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">enzyme</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">Restriction</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">enzyme</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">fragments_filters</span> <span class="o">==</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">enzyme</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">fragments_filters</span> <span class="o">=</span> <span class="p">[</span><span class="n">NoRestrictionSiteFilter</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span><span class="p">))]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fragments_filters</span> <span class="o">=</span> <span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fragments_filters</span> <span class="o">=</span> <span class="n">fragments_filters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+
+<div class="viewcode-block" id="RestrictionLigationMix.compute_digest"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.RestrictionLigationMix.compute_digest">[docs]</a>    <span class="k">def</span> <span class="nf">compute_digest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">construct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the fragments resulting from the digestion&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">digest_seqrecord_with_sticky_ends</span><span class="p">(</span>
+            <span class="n">construct</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="n">construct</span><span class="o">.</span><span class="n">linear</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RestrictionLigationMix.compute_fragments"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.RestrictionLigationMix.compute_fragments">[docs]</a>    <span class="k">def</span> <span class="nf">compute_fragments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compute the (sticky-ended) fragments resulting from the digestion of</span>
@@ -474,9 +675,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">construct</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constructs</span><span class="p">:</span>
 
-            <span class="n">digest</span> <span class="o">=</span> <span class="n">digest_seqrecord_with_sticky_ends</span><span class="p">(</span>
-                <span class="n">construct</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="n">construct</span><span class="o">.</span><span class="n">linear</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">fragment</span> <span class="ow">in</span> <span class="n">digest</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">fragment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_digest</span><span class="p">(</span><span class="n">construct</span><span class="p">):</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fragment</span><span class="p">,</span> <span class="n">StickyEndsSeqRecord</span><span class="p">):</span>
                     <span class="k">continue</span>
                 <span class="n">fragment</span><span class="o">.</span><span class="n">original_construct</span> <span class="o">=</span> <span class="n">construct</span>
@@ -519,6 +718,81 @@
         <span class="k">return</span> <span class="n">fragment1</span><span class="o">.</span><span class="n">will_clip_in_this_order_with</span><span class="p">(</span><span class="n">fragment2</span><span class="p">)</span></div>
 
 
+<span class="k">class</span> <span class="nc">BASICLigationMix</span><span class="p">(</span><span class="n">RestrictionLigationMix</span><span class="p">):</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">find_adapter</span><span class="p">(</span><span class="n">record</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">record</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">qualifiers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">label</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">label</span> <span class="o">==</span> <span class="s2">&quot;adapter&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">(</span>
+                    <span class="nb">int</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">start</span><span class="p">),</span>
+                    <span class="nb">int</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">end</span><span class="p">),</span>
+                    <span class="n">feature</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">strand</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">fragments_filters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">enzyme_filter</span> <span class="o">=</span> <span class="n">NoRestrictionSiteFilter</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="k">lambda</span> <span class="n">frag</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">find_adapter</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span> <span class="ow">or</span> <span class="n">enzyme_filter</span><span class="p">(</span><span class="n">frag</span><span class="p">))</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">compute_digest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">construct</span><span class="p">):</span>
+
+        <span class="n">adapter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_adapter</span><span class="p">(</span><span class="n">construct</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">adapter</span><span class="p">:</span>
+            <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span> <span class="o">=</span> <span class="n">adapter</span>
+            <span class="n">left_end</span> <span class="o">=</span> <span class="n">StickyEnd</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">construct</span><span class="p">[:</span><span class="n">start</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span> <span class="n">strand</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">right_end</span> <span class="o">=</span> <span class="n">StickyEnd</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">construct</span><span class="p">[</span><span class="n">end</span><span class="p">:]</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span> <span class="n">strand</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">sequence</span> <span class="o">=</span> <span class="n">StickyEndsSeq</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">construct</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span>
+                                     <span class="n">left_end</span><span class="o">=</span><span class="n">left_end</span><span class="p">,</span>
+                                     <span class="n">right_end</span><span class="o">=</span><span class="n">right_end</span><span class="p">)</span>
+            <span class="n">sequence</span><span class="o">.</span><span class="n">alphabet</span> <span class="o">=</span> <span class="n">DNAAlphabet</span><span class="p">()</span>
+            <span class="n">record</span> <span class="o">=</span> <span class="n">StickyEndsSeqRecord</span><span class="p">(</span><span class="n">seq</span><span class="o">=</span><span class="n">sequence</span><span class="p">)</span>
+            <span class="n">annotate_record</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">),</span> <span class="mi">1</span><span class="p">),</span>
+                            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;adapter&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">record</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># No feature shows that this is an adapter: use simple restriction</span>
+            <span class="k">return</span> <span class="n">RestrictionLigationMix</span><span class="o">.</span><span class="n">compute_digest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">construct</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">assemble_constructs_and_linkers</span><span class="p">(</span><span class="n">records_list</span><span class="p">,</span> <span class="n">enzyme</span><span class="o">=</span><span class="s2">&quot;BsaI&quot;</span><span class="p">):</span>
+        <span class="n">fragments</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">linker_left</span><span class="p">,</span> <span class="n">part</span><span class="p">,</span> <span class="n">linker_right</span> <span class="ow">in</span> <span class="n">records_list</span><span class="p">:</span>
+            <span class="n">linker_left</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">linker_right</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">part</span> <span class="o">=</span> <span class="p">[</span><span class="n">part</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">part</span><span class="p">:</span>
+                <span class="n">mix</span> <span class="o">=</span> <span class="n">BASICLigationMix</span><span class="p">([</span><span class="n">linker_left</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">linker_right</span><span class="p">],</span>
+                                       <span class="n">enzyme</span><span class="o">=</span><span class="s2">&quot;BsaI&quot;</span><span class="p">)</span>
+                <span class="n">mix</span><span class="o">.</span><span class="n">compute_linear_assemblies</span>
+                <span class="n">new_fragment</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mix</span><span class="o">.</span><span class="n">compute_linear_assemblies</span><span class="p">(</span>
+                    <span class="n">fragments_sets_filters</span><span class="o">=</span><span class="p">(),</span>
+                    <span class="n">min_parts</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                    <span class="n">seqrecord_filters</span><span class="o">=</span><span class="p">[</span><span class="n">TextSearchFilter</span><span class="p">(</span><span class="s2">&quot;adapter&quot;</span><span class="p">)],</span>
+                    <span class="n">annotate_homologies</span><span class="o">=</span><span class="kc">False</span>
+                <span class="p">))</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_fragment</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">part_names</span> <span class="o">=</span> <span class="nb">str</span><span class="p">([</span><span class="n">linker_left</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                      <span class="n">linker_right</span><span class="o">.</span><span class="n">name</span><span class="p">])</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;Something weird happened when trying to assemble &quot;</span>
+                        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">. </span><span class="si">%d</span><span class="s2"> assemblies found&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                            <span class="n">part_names</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_fragment</span><span class="p">)))</span>
+                <span class="n">new_fragment</span> <span class="o">=</span> <span class="n">new_fragment</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">new_fragment</span><span class="o">.</span><span class="n">original_construct</span> <span class="o">=</span> <span class="n">p</span>
+                <span class="n">fragments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_fragment</span><span class="p">)</span>
+        <span class="n">final_mix</span> <span class="o">=</span> <span class="n">BASICLigationMix</span><span class="p">(</span><span class="n">fragments</span><span class="o">=</span><span class="n">fragments</span><span class="p">)</span>
+        <span class="n">final_mix</span><span class="o">.</span><span class="n">compute_reverse_fragments</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">final_mix</span><span class="o">.</span><span class="n">compute_circular_assemblies</span><span class="p">()</span>
+
+
 <div class="viewcode-block" id="GibsonAssemblyMix"><a class="viewcode-back" href="../../ref.html#dnacauldron.AssemblyMix.GibsonAssemblyMix">[docs]</a><span class="k">class</span> <span class="nc">GibsonAssemblyMix</span><span class="p">(</span><span class="n">AssemblyMix</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;In construction. Do not use.&quot;&quot;&quot;</span>
 
@@ -542,6 +816,9 @@
 </pre></div>
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -550,7 +827,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Edinburgh Genome Foundry.
+        &copy; Copyright 2017, Edinburgh Genome Foundry.
 
     </p>
   </div>
@@ -575,12 +852,14 @@
             VERSION:'0.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
 
   
 

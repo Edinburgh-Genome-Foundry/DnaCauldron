@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -45,6 +47,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -88,7 +91,10 @@
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Dna Cauldron Documentation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
@@ -106,8 +112,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="#">DnaCauldron</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">DnaCauldron</a>
+        
       </nav>
 
 
@@ -116,23 +124,40 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="#">Docs</a> &raquo;</li>
-      
-    <li>Dna Cauldron Documentation</li>
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Dna Cauldron Documentation</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -150,6 +175,10 @@ batches of parts-based assemblies).</p>
 <p>It is simple to use, plays well with BioPython, can import and export Genbank
 (it conserves all features), and provides ways to select particular
 constructs when dealing with large combinatorial assemblies.</p>
+<p><strong>Try it online !</strong> Too lazy to use the library programmatically ?
+It is available
+<a class="reference external" href="http://cuba.genomefoundry.org/#/simulate_gg_assemblies">here</a>
+as a web service.</p>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>You can install DnaCauldron through PIP</p>
@@ -253,12 +282,15 @@ allowtransparency="true" frameborder="0" scrolling="0" width="152px" height="30p
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ref.html" class="btn btn-neutral float-right" title="DnaCauldron Reference manual" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ref.html" class="btn btn-neutral float-right" title="DnaCauldron Reference manual" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>
@@ -268,7 +300,7 @@ allowtransparency="true" frameborder="0" scrolling="0" width="152px" height="30p
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Edinburgh Genome Foundry.
+        &copy; Copyright 2017, Edinburgh Genome Foundry.
 
     </p>
   </div>
@@ -293,7 +325,8 @@ allowtransparency="true" frameborder="0" scrolling="0" width="152px" height="30p
             VERSION:'0.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>

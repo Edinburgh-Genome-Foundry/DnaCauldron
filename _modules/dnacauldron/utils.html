@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -30,6 +32,8 @@
   
     <link rel="stylesheet" href="../../_static/css/main.css" type="text/css" />
   
+    <link rel="stylesheet" href="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -45,6 +49,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -88,7 +93,10 @@
           
             
             
-                <ul>
+              
+            
+            
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Dna Cauldron Documentation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
@@ -106,8 +114,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">DnaCauldron</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DnaCauldron</a>
+        
       </nav>
 
 
@@ -120,19 +130,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../index.html">Module code</a> &raquo;</li>
-      
-    <li>dnacauldron.utils</li>
+        
+      <li>dnacauldron.utils</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -145,8 +172,32 @@
 <span class="kn">from</span> <span class="nn">.Filter</span> <span class="k">import</span> <span class="n">NoRestrictionSiteFilter</span>
 <span class="kn">from</span> <span class="nn">.AssemblyMix</span> <span class="k">import</span> <span class="n">RestrictionLigationMix</span><span class="p">,</span> <span class="n">AssemblyError</span>
 
+
+<div class="viewcode-block" id="autoselect_enzyme"><a class="viewcode-back" href="../../ref.html#dnacauldron.utils.autoselect_enzyme">[docs]</a><span class="k">def</span> <span class="nf">autoselect_enzyme</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="n">enzymes</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Finds the enzyme that the parts were probably meant to be assembled with</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    parts</span>
+<span class="sd">      A list of SeqRecord files. They should have a &quot;linear&quot; attribute set to</span>
+<span class="sd">      True or False, otherwise</span>
+
+<span class="sd">    This finds the enzyme that</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">enzyme_fit_score</span><span class="p">(</span><span class="n">enzyme_name</span><span class="p">):</span>
+        <span class="n">enz</span> <span class="o">=</span> <span class="n">Restriction</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">enzyme_name</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span>
+            <span class="nb">abs</span><span class="p">(</span><span class="mi">2</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">enz</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span>
+                                 <span class="n">linear</span><span class="o">=</span><span class="n">part</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">))))</span>
+            <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span>
+        <span class="p">])</span>
+    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">enzymes</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">enzyme_fit_score</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="single_assembly"><a class="viewcode-back" href="../../ref.html#dnacauldron.utils.single_assembly">[docs]</a><span class="k">def</span> <span class="nf">single_assembly</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="n">receptor</span><span class="p">,</span> <span class="n">outfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                    <span class="n">enzyme</span><span class="o">=</span><span class="s2">&quot;BsmBI&quot;</span><span class="p">,</span> <span class="n">annotate_homologies</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                    <span class="n">enzyme</span><span class="o">=</span><span class="s2">&quot;BsmBI&quot;</span><span class="p">,</span> <span class="n">annotate_homologies</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">mix_class</span><span class="o">=</span><span class="s2">&quot;restriction&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return the single assembly obtained by assembling together different</span>
 <span class="sd">    parts on a receptor vector.</span>
 
@@ -166,6 +217,9 @@
 <span class="sd">    enzyme</span>
 <span class="sd">      Name of the enzyme used for the assembly.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">mix_class</span> <span class="o">==</span> <span class="s2">&quot;restriction&quot;</span><span class="p">:</span>
+        <span class="n">mix_class</span> <span class="o">=</span> <span class="n">RestrictionLigationMix</span>
 
     <span class="k">def</span> <span class="nf">load_genbank</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Specific loag_genbank flavor&quot;&quot;&quot;</span>
@@ -190,11 +244,9 @@
         <span class="p">]</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">receptor_fragments</span><span class="p">)</span> <span class="o">==</span> <span class="n">sites_in_receptor</span> <span class="o">-</span> <span class="mi">1</span>
 
-    <span class="n">mix</span> <span class="o">=</span> <span class="n">RestrictionLigationMix</span><span class="p">(</span><span class="n">parts_records</span><span class="p">,</span> <span class="n">enzyme</span><span class="p">)</span>
+    <span class="n">mix</span> <span class="o">=</span> <span class="n">mix_class</span><span class="p">(</span><span class="n">parts_records</span><span class="p">,</span> <span class="n">enzyme</span><span class="p">)</span>
     <span class="n">assemblies</span> <span class="o">=</span> <span class="n">mix</span><span class="o">.</span><span class="n">compute_circular_assemblies</span><span class="p">(</span>
         <span class="n">fragments_sets_filters</span><span class="o">=</span><span class="p">[</span><span class="n">exactly_one_receptor_vector</span><span class="p">],</span>
-        <span class="n">fragments_filters</span><span class="o">=</span><span class="p">[]</span> <span class="k">if</span> <span class="p">(</span><span class="n">sites_in_receptor</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="k">else</span>
-                          <span class="p">[</span><span class="n">NoRestrictionSiteFilter</span><span class="p">(</span><span class="n">enzyme</span><span class="p">)],</span>
         <span class="n">annotate_homologies</span><span class="o">=</span><span class="n">annotate_homologies</span>
     <span class="p">)</span>
     <span class="n">assemblies</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">assemblies</span><span class="p">)</span>
@@ -208,6 +260,9 @@
 </pre></div>
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -216,7 +271,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Edinburgh Genome Foundry.
+        &copy; Copyright 2017, Edinburgh Genome Foundry.
 
     </p>
   </div>
@@ -241,12 +296,14 @@
             VERSION:'0.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
 
   
 

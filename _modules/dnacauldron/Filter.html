@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -30,6 +32,8 @@
   
     <link rel="stylesheet" href="../../_static/css/main.css" type="text/css" />
   
+    <link rel="stylesheet" href="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -45,6 +49,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -88,7 +93,10 @@
           
             
             
-                <ul>
+              
+            
+            
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Dna Cauldron Documentation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
@@ -106,8 +114,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">DnaCauldron</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DnaCauldron</a>
+        
       </nav>
 
 
@@ -120,19 +130,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../index.html">Module code</a> &raquo;</li>
-      
-    <li>dnacauldron.Filter</li>
+        
+      <li>dnacauldron.Filter</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -151,7 +178,8 @@
 
 
 <div class="viewcode-block" id="NoRestrictionSiteFilter"><a class="viewcode-back" href="../../ref.html#dnacauldron.Filter.NoRestrictionSiteFilter">[docs]</a><span class="k">class</span> <span class="nc">NoRestrictionSiteFilter</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Filters to ignore fragments and final assemblies containing a given site</span>
+    <span class="sd">&quot;&quot;&quot;Filters to ignore fragments and final assemblies containing a given</span>
+<span class="sd">    restriction site</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enzyme_name</span><span class="p">):</span>
@@ -166,11 +194,18 @@
             <span class="n">seq</span> <span class="o">=</span> <span class="s2">&quot;AAAAAA&quot;</span> <span class="o">+</span> <span class="n">Seq</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">seqrecord</span><span class="o">.</span><span class="n">seq</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;AAAAAA&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">seq</span> <span class="o">=</span> <span class="n">seqrecord</span><span class="o">.</span><span class="n">seq</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="n">linear</span><span class="p">)</span> <span class="o">==</span> <span class="p">[])</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="n">linear</span><span class="p">)</span> <span class="o">==</span> <span class="p">[])</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;NoRestriction(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">enzyme_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;NoRestriction(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">enzyme_name</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NoPatternFilter"><a class="viewcode-back" href="../../ref.html#dnacauldron.Filter.NoPatternFilter">[docs]</a><span class="k">class</span> <span class="nc">NoPatternFilter</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Filters to ignore fragments and final assemblies containing a pattern.</span>
+    <span class="sd">&quot;&quot;&quot;Filters to ignore fragments and final assemblies whose DNA sequence</span>
+<span class="sd">    contains the given pattern.</span>
 
 <span class="sd">    The pattern must be an exact sequence of DNA.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -187,6 +222,9 @@
     <span class="sd">&quot;&quot;&quot;Filters to ignore assemblies containing or not containing some text.</span>
 
 <span class="sd">    The text will be looked for in every feature of the construct.</span>
+<span class="sd">    Constructs which do NOT have the text pattern in at least one feature will</span>
+<span class="sd">    be filtered out, unless ``is_forbidden`` is set to True, at which case</span>
+<span class="sd">    constructs which DO have the text pattern will be filtered out.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">is_forbidden</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -216,6 +254,9 @@
 </pre></div>
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -224,7 +265,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Edinburgh Genome Foundry.
+        &copy; Copyright 2017, Edinburgh Genome Foundry.
 
     </p>
   </div>
@@ -249,12 +290,14 @@
             VERSION:'0.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
 
   
 

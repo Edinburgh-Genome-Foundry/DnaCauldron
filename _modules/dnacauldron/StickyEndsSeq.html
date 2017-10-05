@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -30,6 +32,8 @@
   
     <link rel="stylesheet" href="../../_static/css/main.css" type="text/css" />
   
+    <link rel="stylesheet" href="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -45,6 +49,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -88,7 +93,10 @@
           
             
             
-                <ul>
+              
+            
+            
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Dna Cauldron Documentation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
@@ -106,8 +114,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">DnaCauldron</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DnaCauldron</a>
+        
       </nav>
 
 
@@ -120,19 +130,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../index.html">Module code</a> &raquo;</li>
-      
-    <li>dnacauldron.StickyEndsSeq</li>
+        
+      <li>dnacauldron.StickyEndsSeq</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -148,6 +175,18 @@
     <span class="sd">&quot;&quot;&quot;A class to represent the sticky end of a sequence.</span>
 
 <span class="sd">    It is used exactly like a Biopython sequence.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    data</span>
+<span class="sd">      A DNA sequence in ATGC format</span>
+
+<span class="sd">    strand</span>
+<span class="sd">      The strand (+1 or -1) on which the protusion is</span>
+
+<span class="sd">    **k</span>
+<span class="sd">      Optional keyword arguments for the sequence, such as ``alphabet`` etc.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">strand</span><span class="p">,</span> <span class="o">**</span><span class="n">k</span><span class="p">):</span>
@@ -176,7 +215,7 @@
     <span class="sd">&quot;&quot;&quot;Represent sequences with sticky ends.</span>
 
 <span class="sd">    It is used like a Biopython Seq, but with additional flanking sequences</span>
-<span class="sd">    `left_end` and `right_end`, which are `StickyEnd` objects.</span>
+<span class="sd">    ``left_end`` and ``right_end``, which are ``StickyEnd`` objects.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -230,7 +269,8 @@
             <span class="k">return</span> <span class="n">Seq</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div>
 
 
-<span class="k">class</span> <span class="nc">StickyEndsSeqRecord</span><span class="p">(</span><span class="n">SeqRecord</span><span class="p">):</span>
+<div class="viewcode-block" id="StickyEndsSeqRecord"><a class="viewcode-back" href="../../ref.html#dnacauldron.StickyEndsSeq.StickyEndsSeqRecord">[docs]</a><span class="k">class</span> <span class="nc">StickyEndsSeqRecord</span><span class="p">(</span><span class="n">SeqRecord</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Biopython SeqRecord whose sequence has sticky ends.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">will_clip_in_this_order_with</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="n">right_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">right_end</span>
@@ -268,13 +308,15 @@
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">assemble_with</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">annotate_homology</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                      <span class="n">annotation_type</span><span class="o">=</span><span class="s2">&quot;Feature&quot;</span><span class="p">,</span> <span class="n">qualifiers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                      <span class="n">annotation_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">qualifiers</span><span class="p">):</span>
         <span class="n">connector</span> <span class="o">=</span> <span class="n">SeqRecord</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">right_end</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">qualifiers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">qualifiers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;homology&quot;</span><span class="p">}</span>
         <span class="k">if</span> <span class="n">annotate_homology</span><span class="p">:</span>
             <span class="n">connector</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="n">SeqFeature</span><span class="p">(</span><span class="n">FeatureLocation</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">connector</span><span class="p">),</span> <span class="mi">1</span><span class="p">),</span>
                            <span class="nb">type</span><span class="o">=</span><span class="n">annotation_type</span><span class="p">,</span>
-                           <span class="n">qualifiers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;homology&quot;</span><span class="p">})</span>
+                           <span class="n">qualifiers</span><span class="o">=</span><span class="n">qualifiers</span><span class="p">)</span>
             <span class="p">]</span>
         <span class="n">selfc</span> <span class="o">=</span> <span class="n">SeqRecord</span><span class="p">(</span><span class="n">seq</span><span class="o">=</span><span class="n">Seq</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">)),</span>
                           <span class="n">features</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">,</span>
@@ -291,7 +333,7 @@
         <span class="k">return</span> <span class="n">new_record</span>
 
     <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">assemble_with</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">assemble_with</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
 
     <span class="c1"># def __hash__(self):</span>
     <span class="c1">#     return hash(&quot;StickyEndSeqRecord&quot;+str(self.seq))</span>
@@ -385,6 +427,9 @@
 </pre></div>
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -393,7 +438,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Edinburgh Genome Foundry.
+        &copy; Copyright 2017, Edinburgh Genome Foundry.
 
     </p>
   </div>
@@ -418,12 +463,14 @@
             VERSION:'0.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
 
   
 

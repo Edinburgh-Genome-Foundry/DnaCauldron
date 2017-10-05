@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -30,6 +32,8 @@
   
     <link rel="stylesheet" href="_static/css/main.css" type="text/css" />
   
+    <link rel="stylesheet" href="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -45,6 +49,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -88,12 +93,16 @@
           
             
             
-                <ul>
+              
+            
+            
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="index.html">Dna Cauldron Documentation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">DnaCauldron Reference manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#classes-dependencies">Classes dependencies:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-dnacauldron.utils">High-level functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-dnacauldron.reports.reports">Reporting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-dnacauldron.AssemblyMix">AssemblyMix</a></li>
@@ -113,8 +122,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">DnaCauldron</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DnaCauldron</a>
+        
       </nav>
 
 
@@ -123,23 +134,40 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
-    <li>DnaCauldron Reference manual</li>
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>DnaCauldron Reference manual</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="_sources/ref.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -147,12 +175,56 @@
             
   <div class="section" id="dnacauldron-reference-manual">
 <h1>DnaCauldron Reference manual<a class="headerlink" href="#dnacauldron-reference-manual" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="classes-dependencies">
+<h2>Classes dependencies:<a class="headerlink" href="#classes-dependencies" title="Permalink to this headline">¶</a></h2>
+
+            <style>
+            .section {
+                opacity: 1.0 !important;
+            }
+            </style>
+            <script>mermaid.initialize({startOnLoad:true});</script><div align="center" class="mermaid align-center">
+             graph TD;
+     StickyEnd[&quot;StickyEnd&lt;br/&gt;(DNA fragment protusion)&quot;]
+     StickyEndSeq[&quot;StickyEndSeq&lt;br/&gt;(DNA fragment with sticky ends)&quot;]
+     StickyEndRecord[&quot;StickyEndRecord&lt;br/&gt;(BioPython record with StickyEndSeq sequence)&quot;]
+     AssemblyMix
+     RestrictionLigationMix
+     StickyEnd--&gt;|can be found at the end of...| StickyEndSeq;
+     StickyEndSeq--&gt;StickyEndRecord;
+     StickyEndRecord --&gt;|several can be grouped into...| FragmentsChain
+     AssemblyMix  --&gt; |is base class of...| RestrictionLigationMix
+     RestrictionLigationMix --&gt;|computes digestions resulting in...| StickyEndRecord
+     FragmentsChain --&gt; |fragments are assembled together into a...| Biopython-SeqRecord
+     style Biopython-SeqRecord fill:#fff;
+        </div>
+        </div>
 <div class="section" id="module-dnacauldron.utils">
 <span id="high-level-functions"></span><h2>High-level functions<a class="headerlink" href="#module-dnacauldron.utils" title="Permalink to this headline">¶</a></h2>
 <p>Useful functions to simplify the most common operations.</p>
 <dl class="function">
+<dt id="dnacauldron.utils.autoselect_enzyme">
+<code class="descclassname">dnacauldron.utils.</code><code class="descname">autoselect_enzyme</code><span class="sig-paren">(</span><em>parts</em>, <em>enzymes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/utils.html#autoselect_enzyme"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.utils.autoselect_enzyme" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the enzyme that the parts were probably meant to be assembled with</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>parts</strong></p>
+<blockquote>
+<div><p>A list of SeqRecord files. They should have a “linear” attribute set to
+True or False, otherwise</p>
+</div></blockquote>
+<p class="last"><strong>This finds the enzyme that</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="dnacauldron.utils.single_assembly">
-<code class="descclassname">dnacauldron.utils.</code><code class="descname">single_assembly</code><span class="sig-paren">(</span><em>parts</em>, <em>receptor</em>, <em>outfile=None</em>, <em>enzyme=’BsmBI’</em>, <em>annotate_homologies=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/utils.html#single_assembly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.utils.single_assembly" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">dnacauldron.utils.</code><code class="descname">single_assembly</code><span class="sig-paren">(</span><em>parts</em>, <em>receptor</em>, <em>outfile=None</em>, <em>enzyme='BsmBI'</em>, <em>annotate_homologies=True</em>, <em>mix_class='restriction'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/utils.html#single_assembly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.utils.single_assembly" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the single assembly obtained by assembling together different
 parts on a receptor vector.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -186,7 +258,7 @@ for that part, with a <code class="docutils literal"><span class="pre">.linear</
 <span id="reporting"></span><h2>Reporting<a class="headerlink" href="#module-dnacauldron.reports.reports" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="dnacauldron.reports.reports.full_assembly_report">
-<code class="descclassname">dnacauldron.reports.reports.</code><code class="descname">full_assembly_report</code><span class="sig-paren">(</span><em>parts</em>, <em>target</em>, <em>enzyme=’BsmBI’</em>, <em>max_assemblies=40</em>, <em>fragments_filters=’auto’</em>, <em>assemblies_prefix=’assembly’</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/reports/reports.html#full_assembly_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.reports.reports.full_assembly_report" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">dnacauldron.reports.reports.</code><code class="descname">full_assembly_report</code><span class="sig-paren">(</span><em>parts</em>, <em>target</em>, <em>enzyme='BsmBI'</em>, <em>max_assemblies=40</em>, <em>connector_records=()</em>, <em>include_fragments=True</em>, <em>include_parts=True</em>, <em>fragments_filters='auto'</em>, <em>assemblies_prefix='assembly'</em>, <em>mix_class='restriction'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/reports/reports.html#full_assembly_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.reports.reports.full_assembly_report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a full assembly report in a folder or a zip.</p>
 <p>The report contains the final sequence(s) of the assembly in Genbank format
 as well as a .csv report on all assemblies produced and PDF figures
@@ -227,10 +299,16 @@ the additional ones won’t be returned.</p>
 assemblies. If left to auto, fragments containing the enzyme site will
 be filtered out.</p>
 </div></blockquote>
+<p><strong>connector_records</strong></p>
+<blockquote>
+<div><p>List of connector records (a connector is a part that can bridge a gap
+between two other parts), from which only the essential elements to form
+an assembly will be automatically selected and added to the other parts.</p>
+</div></blockquote>
 <p><strong>assemblies_prefix</strong></p>
 <blockquote class="last">
 <div><p>Prefix for the file names of all assemblies. They will be named
-<code class="docutils literal"><span class="pre">PRE01.gb</span></code>,“PRE02.gb“, <code class="docutils literal"><span class="pre">PRE03.gb</span></code> where <code class="docutils literal"><span class="pre">PRE</span></code> is the prefix.</p>
+<code class="docutils literal"><span class="pre">PRE01.gb</span></code>,``PRE02.gb``, <code class="docutils literal"><span class="pre">PRE03.gb</span></code> where <code class="docutils literal"><span class="pre">PRE</span></code> is the prefix.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -259,7 +337,7 @@ reverse of another framgnet.</p>
 
 <dl class="function">
 <dt id="dnacauldron.reports.plots.plot_assembly_graph">
-<code class="descclassname">dnacauldron.reports.plots.</code><code class="descname">plot_assembly_graph</code><span class="sig-paren">(</span><em>assembly_mix</em>, <em>ax=None</em>, <em>fragments_display_lim=3</em>, <em>fragments_filters=None</em>, <em>figure_size=(8</em>, <em>6)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/reports/plots.html#plot_assembly_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.reports.plots.plot_assembly_graph" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">dnacauldron.reports.plots.</code><code class="descname">plot_assembly_graph</code><span class="sig-paren">(</span><em>assembly_mix</em>, <em>ax=None</em>, <em>fragments_display_lim=3</em>, <em>figure_size=(10</em>, <em>8)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/reports/plots.html#plot_assembly_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.reports.plots.plot_assembly_graph" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot a map of the different assemblies.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -341,7 +419,7 @@ their own version of how the original constructs are broken into
 fragments, when two fragments will clip together, etc.</p>
 <dl class="method">
 <dt id="dnacauldron.AssemblyMix.AssemblyMix.compute_circular_fragments_sets">
-<code class="descname">compute_circular_fragments_sets</code><span class="sig-paren">(</span><em>fragments_sets_filters=()</em>, <em>fragments_filters=()</em>, <em>randomize=False</em>, <em>randomization_staling_cutoff=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/AssemblyMix.html#AssemblyMix.compute_circular_fragments_sets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyMix.AssemblyMix.compute_circular_fragments_sets" title="Permalink to this definition">¶</a></dt>
+<code class="descname">compute_circular_fragments_sets</code><span class="sig-paren">(</span><em>fragments_sets_filters=()</em>, <em>randomize=False</em>, <em>randomization_staling_cutoff=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/AssemblyMix.html#AssemblyMix.compute_circular_fragments_sets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyMix.AssemblyMix.compute_circular_fragments_sets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return an iterator over all the lists of fragments [f1, f2, f3…fn]
 that can assemble into a circular construct.</p>
 <p>This means that fragment f1 will clip with f2 (in this order),
@@ -419,30 +497,34 @@ f1-&gt;f2 indicating that fragments f1 and f2 will clip in this order.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="dnacauldron.AssemblyMix.FragmentsCycle">
-<em class="property">class </em><code class="descclassname">dnacauldron.AssemblyMix.</code><code class="descname">FragmentsCycle</code><span class="sig-paren">(</span><em>fragments</em>, <em>is_standardized=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/AssemblyMix.html#FragmentsCycle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyMix.FragmentsCycle" title="Permalink to this definition">¶</a></dt>
+<dt id="dnacauldron.AssemblyMix.FragmentsChain">
+<em class="property">class </em><code class="descclassname">dnacauldron.AssemblyMix.</code><code class="descname">FragmentsChain</code><span class="sig-paren">(</span><em>fragments</em>, <em>is_standardized=False</em>, <em>is_cycle=False</em>, <em>precomputed_hash=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/AssemblyMix.html#FragmentsChain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyMix.FragmentsChain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to represent a set of DNA fragments that can assemble into
-a circular construct.</p>
+a linear or circular construct.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>fragments</strong></p>
 <blockquote>
-<div><p>A list of fragments that can be assembled into a cicular construct.</p>
+<div><p>A list of fragments that can be assembled into a linear/cicular construct.</p>
 </div></blockquote>
 <p><strong>is_standardized</strong></p>
-<blockquote class="last">
+<blockquote>
 <div><p>Indicates whether the fragment is in standardized form, which saves time
 by avoiding to standardize the fragment more than once.</p>
+</div></blockquote>
+<p><strong>is_cycle</strong></p>
+<blockquote class="last">
+<div><p>Indicates whether the fragments are expected to assemble circularly</p>
 </div></blockquote>
 </td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
-<dt id="dnacauldron.AssemblyMix.FragmentsCycle.standardized">
-<code class="descname">standardized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/AssemblyMix.html#FragmentsCycle.standardized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyMix.FragmentsCycle.standardized" title="Permalink to this definition">¶</a></dt>
+<dt id="dnacauldron.AssemblyMix.FragmentsChain.standardized">
+<code class="descname">standardized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/AssemblyMix.html#FragmentsChain.standardized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyMix.FragmentsChain.standardized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a standardized version of the cycle.</p>
 <p>Useful for spotting cycles that may look different but are just
 two representations of a same circular DNA construct.</p>
@@ -454,9 +536,10 @@ construct as C-A-B, or even rev(C)-rev(B)-rev(A) (reverse complement).</p>
 “reverse complement” fragments, consider the reverse version of
 the cycle. This way all standardized cycles have less than 50%
 rev-complement fragments</li>
-<li>The cycle is “rotated” so that the first fragment of the cycle is
-the largest fragment. If there are several fragments of same largest
-size we choose the first one in alphabetical order of the sequence.</li>
+<li>If the chaing is a cycle it is “rotated” so that the first fragment
+of the cycle is the largest fragment. If there are several fragments
+of same largest size we choose the first one in alphabetical order of
+the sequence.</li>
 </ul>
 </dd></dl>
 
@@ -470,7 +553,7 @@ size we choose the first one in alphabetical order of the sequence.</li>
 
 <dl class="class">
 <dt id="dnacauldron.AssemblyMix.RestrictionLigationMix">
-<em class="property">class </em><code class="descclassname">dnacauldron.AssemblyMix.</code><code class="descname">RestrictionLigationMix</code><span class="sig-paren">(</span><em>constructs</em>, <em>enzyme</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/AssemblyMix.html#RestrictionLigationMix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyMix.RestrictionLigationMix" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">dnacauldron.AssemblyMix.</code><code class="descname">RestrictionLigationMix</code><span class="sig-paren">(</span><em>constructs=None</em>, <em>enzyme=None</em>, <em>fragments=None</em>, <em>fragments_filters='default'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/AssemblyMix.html#RestrictionLigationMix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyMix.RestrictionLigationMix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assembly mix for an enzymatic Restriction Ligation assembly.</p>
 <p>This includes modern assembly techniques such as Golden Gate as well as
 classical enzyme-based assembly.</p>
@@ -523,6 +606,12 @@ be annotated in the final record.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="dnacauldron.AssemblyMix.RestrictionLigationMix.compute_digest">
+<code class="descname">compute_digest</code><span class="sig-paren">(</span><em>construct</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/AssemblyMix.html#RestrictionLigationMix.compute_digest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyMix.RestrictionLigationMix.compute_digest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the fragments resulting from the digestion</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="dnacauldron.AssemblyMix.RestrictionLigationMix.compute_fragments">
 <code class="descname">compute_fragments</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/AssemblyMix.html#RestrictionLigationMix.compute_fragments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyMix.RestrictionLigationMix.compute_fragments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the (sticky-ended) fragments resulting from the digestion of
@@ -542,21 +631,26 @@ restriction sites of the digestion enzyme (these are unstable)</p>
 <dl class="class">
 <dt id="dnacauldron.Filter.NoPatternFilter">
 <em class="property">class </em><code class="descclassname">dnacauldron.Filter.</code><code class="descname">NoPatternFilter</code><span class="sig-paren">(</span><em>pattern</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/Filter.html#NoPatternFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Filter.NoPatternFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filters to ignore fragments and final assemblies containing a pattern.</p>
+<dd><p>Filters to ignore fragments and final assemblies whose DNA sequence
+contains the given pattern.</p>
 <p>The pattern must be an exact sequence of DNA.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="dnacauldron.Filter.NoRestrictionSiteFilter">
 <em class="property">class </em><code class="descclassname">dnacauldron.Filter.</code><code class="descname">NoRestrictionSiteFilter</code><span class="sig-paren">(</span><em>enzyme_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/Filter.html#NoRestrictionSiteFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Filter.NoRestrictionSiteFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filters to ignore fragments and final assemblies containing a given site</p>
+<dd><p>Filters to ignore fragments and final assemblies containing a given
+restriction site</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="dnacauldron.Filter.TextSearchFilter">
 <em class="property">class </em><code class="descclassname">dnacauldron.Filter.</code><code class="descname">TextSearchFilter</code><span class="sig-paren">(</span><em>text</em>, <em>is_forbidden=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/Filter.html#TextSearchFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Filter.TextSearchFilter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters to ignore assemblies containing or not containing some text.</p>
-<p>The text will be looked for in every feature of the construct.</p>
+<p>The text will be looked for in every feature of the construct.
+Constructs which do NOT have the text pattern in at least one feature will
+be filtered out, unless <code class="docutils literal"><span class="pre">is_forbidden</span></code> is set to True, at which case
+constructs which DO have the text pattern will be filtered out.</p>
 </dd></dl>
 
 </div>
@@ -567,6 +661,26 @@ restriction sites of the digestion enzyme (these are unstable)</p>
 <em class="property">class </em><code class="descclassname">dnacauldron.StickyEndsSeq.</code><code class="descname">StickyEnd</code><span class="sig-paren">(</span><em>data</em>, <em>strand</em>, <em>**k</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/StickyEndsSeq.html#StickyEnd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.StickyEndsSeq.StickyEnd" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class to represent the sticky end of a sequence.</p>
 <p>It is used exactly like a Biopython sequence.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data</strong></p>
+<blockquote>
+<div><p>A DNA sequence in ATGC format</p>
+</div></blockquote>
+<p><strong>strand</strong></p>
+<blockquote>
+<div><p>The strand (+1 or -1) on which the protusion is</p>
+</div></blockquote>
+<p><strong>**k</strong></p>
+<blockquote class="last">
+<div><p>Optional keyword arguments for the sequence, such as <code class="docutils literal"><span class="pre">alphabet</span></code> etc.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="class">
@@ -574,7 +688,13 @@ restriction sites of the digestion enzyme (these are unstable)</p>
 <em class="property">class </em><code class="descclassname">dnacauldron.StickyEndsSeq.</code><code class="descname">StickyEndsSeq</code><span class="sig-paren">(</span><em>data</em>, <em>left_end=None</em>, <em>right_end=None</em>, <em>**k</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/StickyEndsSeq.html#StickyEndsSeq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.StickyEndsSeq.StickyEndsSeq" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represent sequences with sticky ends.</p>
 <p>It is used like a Biopython Seq, but with additional flanking sequences
-<cite>left_end</cite> and <cite>right_end</cite>, which are <cite>StickyEnd</cite> objects.</p>
+<code class="docutils literal"><span class="pre">left_end</span></code> and <code class="docutils literal"><span class="pre">right_end</span></code>, which are <code class="docutils literal"><span class="pre">StickyEnd</span></code> objects.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="dnacauldron.StickyEndsSeq.StickyEndsSeqRecord">
+<em class="property">class </em><code class="descclassname">dnacauldron.StickyEndsSeq.</code><code class="descname">StickyEndsSeqRecord</code><span class="sig-paren">(</span><em>seq</em>, <em>id='&lt;unknown id&gt;'</em>, <em>name='&lt;unknown name&gt;'</em>, <em>description='&lt;unknown description&gt;'</em>, <em>dbxrefs=None</em>, <em>features=None</em>, <em>annotations=None</em>, <em>letter_annotations=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dnacauldron/StickyEndsSeq.html#StickyEndsSeqRecord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.StickyEndsSeq.StickyEndsSeqRecord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Biopython SeqRecord whose sequence has sticky ends.</p>
 </dd></dl>
 
 </div>
@@ -582,13 +702,16 @@ restriction sites of the digestion enzyme (these are unstable)</p>
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="index.html" class="btn btn-neutral" title="Dna Cauldron Documentation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral" title="Dna Cauldron Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -597,7 +720,7 @@ restriction sites of the digestion enzyme (these are unstable)</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Edinburgh Genome Foundry.
+        &copy; Copyright 2017, Edinburgh Genome Foundry.
 
     </p>
   </div>
@@ -622,12 +745,14 @@ restriction sites of the digestion enzyme (these are unstable)</p>
             VERSION:'0.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
 
   
 

@@ -13,6 +13,8 @@
 
   
   
+  
+  
 
   
 
@@ -30,6 +32,8 @@
   
     <link rel="stylesheet" href="../../../_static/css/main.css" type="text/css" />
   
+    <link rel="stylesheet" href="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.css" type="text/css" />
+  
 
   
         <link rel="index" title="Index"
@@ -45,6 +49,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -88,7 +93,10 @@
           
             
             
-                <ul>
+              
+            
+            
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../index.html">Dna Cauldron Documentation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
@@ -106,8 +114,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../../index.html">DnaCauldron</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DnaCauldron</a>
+        
       </nav>
 
 
@@ -120,19 +130,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Module code</a> &raquo;</li>
-      
-    <li>dnacauldron.reports.plots</li>
+        
+      <li>dnacauldron.reports.plots</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -233,7 +260,7 @@
                 <span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;misc_feature&#39;</span><span class="p">)):</span>
                 <span class="k">return</span> <span class="s1">&#39;#f5eaff&#39;</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="s1">&#39;#ffffff&#39;</span>
+                <span class="k">return</span> <span class="s1">&#39;#fefefe&#39;</span>
     <span class="n">translator</span> <span class="o">=</span> <span class="n">MyTranslator</span><span class="p">()</span>
     <span class="n">grecord_class</span> <span class="o">=</span> <span class="n">GraphicRecord</span> <span class="k">if</span> <span class="n">linear</span> <span class="k">else</span> <span class="n">CircularGraphicRecord</span>
     <span class="n">graphic_record</span> <span class="o">=</span> <span class="n">translator</span><span class="o">.</span><span class="n">translate_record</span><span class="p">(</span><span class="n">record</span><span class="p">,</span>
@@ -249,7 +276,7 @@
             <span class="p">(</span><span class="s2">&quot;_r&quot;</span> <span class="k">if</span> <span class="n">fragment</span><span class="o">.</span><span class="n">is_reverse</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="plot_assembly_graph"><a class="viewcode-back" href="../../../ref.html#dnacauldron.reports.plots.plot_assembly_graph">[docs]</a><span class="k">def</span> <span class="nf">plot_assembly_graph</span><span class="p">(</span><span class="n">assembly_mix</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fragments_display_lim</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-                        <span class="n">fragments_filters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figure_size</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">)):</span>
+                        <span class="n">figure_size</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">)):</span>
     <span class="sd">&quot;&quot;&quot;Plot a map of the different assemblies.</span>
 
 <span class="sd">    Parameters</span>
@@ -281,7 +308,7 @@
     <span class="n">g</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
     <span class="n">all_fragments</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">(</span><span class="n">assembly_mix</span><span class="o">.</span><span class="n">fragments</span> <span class="o">+</span> <span class="n">assembly_mix</span><span class="o">.</span><span class="n">reverse_fragments</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">fl</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span> <span class="n">fragments_filters</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">fl</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span> <span class="n">assembly_mix</span><span class="o">.</span><span class="n">fragments_filters</span><span class="p">])</span>
     <span class="p">]</span>
     <span class="k">def</span> <span class="nf">fragments_are_equal</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;loose equality for the purpose of this method&#39;&#39;&#39;</span>
@@ -311,12 +338,13 @@
     <span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">layout</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
     <span class="n">all_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
     <span class="n">all_y</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
-    <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">all_x</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">all_x</span><span class="p">)</span>
-    <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">all_y</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">all_y</span><span class="p">)</span>
-    <span class="n">dx</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span>
-    <span class="n">dy</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="p">(</span><span class="n">ymax</span> <span class="o">-</span> <span class="n">ymin</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xmin</span> <span class="o">-</span> <span class="n">dx</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">+</span> <span class="n">dx</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ymin</span> <span class="o">-</span> <span class="n">dy</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">+</span> <span class="n">dy</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">all_x</span> <span class="o">!=</span> <span class="p">[]:</span>
+        <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">all_x</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">all_x</span><span class="p">)</span>
+        <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">all_y</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">all_y</span><span class="p">)</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="p">(</span><span class="n">ymax</span> <span class="o">-</span> <span class="n">ymin</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xmin</span> <span class="o">-</span> <span class="n">dx</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">+</span> <span class="n">dx</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ymin</span> <span class="o">-</span> <span class="n">dy</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">+</span> <span class="n">dy</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="p">(</span><span class="n">end1</span><span class="p">,</span> <span class="n">end2</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)):</span>
 
@@ -337,17 +365,21 @@
                     <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
                     <span class="n">xycoords</span><span class="o">=</span><span class="s2">&quot;data&quot;</span><span class="p">,</span>
                     <span class="n">bbox</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;facecolor&#39;</span><span class="p">:</span> <span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="s1">&#39;linewidth&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
-                    <span class="n">family</span><span class="o">=</span><span class="s1">&#39;Open Sans&#39;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+                    <span class="n">family</span><span class="o">=</span><span class="s1">&#39;Open Sans&#39;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+                    <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span> <span class="ow">in</span> <span class="n">layout</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
                     <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
                     <span class="n">xycoords</span><span class="o">=</span><span class="s2">&quot;data&quot;</span><span class="p">,</span>
                     <span class="n">bbox</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;facecolor&#39;</span><span class="p">:</span> <span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="s1">&#39;linewidth&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
-                    <span class="n">family</span><span class="o">=</span><span class="s1">&#39;Open Sans&#39;</span><span class="p">)</span>
+                    <span class="n">family</span><span class="o">=</span><span class="s1">&#39;Open Sans&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ax</span><span class="p">,</span> <span class="n">g</span></div>
 </pre></div>
 
+           </div>
+           <div class="articleComments">
+            
            </div>
           </div>
           <footer>
@@ -357,7 +389,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Edinburgh Genome Foundry.
+        &copy; Copyright 2017, Edinburgh Genome Foundry.
 
     </p>
   </div>
@@ -382,12 +414,14 @@
             VERSION:'0.1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
 
   
 
