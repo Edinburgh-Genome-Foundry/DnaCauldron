@@ -80,5 +80,5 @@ def test_full_report(tmpdir):
     dc.full_assembly_report(parts, target2, enzyme="BsmBI",
                             max_assemblies=40, fragments_filters='auto',
                             assemblies_prefix='asm')
-    assert os.path.exists(os.path.join(target1, 'assemblies', 'asm_05.gb'))
+    assert os.path.exists(os.path.join(target1, 'assemblies', 'asm_005.gb'))
     assert os.path.exists(target2)
