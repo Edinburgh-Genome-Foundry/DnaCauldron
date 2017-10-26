@@ -89,3 +89,53 @@ def single_assembly(parts, receptor, outfile=None,
     if outfile is not None:
         SeqIO.write(assembly, outfile, "genbank")
     return assembly
+
+def swap_donor_vector_part(donor_vector, insert, enzyme):
+    """Return the records obtained by cloning inserts into a donor vector.
+
+    Meant for Type-2S assembly standards only (Golden Gate, etc.)
+
+    This method is meant to quickly go from a linearized sequence of a part
+    to a circular vector (the part in its donor vector) by starting from
+    an existing donor vector (with same overhangs) and swapping this vector's
+    part for the insert of interest.
+
+    Parameters
+    ----------
+    donor_vector
+      Biopython record of a donor vector. must have an insert producing a
+      restriction-free fragment
+
+    insert
+      Biopython record of a plasmid or a linear DNA sequence containing an
+      insert (i.e. a fragment that is cut out)
+
+    enzyme
+      The name of the enzyme to use e.g. 'BsmBI', 'BsaI', ...
+
+    """
+
+    mix = RestrictionLigationMix([donor_vector], enzyme=enzyme)
+    donor_fragments = [
+        f for f in mix.fragments
+        if len(mix.enzyme.search('A' + f.seq.to_standard_sequence())) > 0
+    ]
+    for fr in donor_fragments:
+        fr.features = [f for f in fr.features
+                       if 'source' not in f.qualifiers]
+    assert(len(donor_fragments) == len(mix.fragments) - 1)
+
+    mix = RestrictionLigationMix([insert], enzyme=enzyme)
+    insert_fragments = [
+        f for f in mix.fragments
+        if len(mix.enzyme.search('A' + f.seq.to_standard_sequence())) == 0
+    ]
+    assert(len(insert_fragments) == 1)
+    mix = RestrictionLigationMix(
+        fragments=[insert_fragments[0]] + donor_fragments,
+        enzyme=enzyme,
+        fragments_filters=()
+    )
+    assemblies = list(mix.compute_circular_assemblies())
+    assert (len(assemblies) == 1)
+    return assemblies[0]

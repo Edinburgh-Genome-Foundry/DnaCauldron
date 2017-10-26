@@ -99,6 +99,11 @@ class StickyEndsSeq(Seq):
     def to_standard_sequence(self, discard_sticky_ends=False):
         if discard_sticky_ends:
             return Seq(str(self))
+        else:
+            left = str(self.left_end)
+            middle = self.to_standard_sequence(discard_sticky_ends=True)
+            right = str(self.right_end)
+            return left + middle + right
 
 
 class StickyEndsSeqRecord(SeqRecord):

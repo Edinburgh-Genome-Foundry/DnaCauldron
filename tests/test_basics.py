@@ -40,7 +40,6 @@ def test_single_assembly_with_wrong_enzyme(tmpdir):
 def test_combinatorial_assembly(tmpdir):
 
     enzyme = "BsmBI"
-
     parts_files = [
         os.path.join('tests', 'data', partfile)
         for partfile in("partA.gb", "partA2.gb", "partB.gb", "partB2.gb",
@@ -58,6 +57,16 @@ def test_combinatorial_assembly(tmpdir):
     for i, assembly in enumerate(assemblies):
         filepath = os.path.join(str(tmpdir), "%03d.gb" % i)
         SeqIO.write(assembly, filepath, "genbank")
+
+def test_swap_donor_vector_part():
+    for part_names in [("partA", "partA2"), ("partB", "partB2")]:
+        donor, insert = [
+            dc.load_genbank(os.path.join('tests', 'data', part_name + '.gb'),
+                            linear=False, name=part_name[:-3])
+            for part_name in part_names
+        ]
+        record = dc.swap_donor_vector_part(donor, insert, enzyme='BsmBI')
+
 
 
 def test_full_report(tmpdir):

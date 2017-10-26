@@ -409,7 +409,6 @@ class AssemblyMix:
         ]
         self.constructs = slotted_parts_records + connectors_records
         self.compute_fragments()
-        # print ('FRAGMENTS:', len(self.fragments))
         self.initialize()
         graph = self.compute_filtered_connections_graph()
         components = sorted(
