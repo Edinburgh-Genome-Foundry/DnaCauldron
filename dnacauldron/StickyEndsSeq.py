@@ -100,9 +100,9 @@ class StickyEndsSeq(Seq):
         if discard_sticky_ends:
             return Seq(str(self))
         else:
-            left = str(self.left_end)
+            left = str(self.left_end) if self.left_end else ''
             middle = self.to_standard_sequence(discard_sticky_ends=True)
-            right = str(self.right_end)
+            right = str(self.right_end) if self.right_end else ''
             return left + middle + right
 
 
