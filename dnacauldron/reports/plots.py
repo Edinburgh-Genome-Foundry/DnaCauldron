@@ -154,6 +154,6 @@ def plot_slots_graph(mix, ax=None, with_overhangs=False):
         "%2s - %s" % (str(i + 1), name)
         for i, name in enumerate(legend)
     ]), va='center', transform=ax.transAxes,
-    fontdict=dict(size=12))
+    fontdict=dict(size=12, family='Inconsolata'))
     ax.set_aspect('equal')
     return ax
