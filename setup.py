@@ -13,5 +13,5 @@ setup(name='dnacauldron',
     license='see LICENSE.txt',
     keywords="",
     packages= find_packages(exclude='docs'),
-    install_requires=['Biopython', 'numpy', 'matplotlib', 'pandas',
+    install_requires=['Biopython', 'numpy', 'matplotlib', 'pandas', 'scipy',
                       'networkx', 'dna_features_viewer', 'flametree'])
