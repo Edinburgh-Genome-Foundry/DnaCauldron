@@ -99,139 +99,61 @@ def plot_cuts(record, enzyme_name, linear=True, figure_width=5, ax=None):
                                                  grecord_class=grecord_class)
     return graphic_record.plot(ax=ax, figure_width=figure_width)
 
-
-
-def name_fragment(fragment):
-    """Return the name of the fragment, or `r_NAME` if the fragment is the
-    reverse of another framgnet."""
-    return (fragment.original_construct.name +
-            ("_r" if fragment.is_reverse else ""))
-
-def plot_assembly_graph(assembly_mix, ax=None, fragments_display_lim=3,
-                        figure_size=(10, 8)):
+def plot_slots_graph(mix, ax=None, with_overhangs=False):
     """Plot a map of the different assemblies.
 
     Parameters
     ----------
-
-    assembly_mix
+    mix
       A DnaCauldron AssemblyMix object.
 
     ax
       A matplotlib ax on which to plot. If none is provided, one is created.
 
-    fragments_display_lim
-      Maximum number of fragments names to write in a slot. If a "slot" has
-      more fragments than this it will display "N fragments" instead of the
-      list of fragments names.
-
-    fragments_filters
-      List of functions f(fragment)=>true/false than can be used to remove
-      some fragments from the list of fragments.
-
-    figure_size
-      Size (width, height) in inches of the final figure
+    with_overhangs
+      If true, the overhangs appear in the graph
     """
+    slots = mix.compute_slots()
+    graph = mix.slots_graph(with_overhangs=with_overhangs)
 
-    def normalized_end(end):
-        return min(str(end), str(end.reverse_complement()))
-
-
-    g = nx.Graph()
-    all_fragments = [
-        f for f in (assembly_mix.fragments + assembly_mix.reverse_fragments)
-        if all([fl(f) for fl in assembly_mix.fragments_filters])
-    ]
-    def fragments_are_equal(f1, f2):
-        '''loose equality for the purpose of this method'''
-        return str(f1.seq) == str(f2.seq)
-    for fragment in all_fragments:
-        # print fragment.seq.left_end, fragment.seq.right_end
-        if None in [fragment.seq.left_end, fragment.seq.right_end]:
-            continue
-        left = normalized_end(fragment.seq.left_end)
-        right = normalized_end(fragment.seq.right_end)
-        if not g.has_edge(left, right):
-            g.add_edge(left, right, fragments=[])
-        fragments = g[left][right]['fragments']
-        if ((not any([fragments_are_equal(fragment, f) for f in fragments])) and
-            (not any([fragments_are_equal(fragment.reverse_fragment, f)
-                     for f in fragments]))):
-            fragments.append(fragment)
+    # Positioning - a bit complex to deal with multi-components graphs
+    pos = {}
+    components = list(nx.components.connected_component_subgraphs(graph))
+    max_len = 1.0 * max(len(c) for c in components)
+    for i, g in enumerate(components):
+        pos.update(nx.layout.kamada_kawai_layout(g, center=(0, -i),
+                                                 scale=len(g) / max_len))
 
 
-    if ax is None:
-        fig, ax = plt.subplots(1, figsize=figure_size)
-    ax.axis("off")
-    if GRAPHVIZ_AVAILABLE:
-        layout = graphviz_layout(g, 'circo')
-    else:
-        layout = nx.layout.circular_layout(g)
-    values = list(layout.values())
-    all_x = [p[0] for p in values]
-    all_y = [p[1] for p in values]
-    if all_x != []:
-        xmin, xmax = min(all_x), max(all_x)
-        ymin, ymax = min(all_y), max(all_y)
-        dx = 0.1 * (xmax - xmin)
-        dy = 0.1 * (ymax - ymin)
-        ax.set_xlim(xmin - dx, xmax + dx)
-        ax.set_ylim(ymin - dy, ymax + dy)
-
-    for (end1, end2, data) in list(g.edges(data=True)):
-
-        x1, y1 = p1 = np.array(layout[end1])
-        x2, y2 = p2 = np.array(layout[end2])
-        center = 0.5 * (p1+p2)
-        ax.plot([x1, x2], [y1, y2], color='gray')
-        fragments = data['fragments']
-        g[end1][end2]['fragments'] = fragments
-        if len(fragments) <= fragments_display_lim:
-            label = "\n".join([
-                name_fragment(fragment)
-                for fragment in fragments[:fragments_display_lim]
-            ])
-        else:
-            label = "%d parts" % len(fragments)
-        ax.annotate(label, center, verticalalignment="center",
-                    horizontalalignment="center",
-                    xycoords="data",
-                    bbox={'facecolor': 'white', 'linewidth': 0},
-                    family='Open Sans', weight='bold',
-                    size=10)
-
-    for (end, pos) in layout.items():
-        ax.annotate(end, pos, verticalalignment="center",
-                    horizontalalignment="center",
-                    xycoords="data",
-                    bbox={'facecolor': 'white', 'linewidth': 0},
-                    family='Open Sans', size=10)
-    return ax, g
-
-def plot_parts_graph(mix, ax=None, with_overhangs=False):
-    graph = mix.parts_connections_graph(with_overhangs=with_overhangs)
-    pos = nx.layout.kamada_kawai_layout(graph)
-    parts = [n for n in graph.nodes() if n in mix.fragments_dict]
+    parts = [n for n in graph.nodes() if n in slots]
     def polar(xy):
         x, y = xy - np.array([0.05, 0.05])
         return (np.arctan2(x, -y), -np.sqrt(x**2 + y**2))
     sorted_pos = sorted(pos.items(), key=lambda c: polar(c[1]))
-    fig, ax = plt.subplots(1, figsize=(10, 0.3*len(parts)))
+    fig, ax = plt.subplots(1, figsize=(13, 0.4*len(parts)))
     nx.draw(graph, pos=pos, node_color='w', node_size=100, ax=ax,
             edge_color='#eeeeee')
     legend = []
     for i, (n, (x, y)) in enumerate(sorted_pos):
-        if n in mix.fragments_dict:
-            legend.append(mix.fragments_dict[n].original_construct.id)
+        if n in parts:
+            slot_parts = list(slots[n])
+            if len(slot_parts) == 1:
+                label = slot_parts[0]
+            else:
+                label = "\n       ".join(["\n       ".join(slot_parts[:-1]),
+                                          slot_parts[-1]])
+            legend.append(label)
+            fontdict = {'weight': 'bold'} if len(slots[n]) > 1 else {}
             ax.text(x, y, len(legend), ha='center', va='center',
-                    color='#3a3aad')
+                    color='#3a3aad', fontdict=fontdict)
         else:
             ax.text(x, y, n, ha='center', va='center', color='#333333',
-                    size=7, fontdict=dict(family='Inconsolata'))
+                    size=9, fontdict=dict(family='Inconsolata'))
 
     ax.text(1.1, 0.5, "\n".join(['Parts:'] + [
-        "%d - %s" % (i + 1, name)
+        "%2s - %s" % (str(i + 1), name)
         for i, name in enumerate(legend)
-    ]), va='center', transform=ax.transAxes)
+    ]), va='center', transform=ax.transAxes,
+    fontdict=dict(size=12))
     ax.set_aspect('equal')
     return ax

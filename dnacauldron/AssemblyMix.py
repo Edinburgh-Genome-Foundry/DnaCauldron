@@ -158,6 +158,17 @@ class AssemblyMix:
     fragments, when two fragments will clip together, etc.
     """
 
+    def initialize(self):
+        """Precompute the fragments and connections graph of the mix."""
+        if self.constructs is not None:
+            for construct in self.constructs:
+                if not hasattr(construct, "linear"):
+                    construct.linear = True  # assumed linear by default
+        if not hasattr(self, "fragments") or self.fragments is None:
+            self.compute_fragments()
+        self.compute_reverse_fragments()
+        self.compute_connections_graph()
+
     def compute_connections_graph(self):
         """Compute a graph where nodes are fragments and edges indicate
         which fragments can clip together.
@@ -186,27 +197,40 @@ class AssemblyMix:
         ])
         return graph
 
-    def parts_connections_graph(self, with_overhangs=False):
-        graph = self.filtered_connections_graph
-        graph = graph.to_undirected()
-        L = len(self.fragments)
-        for i in range(L):
-            if (i in graph.nodes()) and ((i + L) in graph.nodes()):
-                graph = nx.contracted_nodes(graph, i, i + L)
-        if with_overhangs:
-            graph = self.add_overhangs_to_graph(graph)
-        return graph
+    def compute_slots(self):
+        def std_overhang(oh):
+            if (oh is None):
+                return ''
+            else:
+                oh = str(oh)
+                return min(oh, reverse_complement(oh))
+        def slot(fragment):
+            return tuple(sorted([std_overhang(fragment.seq.left_end),
+                                 std_overhang(fragment.seq.right_end)]))
+        slots = {}
+        for f in self.filtered_fragments:
+            f_slot = slot(f)
+            if f_slot not in slots:
+                slots[f_slot] = set()
+            slots[f_slot].add(f.original_construct.id)
+        return slots
 
-    def add_overhangs_to_graph(self, graph):
+    def slots_graph(self, with_overhangs=True):
+        """Compute the slots graph of the graph."""
+        slots_list = list(self.compute_slots().keys())
         edges = []
-        for n in graph.nodes():
-            fr = self.fragments_dict[n]
-            if fr.seq.left_end is not None:
-                oh = str(fr.seq.left_end)
-                edges.append((n, min(oh, reverse_complement(oh))))
-            if fr.seq.right_end is not None:
-                oh = str(fr.seq.right_end)
-                edges.append((n, min(oh, reverse_complement(oh))))
+        if with_overhangs:
+            edges = [
+                (slot, e)
+                for slot in slots_list
+                for e in slot
+                if e != ''
+            ]
+        else:
+            edges = [
+                (s1, s2) for (s1, s2) in itt.combinations(slots_list, 2)
+                if [e for e in s1 if (e != '') and (e in s2)] != []
+            ]
         return nx.Graph(edges)
 
 
@@ -226,17 +250,6 @@ class AssemblyMix:
             fragment.reverse_fragment = new_fragment
             new_fragment.original_construct = fragment.original_construct
             self.reverse_fragments.append(new_fragment)
-
-    def initialize(self):
-        """Precompute the fragments and connections graph of the mix."""
-        if self.constructs is not None:
-            for construct in self.constructs:
-                if not hasattr(construct, "linear"):
-                    construct.linear = True  # assumed linear by default
-        if not hasattr(self, "fragments") or self.fragments is None:
-            self.compute_fragments()
-        self.compute_reverse_fragments()
-        self.compute_connections_graph()
 
     def compute_circular_fragments_sets(self, fragments_sets_filters=(),
                                         randomize=False,
@@ -395,48 +408,12 @@ class AssemblyMix:
                 if all([fl(fragments_assembly) for fl in seqrecord_filters]):
                     yield(fragments_assembly)
 
-    def get_interfragments_overhang(self, fr_index1, fr_index2):
-        """Return the overhang sequence linking two fragments"""
-        overhang, n = Counter([
-            str(e)
-            for f in [self.fragments_dict[n] for n in (fr_index1, fr_index2)]
-            for end in [f.seq.left_end, f.seq.right_end]
-            for e in (end, end.reverse_complement())
-        ]).most_common(1)[0]
-        if n != 2:
-            raise ValueError('Fragments do not anneal correctly.')
-        return overhang
-
     @property
     def filtered_fragments(self):
         return [
             f for f in (self.fragments + self.reverse_fragments)
             if all([fl(f) for fl in self.fragments_filters])
         ]
-
-    def slots_graph(self):
-        def normalized_end(end):
-            return min(str(end), str(end.reverse_complement()))
-
-        def fragments_are_equal(f1, f2):
-            '''loose equality for the purpose of this method'''
-            return str(f1.seq) == str(f2.seq)
-
-        graph = nx.Graph()
-        for fragment in self.filtered_fragments:
-            if None in [fragment.seq.left_end, fragment.seq.right_end]:
-                continue
-            left = normalized_end(fragment.seq.left_end)
-            right = normalized_end(fragment.seq.right_end)
-            if not graph.has_edge(left, right):
-                graph.add_edge(left, right, fragments=[])
-            fragments = graph[left][right]['fragments']
-            if ((not any([fragments_are_equal(fragment, f)
-                          for f in fragments])) and
-                (not any([fragments_are_equal(fragment.reverse_fragment, f)
-                          for f in fragments]))):
-                fragments.append(fragment)
-        return graph
 
     def autoselect_connectors(self, connectors_records):
         original_constructs = self.constructs

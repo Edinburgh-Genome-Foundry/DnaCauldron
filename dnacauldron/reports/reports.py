@@ -7,8 +7,13 @@ from collections import defaultdict, Counter
 
 from ..Filter import NoRestrictionSiteFilter
 from ..AssemblyMix import RestrictionLigationMix
-from .plots import (name_fragment, plot_cuts, plot_parts_graph,
-                    AssemblyTranslator)
+from .plots import (plot_cuts, plot_slots_graph, AssemblyTranslator)
+
+def name_fragment(fragment):
+    """Return the name of the fragment, or `r_NAME` if the fragment is the
+    reverse of another framgnet."""
+    return (fragment.original_construct.name +
+            ("_r" if fragment.is_reverse else ""))
 
 def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
                          connector_records=(),
@@ -112,21 +117,10 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
             plt.close(ax.figure)
 
     # GRAPH
-    ax = plot_parts_graph(mix)
+    ax = plot_slots_graph(mix)
     f = report._file('parts_graph.pdf')
     ax.figure.savefig(f.open('wb'), format='pdf', bbox_inches='tight')
     plt.close(ax.figure)
-    # data = [
-    #     dict(
-    #         end_1=end_1, end_2=end_2,
-    #         parts=" & ".join([name_fragment(f)
-    #                           for f in data["fragments"]])
-    #     )
-    #     for end_1, end_2, data in graph.edges(data=True)
-    # ]
-    # df = pandas.DataFrame.from_records(data,
-    #                                    columns=['end_1', 'end_2', 'parts'])
-    # df.to_csv(graph_dir._file('parts_per_slot.csv'), index=False)
 
     # ASSEMBLIES
     assemblies = mix.compute_circular_assemblies()
@@ -143,7 +137,7 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
             name = '%s_%03d' % (assemblies_prefix, (i+1))
         assemblies_data.append(dict(
             name=name,
-            parts=" & ".join([name_fragment(f) for f in asm.fragments]),
+            parts=" & ".join([name_fragment(f_) for f_ in asm.fragments]),
             number_of_parts=len(asm.fragments),
             assembly_size=len(asm)
         ))
