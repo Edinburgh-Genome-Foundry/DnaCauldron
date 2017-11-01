@@ -1,7 +1,26 @@
 import numpy as np
 from Bio import SeqIO
 from Bio.SeqFeature import SeqFeature, FeatureLocation
+from Bio.Seq import Seq
 
+def complement(dna_sequence):
+    """Return the complement of the DNA sequence.
+
+    For instance ``complement("ATGCCG")`` returns ``"TACGGC"``.
+
+    Uses BioPython for speed.
+    """
+    return str(Seq(dna_sequence).complement())
+
+
+def reverse_complement(sequence):
+    """Return the reverse-complement of the DNA sequence.
+
+    For instance ``complement("ATGCCG")`` returns ``"GCCGTA"``.
+
+    Uses BioPython for speed.
+    """
+    return complement(sequence)[::-1]
 
 def random_dna_sequence(length, probas=None, seed=None):
     """Return a random DNA sequence ("ATGGCGT...") with the specified length.

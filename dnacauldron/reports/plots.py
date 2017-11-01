@@ -207,3 +207,31 @@ def plot_assembly_graph(assembly_mix, ax=None, fragments_display_lim=3,
                     bbox={'facecolor': 'white', 'linewidth': 0},
                     family='Open Sans', size=10)
     return ax, g
+
+def plot_parts_graph(mix, ax=None, with_overhangs=False):
+    graph = mix.parts_connections_graph(with_overhangs=with_overhangs)
+    pos = nx.layout.kamada_kawai_layout(graph)
+    parts = [n for n in graph.nodes() if n in mix.fragments_dict]
+    def polar(xy):
+        x, y = xy - np.array([0.05, 0.05])
+        return (np.arctan2(x, -y), -np.sqrt(x**2 + y**2))
+    sorted_pos = sorted(pos.items(), key=lambda c: polar(c[1]))
+    fig, ax = plt.subplots(1, figsize=(10, 0.3*len(parts)))
+    nx.draw(graph, pos=pos, node_color='w', node_size=100, ax=ax,
+            edge_color='#eeeeee')
+    legend = []
+    for i, (n, (x, y)) in enumerate(sorted_pos):
+        if n in mix.fragments_dict:
+            legend.append(mix.fragments_dict[n].original_construct.id)
+            ax.text(x, y, len(legend), ha='center', va='center',
+                    color='#3a3aad')
+        else:
+            ax.text(x, y, n, ha='center', va='center', color='#333333',
+                    size=7, fontdict=dict(family='Inconsolata'))
+
+    ax.text(1.1, 0.5, "\n".join(['Parts:'] + [
+        "%d - %s" % (i + 1, name)
+        for i, name in enumerate(legend)
+    ]), va='center', transform=ax.transAxes)
+    ax.set_aspect('equal')
+    return ax

@@ -7,7 +7,7 @@ from collections import defaultdict, Counter
 
 from ..Filter import NoRestrictionSiteFilter
 from ..AssemblyMix import RestrictionLigationMix
-from .plots import (name_fragment, plot_cuts, plot_assembly_graph,
+from .plots import (name_fragment, plot_cuts, plot_parts_graph,
                     AssemblyTranslator)
 
 def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
@@ -79,7 +79,6 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
 
     report = file_tree(target, replace=True)
 
-    graph_dir = report._dir("assembly_graph")
     assemblies_dir = report._dir("assemblies")
 
     mix = mix_class(parts, enzyme, fragments_filters=fragments_filters)
@@ -113,22 +112,21 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
             plt.close(ax.figure)
 
     # GRAPH
-
-    ax, graph = plot_assembly_graph(mix)
-    ax.figure.savefig(graph_dir._file('graph.pdf').open('wb'),
-                      format='pdf', bbox_inches='tight')
-    data = [
-        dict(
-            end_1=end_1, end_2=end_2,
-            parts=" & ".join([name_fragment(f)
-                              for f in data["fragments"]])
-        )
-        for end_1, end_2, data in graph.edges(data=True)
-    ]
-    df = pandas.DataFrame.from_records(data,
-                                       columns=['end_1', 'end_2', 'parts'])
-    df.to_csv(graph_dir._file('parts_per_slot.csv'), index=False)
+    ax = plot_parts_graph(mix)
+    f = report._file('parts_graph.pdf')
+    ax.figure.savefig(f.open('wb'), format='pdf', bbox_inches='tight')
     plt.close(ax.figure)
+    # data = [
+    #     dict(
+    #         end_1=end_1, end_2=end_2,
+    #         parts=" & ".join([name_fragment(f)
+    #                           for f in data["fragments"]])
+    #     )
+    #     for end_1, end_2, data in graph.edges(data=True)
+    # ]
+    # df = pandas.DataFrame.from_records(data,
+    #                                    columns=['end_1', 'end_2', 'parts'])
+    # df.to_csv(graph_dir._file('parts_per_slot.csv'), index=False)
 
     # ASSEMBLIES
     assemblies = mix.compute_circular_assemblies()

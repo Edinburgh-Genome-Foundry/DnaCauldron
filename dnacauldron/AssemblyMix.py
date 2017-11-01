@@ -3,6 +3,7 @@
 
 import itertools as itt
 from copy import deepcopy
+from collections import Counter
 
 import networkx as nx
 import numpy as np
@@ -12,7 +13,7 @@ from Bio.Alphabet import DNAAlphabet
 from .StickyEndsSeq import (StickyEndsSeqRecord, StickyEndsSeq, StickyEnd,
                             digest_seqrecord_with_sticky_ends)
 from .Filter import NoRestrictionSiteFilter, TextSearchFilter
-from .tools import annotate_record
+from .tools import annotate_record, reverse_complement
 
 
 class AssemblyError(Exception):
@@ -175,7 +176,8 @@ class AssemblyMix:
             if self.will_clip_in_this_order(fragment2, fragment1):
                 self.connections_graph.add_edge(i2, i1)
 
-    def compute_filtered_connections_graph(self):
+    @property
+    def filtered_connections_graph(self):
         graph = nx.DiGraph(self.connections_graph)
         graph.remove_nodes_from([
             node for node in graph.nodes()
@@ -183,6 +185,30 @@ class AssemblyMix:
                         for fl in self.fragments_filters])
         ])
         return graph
+
+    def parts_connections_graph(self, with_overhangs=False):
+        graph = self.filtered_connections_graph
+        graph = graph.to_undirected()
+        L = len(self.fragments)
+        for i in range(L):
+            if (i in graph.nodes()) and ((i + L) in graph.nodes()):
+                graph = nx.contracted_nodes(graph, i, i + L)
+        if with_overhangs:
+            graph = self.add_overhangs_to_graph(graph)
+        return graph
+
+    def add_overhangs_to_graph(self, graph):
+        edges = []
+        for n in graph.nodes():
+            fr = self.fragments_dict[n]
+            if fr.seq.left_end is not None:
+                oh = str(fr.seq.left_end)
+                edges.append((n, min(oh, reverse_complement(oh))))
+            if fr.seq.right_end is not None:
+                oh = str(fr.seq.right_end)
+                edges.append((n, min(oh, reverse_complement(oh))))
+        return nx.Graph(edges)
+
 
     def compute_reverse_fragments(self):
         """Precompute self.reverse_fragments.
@@ -258,7 +284,7 @@ class AssemblyMix:
           is the randomization staling cutoff.
 
         """
-        graph = self.compute_filtered_connections_graph()
+        graph = self.filtered_connections_graph
 
         if randomize:
             def circular_fragments_sets_generator():
@@ -350,9 +376,8 @@ class AssemblyMix:
                                   min_parts=2,
                                   seqrecord_filters=(),
                                   annotate_homologies=False):
-        self.compute_filtered_connections_graph()
         seen_hashes = set()
-        g = self.compute_filtered_connections_graph()
+        g = self.filtered_connections_graph
         for source, targets in nx.shortest_path(g).items():
             for target, path in targets.items():
                 if (len(path) < min_parts):
@@ -369,6 +394,18 @@ class AssemblyMix:
                     fragments, annotate_homologies=annotate_homologies)
                 if all([fl(fragments_assembly) for fl in seqrecord_filters]):
                     yield(fragments_assembly)
+
+    def get_interfragments_overhang(self, fr_index1, fr_index2):
+        """Return the overhang sequence linking two fragments"""
+        overhang, n = Counter([
+            str(e)
+            for f in [self.fragments_dict[n] for n in (fr_index1, fr_index2)]
+            for end in [f.seq.left_end, f.seq.right_end]
+            for e in (end, end.reverse_complement())
+        ]).most_common(1)[0]
+        if n != 2:
+            raise ValueError('Fragments do not anneal correctly.')
+        return overhang
 
     @property
     def filtered_fragments(self):
@@ -410,7 +447,7 @@ class AssemblyMix:
         self.constructs = slotted_parts_records + connectors_records
         self.compute_fragments()
         self.initialize()
-        graph = self.compute_filtered_connections_graph()
+        graph = self.filtered_connections_graph
         components = sorted(
             nx.components.connected_component_subgraphs(graph.to_undirected()),
             key=lambda graph_: -len(graph_)
