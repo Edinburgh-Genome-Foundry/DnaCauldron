@@ -21,6 +21,8 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
                          include_parts=True,
                          fragments_filters='auto',
                          assemblies_prefix='assembly',
+                         show_overhangs_in_graph=True,
+                         show_overhangs_in_genbank=False,
                          mix_class="restriction"):
     """Write a full assembly report in a folder or a zip.
 
@@ -117,13 +119,14 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
             plt.close(ax.figure)
 
     # GRAPH
-    ax = plot_slots_graph(mix)
+    ax = plot_slots_graph(mix, with_overhangs=show_overhangs_in_graph)
     f = report._file('parts_graph.pdf')
     ax.figure.savefig(f.open('wb'), format='pdf', bbox_inches='tight')
     plt.close(ax.figure)
 
     # ASSEMBLIES
-    assemblies = mix.compute_circular_assemblies()
+    assemblies = mix.compute_circular_assemblies(
+        annotate_homologies=show_overhangs_in_genbank)
     assemblies = sorted(
         [asm for (i, asm) in zip(range(max_assemblies), assemblies)],
         key=lambda asm: str(asm.seq)
