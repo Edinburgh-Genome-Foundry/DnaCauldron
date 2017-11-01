@@ -124,7 +124,6 @@ def plot_slots_graph(mix, ax=None, with_overhangs=False):
         pos.update(nx.layout.kamada_kawai_layout(g, center=(0, -i),
                                                  scale=len(g) / max_len))
 
-
     parts = [n for n in graph.nodes() if n in slots]
     def polar(xy):
         x, y = xy - np.array([0.05, 0.05])
@@ -137,23 +136,18 @@ def plot_slots_graph(mix, ax=None, with_overhangs=False):
     for i, (n, (x, y)) in enumerate(sorted_pos):
         if n in parts:
             slot_parts = list(slots[n])
-            if len(slot_parts) == 1:
-                label = slot_parts[0]
-            else:
-                label = "\n       ".join(["\n       ".join(slot_parts[:-1]),
-                                          slot_parts[-1]])
-            legend.append(label)
-            fontdict = {'weight': 'bold'} if len(slots[n]) > 1 else {}
+            legend.append("\n     ".join(sorted(slot_parts)))
+            fontdict = {'weight': 'bold'} if len(slot_parts) > 1 else {}
             ax.text(x, y, len(legend), ha='center', va='center',
                     color='#3a3aad', fontdict=fontdict)
         else:
             ax.text(x, y, n, ha='center', va='center', color='#333333',
                     size=9, fontdict=dict(family='Inconsolata'))
-
-    ax.text(1.1, 0.5, "\n".join(['Parts:'] + [
+    text = "\n".join(['Parts:'] + [
         "%2s - %s" % (str(i + 1), name)
         for i, name in enumerate(legend)
-    ]), va='center', transform=ax.transAxes,
-    fontdict=dict(size=12, family='Inconsolata'))
+    ])
+    ax.text(1.1, 0.5, text, va='center', transform=ax.transAxes,
+            fontdict=dict(size=12, family='Inconsolata'))
     ax.set_aspect('equal')
     return ax
