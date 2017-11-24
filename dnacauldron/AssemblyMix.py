@@ -2,7 +2,7 @@
 """
 
 import itertools as itt
-from copy import deepcopy
+from copy import deepcopy, copy
 from collections import Counter
 
 import networkx as nx
@@ -431,7 +431,7 @@ class AssemblyMix:
         )
 
         for component in components:
-            newgraph = deepcopy(graph)
+            newgraph = graph.copy()#deepcopy(graph)
             newgraph.remove_nodes_from(
                 set(newgraph.nodes()).difference(component.nodes())
             )
@@ -471,7 +471,6 @@ class AssemblyMix:
         self.initialize()
         return selected_connectors
 
-
 class RestrictionLigationMix(AssemblyMix):
     """Assembly mix for an enzymatic Restriction Ligation assembly.
 
@@ -493,9 +492,10 @@ class RestrictionLigationMix(AssemblyMix):
 
     def __init__(self, constructs=None, enzyme=None, fragments=None,
                  fragments_filters='default'):
-
-        self.constructs = deepcopy(constructs) if constructs else constructs
-        self.fragments = deepcopy(fragments) if fragments else fragments
+        # shallow copy seems sufficient and problem-free.
+        # deepcopy would be safer but it is a computational bottleneck.
+        self.constructs = copy(constructs) if constructs else constructs
+        self.fragments = copy(fragments) if fragments else fragments
         self.enzyme = None if enzyme is None else Restriction.__dict__[enzyme]
         if fragments_filters == 'default':
             if enzyme is not None:

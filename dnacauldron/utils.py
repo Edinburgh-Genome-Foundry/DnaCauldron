@@ -3,7 +3,7 @@
 from Bio import SeqIO, Restriction
 from .Filter import NoRestrictionSiteFilter
 from .AssemblyMix import RestrictionLigationMix, AssemblyError
-
+from .tools import reverse_complement
 
 def autoselect_enzyme(parts, enzymes):
     """Finds the enzyme that the parts were probably meant to be assembled with
@@ -15,8 +15,10 @@ def autoselect_enzyme(parts, enzymes):
       A list of SeqRecord files. They should have a "linear" attribute set to
       True or False, otherwise
 
-    This finds the enzyme that
-
+    Returns
+    --------
+    The enzyme that has as near as possible as exactly 2 sites in the different
+    constructs.
     """
     def enzyme_fit_score(enzyme_name):
         enz = Restriction.__dict__[enzyme_name]
@@ -61,13 +63,13 @@ def single_assembly(parts, receptor, outfile=None,
         if isinstance(receptor, str) and (filename == receptor):
             record.name += " (RECEPTOR)"
         return record
-    parts_records = [
+    part_records = [
         load_genbank(part) if isinstance(part, str) else part
         for part in parts + [receptor]
     ]
     biopython_enzyme = Restriction.__dict__[enzyme]
     sites_in_receptor = \
-        len(biopython_enzyme.search(parts_records[-1].seq, linear=False))
+        len(biopython_enzyme.search(part_records[-1].seq, linear=False))
 
     def exactly_one_receptor_vector(fragments):
         receptor_fragments = [
@@ -76,7 +78,7 @@ def single_assembly(parts, receptor, outfile=None,
         ]
         return len(receptor_fragments) == sites_in_receptor - 1
 
-    mix = mix_class(parts_records, enzyme)
+    mix = mix_class(part_records, enzyme)
     assemblies = mix.compute_circular_assemblies(
         fragments_sets_filters=[exactly_one_receptor_vector],
         annotate_homologies=annotate_homologies
@@ -139,3 +141,131 @@ def swap_donor_vector_part(donor_vector, insert, enzyme):
     assemblies = list(mix.compute_circular_assemblies())
     assert (len(assemblies) == 1)
     return assemblies[0]
+
+
+class BackboneChoice:
+    """Class to represent the result of a backbone autoselection"""
+
+    def __init__(self, record, already_on_backbone,
+                 backbone_record=None, final_record=None):
+        self.record = record
+        self.already_on_backbone = already_on_backbone
+        self.backbone_record = backbone_record
+        self.final_record = final_record
+
+    def __repr__(self):
+        if self.already_on_backbone:
+            return "%s (already on backbone)" % self.record.id
+        else:
+            return "%s inserted on %s" % (self.record.id,
+                                          self.backbone_record.id)
+    def to_dict(self):
+        return dict(record=self.record,
+                    backbone_record=self.backbone_record,
+                    final_record=self.final_record)
+
+def insert_parts_on_backbones(part_records, backbone_records,
+                              enzyme='autodetect',
+                              min_backbone_length=500,
+                              process_parts_with_backbone=False):
+    """Autodetect the right backbone for each Golden Gate part.
+
+    This method is meant to process a batch of genbank files, some of
+    which might represent a part on a backbone, and some of which
+    represent simply a part (and enzyme-flanked overhangs) which needs
+    to be complemented with the right backbone.
+
+    It will return, for each part, whether it has already a backbone, and
+    if not, which backbone was selected and what the final sequence is.
+
+    Parameters
+    ----------
+
+    part_records
+      List of genbanks of the parts to put on vectors.
+
+    backbone_vectors
+      Vectors to insert parts in, typically donor vectors for different
+      positions of an assembly standard.
+
+    enzyme
+      Enzyme to use. Use autodetect for autodetection.
+
+    min_backbone_length
+      Minimal length of a backbone. Used to determine if a part is
+      represented alone or with a backbone.
+
+    process_parts_with_backbone
+      If true, parts will be inserted in an autoselected backbone even
+      when they already have a backbone (it will be replaced).
+
+    """
+
+    # HELPER FUNCTIONS
+
+    def record_contains_backbone(record, enzyme='BsmBI',
+                                 min_backbone_length=500):
+        mix = RestrictionLigationMix([record], enzyme='BsmBI')
+        insert = [
+            frag for frag in mix.filtered_fragments
+            if not frag.is_reverse
+        ][0]
+        return (len(record) - len(insert)) > min_backbone_length
+
+    def get_insert_from_record(record, enzyme='BsmBI'):
+        mix = RestrictionLigationMix([record], enzyme=enzyme)
+        return [
+            frag for frag in mix.filtered_fragments
+            if not frag.is_reverse
+        ][0]
+
+    def standardize_overhangs(overhangs):
+        o1, o2 = overhangs
+        ro1, ro2 = [reverse_complement(o) for o in (o1, o2)]
+        return min((o1, o2), (ro2, ro1))
+
+    def get_overhangs_from_record(record, enzyme='BsmBI'):
+        insert = get_insert_from_record(record, enzyme=enzyme)
+        overhangs = str(insert.seq.left_end), str(insert.seq.right_end)
+        return standardize_overhangs(overhangs)
+
+    def records_to_overhangs_dict(records, allow_multiple_choices=False):
+        result = {}
+        for record in records:
+            overhangs = get_overhangs_from_record(record)
+            if overhangs in result:
+                if allow_multiple_choices:
+                    result[overhangs].append(record)
+                else:
+                    raise ValueError("Vector %s has same overhangs as %s"
+                                     % (record.id, result[overhangs].id))
+            else:
+                if allow_multiple_choices:
+                    result[overhangs] = []
+                else:
+                    result[overhangs] = record
+        return result
+
+    # MAIN SCRIPT
+
+    if enzyme == 'autodetect':
+        enzyme = autoselect_enzyme(part_records, ['BsmBI', 'BsaI', 'BbsI'])
+
+    overhangs_dict = records_to_overhangs_dict(backbone_records)
+    backbone_choices = []
+    for record in part_records:
+        if (not process_parts_with_backbone) and record_contains_backbone(
+            record, enzyme=enzyme, min_backbone_length=min_backbone_length):
+            choice = BackboneChoice(record, already_on_backbone=True)
+        else:
+            overhangs = get_overhangs_from_record(record, enzyme=enzyme)
+            backbone_record = overhangs_dict[overhangs]
+            final_record = swap_donor_vector_part(donor_vector=backbone_record,
+                                                  insert=record, enzyme=enzyme)
+            choice = BackboneChoice(record=record,
+                                    already_on_backbone=False,
+                                    backbone_record=backbone_record,
+                                    final_record=final_record)
+        backbone_choices.append(choice)
+
+    return backbone_choices
