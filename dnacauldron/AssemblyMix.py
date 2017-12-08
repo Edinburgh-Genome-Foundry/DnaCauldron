@@ -164,6 +164,10 @@ class AssemblyMix:
             for construct in self.constructs:
                 if not hasattr(construct, "linear"):
                     construct.linear = True  # assumed linear by default
+            self.constructs_dict = {
+                cst.id: cst
+                for cst in self.constructs
+            }
         if not hasattr(self, "fragments") or self.fragments is None:
             self.compute_fragments()
         self.compute_reverse_fragments()
@@ -418,8 +422,8 @@ class AssemblyMix:
     def autoselect_connectors(self, connectors_records):
         original_constructs = self.constructs
         slotted_parts_records = [
-            data['fragments'][0].original_construct
-            for (n1, n2, data) in self.slots_graph().edges(data=True)
+             self.constructs_dict[list(parts)[0]]
+             for parts in self.compute_slots().values()
         ]
         self.constructs = slotted_parts_records + connectors_records
         self.compute_fragments()
@@ -431,6 +435,7 @@ class AssemblyMix:
         )
 
         for component in components:
+
             newgraph = graph.copy()#deepcopy(graph)
             newgraph.remove_nodes_from(
                 set(newgraph.nodes()).difference(component.nodes())
@@ -458,6 +463,8 @@ class AssemblyMix:
                 break
         else:
             raise ValueError("No construct found involving all parts")
+        if len(cycle) == 0:
+            raise ValueError("No solution found - a connector may be missing.")
 
         selected_connectors = [
             self.fragments_dict[n].original_construct

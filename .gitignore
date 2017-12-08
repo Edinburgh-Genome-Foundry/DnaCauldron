@@ -44,4 +44,4 @@ nosetests.xml
 
 .pypirc
 
-examples/generated_data
+examples/output_data

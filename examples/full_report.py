@@ -1,13 +1,13 @@
-import dnacauldron as dc
-import os
+import flametree # for getting/writing files and folders
+from Bio import SeqIO  # for exporting to Genbank
+from dnacauldron import full_assembly_report, load_genbank
+root = flametree.file_tree(".")
 parts = [
-    dc.load_genbank(os.path.join('data', partfile), linear=False,
-                    name=partfile[:-3])
-    for partfile in("partA.gb", "partA2.gb", "partB.gb", "partB2.gb",
-                    "partC.gb", "receptor.gb")
+    load_genbank(f._path, linear=False, name=f._name_no_extension)
+    for f in root.data.assemblies._all_files
 ]
-target = os.path.join('generated_data', 'my_report')
-dc.full_assembly_report(parts, target, enzyme="BsmBI",
-                        max_assemblies=40, fragments_filters='auto',
-                        assemblies_prefix='asm')
-print ("Your report is ready at 'generated_data/my_report/'")
+target = root._dir('output_data')._dir('report')._path
+full_assembly_report(parts, target=target, enzyme="BsmBI",
+                     max_assemblies=40, fragments_filters='auto',
+                     assemblies_prefix='asm')
+print ("Your report is ready at 'output_data/report/'")

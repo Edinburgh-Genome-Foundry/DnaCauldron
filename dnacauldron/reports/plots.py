@@ -99,7 +99,7 @@ def plot_cuts(record, enzyme_name, linear=True, figure_width=5, ax=None):
                                                  grecord_class=grecord_class)
     return graphic_record.plot(ax=ax, figure_width=figure_width)
 
-def plot_slots_graph(mix, ax=None, with_overhangs=False):
+def plot_slots_graph(mix, ax=None, with_overhangs=False, show_missing=True):
     """Plot a map of the different assemblies.
 
     Parameters
@@ -147,6 +147,13 @@ def plot_slots_graph(mix, ax=None, with_overhangs=False):
         "%2s - %s" % (str(i + 1), name)
         for i, name in enumerate(legend)
     ])
+    if show_missing:
+        all_mix_parts = set([f.id for f in mix.constructs])
+        all_slots_parts = set([p for plist in slots.values() for p in plist])
+        missing_parts = all_mix_parts.difference(all_slots_parts)
+        if len(missing_parts):
+            text += "\n!!! Missing parts: " + ", ".join(missing_parts)
+
     ax.text(1.1, 0.5, text, va='center', transform=ax.transAxes,
             fontdict=dict(size=12, family='Inconsolata'))
     ax.set_aspect('equal')

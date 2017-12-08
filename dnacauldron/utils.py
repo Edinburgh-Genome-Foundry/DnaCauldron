@@ -1,6 +1,8 @@
 """Useful functions to simplify the most common operations."""
 
 from Bio import SeqIO, Restriction
+import pandas
+
 from .Filter import NoRestrictionSiteFilter
 from .AssemblyMix import RestrictionLigationMix, AssemblyError
 from .tools import reverse_complement
@@ -160,9 +162,30 @@ class BackboneChoice:
             return "%s inserted on %s" % (self.record.id,
                                           self.backbone_record.id)
     def to_dict(self):
-        return dict(record=self.record,
-                    backbone_record=self.backbone_record,
-                    final_record=self.final_record)
+        return dict(original_record=self.record.id,
+                    already_on_backbone=self.already_on_backbone,
+                    detected_backbone=self.backbone_record.id if
+                                    self.backbone_record else '',
+                    final_record_length=len(self.final_record) if
+                                        self.final_record else
+                                        len(self.record))
+
+    @staticmethod
+    def list_to_infos_spreadsheet(choices):
+        return pandas.DataFrame.from_records(
+            [
+                choice.to_dict()
+                for choice in choices
+            ],
+            columns=['original_record', 'already_on_backbone',
+                     'detected_backbone', 'final_record_length']
+        )
+
+    @staticmethod
+    def write_final_records(choices, directory):
+        for choice in choices:
+            pass
+
 
 def insert_parts_on_backbones(part_records, backbone_records,
                               enzyme='autodetect',
