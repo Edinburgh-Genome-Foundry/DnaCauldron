@@ -51,6 +51,12 @@ class FragmentsChain:
         self._hash = precomputed_hash
 
     def reverse_complement(self):
+        """Return a reverse-complemented FragmentsChain.
+
+        The chain is made of the inverted list of the fragments's
+        rev-complements, which would therefore assemble as the
+        reverse-complement of the current Fragments Chain.
+        """
         return FragmentsChain([f.reverse_fragment
                                for f in self.fragments][::-1],
                               is_cycle=self.is_cycle)
@@ -193,6 +199,12 @@ class AssemblyMix:
 
     @property
     def filtered_connections_graph(self):
+        """Networkx Graph of the filered fragments and how they assemble.
+
+        The nodes of the graph are numbers such that N represents the fragment
+        indexed by self.fragments_dict[N]
+
+        """
         graph = nx.DiGraph(self.connections_graph)
         graph.remove_nodes_from([
             node for node in graph.nodes()
@@ -202,15 +214,22 @@ class AssemblyMix:
         return graph
 
     def compute_slots(self):
-        def std_overhang(oh):
-            if (oh is None):
-                return ''
-            else:
-                oh = str(oh)
-                return min(oh, reverse_complement(oh))
+        """Return a dict {standardized_slot: set(fragments_id)}.
+
+        If a fragment has left and right sticky ends (o1, o2), the
+        standardized version will be will be whichever is alphabetically
+        smaller between  (o1, o2) and (revcomp(o2), revcomp(o1))
+
+        For instance
+
+        """
         def slot(fragment):
-            return tuple(sorted([std_overhang(fragment.seq.left_end),
-                                 std_overhang(fragment.seq.right_end)]))
+            def std_sticky(s):
+                return '' if s is None else str(s)
+            dir_slot = l, r = (std_sticky(fragment.seq.left_end),
+                               std_sticky(fragment.seq.right_end))
+            rev_slot = (reverse_complement(r), reverse_complement(l))
+            return min(dir_slot, rev_slot)
         slots = {}
         for f in self.filtered_fragments:
             f_slot = slot(f)
@@ -220,20 +239,33 @@ class AssemblyMix:
         return slots
 
     def slots_graph(self, with_overhangs=True):
-        """Compute the slots graph of the graph."""
+        """Compute the slots graph of the graph.
+
+        In this graph, a node represents a slot (i.e. left-right overhangs)
+        and edges represent slots sharing one overhang. If with_overhangs is
+        True, additional nodes are added to represent the overhangs (this
+        makes the graph more informative).
+        """
+        def std_overhang(o):
+            return min(o, reverse_complement(o))
         slots_list = list(self.compute_slots().keys())
         edges = []
         if with_overhangs:
             edges = [
-                (slot, e)
+                (slot, std_overhang(e))
                 for slot in slots_list
                 for e in slot
                 if e != ''
             ]
         else:
+            def slots_have_common_overhang(s1, s2):
+                """Return True iff the slots have 1+ common overhang."""
+                s2 = [std_overhang(o) for o in s2]
+                return any([std_overhang(o) in s2 for o in s1])
             edges = [
-                (s1, s2) for (s1, s2) in itt.combinations(slots_list, 2)
-                if [e for e in s1 if (e != '') and (e in s2)] != []
+                (s1, s2)
+                for (s1, s2) in itt.combinations(slots_list, 2)
+                if slots_have_common_overhang(s1, s2)
             ]
         return nx.Graph(edges)
 
@@ -264,11 +296,6 @@ class AssemblyMix:
         This means that fragment f1 will clip with f2 (in this order),
         f2 with f3... and fn with f1.
 
-        Examples
-        --------
-
-        >>>
-
         Parameters
         ----------
 
@@ -277,12 +304,6 @@ class AssemblyMix:
           a list of fragments from the mix (which assemble into a circular
           construct). Only circular fragments sets passing all these tests
           will be returned
-
-        fragments_filters
-          A list of test functions of the form (fragment->True/False) where
-          fragment is a fragment of the mix (potentially with sticky ends)
-          Only fragments passing all these tests are considered. Filtering
-          out fragments can dramatically decrease computing times. Use it.
 
         randomize
           If set to False, the circular fragments sets will be returned one by
@@ -371,6 +392,44 @@ class AssemblyMix:
                                     annotate_homologies=False,
                                     randomize=False,
                                     randomization_staling_cutoff=100):
+        """Return a generator listing the circular assemblies in the graph.
+
+        Parameters
+        ----------
+
+        fragments_sets_filters
+          A list of test functions of the form (set->True/False) where "set" is
+          a list of fragments from the mix (which assemble into a circular
+          construct). Only circular fragments sets passing all these tests
+          will be returned
+
+        seqrecord_filters
+          A list of test functions of the form (record->True/False) where
+          "record" is the biopython record of a circular assembly found.
+          Only records passing all these tests will be returned
+
+        annotate_homologies
+          If True, the junctions between assembled fragments will be annotated
+          in the final record with a feature of type 'homology' and label
+          equal to the homology (if <8bp), else simply 'homology'.
+
+        randomize
+          If set to False, the circular fragments sets will be returned one by
+          one until the last one, in an order implemented by
+          networkx.simple_cycles.
+          True, the circular sets returned will be drawn randomly
+          (a circular set will only be returned once). This is very practical
+          to obtain a sample out of a combinatorial assembly mix. However this
+          feature is a bit experimental, and the iteration will certainly stale
+          before all cycles have been found, because the randomizer can't find
+          any new cycle.
+
+        randomization_staling_cutoff
+          If randomize is True, the randomizer will throw an error if the
+          latest C cycles it has drawn had already been seen before, where C
+          is the randomization staling cutoff.
+
+        """
 
         def assemblies_generator():
             for fragments in self.compute_circular_fragments_sets(
@@ -393,6 +452,52 @@ class AssemblyMix:
                                   min_parts=2,
                                   seqrecord_filters=(),
                                   annotate_homologies=False):
+        """Return a generator listing the possible linear assemblies.
+
+        Parameters
+        ----------
+
+        fragments_sets_filters
+          A list of test functions of the form (set->True/False) where "set" is
+          a list of fragments from the mix (which assemble into a circular
+          construct). Only circular fragments sets passing all these tests
+          will be returned
+
+        min_parts
+          Assemblies with less than this number of parts will be ignored.
+
+        seqrecord_filters
+          A list of test functions of the form (record->True/False) where
+          "record" is the biopython record of a circular assembly found.
+          Only records passing all these tests will be returned
+
+        annotate_homologies
+          If True, the junctions between assembled fragments will be annotated
+          in the final record with a feature of type 'homology' and label
+          equal to the homology (if <8bp), else simply 'homology'.
+
+        randomize
+          If set to False, the circular fragments sets will be returned one by
+          one until the last one, in an order implemented by
+          networkx.simple_cycles.
+          True, the circular sets returned will be drawn randomly
+          (a circular set will only be returned once). This is very practical
+          to obtain a sample out of a combinatorial assembly mix. However this
+          feature is a bit experimental, and the iteration will certainly stale
+          before all cycles have been found, because the randomizer can't find
+          any new cycle.
+
+        randomization_staling_cutoff
+          If randomize is True, the randomizer will throw an error if the
+          latest C cycles it has drawn had already been seen before, where C
+          is the randomization staling cutoff.
+
+        Notes
+        ------
+
+        This is a bit undertested as there have been little use cases.
+
+        """
         seen_hashes = set()
         g = self.filtered_connections_graph
         for source, targets in nx.shortest_path(g).items():
@@ -414,12 +519,33 @@ class AssemblyMix:
 
     @property
     def filtered_fragments(self):
+        """Return the fragments of the mix passing all the tests
+
+        Generally used to remove fragments containing a restriction site used
+        in a Type2S assembly.
+        """
         return [
             f for f in (self.fragments + self.reverse_fragments)
             if all([fl(f) for fl in self.fragments_filters])
         ]
 
     def autoselect_connectors(self, connectors_records):
+        """Select connectors necessary for circular assemblie(s) in this mix.
+
+        This method assumes that the constructs provided in the mix are the
+        main parts of either a single or a combinatorial assembly (with
+        well-defined slots), and the provided list of ``connector_records``
+        contains "bridging" parts, some of which may be necessary for bridging
+        the main parts of the assembly.
+
+        The connectors record list contains records of parts (with or
+        without backbone).
+
+        If a solution is found, the method automatically adds the connectors
+        to the mix, and returns the list of selected connectors records.
+
+        Else, an exception is raised.
+        """
         original_constructs = self.constructs
         slotted_parts_records = [
              self.constructs_dict[list(parts)[0]]
@@ -436,7 +562,7 @@ class AssemblyMix:
 
         for component in components:
 
-            newgraph = graph.copy()#deepcopy(graph)
+            newgraph = graph.copy()  # deepcopy(graph)
             newgraph.remove_nodes_from(
                 set(newgraph.nodes()).difference(component.nodes())
             )
@@ -567,6 +693,7 @@ class RestrictionLigationMix(AssemblyMix):
 
     @staticmethod
     def will_clip_in_this_order(fragment1, fragment2):
+        """Return True iff f1's right sticky end fits f2's left."""
         return fragment1.will_clip_in_this_order_with(fragment2)
 
 

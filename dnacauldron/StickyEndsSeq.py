@@ -110,21 +110,31 @@ class StickyEndsSeqRecord(SeqRecord):
     """Biopython SeqRecord whose sequence has sticky ends."""
 
     def will_clip_in_this_order_with(self, other):
+        """Return True iff this record's right sticky end is complementary with
+        the other record's left sticky end."""
         right_end = self.seq.right_end
         return ((right_end is not None) and
                 right_end.will_clip_directly_with(other.seq.left_end))
 
-    def circularized(self, annotate_homology=False, annotation_type="Feature",
+    def circularized(self, annotate_homology=False, annotation_type="homology",
                      qualifiers=None):
+        """Return the biopython record obtained by cirularizing the result.
+
+        Only works if the left and right sticky ends are compatible. The
+        return is a simple Biopython record where the sticky end has been
+        integrated in the sequence.
+        """
         if not self.will_clip_in_this_order_with(self):
             raise ValueError("Only constructs with two compatible sticky ends"
                              " can be circularized")
+        connector_str = str(self.seq.left_end)
         connector = SeqRecord(Seq(str(self.seq.left_end)))
         if annotate_homology:
+            label = "homology" if (len(connector) > 8) else connector_str
             connector.features = [
                 SeqFeature(FeatureLocation(0, len(connector), 1),
                            type=annotation_type,
-                           qualifiers={"label": "homology"})
+                           qualifiers={"label": label})
             ]
         result = connector + self
         result.linear = False
@@ -132,23 +142,28 @@ class StickyEndsSeqRecord(SeqRecord):
 
     @staticmethod
     def assemble(fragments, circularize=False, annotate_homologies=False):
+        """Return the (sticky end) record obtained by assembling the fragments.
+
+
+        """
         result = fragments[0]
         for fragment in fragments[1:]:
             result = result.assemble_with(
                 fragment,
                 annotate_homology=annotate_homologies
             )
-        # result = sum(fragments[1:], fragments[0])
         if circularize:
             result = result.circularized(annotate_homology=annotate_homologies)
         result.seq.alphabet = DNAAlphabet()
         return result
 
     def assemble_with(self, other, annotate_homology=False,
-                      annotation_type="misc_feature", **qualifiers):
-        connector = SeqRecord(Seq(str(self.seq.right_end)))
+                      annotation_type="homology", **qualifiers):
+        connector_str = str(self.seq.right_end)
+        connector = SeqRecord(Seq(connector_str))
         if len(qualifiers) == 0:
-            qualifiers = {"label": "homology"}
+            label = "homology" if (len(connector) > 8) else connector_str
+            qualifiers = {"label": label}
         if annotate_homology:
             connector.features = [
                 SeqFeature(FeatureLocation(0, len(connector), 1),

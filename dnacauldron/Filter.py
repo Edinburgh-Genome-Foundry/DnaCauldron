@@ -65,6 +65,7 @@ class TextSearchFilter:
 
     @staticmethod
     def gather_all_feature_text(feature):
+        """Return a single string of all text in the feature (+qualifiers)."""
         return " ".join(
             [feature.type] +
             list(map(str, feature.qualifiers.keys())) +
@@ -72,6 +73,7 @@ class TextSearchFilter:
         )
 
     def gather_all_texts(self, seqrecord):
+        """Return a single string of all texts in all record features."""
         return " ".join([self.gather_all_feature_text(feature)
                          for feature in seqrecord.features] +
                         list(map(str, seqrecord.annotations)))

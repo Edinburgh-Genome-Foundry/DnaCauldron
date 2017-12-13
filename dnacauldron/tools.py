@@ -53,6 +53,19 @@ def random_dna_sequence(length, probas=None, seed=None):
 
 
 def load_genbank(filename, linear=True, name="unnamed"):
+    """Load a genbank file
+
+    Parameters
+    ----------
+
+    linear
+      Set to True for linear constructs, False for circular constructs
+
+    name
+      The name of the record. Should be the name of the part if the record
+      represents a part.
+
+    """
     record = SeqIO.read(filename, "genbank")
     record.linear = linear
     record.id = name
