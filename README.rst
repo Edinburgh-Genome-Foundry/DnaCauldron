@@ -1,16 +1,14 @@
-Dna Cauldron
-=============
+.. raw:: html
 
-.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaCauldron/master/docs/_static/images/title.png
-   :alt: [logo]
-   :align: center
-   :width: 500px
+    <p align="center">
+    <img alt="DNA Cauldron Logo" title="DNA Cauldron Logo" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaCauldron/master/docs/_static/images/title.png" width="450">
+    </p>
 
 .. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaCauldron.svg?branch=master
   :target: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaCauldron
   :alt: Travis CI build status
 
-Dna Cauldron (complete documentation `here <https://edinburgh-genome-foundry.github.io/DnaCauldron/>`_)
+DNA Cauldron (complete documentation `here <https://edinburgh-genome-foundry.github.io/DnaCauldron/>`_)
 is a Python library to simulate restriction-based assembly operations.
 You provide a set of parts and receptor vectors and Dna Cauldron will compute the
 assembli(es) that could result from the mix.
