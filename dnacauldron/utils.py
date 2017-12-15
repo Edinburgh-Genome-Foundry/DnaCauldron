@@ -165,7 +165,8 @@ class BackboneChoice:
         return dict(original_record=self.record.id,
                     already_on_backbone=self.already_on_backbone,
                     detected_backbone=self.backbone_record.id if
-                                    self.backbone_record else '',
+                                      hasattr(self.backbone_record, 'id')
+                                      else '',
                     final_record_length=len(self.final_record) if
                                         self.final_record else
                                         len(self.record))
@@ -282,13 +283,20 @@ def insert_parts_on_backbones(part_records, backbone_records,
             choice = BackboneChoice(record, already_on_backbone=True)
         else:
             overhangs = get_overhangs_from_record(record, enzyme=enzyme)
-            backbone_record = overhangs_dict[overhangs]
-            final_record = swap_donor_vector_part(donor_vector=backbone_record,
-                                                  insert=record, enzyme=enzyme)
-            choice = BackboneChoice(record=record,
-                                    already_on_backbone=False,
-                                    backbone_record=backbone_record,
-                                    final_record=final_record)
+            if overhangs in overhangs_dict:
+                backbone_record = overhangs_dict[overhangs]
+                final_record = swap_donor_vector_part(
+                    donor_vector=backbone_record, insert=record, enzyme=enzyme)
+                final_record.id = record.id
+                choice = BackboneChoice(record=record,
+                                        already_on_backbone=False,
+                                        backbone_record=backbone_record,
+                                        final_record=final_record)
+            else:
+                choice = BackboneChoice(record=record,
+                                        already_on_backbone=False,
+                                        backbone_record='none found',
+                                        final_record=None)
         backbone_choices.append(choice)
 
     return backbone_choices
