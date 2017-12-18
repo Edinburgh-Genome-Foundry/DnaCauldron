@@ -1,4 +1,5 @@
 exclude_patterns:
 - "ez_setup.py"
 - "tests/"
+- "examples/"
 - "docs/"

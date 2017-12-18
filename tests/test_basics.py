@@ -111,3 +111,15 @@ def test_random_constructs_generator():
     circular_assemblies = mix.compute_circular_assemblies(randomize=True)
     assembly_list = list(zip([1, 2, 3], circular_assemblies))
     assert len(assembly_list) == 3
+
+def test_insert_parts_on_backbones():
+    backbone_names = ['partA2', 'partB2', 'partC', 'receptor']
+    backbone_records = [records_dict[name] for name in backbone_names]
+    part_records = [records_dict[name] for name in ['partA', 'partB']]
+
+    resultA, resultB = dc.insert_parts_on_backbones(
+        part_records, backbone_records, process_parts_with_backbone=True)
+    assert resultA.already_on_backbone
+    assert resultB.already_on_backbone
+    assert resultA.backbone_record.id == 'partA2'
+    assert resultB.backbone_record.id == 'partB2'

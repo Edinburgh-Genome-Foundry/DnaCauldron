@@ -145,9 +145,8 @@ class AssemblyMix:
             new_fragment.original_construct = fragment.original_construct
             self.reverse_fragments.append(new_fragment)
 
-    def compute_circular_fragments_sets(self, fragments_sets_filters=(),
-                                        randomize=False,
-                                        randomization_staling_cutoff=100):
+    def compute_random_circular_fragments_sets(self, staling_cutoff=100,
+                                               fragments_sets_filters=()):
         """Return an iterator over all the lists of fragments [f1, f2, f3...fn]
         that can assemble into a circular construct.
 
@@ -180,71 +179,89 @@ class AssemblyMix:
           is the randomization staling cutoff.
 
         """
-        graph = self.filtered_connections_graph
 
-        if randomize:
-            def circular_fragments_sets_generator():
-                """Return random cycles from the connections graph.
+        def generator():
+            """Return random cycles from the connections graph.
 
-                The randomness is introduced by permuting the nodes names,
-                running `networkx.circular_paths` once, permuting the nodes
-                names again, etc.
-                """
-                
-                seen_hashes = set()
-                graph_nodes = list(graph.nodes())
-                node_to_index = {node: i for i, node in enumerate(graph_nodes)}
-                while True:
-                    permutation = np.arange(len(graph_nodes))
-                    np.random.shuffle(permutation)
-                    antipermutation = np.argsort(permutation)
-                    new_graph = nx.DiGraph([
-                        (permutation[node_to_index[node1]],
-                         permutation[node_to_index[node2]])
-                        for node1, node2 in graph.edges()
+            The randomness is introduced by permuting the nodes names,
+            running `networkx.circular_paths` once, permuting the nodes
+            names again, etc.
+            """
 
-                    ])
-                    counter = 0
-                    for cycle in nx.simple_cycles(new_graph):
-                        cycle = [antipermutation[i] for i in cycle]
-                        fragments = [self.fragments_dict[graph_nodes[i]]
-                                     for i in cycle]
-                        print(cycle)
-                        cycle = FragmentsChain(fragments,
-                                               is_cycle=True).standardized()
-                        cycle_hash = hash(cycle)
-                        if cycle_hash in seen_hashes:
-                            counter += 1
-                            if counter > randomization_staling_cutoff:
-                                raise ValueError(
-                                    "Randomization staled. Only randomize when"
-                                    " the search space is huge."
-                                )
-                            continue
-                        seen_hashes.add(cycle_hash)
-                        if all(fl(cycle.fragments)
-                               for fl in fragments_sets_filters):
-                            yield cycle.fragments
-                            break
-                    else:
-                        break
-        else:
-            def circular_fragments_sets_generator():
-                """Iterate over all circular paths in the connexion graph
-                using Networkx's `simple_paths`."""
-                seen_hashes = set()
-                for cycle in nx.simple_cycles(graph):
-                    cycle = [self.fragments_dict[i] for i in cycle]
-                    cycle = FragmentsChain(cycle, is_cycle=True).standardized()
+            graph = self.filtered_connections_graph
+            seen_hashes = set()
+            graph_nodes = list(graph.nodes())
+            node_to_index = {node: i for i, node in enumerate(graph_nodes)}
+            while True:
+                permutation = np.arange(len(graph_nodes))
+                np.random.shuffle(permutation)
+                antipermutation = np.argsort(permutation)
+                new_graph = nx.DiGraph([
+                    (permutation[node_to_index[node1]],
+                     permutation[node_to_index[node2]])
+                    for node1, node2 in graph.edges()
+
+                ])
+                counter = 0
+                for cycle in nx.simple_cycles(new_graph):
+                    cycle = [antipermutation[i] for i in cycle]
+                    fragments = [self.fragments_dict[graph_nodes[i]]
+                                 for i in cycle]
+                    cycle = FragmentsChain(fragments,
+                                           is_cycle=True).standardized()
                     cycle_hash = hash(cycle)
                     if cycle_hash in seen_hashes:
+                        counter += 1
+                        if counter > staling_cutoff:
+                            raise ValueError(
+                                "Randomization staled. Only randomize when"
+                                " the search space is huge."
+                            )
                         continue
                     seen_hashes.add(cycle_hash)
                     if all(fl(cycle.fragments)
                            for fl in fragments_sets_filters):
                         yield cycle.fragments
+                        break
+                else:
+                    break
 
-        return circular_fragments_sets_generator()
+        return generator()
+
+    def compute_circular_fragments_sets(self, fragments_sets_filters=()):
+        """Return an iterator over all the lists of fragments [f1, f2, f3...fn]
+        that can assemble into a circular construct.
+
+        This means that fragment f1 will clip with f2 (in this order),
+        f2 with f3... and fn with f1.
+
+        Parameters
+        ----------
+
+        fragments_sets_filters
+          A list of test functions of the form (set->True/False) where "set" is
+          a list of fragments from the mix (which assemble into a circular
+          construct). Only circular fragments sets passing all these tests
+          will be returned
+        """
+
+
+        def generator():
+            """Iterate over all circular paths in the connexion graph
+            using Networkx's `simple_paths`."""
+            seen_hashes = set()
+            for cycle in nx.simple_cycles(self.filtered_connections_graph):
+                cycle = [self.fragments_dict[i] for i in cycle]
+                cycle = FragmentsChain(cycle, is_cycle=True).standardized()
+                cycle_hash = hash(cycle)
+                if cycle_hash in seen_hashes:
+                    continue
+                seen_hashes.add(cycle_hash)
+                if all(fl(cycle.fragments)
+                       for fl in fragments_sets_filters):
+                    yield cycle.fragments
+
+        return generator()
 
     def compute_circular_assemblies(self, fragments_sets_filters=(),
                                     seqrecord_filters=(),
@@ -291,11 +308,15 @@ class AssemblyMix:
         """
 
         def assemblies_generator():
-            for fragments in self.compute_circular_fragments_sets(
-                fragments_sets_filters=fragments_sets_filters,
-                randomize=randomize,
-                randomization_staling_cutoff=randomization_staling_cutoff
-            ):
+            if randomize:
+                fragments = self.compute_random_circular_fragments_sets(
+                    fragments_sets_filters=fragments_sets_filters,
+                    staling_cutoff=randomization_staling_cutoff
+                )
+            else:
+                fragments = self.compute_circular_fragments_sets(
+                    fragments_sets_filters=fragments_sets_filters)
+            for fragments in fragments:
                 construct = self.assemble(
                     fragments,
                     circularize=True,

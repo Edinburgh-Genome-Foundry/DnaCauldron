@@ -186,8 +186,9 @@ def insert_parts_on_backbones(part_records, backbone_records,
     overhangs_dict = _records_to_overhangs_dict(backbone_records)
     backbone_choices = []
     for record in part_records:
-        if (not process_parts_with_backbone) and _record_contains_backbone(
-            record, enzyme=enzyme, min_backbone_length=min_backbone_length):
+        has_backbone = _record_contains_backbone(
+            record, enzyme=enzyme, min_backbone_length=min_backbone_length)
+        if (not process_parts_with_backbone) and has_backbone:
             choice = BackboneChoice(record, already_on_backbone=True)
         else:
             overhangs = _get_overhangs_from_record(record, enzyme=enzyme)
@@ -196,12 +197,12 @@ def insert_parts_on_backbones(part_records, backbone_records,
                 final_record = swap_donor_vector_part(
                     donor_vector=backbone_record, insert=record, enzyme=enzyme)
                 choice = BackboneChoice(record=record,
-                                        already_on_backbone=False,
+                                        already_on_backbone=has_backbone,
                                         backbone_record=backbone_record,
                                         final_record=final_record)
             else:
                 choice = BackboneChoice(record=record,
-                                        already_on_backbone=False,
+                                        already_on_backbone=has_backbone,
                                         backbone_record='none found',
                                         final_record=None)
         backbone_choices.append(choice)
