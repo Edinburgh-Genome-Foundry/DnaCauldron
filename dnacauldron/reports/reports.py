@@ -5,8 +5,7 @@ from dna_features_viewer import BiopythonTranslator
 import pandas
 from collections import defaultdict, Counter
 
-from ..Filter import NoRestrictionSiteFilter
-from ..AssemblyMix import RestrictionLigationMix
+from ..AssemblyMix import RestrictionLigationMix, NoRestrictionSiteFilter
 from .plots import (plot_cuts, plot_slots_graph, AssemblyTranslator)
 
 def name_fragment(fragment):

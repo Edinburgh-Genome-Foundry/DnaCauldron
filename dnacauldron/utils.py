@@ -1,9 +1,9 @@
-"""Useful functions to simplify the most common operations."""
+"""Useful functions built on top of the DnaCauldron classes to simplify the
+most common operations."""
 
 from Bio import SeqIO, Restriction
 import pandas
 
-from .Filter import NoRestrictionSiteFilter
 from .AssemblyMix import RestrictionLigationMix, AssemblyError
 from .tools import reverse_complement
 
@@ -287,7 +287,6 @@ def insert_parts_on_backbones(part_records, backbone_records,
                 backbone_record = overhangs_dict[overhangs]
                 final_record = swap_donor_vector_part(
                     donor_vector=backbone_record, insert=record, enzyme=enzyme)
-                final_record.id = record.id
                 choice = BackboneChoice(record=record,
                                         already_on_backbone=False,
                                         backbone_record=backbone_record,

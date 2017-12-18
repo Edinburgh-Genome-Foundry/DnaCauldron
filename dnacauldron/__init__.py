@@ -2,9 +2,13 @@
 
 # __all__ = []
 
-from .Filter import NoPatternFilter, TextSearchFilter, NoRestrictionSiteFilter
-from .AssemblyMix import (RestrictionLigationMix, BASICLigationMix,
-                          AssemblyError)
+from .AssemblyMix import (RestrictionLigationMix,
+                          BASICLigationMix,
+                          AssemblyError,
+                          NoPatternFilter,
+                          TextSearchFilter,
+                          NoRestrictionSiteFilter)
+
 from .StickyEndsSeq import StickyEndsSeq, StickyEndsSeqRecord, StickyEnd
 from .tools import random_dna_sequence, load_genbank
 from .utils import (single_assembly, autoselect_enzyme, swap_donor_vector_part,
