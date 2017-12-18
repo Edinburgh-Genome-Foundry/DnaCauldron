@@ -1,5 +1,7 @@
 import numpy as np
 from Bio import SeqIO
+from Bio.SeqRecord import SeqRecord
+from Bio.Alphabet import DNAAlphabet
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 from Bio.Seq import Seq
 
@@ -21,6 +23,12 @@ def reverse_complement(sequence):
     Uses BioPython for speed.
     """
     return complement(sequence)[::-1]
+
+def sequence_to_biopython_record(sequence, id='<unknown id>',
+                                 name='<unknown name>', features=()):
+    """Return a SeqRecord of the sequence, ready to be Genbanked."""
+    return SeqRecord(Seq(sequence, alphabet=DNAAlphabet()),
+                     id=id, name=name, features=list(features))
 
 def random_dna_sequence(length, probas=None, seed=None):
     """Return a random DNA sequence ("ATGGCGT...") with the specified length.
