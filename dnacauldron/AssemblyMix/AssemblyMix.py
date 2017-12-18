@@ -2,6 +2,7 @@
 """
 
 import itertools as itt
+from copy import deepcopy
 
 import networkx as nx
 import numpy as np
@@ -189,25 +190,26 @@ class AssemblyMix:
                 running `networkx.circular_paths` once, permuting the nodes
                 names again, etc.
                 """
-
-                original_adj = deepcopy(graph.adj)
+                
                 seen_hashes = set()
+                graph_nodes = list(graph.nodes())
+                node_to_index = {node: i for i, node in enumerate(graph_nodes)}
                 while True:
-                    permutation = np.arange(
-                        len(self.connections_graph.nodes()))
+                    permutation = np.arange(len(graph_nodes))
                     np.random.shuffle(permutation)
                     antipermutation = np.argsort(permutation)
-                    graph.adj = {
-                        permutation[node]: {
-                            permutation[n]: v
-                            for n, v in children.items()
-                        }
-                        for node, children in original_adj.items()
-                    }
+                    new_graph = nx.DiGraph([
+                        (permutation[node_to_index[node1]],
+                         permutation[node_to_index[node2]])
+                        for node1, node2 in graph.edges()
+
+                    ])
                     counter = 0
-                    for cycle in nx.simple_cycles(graph):
+                    for cycle in nx.simple_cycles(new_graph):
                         cycle = [antipermutation[i] for i in cycle]
-                        fragments = [self.fragments_dict[i] for i in cycle]
+                        fragments = [self.fragments_dict[graph_nodes[i]]
+                                     for i in cycle]
+                        print(cycle)
                         cycle = FragmentsChain(fragments,
                                                is_cycle=True).standardized()
                         cycle_hash = hash(cycle)
