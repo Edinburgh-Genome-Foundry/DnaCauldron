@@ -2,19 +2,20 @@
 most common operations."""
 
 import pandas
-from ..AssemblyMix import RestrictionLigationMix
+from ..AssemblyMix import RestrictionLigationMix, AssemblyError
 from ..tools import reverse_complement
 from .utils import autoselect_enzyme
 
 class BackboneChoice:
     """Class to represent the result of a backbone autoselection"""
 
-    def __init__(self, record, already_on_backbone,
+    def __init__(self, record, already_on_backbone=None, error=None,
                  backbone_record=None, final_record=None):
         self.record = record
         self.already_on_backbone = already_on_backbone
         self.backbone_record = backbone_record
         self.final_record = final_record
+        self.error = error
 
     def __repr__(self):
         if self.already_on_backbone:
@@ -28,9 +29,10 @@ class BackboneChoice:
         final_length = len(final_record) if final_record else  len(self.record)
         return dict(
             original_record=self.record.id,
-            already_on_backbone=self.already_on_backbone,
+            already_on_backbone='yes' if self.already_on_backbone else 'no',
             detected_backbone=detected,
-            final_record_length=final_length
+            final_record_length=final_length,
+            error=str(self.error.args[0]) if self.error else ''
         )
 
     @staticmethod
@@ -41,7 +43,7 @@ class BackboneChoice:
                 for choice in choices
             ],
             columns=['original_record', 'already_on_backbone',
-                     'detected_backbone', 'final_record_length']
+                     'detected_backbone', 'final_record_length', 'error']
         )
 
     @staticmethod
@@ -62,15 +64,15 @@ def _standardize_overhangs(overhangs):
     ro1, ro2 = [reverse_complement(o) for o in (o1, o2)]
     return min((o1, o2), (ro2, ro1))
 
-def _get_overhangs_from_record(record, enzyme='BsmBI'):
+def get_overhangs_from_record(record, enzyme='BsmBI', standardize=True):
     insert = _get_insert_from_record(record, enzyme=enzyme)
     overhangs = str(insert.seq.left_end), str(insert.seq.right_end)
-    return _standardize_overhangs(overhangs)
+    return _standardize_overhangs(overhangs) if standardize else overhangs
 
 def _records_to_overhangs_dict(records, allow_multiple_choices=False):
     result = {}
     for record in records:
-        overhangs = _get_overhangs_from_record(record)
+        overhangs = get_overhangs_from_record(record)
         if overhangs in result:
             if allow_multiple_choices:
                 result[overhangs].append(record)
@@ -87,10 +89,14 @@ def _records_to_overhangs_dict(records, allow_multiple_choices=False):
 def _record_contains_backbone(record, enzyme='BsmBI',
                              min_backbone_length=500):
     mix = RestrictionLigationMix([record], enzyme='BsmBI')
-    insert = [
+    fragments = [
         frag for frag in mix.filtered_fragments
         if not frag.is_reverse
-    ][0]
+    ]
+    if fragments == []:
+        raise AssemblyError('No site-less fragment found digesting record '
+                            + record.id, record.id)
+    insert = fragments[0]
     return (len(record) - len(insert)) > min_backbone_length
 
 def swap_donor_vector_part(donor_vector, insert, enzyme):
@@ -146,7 +152,8 @@ def swap_donor_vector_part(donor_vector, insert, enzyme):
 def insert_parts_on_backbones(part_records, backbone_records,
                               enzyme='autodetect',
                               min_backbone_length=500,
-                              process_parts_with_backbone=False):
+                              process_parts_with_backbone=False,
+                              default_backbone_choice=None):
     """Autodetect the right backbone for each Golden Gate part.
 
     This method is meant to process a batch of genbank files, some of
@@ -186,25 +193,34 @@ def insert_parts_on_backbones(part_records, backbone_records,
     overhangs_dict = _records_to_overhangs_dict(backbone_records)
     backbone_choices = []
     for record in part_records:
-        has_backbone = _record_contains_backbone(
-            record, enzyme=enzyme, min_backbone_length=min_backbone_length)
-        if (not process_parts_with_backbone) and has_backbone:
-            choice = BackboneChoice(record, already_on_backbone=True)
-        else:
-            overhangs = _get_overhangs_from_record(record, enzyme=enzyme)
-            if overhangs in overhangs_dict:
-                backbone_record = overhangs_dict[overhangs]
-                final_record = swap_donor_vector_part(
-                    donor_vector=backbone_record, insert=record, enzyme=enzyme)
-                choice = BackboneChoice(record=record,
-                                        already_on_backbone=has_backbone,
-                                        backbone_record=backbone_record,
-                                        final_record=final_record)
+        try:
+            has_backbone = _record_contains_backbone(
+                record, enzyme=enzyme, min_backbone_length=min_backbone_length)
+            if (not process_parts_with_backbone) and has_backbone:
+                choice = BackboneChoice(record, already_on_backbone=True)
             else:
-                choice = BackboneChoice(record=record,
-                                        already_on_backbone=has_backbone,
-                                        backbone_record='none found',
-                                        final_record=None)
+                overhangs = get_overhangs_from_record(record, enzyme=enzyme)
+                if overhangs in overhangs_dict:
+                    backbone_record = overhangs_dict[overhangs]
+                    final_record = swap_donor_vector_part(
+                        donor_vector=backbone_record, insert=record,
+                        enzyme=enzyme)
+                    choice = BackboneChoice(record=record,
+                                            already_on_backbone=has_backbone,
+                                            backbone_record=backbone_record,
+                                            final_record=final_record)
+                else:
+                    if default_backbone_choice is not None:
+                        choice = default_backbone_choice(record)
+                    else:
+                        choice = BackboneChoice(
+                            record=record,
+                            already_on_backbone=has_backbone,
+                            backbone_record='none found',
+                            final_record=None
+                        )
+        except AssemblyError as e:
+            choice = BackboneChoice(record, error=e)
         backbone_choices.append(choice)
 
     return backbone_choices

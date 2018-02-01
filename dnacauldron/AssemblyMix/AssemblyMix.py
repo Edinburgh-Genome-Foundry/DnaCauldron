@@ -13,7 +13,6 @@ from .FragmentsChain import FragmentsChain
 class AssemblyError(Exception):
     pass
 
-
 class AssemblyMix:
     """General class for assembly mixes.
 

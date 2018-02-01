@@ -18,6 +18,7 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
                          connector_records=(),
                          include_fragments=True,
                          include_parts=True,
+                         include_assembly_plots=True,
                          fragments_filters='auto',
                          assemblies_prefix='assembly',
                          show_overhangs_in_graph=True,
@@ -76,6 +77,7 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
         mix_class = RestrictionLigationMix
     part_names = [p.name for p in parts]
     non_unique = [e for (e, count) in Counter(part_names).items() if count > 1]
+    non_unique = list(set(non_unique))
     if len(non_unique) > 0:
         raise ValueError("All parts provided should have different names. "
                          "Assembly (%s) contains several times the parts %s " %
@@ -139,22 +141,23 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
         else:
             name = '%s_%03d' % (assemblies_prefix, (i+1))
         assemblies_data.append(dict(
-            name=name,
+            assembly_name=name,
             parts=" & ".join([name_fragment(f_) for f_ in asm.fragments]),
             number_of_parts=len(asm.fragments),
             assembly_size=len(asm)
         ))
         SeqIO.write(asm, assemblies_dir._file(name + '.gb').open('w'),
                     'genbank')
-        gr_record = AssemblyTranslator().translate_record(asm)
-        ax, gr = gr_record.plot(figure_width=16)
-        ax.set_title(name)
-        ax.figure.savefig(assemblies_dir._file(name + '.pdf').open('wb'),
-                          format='pdf', bbox_inches='tight')
-        plt.close(ax.figure)
+        if include_assembly_plots:
+            gr_record = AssemblyTranslator().translate_record(asm)
+            ax, gr = gr_record.plot(figure_width=16)
+            ax.set_title(name)
+            ax.figure.savefig(assemblies_dir._file(name + '.pdf').open('wb'),
+                              format='pdf', bbox_inches='tight')
+            plt.close(ax.figure)
     df = pandas.DataFrame.from_records(
         assemblies_data,
-        columns=['name', 'number_of_parts', 'assembly_size', 'parts']
+        columns=['assembly_name', 'number_of_parts', 'assembly_size', 'parts']
     )
     df.to_csv(report._file('report.csv'), index=False)
     n_constructs = len(df)
