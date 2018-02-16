@@ -6,26 +6,18 @@ Dna Cauldron Documentation
    :align: center
 
 
-Dna Cauldron is a Python library to simulate restriction-based assembly operations.
-You provide a set of parts and receptor vectors and Dna Cauldron will compute the
-assembli(es) that could result from the mix.
+DNA Cauldron
+===================
+
+DNA Cauldron is a Python library to simulate restriction-based assembly operations. Provided the sequences of genetic parts and receptor vectors, DNA Cauldron will compute the assembli(es) that could result from the mix.
 
 .. image:: _static/images/principle.png
    :width: 600px
    :align: center
 
+DNA Cauldron was written for Synthetic Biology applications - typically, to predict and validate batches of parts-based assemblies. It is simple to use, plays well with BioPython, can import and export Genbank (it conserves all features), and provides advanced methods such as connector part auto-selection, backbone selection for linear parts, methods to select constructs subsets when dealing with large combinatorial assemblies.
 
-Dna Cauldron was written with Synthetic Biology applications in mind (typically,
-batches of parts-based assemblies).
-
-It is simple to use, plays well with BioPython, can import and export Genbank
-(it conserves all features), and provides ways to select particular
-constructs when dealing with large combinatorial assemblies.
-
-**Try it online !** Too lazy to use the library programmatically ?
-It is available
-`here <http://cuba.genomefoundry.org/#/simulate_gg_assemblies>`_
-as a web service.
+**Try it online !** Use `this web service <http://cuba.genomefoundry.org/#/simulate_gg_assemblies>`_ to predict the outcome of a batch of (possibly combinatorial) Type 2S assemblies.
 
 Installation
 -------------
@@ -158,6 +150,14 @@ licence (¢ Edinburgh Genome Foundry), everyone is welcome to contribute.
     :maxdepth: 3
 
     ref
+
+More biology software
+----------------------
+
+.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Edinburgh-Genome-Foundry.github.io/master/static/imgs/logos/egf-codon-horizontal.png
+  :target: https://edinburgh-genome-foundry.github.io/
+
+DNA Cauldron is part of the `EGF Codons <https://edinburgh-genome-foundry.github.io/>`_ synthetic biology software suite for DNA design, manufacturing and validation.
 
 .. _Zulko: https://github.com/Zulko/
 .. _Github: https://github.com/EdinburghGenomeFoundry/dnacauldron

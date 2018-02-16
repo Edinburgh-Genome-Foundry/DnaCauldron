@@ -94,9 +94,9 @@ def plot_cuts(record, enzyme_name, linear=True, figure_width=5, ax=None):
             else:
                 return '#fefefe'
     translator = MyTranslator()
-    grecord_class = GraphicRecord if linear else CircularGraphicRecord
+    record_class = GraphicRecord if linear else CircularGraphicRecord
     graphic_record = translator.translate_record(record,
-                                                 grecord_class=grecord_class)
+                                                 record_class=record_class)
     return graphic_record.plot(ax=ax, figure_width=figure_width)
 
 def plot_slots_graph(mix, ax=None, with_overhangs=False, show_missing=True):
