@@ -18,7 +18,7 @@ Infos
 
 .. code:: bash
 
-  pip install dna_features_viewer
+  pip install dnacauldron
 
 **Web documentation:**
 
