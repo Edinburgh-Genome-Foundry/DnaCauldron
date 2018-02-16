@@ -30,7 +30,7 @@ Infos
 
 **Live demo**
 
-`<http://cuba.genomefoundry.org/#/simulate_gg_assemblies>`_
+`<http://cuba.genomefoundry.org/simulate_gg_assemblies>`_
 
 **License:** MIT, Copyright Edinburgh Genome Foundry
 
