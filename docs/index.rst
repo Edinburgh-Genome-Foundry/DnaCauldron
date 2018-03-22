@@ -1,4 +1,4 @@
-Dna Cauldron Documentation
+DNA Cauldron Documentation
 ==========================
 
 .. image:: _static/images/title.png
@@ -22,7 +22,7 @@ DNA Cauldron was written for Synthetic Biology applications - typically, to pred
 Installation
 -------------
 
-You can install DnaCauldron through PIP
+You can install DNA Cauldron through PIP
 
 
 .. code:: shell
@@ -45,7 +45,7 @@ Single assembly
 
 To assemble several parts and a receptor plasmid into a single construct,
 use `single_assembly`. The parts can be provided either as paths to genbank
-files or as Biopython records. Dna Cauldron returns a Biopython record of the
+files or as Biopython records. DNA Cauldron returns a Biopython record of the
 final assembly, and (optionally) writes it to a Genbank file.
 
 .. code:: python
@@ -102,6 +102,7 @@ The following code produces a structured directory with various reports:
     dc.full_assembly_report(parts, target="./my_report", enzyme="BsmBI",
                             max_assemblies=40, fragments_filters='auto',
                             assemblies_prefix='asm')
+
 Result:
 
 .. image:: _static/images/report_screenshot.jpg
@@ -111,7 +112,7 @@ Result:
 How it works
 ------------
 
-Dna Cauldron simulates enzyme digestions and computes sticky ends, then generates
+DNA Cauldron simulates enzyme digestions and computes sticky ends, then generates
 a graph of the fragments that bind together, and explores circular paths in this graph
 (which correspond to circular constructs), an idea also used in
 `PyDNA <https://github.com/BjornFJohansson/pydna>`_ and first
@@ -121,20 +122,20 @@ DNA Cauldron adds methods to deal with combinatorial assemblies, selecting const
 Contribute
 ----------
 
-DnaCauldron is an open-source library originally written at the
+DNA Cauldron is an open-source library originally written at the
 Edinburgh Genome Foundry by Zulko_ and is released on Github_ under the MIT
 licence (¢ Edinburgh Genome Foundry), everyone is welcome to contribute.
 
 .. raw:: html
 
        <a href="https://twitter.com/share" class="twitter-share-button"
-       data-text="DnaCauldron - A Python module for printing with living matter" data-size="large" data-hashtags="Bioprinting">Tweet
+       data-text="DNA Cauldron - A Python module for printing with living matter" data-size="large" data-hashtags="Bioprinting">Tweet
        </a>
        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
        if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
        fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
        </script>
-       <iframe src="http://ghbtns.com/github-btn.html?user=Edinburgh-Genome-Foundry&repo=DnaCauldron&type=watch&count=true&size=large"
+       <iframe src="http://ghbtns.com/github-btn.html?user=Edinburgh-Genome-Foundry&repo=DNA Cauldron&type=watch&count=true&size=large"
        allowtransparency="true" frameborder="0" scrolling="0" width="152px" height="30px" margin-bottom="30px"></iframe>
 
 
@@ -150,6 +151,17 @@ licence (¢ Edinburgh Genome Foundry), everyone is welcome to contribute.
     :maxdepth: 3
 
     ref
+
+.. toctree::
+  :caption: Examples
+
+  examples/single_assembly
+  examples/full_report
+  examples/backbone_autoselection
+  examples/combinatorial_assembly
+  examples/connector_selection
+
+
 
 More biology software
 ----------------------

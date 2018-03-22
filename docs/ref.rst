@@ -1,10 +1,9 @@
-.. reference ::
+.. _reference:
 
-DnaCauldron Reference manual
-==========================
+DNA Cauldron Reference manual
+=============================
 
-Classes dependencies:
-----------------------
+**Classes dependencies:**
 
 .. mermaid::
    :align: center
@@ -27,8 +26,10 @@ Classes dependencies:
 High-level functions
 --------------------
 
-.. automodule:: dnacauldron.utils
-   :members:
+.. autofunction:: dnacauldron.utils.insert_parts_on_backbones
+.. autofunction:: dnacauldron.utils.single_assembly
+.. autofunction:: dnacauldron.utils.record_contains_backbone
+.. autofunction:: dnacauldron.utils.autoselect_enzyme
 
 Reporting
 ---------
@@ -40,23 +41,37 @@ Reporting
 .. automodule:: dnacauldron.reports.plots
  :members:
 
-
 AssemblyMix
 -----------
 
-.. automodule:: dnacauldron.AssemblyMix
-   :members:
+.. automodule:: dnacauldron.AssemblyMix.AssemblyMix
+  :members:
 
+.. automodule:: dnacauldron.AssemblyMix.BASICLigationMix
+  :members:
+
+
+Lower-level classes
+-------------------
 
 Filters
----------
+~~~~~~~
 
-.. automodule:: dnacauldron.Filter
+.. automodule:: dnacauldron.AssemblyMix.Filter
    :members:
-
 
 StickyEndsSeq
---------------
+~~~~~~~~~~~~~
 
-.. automodule:: dnacauldron.StickyEndsSeq
+.. autoclass:: dnacauldron.StickyEndsSeq.StickyEnd
    :members:
+.. autoclass:: dnacauldron.StickyEndsSeq.StickyEndsSeq
+   :members:
+.. autoclass:: dnacauldron.StickyEndsSeq.StickyEndsSeqRecord
+   :members:
+
+BackBoneChoice
+~~~~~~~~~~~~~~
+
+.. autoclass:: dnacauldron.utils.insert_parts_on_backbones.BackboneChoice
+  :members:

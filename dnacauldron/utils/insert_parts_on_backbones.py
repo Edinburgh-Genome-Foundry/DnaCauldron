@@ -5,12 +5,36 @@ import pandas
 from ..AssemblyMix import RestrictionLigationMix, AssemblyError
 from ..tools import reverse_complement
 from .utils import autoselect_enzyme
+import flametree
+from Bio import SeqIO
 
 class BackboneChoice:
-    """Class to represent the result of a backbone autoselection"""
+    """Class to represent the result of a backbone autoselection.
+
+    Parameters
+    ----------
+
+    record
+      Record that was analyzed, containing an insert, to be backbonized,
+      and potentially an original backbone too.
+
+    already_on_backbone
+      Was a backbone detected in that record ?
+
+    error
+
+    backbone_record
+      Record of the backone that was selected for this record among all
+      provided choices.
+
+    final_record
+      Record featuring the original insert in the given ``record`` cloned into
+      the auto-selected backbone.
+    """
 
     def __init__(self, record, already_on_backbone=None, error=None,
                  backbone_record=None, final_record=None):
+        """Initialize."""
         self.record = record
         self.already_on_backbone = already_on_backbone
         self.backbone_record = backbone_record
@@ -18,12 +42,14 @@ class BackboneChoice:
         self.error = error
 
     def __repr__(self):
+        """Write [recordname] (already/inserted on backbone)."""
         if self.already_on_backbone:
             return "%s (already on backbone)" % self.record.id
         else:
             return "%s inserted on %s" % (self.record.id,
                                           self.backbone_record.id)
     def to_dict(self):
+        """Return the object as a dict. Used for dataframe/spreadsheet."""
         backbone, final_record = self.backbone_record, self.final_record
         detected = backbone.id if hasattr(backbone, 'id') else ''
         final_length = len(final_record) if final_record else  len(self.record)
@@ -37,6 +63,11 @@ class BackboneChoice:
 
     @staticmethod
     def list_to_infos_spreadsheet(choices):
+        """Return a pandas dataframe summarizing a list of BackboneChoices.
+
+        The dataframe's columns are 'original_record', 'already_on_backbone',
+        'detected_backbone', 'final_record_length', 'error'.
+        """
         return pandas.DataFrame.from_records(
             [
                 choice.to_dict()
@@ -48,28 +79,62 @@ class BackboneChoice:
 
     @staticmethod
     def write_final_records(choices, directory):
+        """Write a list of BackboneChoices final records as genbanks."""
+        target_dir = flametree.file_tree(directory)
         for choice in choices:
-            pass
+            if choice.already_on_backbone:
+                record = choice.record
+            else:
+                choice.final_record
+            if record is not None:
+                record.name = choice.record.name
+                record.id = choice.record.id
+                target_file = target_dir._file('%s.gb' % choice.record.id)
+                SeqIO.write(record, target_file, 'genbank')
 
 
 def _get_insert_from_record(record, enzyme='BsmBI'):
+    """Return the record of the one digested fragment without enzyme site."""
     mix = RestrictionLigationMix([record], enzyme=enzyme)
-    return [
+    inserts = [
         frag for frag in mix.filtered_fragments
         if not frag.is_reverse
-    ][0]
+    ]
+    if len(inserts) != 1:
+        raise ValueError("")
+    return inserts[0]
 
 def _standardize_overhangs(overhangs):
+    """Standardize a pair of overhangs (o1, o2).
+
+    Returns either ``(o1, o2)`` or its reverse complement ``(rev_o2, rev_o1)``,
+    whichever is smaller in alphabetical order.
+    """
     o1, o2 = overhangs
     ro1, ro2 = [reverse_complement(o) for o in (o1, o2)]
     return min((o1, o2), (ro2, ro1))
 
 def get_overhangs_from_record(record, enzyme='BsmBI', standardize=True):
+    """Return a pair (o1, o2) of overhangs found by record digestion.
+
+    If ``standardized=True`` the pair returned is either ``(o1, o2)`` or
+    its reverse complement ``(rev_o2, rev_o1)``, which ever is smaller
+    in alphabetical order.
+    """
     insert = _get_insert_from_record(record, enzyme=enzyme)
     overhangs = str(insert.seq.left_end), str(insert.seq.right_end)
     return _standardize_overhangs(overhangs) if standardize else overhangs
 
 def _records_to_overhangs_dict(records, allow_multiple_choices=False):
+    """Return ``{(o1, o2): rec}`` where o1, o2 are standardized overhangs.
+
+    If ``allow_multiple_choices=True`` it will return ``{(o1, o2): [r1, r2]}``
+    when several records share the same overhangs pair.
+
+    If ``allow_multiple_choices=False`` and several records share the same
+    overhangs pair, an error is raised.
+
+    """
     result = {}
     for record in records:
         overhangs = get_overhangs_from_record(record)
@@ -81,13 +146,19 @@ def _records_to_overhangs_dict(records, allow_multiple_choices=False):
                                  % (record.id, result[overhangs].id))
         else:
             if allow_multiple_choices:
-                result[overhangs] = []
+                result[overhangs] = [record]
             else:
                 result[overhangs] = record
     return result
 
-def _record_contains_backbone(record, enzyme='BsmBI',
+def record_contains_backbone(record, enzyme='BsmBI',
                              min_backbone_length=500):
+    """Return True iff it believes the given record contains a backbone.
+
+    A backbone is detected if, when cutting the circularized record with the
+    given enzyme, there is one fragment with no site (the insert), and the rest
+    has a total size above the given ``min_backbone_length``.
+    """
     mix = RestrictionLigationMix([record], enzyme='BsmBI')
     fragments = [
         frag for frag in mix.filtered_fragments
@@ -194,7 +265,7 @@ def insert_parts_on_backbones(part_records, backbone_records,
     backbone_choices = []
     for record in part_records:
         try:
-            has_backbone = _record_contains_backbone(
+            has_backbone = record_contains_backbone(
                 record, enzyme=enzyme, min_backbone_length=min_backbone_length)
             if (not process_parts_with_backbone) and has_backbone:
                 choice = BackboneChoice(record, already_on_backbone=True)
