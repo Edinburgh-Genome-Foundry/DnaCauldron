@@ -32,8 +32,6 @@
   
     <link rel="stylesheet" href="../../../_static/css/main.css" type="text/css" />
   
-    <link rel="stylesheet" href="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.css" type="text/css" />
-  
 
   
         <link rel="index" title="Index"
@@ -97,11 +95,19 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Dna Cauldron Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">DNA Cauldron Documentation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../ref.html">DnaCauldron Reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ref.html">DNA Cauldron Reference manual</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/single_assembly.html">Simple single assembly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/full_report.html">Cloning simulation with full report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/backbone_autoselection.html">Backbone Autoselection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/combinatorial_assembly.html">Combinatorial Assembly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/connector_selection.html">Connector autoselection</a></li>
 </ul>
 
             
@@ -173,17 +179,24 @@
 <span class="kn">import</span> <span class="nn">pandas</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">Counter</span>
 
-<span class="kn">from</span> <span class="nn">..Filter</span> <span class="k">import</span> <span class="n">NoRestrictionSiteFilter</span>
-<span class="kn">from</span> <span class="nn">..AssemblyMix</span> <span class="k">import</span> <span class="n">RestrictionLigationMix</span>
-<span class="kn">from</span> <span class="nn">.plots</span> <span class="k">import</span> <span class="p">(</span><span class="n">name_fragment</span><span class="p">,</span> <span class="n">plot_cuts</span><span class="p">,</span> <span class="n">plot_assembly_graph</span><span class="p">,</span>
-                    <span class="n">AssemblyTranslator</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..AssemblyMix</span> <span class="k">import</span> <span class="n">RestrictionLigationMix</span><span class="p">,</span> <span class="n">NoRestrictionSiteFilter</span>
+<span class="kn">from</span> <span class="nn">.plots</span> <span class="k">import</span> <span class="p">(</span><span class="n">plot_cuts</span><span class="p">,</span> <span class="n">plot_slots_graph</span><span class="p">,</span> <span class="n">AssemblyTranslator</span><span class="p">)</span>
+
+<div class="viewcode-block" id="name_fragment"><a class="viewcode-back" href="../../../ref.html#dnacauldron.reports.reports.name_fragment">[docs]</a><span class="k">def</span> <span class="nf">name_fragment</span><span class="p">(</span><span class="n">fragment</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the name of the fragment, or `r_NAME` if the fragment is the</span>
+<span class="sd">    reverse of another framgnet.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">fragment</span><span class="o">.</span><span class="n">original_construct</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span>
+            <span class="p">(</span><span class="s2">&quot;_r&quot;</span> <span class="k">if</span> <span class="n">fragment</span><span class="o">.</span><span class="n">is_reverse</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="full_assembly_report"><a class="viewcode-back" href="../../../ref.html#dnacauldron.reports.reports.full_assembly_report">[docs]</a><span class="k">def</span> <span class="nf">full_assembly_report</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">enzyme</span><span class="o">=</span><span class="s2">&quot;BsmBI&quot;</span><span class="p">,</span> <span class="n">max_assemblies</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
                          <span class="n">connector_records</span><span class="o">=</span><span class="p">(),</span>
                          <span class="n">include_fragments</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                          <span class="n">include_parts</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                         <span class="n">include_assembly_plots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                          <span class="n">fragments_filters</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
                          <span class="n">assemblies_prefix</span><span class="o">=</span><span class="s1">&#39;assembly&#39;</span><span class="p">,</span>
+                         <span class="n">show_overhangs_in_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                         <span class="n">show_overhangs_in_genbank</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                          <span class="n">mix_class</span><span class="o">=</span><span class="s2">&quot;restriction&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Write a full assembly report in a folder or a zip.</span>
 
@@ -238,6 +251,7 @@
         <span class="n">mix_class</span> <span class="o">=</span> <span class="n">RestrictionLigationMix</span>
     <span class="n">part_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">]</span>
     <span class="n">non_unique</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span> <span class="ow">in</span> <span class="n">Counter</span><span class="p">(</span><span class="n">part_names</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">non_unique</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">non_unique</span><span class="p">))</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">non_unique</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;All parts provided should have different names. &quot;</span>
                          <span class="s2">&quot;Assembly (</span><span class="si">%s</span><span class="s2">) contains several times the parts </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span>
@@ -247,7 +261,6 @@
 
     <span class="n">report</span> <span class="o">=</span> <span class="n">file_tree</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">graph_dir</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">_dir</span><span class="p">(</span><span class="s2">&quot;assembly_graph&quot;</span><span class="p">)</span>
     <span class="n">assemblies_dir</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">_dir</span><span class="p">(</span><span class="s2">&quot;assemblies&quot;</span><span class="p">)</span>
 
     <span class="n">mix</span> <span class="o">=</span> <span class="n">mix_class</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="n">enzyme</span><span class="p">,</span> <span class="n">fragments_filters</span><span class="o">=</span><span class="n">fragments_filters</span><span class="p">)</span>
@@ -281,25 +294,15 @@
             <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">)</span>
 
     <span class="c1"># GRAPH</span>
-
-    <span class="n">ax</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="n">plot_assembly_graph</span><span class="p">(</span><span class="n">mix</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">graph_dir</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="s1">&#39;graph.pdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;wb&#39;</span><span class="p">),</span>
-                      <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">end_1</span><span class="o">=</span><span class="n">end_1</span><span class="p">,</span> <span class="n">end_2</span><span class="o">=</span><span class="n">end_2</span><span class="p">,</span>
-            <span class="n">parts</span><span class="o">=</span><span class="s2">&quot; &amp; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">name_fragment</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-                              <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;fragments&quot;</span><span class="p">]])</span>
-        <span class="p">)</span>
-        <span class="k">for</span> <span class="n">end_1</span><span class="p">,</span> <span class="n">end_2</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="p">]</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">data</span><span class="p">,</span>
-                                       <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;end_1&#39;</span><span class="p">,</span> <span class="s1">&#39;end_2&#39;</span><span class="p">,</span> <span class="s1">&#39;parts&#39;</span><span class="p">])</span>
-    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">graph_dir</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="s1">&#39;parts_per_slot.csv&#39;</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_slots_graph</span><span class="p">(</span><span class="n">mix</span><span class="p">,</span> <span class="n">with_overhangs</span><span class="o">=</span><span class="n">show_overhangs_in_graph</span><span class="p">,</span>
+                          <span class="n">show_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="s1">&#39;parts_graph.pdf&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;wb&#39;</span><span class="p">),</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">)</span>
 
     <span class="c1"># ASSEMBLIES</span>
-    <span class="n">assemblies</span> <span class="o">=</span> <span class="n">mix</span><span class="o">.</span><span class="n">compute_circular_assemblies</span><span class="p">()</span>
+    <span class="n">assemblies</span> <span class="o">=</span> <span class="n">mix</span><span class="o">.</span><span class="n">compute_circular_assemblies</span><span class="p">(</span>
+        <span class="n">annotate_homologies</span><span class="o">=</span><span class="n">show_overhangs_in_genbank</span><span class="p">)</span>
     <span class="n">assemblies</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
         <span class="p">[</span><span class="n">asm</span> <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">asm</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">max_assemblies</span><span class="p">),</span> <span class="n">assemblies</span><span class="p">)],</span>
         <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">asm</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">asm</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
@@ -312,22 +315,23 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_</span><span class="si">%03d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">assemblies_prefix</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
         <span class="n">assemblies_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-            <span class="n">parts</span><span class="o">=</span><span class="s2">&quot; &amp; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">name_fragment</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">asm</span><span class="o">.</span><span class="n">fragments</span><span class="p">]),</span>
+            <span class="n">assembly_name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">parts</span><span class="o">=</span><span class="s2">&quot; &amp; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">name_fragment</span><span class="p">(</span><span class="n">f_</span><span class="p">)</span> <span class="k">for</span> <span class="n">f_</span> <span class="ow">in</span> <span class="n">asm</span><span class="o">.</span><span class="n">fragments</span><span class="p">]),</span>
             <span class="n">number_of_parts</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">asm</span><span class="o">.</span><span class="n">fragments</span><span class="p">),</span>
             <span class="n">assembly_size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">asm</span><span class="p">)</span>
         <span class="p">))</span>
         <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">asm</span><span class="p">,</span> <span class="n">assemblies_dir</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.gb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;w&#39;</span><span class="p">),</span>
                     <span class="s1">&#39;genbank&#39;</span><span class="p">)</span>
-        <span class="n">gr_record</span> <span class="o">=</span> <span class="n">AssemblyTranslator</span><span class="p">()</span><span class="o">.</span><span class="n">translate_record</span><span class="p">(</span><span class="n">asm</span><span class="p">)</span>
-        <span class="n">ax</span><span class="p">,</span> <span class="n">gr</span> <span class="o">=</span> <span class="n">gr_record</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figure_width</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">assemblies_dir</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.pdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;wb&#39;</span><span class="p">),</span>
-                          <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">include_assembly_plots</span><span class="p">:</span>
+            <span class="n">gr_record</span> <span class="o">=</span> <span class="n">AssemblyTranslator</span><span class="p">()</span><span class="o">.</span><span class="n">translate_record</span><span class="p">(</span><span class="n">asm</span><span class="p">)</span>
+            <span class="n">ax</span><span class="p">,</span> <span class="n">gr</span> <span class="o">=</span> <span class="n">gr_record</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figure_width</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">assemblies_dir</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.pdf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;wb&#39;</span><span class="p">),</span>
+                              <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span>
         <span class="n">assemblies_data</span><span class="p">,</span>
-        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;number_of_parts&#39;</span><span class="p">,</span> <span class="s1">&#39;assembly_size&#39;</span><span class="p">,</span> <span class="s1">&#39;parts&#39;</span><span class="p">]</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;assembly_name&#39;</span><span class="p">,</span> <span class="s1">&#39;number_of_parts&#39;</span><span class="p">,</span> <span class="s1">&#39;assembly_size&#39;</span><span class="p">,</span> <span class="s1">&#39;parts&#39;</span><span class="p">]</span>
     <span class="p">)</span>
     <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">report</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="s1">&#39;report.csv&#39;</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">n_constructs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
@@ -381,7 +385,7 @@
       <script type="text/javascript" src="../../../_static/jquery.js"></script>
       <script type="text/javascript" src="../../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.rawgit.com/knsv/mermaid/7.0.0/dist/mermaid.min.js"></script>
+      <script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
 
   
 

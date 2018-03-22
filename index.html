@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Dna Cauldron Documentation &mdash; DnaCauldron 0.1.0 documentation</title>
+  <title>DNA Cauldron Documentation &mdash; DnaCauldron 0.1.0 documentation</title>
   
 
   
@@ -38,7 +38,7 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="DnaCauldron 0.1.0 documentation" href="#"/>
-        <link rel="next" title="DnaCauldron Reference manual" href="ref.html"/> 
+        <link rel="next" title="DNA Cauldron Reference manual" href="ref.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -95,11 +95,19 @@
             
             
               <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Dna Cauldron Documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">DNA Cauldron Documentation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="ref.html">DnaCauldron Reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ref.html">DNA Cauldron Reference manual</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/single_assembly.html">Simple single assembly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/full_report.html">Cloning simulation with full report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/backbone_autoselection.html">Backbone Autoselection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/combinatorial_assembly.html">Combinatorial Assembly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/connector_selection.html">Connector autoselection</a></li>
 </ul>
 
             
@@ -144,7 +152,7 @@
     
       <li><a href="#">Docs</a> &raquo;</li>
         
-      <li>Dna Cauldron Documentation</li>
+      <li>DNA Cauldron Documentation</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -164,24 +172,18 @@
            <div itemprop="articleBody">
             
   <div class="section" id="dna-cauldron-documentation">
-<h1>Dna Cauldron Documentation<a class="headerlink" href="#dna-cauldron-documentation" title="Permalink to this headline">¶</a></h1>
+<h1>DNA Cauldron Documentation<a class="headerlink" href="#dna-cauldron-documentation" title="Permalink to this headline">¶</a></h1>
 <a class="reference internal image-reference" href="_images/title.png"><img alt="_images/title.png" class="align-center" src="_images/title.png" style="width: 500px;" /></a>
-<p>Dna Cauldron is a Python library to simulate restriction-based assembly operations.
-You provide a set of parts and receptor vectors and Dna Cauldron will compute the
-assembli(es) that could result from the mix.</p>
+</div>
+<div class="section" id="dna-cauldron">
+<h1>DNA Cauldron<a class="headerlink" href="#dna-cauldron" title="Permalink to this headline">¶</a></h1>
+<p>DNA Cauldron is a Python library to simulate restriction-based assembly operations. Provided the sequences of genetic parts and receptor vectors, DNA Cauldron will compute the assembli(es) that could result from the mix.</p>
 <a class="reference internal image-reference" href="_images/principle.png"><img alt="_images/principle.png" class="align-center" src="_images/principle.png" style="width: 600px;" /></a>
-<p>Dna Cauldron was written with Synthetic Biology applications in mind (typically,
-batches of parts-based assemblies).</p>
-<p>It is simple to use, plays well with BioPython, can import and export Genbank
-(it conserves all features), and provides ways to select particular
-constructs when dealing with large combinatorial assemblies.</p>
-<p><strong>Try it online !</strong> Too lazy to use the library programmatically ?
-It is available
-<a class="reference external" href="http://cuba.genomefoundry.org/#/simulate_gg_assemblies">here</a>
-as a web service.</p>
+<p>DNA Cauldron was written for Synthetic Biology applications - typically, to predict and validate batches of parts-based assemblies. It is simple to use, plays well with BioPython, can import and export Genbank (it conserves all features), and provides advanced methods such as connector part auto-selection, backbone selection for linear parts, methods to select constructs subsets when dealing with large combinatorial assemblies.</p>
+<p><strong>Try it online !</strong> Use <a class="reference external" href="http://cuba.genomefoundry.org/simulate_gg_assemblies">this web service</a> to predict the outcome of a batch of (possibly combinatorial) Type 2S assemblies.</p>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>You can install DnaCauldron through PIP</p>
+<p>You can install DNA Cauldron through PIP</p>
 <div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">dnacauldron</span>
 </pre></div>
 </div>
@@ -196,7 +198,7 @@ as a web service.</p>
 <h3>Single assembly<a class="headerlink" href="#single-assembly" title="Permalink to this headline">¶</a></h3>
 <p>To assemble several parts and a receptor plasmid into a single construct,
 use <cite>single_assembly</cite>. The parts can be provided either as paths to genbank
-files or as Biopython records. Dna Cauldron returns a Biopython record of the
+files or as Biopython records. DNA Cauldron returns a Biopython record of the
 final assembly, and (optionally) writes it to a Genbank file.</p>
 <div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dnacauldron.utils</span> <span class="k">import</span> <span class="n">single_assembly</span>
 <span class="n">final_construct</span> <span class="o">=</span> <span class="n">single_assembly</span><span class="p">(</span>
@@ -253,7 +255,7 @@ if necessary.</p>
 </div>
 <div class="section" id="how-it-works">
 <h2>How it works<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h2>
-<p>Dna Cauldron simulates enzyme digestions and computes sticky ends, then generates
+<p>DNA Cauldron simulates enzyme digestions and computes sticky ends, then generates
 a graph of the fragments that bind together, and explores circular paths in this graph
 (which correspond to circular constructs), an idea also used in
 <a class="reference external" href="https://github.com/BjornFJohansson/pydna">PyDNA</a> and first
@@ -262,21 +264,36 @@ DNA Cauldron adds methods to deal with combinatorial assemblies, selecting const
 </div>
 <div class="section" id="contribute">
 <h2>Contribute<a class="headerlink" href="#contribute" title="Permalink to this headline">¶</a></h2>
-<p>DnaCauldron is an open-source library originally written at the
+<p>DNA Cauldron is an open-source library originally written at the
 Edinburgh Genome Foundry by <a class="reference external" href="https://github.com/Zulko/">Zulko</a> and is released on <a class="reference external" href="https://github.com/EdinburghGenomeFoundry/dnacauldron">Github</a> under the MIT
 licence (¢ Edinburgh Genome Foundry), everyone is welcome to contribute.</p>
 <a href="https://twitter.com/share" class="twitter-share-button"
-data-text="DnaCauldron - A Python module for printing with living matter" data-size="large" data-hashtags="Bioprinting">Tweet
+data-text="DNA Cauldron - A Python module for printing with living matter" data-size="large" data-hashtags="Bioprinting">Tweet
 </a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
 if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
 fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
 </script>
-<iframe src="http://ghbtns.com/github-btn.html?user=Edinburgh-Genome-Foundry&repo=DnaCauldron&type=watch&count=true&size=large"
+<iframe src="http://ghbtns.com/github-btn.html?user=Edinburgh-Genome-Foundry&repo=DNA Cauldron&type=watch&count=true&size=large"
 allowtransparency="true" frameborder="0" scrolling="0" width="152px" height="30px" margin-bottom="30px"></iframe><div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
 </div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/single_assembly.html">Simple single assembly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/full_report.html">Cloning simulation with full report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/backbone_autoselection.html">Backbone Autoselection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/combinatorial_assembly.html">Combinatorial Assembly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/connector_selection.html">Connector autoselection</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="more-biology-software">
+<h2>More biology software<a class="headerlink" href="#more-biology-software" title="Permalink to this headline">¶</a></h2>
+<a class="reference external image-reference" href="https://edinburgh-genome-foundry.github.io/"><img alt="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Edinburgh-Genome-Foundry.github.io/master/static/imgs/logos/egf-codon-horizontal.png" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Edinburgh-Genome-Foundry.github.io/master/static/imgs/logos/egf-codon-horizontal.png" /></a>
+<p>DNA Cauldron is part of the <a class="reference external" href="https://edinburgh-genome-foundry.github.io/">EGF Codons</a> synthetic biology software suite for DNA design, manufacturing and validation.</p>
 </div>
 </div>
 
@@ -290,7 +307,7 @@ allowtransparency="true" frameborder="0" scrolling="0" width="152px" height="30p
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ref.html" class="btn btn-neutral float-right" title="DnaCauldron Reference manual" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ref.html" class="btn btn-neutral float-right" title="DNA Cauldron Reference manual" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>

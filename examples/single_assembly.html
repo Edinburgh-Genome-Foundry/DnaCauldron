@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Overview: module code &mdash; DnaCauldron 0.1.0 documentation</title>
+  <title>Simple single assembly &mdash; DnaCauldron 0.1.0 documentation</title>
   
 
   
@@ -37,7 +37,9 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="DnaCauldron 0.1.0 documentation" href="../index.html"/> 
+    <link rel="top" title="DnaCauldron 0.1.0 documentation" href="../index.html"/>
+        <link rel="next" title="Cloning simulation with full report" href="full_report.html"/>
+        <link rel="prev" title="DNA Cauldron Reference manual" href="../ref.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -101,12 +103,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../ref.html">DNA Cauldron Reference manual</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Examples</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../examples/single_assembly.html">Simple single assembly</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/full_report.html">Cloning simulation with full report</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/backbone_autoselection.html">Backbone Autoselection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/combinatorial_assembly.html">Combinatorial Assembly</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/connector_selection.html">Connector autoselection</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Simple single assembly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="full_report.html">Cloning simulation with full report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="backbone_autoselection.html">Backbone Autoselection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="combinatorial_assembly.html">Combinatorial Assembly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connector_selection.html">Connector autoselection</a></li>
 </ul>
 
             
@@ -151,12 +153,14 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>Overview: module code</li>
+      <li>Simple single assembly</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
+            <a href="../_sources/examples/single_assembly.rst.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
     
@@ -168,17 +172,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>All modules for which code is available</h1>
-<ul><li><a href="dnacauldron/AssemblyMix/AssemblyMix.html">dnacauldron.AssemblyMix.AssemblyMix</a></li>
-<li><a href="dnacauldron/AssemblyMix/Filter.html">dnacauldron.AssemblyMix.Filter</a></li>
-<li><a href="dnacauldron/StickyEndsSeq/StickyEnd.html">dnacauldron.StickyEndsSeq.StickyEnd</a></li>
-<li><a href="dnacauldron/StickyEndsSeq/StickyEndsSeq.html">dnacauldron.StickyEndsSeq.StickyEndsSeq</a></li>
-<li><a href="dnacauldron/StickyEndsSeq/StickyEndsSeqRecord.html">dnacauldron.StickyEndsSeq.StickyEndsSeqRecord</a></li>
-<li><a href="dnacauldron/reports/plots.html">dnacauldron.reports.plots</a></li>
-<li><a href="dnacauldron/reports/reports.html">dnacauldron.reports.reports</a></li>
-<li><a href="dnacauldron/utils/insert_parts_on_backbones.html">dnacauldron.utils.insert_parts_on_backbones</a></li>
-<li><a href="dnacauldron/utils/utils.html">dnacauldron.utils.utils</a></li>
-</ul>
+  <div class="section" id="simple-single-assembly">
+<span id="single-assembly"></span><h1>Simple single assembly<a class="headerlink" href="#simple-single-assembly" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dnacauldron</span> <span class="k">import</span> <span class="n">single_assembly</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span>
+<span class="n">single_assembly</span><span class="p">(</span><span class="n">parts</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;partA.gb&quot;</span><span class="p">,</span> <span class="s2">&quot;partB.gb&quot;</span><span class="p">,</span> <span class="s2">&quot;partC.gb&quot;</span><span class="p">],</span>
+                <span class="n">receptor</span><span class="o">=</span><span class="s2">&quot;receptor.gb&quot;</span><span class="p">,</span> <span class="n">enzyme</span><span class="o">=</span><span class="s2">&quot;BsmBI&quot;</span><span class="p">,</span>
+                <span class="n">outfile</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;output_data&quot;</span><span class="p">,</span> <span class="s2">&quot;final_sequence.gb&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+
 
            </div>
            <div class="articleComments">
@@ -186,6 +191,15 @@
            </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="full_report.html" class="btn btn-neutral float-right" title="Cloning simulation with full report" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../ref.html" class="btn btn-neutral" title="DNA Cauldron Reference manual" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
@@ -224,7 +238,6 @@
       <script type="text/javascript" src="../_static/jquery.js"></script>
       <script type="text/javascript" src="../_static/underscore.js"></script>
       <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
 
   
 
