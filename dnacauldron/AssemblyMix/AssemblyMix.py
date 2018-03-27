@@ -426,6 +426,10 @@ class AssemblyMix:
         Else, an exception is raised.
         """
         original_constructs = self.constructs
+        all_construct_ids = [c.id for c in original_constructs]
+        connectors_records = [c for c in connectors_records
+                              if c.id not in all_construct_ids]
+
         slotted_parts_records = [
              self.constructs_dict[list(parts)[0]]
              for parts in self.compute_slots().values()
@@ -461,7 +465,10 @@ class AssemblyMix:
                 and len(set(path[1: -1]).intersection(set(parts_nodes))) == 0
             ])
             cycle = []
+            if (len(parts_graph) != len(original_constructs)):
+                continue
             for cycle in nx.cycles.simple_cycles(parts_graph):
+
                 if len(cycle) == len(parts_graph):
                     break
             if (len(cycle) == len(parts_graph)):
