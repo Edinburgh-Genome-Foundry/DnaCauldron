@@ -5,7 +5,8 @@ from dna_features_viewer import BiopythonTranslator
 import pandas
 from collections import defaultdict, Counter
 
-from ..AssemblyMix import RestrictionLigationMix, NoRestrictionSiteFilter
+from ..AssemblyMix import (RestrictionLigationMix, NoRestrictionSiteFilter,
+                           FragmentSetContainsPartsFilter)
 from .plots import (plot_cuts, plot_slots_graph, AssemblyTranslator)
 
 def name_fragment(fragment):
@@ -16,13 +17,14 @@ def name_fragment(fragment):
 
 def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
                          connector_records=(),
-                         include_fragments=True,
-                         include_parts=True,
+                         include_fragments_plots=True,
+                         include_parts_plots=True,
                          include_assembly_plots=True,
                          fragments_filters='auto',
                          assemblies_prefix='assembly',
                          show_overhangs_in_graph=True,
                          show_overhangs_in_genbank=False,
+                         no_skipped_parts=False,
                          mix_class="restriction"):
     """Write a full assembly report in a folder or a zip.
 
@@ -94,7 +96,7 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
         mix.autoselect_connectors(connector_records)
 
     # PROVIDED PARTS
-    if include_parts:
+    if include_parts_plots:
         provided_parts_dir = report._dir("provided_parts")
         for part in parts:
             linear = part.linear if hasattr(part, 'linear') else False
@@ -106,7 +108,7 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
             SeqIO.write(part, gb_file.open('w'), 'genbank')
 
     # FRAGMENTS
-    if include_fragments:
+    if include_fragments_plots:
         fragments_dir = report._dir("fragments")
         seenfragments = defaultdict(lambda *a: 0)
         for fragment in mix.fragments:
@@ -127,8 +129,11 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
     plt.close(ax.figure)
 
     # ASSEMBLIES
+    filters = (FragmentSetContainsPartsFilter(part_names),)
     assemblies = mix.compute_circular_assemblies(
-        annotate_homologies=show_overhangs_in_genbank)
+        annotate_homologies=show_overhangs_in_genbank,
+        fragments_sets_filters=filters if no_skipped_parts else ()
+    )
     assemblies = sorted(
         [asm for (i, asm) in zip(range(max_assemblies), assemblies)],
         key=lambda asm: str(asm.seq)

@@ -85,3 +85,12 @@ class TextSearchFilter:
             return not text_found
         else:
             return text_found
+
+class FragmentSetContainsPartsFilter:
+
+    def __init__(self, part_names):
+        self.mandatory_part_names = set(part_names)
+
+    def __call__(self, fragments):
+        fragments = set([f.original_construct.name for f in fragments])
+        return fragments >= self.mandatory_part_names
