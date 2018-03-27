@@ -32,14 +32,18 @@ def test_filters():
 
 
 def test_single_assembly(tmpdir):
-    parts_files = [
-        os.path.join('tests', 'data', 'assemblies', partfile)
-        for partfile in ["partA.gb", "partB.gb", "partC.gb", 'receptor.gb']
-    ]
-    receptor_file = os.path.join('tests', 'data', 'assemblies', 'receptor.gb')
+    parts_files = [records_dict[part]
+                   for part in ["partA", "partB", "partC", 'receptor']]
     dc.single_assembly(parts=parts_files, enzyme="BsmBI",
-                       # receptor=receptor_file,
                        outfile=os.path.join(str(tmpdir), "final_sequence.gb"))
+
+def test_single_assembly_with_skipped_part(tmpdir):
+    parts_files = [records_dict[part]
+                   for part in ["partA", "connector_A2C", "partC", 'receptor']]
+    outfile = os.path.join(str(tmpdir), "final_sequence.gb")
+    with pytest.raises(dc.AssemblyError) as exc:
+        dc.single_assembly(parts=parts_files, enzyme="BsmBI", outfile=outfile)
+    assert "0 assemblies" in str(exc.value)
 
 def test_autoselect_enzyme():
     parts = [records_dict[name] for name in ["partA", "partB", "partC"]]
@@ -47,11 +51,8 @@ def test_autoselect_enzyme():
     assert selected == "BsmBI"
 
 def test_single_assembly_with_wrong_enzyme(tmpdir):
-    parts_files = [
-        os.path.join('tests', 'data', 'assemblies', partfile)
-        for partfile in ["partA.gb", "partB.gb", "partC.gb"]
-    ]
-    receptor_file = os.path.join('tests', 'data', 'assemblies', 'receptor.gb')
+    parts_files = [records_dict[part]
+                   for part in ["partA", "partB", "partC"]]
     with pytest.raises(dc.AssemblyError) as exc:
         dc.single_assembly(
             parts=parts_files, enzyme="BsaI",

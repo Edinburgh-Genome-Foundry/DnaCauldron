@@ -4,7 +4,8 @@ most common operations."""
 from Bio import SeqIO, Restriction
 
 
-from ..AssemblyMix import RestrictionLigationMix, AssemblyError
+from ..AssemblyMix import (RestrictionLigationMix, AssemblyError,
+                           FragmentSetContainsPartsFilter)
 from ..tools import reverse_complement, load_genbank
 
 def autoselect_enzyme(parts, enzymes):
@@ -68,8 +69,10 @@ def single_assembly(parts, outfile=None, enzyme="autoselect",
         enzyme = autoselect_enzyme(parts, ['BsmBI', 'BsaI', 'BbsI'])
 
     mix = mix_class(part_records, enzyme)
+    part_names = [p.id for p in part_records]
     assemblies = mix.compute_circular_assemblies(
-        annotate_homologies=annotate_homologies
+        annotate_homologies=annotate_homologies,
+        fragments_sets_filters=(FragmentSetContainsPartsFilter(part_names),)
     )
     first_assemblies = list(zip(assemblies, [1, 2]))
     N = len(first_assemblies)
