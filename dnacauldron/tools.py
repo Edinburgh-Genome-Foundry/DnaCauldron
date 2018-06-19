@@ -3,7 +3,9 @@ from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import DNAAlphabet
 from Bio.SeqFeature import SeqFeature, FeatureLocation
+from snapgene_reader import snapgene_file_to_seqrecord
 from Bio.Seq import Seq
+import os
 
 def complement(dna_sequence):
     """Return the complement of the DNA sequence.
@@ -58,6 +60,28 @@ def random_dna_sequence(length, probas=None, seed=None):
         bases, probas = zip(*probas.items())
         sequence = np.random.choice(bases, length, p=probas)
     return "".join(sequence)
+
+
+def load_record(filename, linear=True, id='auto'):
+    if filename.lower().endswith(("gb", "gbk")):
+        record = SeqIO.read(filename, "genbank")
+    elif filename.lower().endswith(('fa', 'fasta')):
+        record = SeqIO.read(filename, "fasta")
+    elif filename.lower().endswith('.dna'):
+        record = snapgene_file_to_seqrecord(filename)
+    else:
+        raise ValueError('Unknown format for file: %s' % filename)
+    record.linear = linear
+    if id == 'auto':
+        id = record.id
+        if id in [None, '', "<unknown id>", '.', ' ']:
+            id = os.path.splitext(os.path.basename(filename))[0]
+            record.name = id.replace(" ", "_")[:20]
+        record.id = id
+    elif id is not None:
+        record.id = id
+        record.name = id.replace(" ", "_")[:20]
+    return record
 
 
 def load_genbank(filename, linear=True, name="unnamed"):

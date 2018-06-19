@@ -85,7 +85,7 @@ class BackboneChoice:
             if choice.already_on_backbone:
                 record = choice.record
             else:
-                choice.final_record
+                record = choice.final_record
             if record is not None:
                 record.name = choice.record.name
                 record.id = choice.record.id
@@ -170,7 +170,8 @@ def record_contains_backbone(record, enzyme='BsmBI',
     insert = fragments[0]
     return (len(record) - len(insert)) > min_backbone_length
 
-def swap_donor_vector_part(donor_vector, insert, enzyme):
+def swap_donor_vector_part(donor_vector, insert, enzyme,
+                           allow_overhangs_edits=False):
     """Return the records obtained by cloning inserts into a donor vector.
 
     Meant for Type-2S assembly standards only (Golden Gate, etc.)

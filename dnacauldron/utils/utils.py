@@ -8,7 +8,7 @@ from ..AssemblyMix import (RestrictionLigationMix, AssemblyError,
                            FragmentSetContainsPartsFilter)
 from ..tools import reverse_complement, load_genbank
 
-def autoselect_enzyme(parts, enzymes):
+def autoselect_enzyme(parts, enzymes=('BsmBI', 'BsaI', 'BbsI')):
     """Finds the enzyme that the parts were probably meant to be assembled with
 
     Parameters
@@ -83,3 +83,11 @@ def single_assembly(parts, outfile=None, enzyme="autoselect",
     if outfile is not None:
         SeqIO.write(assembly, outfile, "genbank")
     return assembly
+
+def complement_parts(parts, candidates_parts, enzyme='autoselect'):
+    parts = list(parts)
+    complement_parts = list(candidates_parts)
+    if enzyme == 'autoselect':
+        enzyme = autoselect_enzyme(parts + complement_parts)
+    mix = RestrictionLigationMix(parts, enzyme=enzyme)
+    return mix.autoselect_connectors(complement_parts)

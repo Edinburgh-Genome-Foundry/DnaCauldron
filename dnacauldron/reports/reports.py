@@ -1,9 +1,13 @@
+from collections import defaultdict, Counter, OrderedDict
+from copy import deepcopy
+
 from flametree import file_tree
 import matplotlib.pyplot as plt
 from Bio import SeqIO
 from dna_features_viewer import BiopythonTranslator
 import pandas
-from collections import defaultdict, Counter
+from proglog import default_bar_logger
+
 
 from ..AssemblyMix import (RestrictionLigationMix, NoRestrictionSiteFilter,
                            FragmentSetContainsPartsFilter)
@@ -127,6 +131,22 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
     f = report._file('parts_graph.pdf')
     ax.figure.savefig(f.open('wb'), format='pdf', bbox_inches='tight')
     plt.close(ax.figure)
+    graph = mix.slots_graph(with_overhangs=False)
+    slots_dict = {
+        s: "|".join(list(pts))
+        for s, pts in mix.compute_slots().items()
+    }
+    non_linear_slots = [
+        (slots_dict[n], "|".join([slots_dict[b] for b in graph.neighbors(n)]))
+        for n in graph.nodes()
+        if graph.degree(n) != 2]
+    if len(non_linear_slots):
+        report._file('non_linear_nodes.csv').write("\n".join(
+            ["part,neighbours"] + [
+                "%s,%s" % (part, neighbours)
+                for part, neighbours in non_linear_slots
+            ]
+        ))
 
     # ASSEMBLIES
     filters = (FragmentSetContainsPartsFilter(part_names),)
@@ -164,9 +184,53 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
         assemblies_data,
         columns=['assembly_name', 'number_of_parts', 'assembly_size', 'parts']
     )
-    df.to_csv(report._file('report.csv'), index=False)
+    df.to_csv(report._file('report.csv').open('w'), index=False)
     n_constructs = len(df)
     if target == '@memory':
         return n_constructs, report._close()
     else:
         return n_constructs
+
+def full_assembly_plan_report(assembly_plan, target, part_records=None,
+                              assert_single_assemblies=True,
+                              logger='bar', **report_kwargs):
+    """for plans of single assemblies"""
+    logger = default_bar_logger(logger)
+    if isinstance(assembly_plan, list):
+        assembly_plan = OrderedDict(assembly_plan)
+    if isinstance(list(assembly_plan.values())[0][0], str):
+        if not hasattr(part_records, 'items'):
+            part_records = {r.name: r for r in part_records}
+        for part, record in part_records.items():
+            part_records[part] = deepcopy(part_records[part])
+            part_records[part].name = part_records[part].id = part
+        assembly_plan = OrderedDict([
+            (name, [part_records[p] for p in parts])
+            for name, parts in assembly_plan.items()
+        ])
+    root = file_tree(target, replace=True)
+    all_records_folder = root._dir("all_records")
+    errored_assemblies = []
+    assemblies = list(assembly_plan.items())
+    for asm_name, parts in logger.iter_bar(assembly=assemblies):
+        asm_folder = root._dir(asm_name)
+        try:
+            n = full_assembly_report(parts, target=asm_folder,
+                                     assemblies_prefix=asm_name,
+                                     **report_kwargs)
+            if assert_single_assemblies and (n != 1):
+                raise ValueError("%s assemblies found instead of 1 for %s." %
+                                 (n, asm_name))
+            for f in asm_folder.assemblies._all_files:
+                if f._extension == 'gb':
+                    f.copy(all_records_folder)
+        except Exception as err:
+            errored_assemblies.append((asm_name, str(err)))
+
+    if len(errored_assemblies):
+        root._file("errored_assemblies.txt").write("\n\n".join([
+            "%s: %s" % (name, error)
+            for name, error in errored_assemblies
+        ]))
+
+    return errored_assemblies, root._close()
