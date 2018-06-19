@@ -27,7 +27,7 @@ FEATURES             Location/Qualifiers
                      /label="feature 8"
      misc_feature    1067..1072
                      /label="feature 9"
-     terminator      3246..27
+     terminator      3240..3246
                      /label="feature 10"
      gene            1080..1442
                      /label="feature 11"

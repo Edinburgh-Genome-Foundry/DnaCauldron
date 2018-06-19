@@ -33,7 +33,7 @@ FEATURES             Location/Qualifiers
                      /label="feature 11"
      promoter        complement(2589..2691)
                      /label="feature 12"
-     terminator      2692..2
+     terminator      2692..2699
                      /label="feature 13"
 ORIGIN
         1 aagtatttat tgtttttacc caaccggaat gttggcgcta agcggggcat atctagagaa
