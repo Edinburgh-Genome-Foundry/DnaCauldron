@@ -15,7 +15,7 @@ FEATURES             Location/Qualifiers
                      /label="feature 2"
      terminator      1148..1179
                      /label="feature 3"
-     rep_origin      complement(2161..216)
+     rep_origin      complement(216..2161)
                      /label="feature 4"
      misc_feature    341..346
                      /label="feature 5"
