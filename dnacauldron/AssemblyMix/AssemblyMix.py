@@ -474,7 +474,10 @@ class AssemblyMix:
             if (len(cycle) == len(parts_graph)):
                 break
         else:
-            raise ValueError("No construct found involving all parts")
+            err = AssemblyError("No construct found involving all parts")
+            err.graph = graph
+            err.mix = self
+            raise err
         if len(cycle) == 0:
             raise ValueError("No solution found - a connector may be missing.")
 

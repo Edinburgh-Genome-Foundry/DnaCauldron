@@ -10,7 +10,7 @@ from proglog import default_bar_logger
 
 
 from ..AssemblyMix import (RestrictionLigationMix, NoRestrictionSiteFilter,
-                           FragmentSetContainsPartsFilter)
+                           FragmentSetContainsPartsFilter, AssemblyError)
 from .plots import (plot_cuts, plot_slots_graph, AssemblyTranslator)
 
 def name_fragment(fragment):
@@ -97,7 +97,15 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
 
     mix = mix_class(parts, enzyme, fragments_filters=fragments_filters)
     if len(connector_records):
-        mix.autoselect_connectors(connector_records)
+        try:
+            mix.autoselect_connectors(connector_records)
+        except AssemblyError as err:
+            ax = plot_slots_graph(mix, with_overhangs=show_overhangs_in_graph,
+                                  show_missing=True)
+            f = report._file('parts_graph.pdf')
+            ax.figure.savefig(f.open('wb'), format='pdf', bbox_inches='tight')
+            plt.close(ax.figure)
+            raise err
 
     # PROVIDED PARTS
     if include_parts_plots:
@@ -192,9 +200,49 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
         return n_constructs
 
 def full_assembly_plan_report(assembly_plan, target, part_records=None,
-                              assert_single_assemblies=True,
-                              logger='bar', **report_kwargs):
-    """for plans of single assemblies"""
+                              enzyme="BsmBI", assert_single_assemblies=True,
+                              logger='bar', connector_records=(),
+                              fail_silently=True,
+                              **report_kwargs):
+    """Makes a full report for a plan (list of single assemblies)
+
+    Parameters
+    ----------
+
+    assembly_plan
+      A list ``[('name', [parts])...]`` or a dict ``{name: [parts]}`` where
+      the parts are either records, or simply part names (in that case you
+      must provide the records in ``parts_records``)
+
+    parts_records
+      A dict {part_name: part_record}.
+
+    target
+      Either a path to a folder, or to a zip file, or ``@memory`` to return
+      a string representing zip data (the latter is particularly useful for
+      website backends).
+
+    enzyme
+      Name of the enzyme to be used in the assembly
+
+    max_assemblies
+      Maximal number of assemblies to consider. If there are more than this
+      the additional ones won't be returned.
+
+    fragments_filters
+      Fragments filters to be used to filter out fragments before looking for
+      assemblies. If left to auto, fragments containing the enzyme site will
+      be filtered out.
+
+    connector_records
+      List of connector records (a connector is a part that can bridge a gap
+      between two other parts), from which only the essential elements to form
+      an assembly will be automatically selected and added to the other parts.
+
+    **report_kwargs
+      Any other parameter of ``full_assembly_report``
+
+    """
     logger = default_bar_logger(logger)
     if isinstance(assembly_plan, list):
         assembly_plan = OrderedDict(assembly_plan)
@@ -217,6 +265,8 @@ def full_assembly_plan_report(assembly_plan, target, part_records=None,
         try:
             n = full_assembly_report(parts, target=asm_folder,
                                      assemblies_prefix=asm_name,
+                                     enzyme=enzyme,
+                                     connector_records=connector_records,
                                      **report_kwargs)
             if assert_single_assemblies and (n != 1):
                 raise ValueError("%s assemblies found instead of 1 for %s." %
@@ -225,7 +275,10 @@ def full_assembly_plan_report(assembly_plan, target, part_records=None,
                 if f._extension == 'gb':
                     f.copy(all_records_folder)
         except Exception as err:
-            errored_assemblies.append((asm_name, str(err)))
+            if fail_silently:
+                errored_assemblies.append((asm_name, str(err)))
+            else:
+                raise err
 
     if len(errored_assemblies):
         root._file("errored_assemblies.txt").write("\n\n".join([
