@@ -1,3 +1,4 @@
-include *.rst
+include pypi-readme.rst
+include ez_setup.py
 include *.txt
 recursive-include examples *.txt *.py
