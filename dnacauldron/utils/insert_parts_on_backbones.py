@@ -45,6 +45,8 @@ class BackboneChoice:
         """Write [recordname] (already/inserted on backbone)."""
         if self.already_on_backbone:
             return "%s (already on backbone)" % self.record.id
+        elif (isinstance(self.backbone_record, str)):
+            return "%s: no backbone found." % self.record.id
         else:
             return "%s inserted on %s" % (self.record.id,
                                           self.backbone_record.id)

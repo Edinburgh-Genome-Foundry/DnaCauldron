@@ -19,7 +19,7 @@ class StickyEnd(Seq):
     """
 
     def __init__(self, data, strand, **k):
-        Seq.__init__(self, str(data), **k)
+        Seq.__init__(self, str(data).upper(), **k)
         self.strand = strand
 
     def reverse_complement(self):

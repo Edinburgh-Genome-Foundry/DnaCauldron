@@ -2,7 +2,7 @@
 
 """
 from dnacauldron import load_genbank, insert_parts_on_backbones, BackboneChoice
-import flametree # for getting/writing files and folders
+import flametree  # for getting/writing files and folders
 
 root = flametree.file_tree('.')
 output_dir = root._dir('output_data')._dir('backbone_autoselection')

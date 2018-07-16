@@ -62,7 +62,7 @@ def random_dna_sequence(length, probas=None, seed=None):
     return "".join(sequence)
 
 
-def load_record(filename, linear=True, id='auto'):
+def load_record(filename, linear=True, id='auto', upperize=True):
     if filename.lower().endswith(("gb", "gbk")):
         record = SeqIO.read(filename, "genbank")
     elif filename.lower().endswith(('fa', 'fasta')):
@@ -71,6 +71,8 @@ def load_record(filename, linear=True, id='auto'):
         record = snapgene_file_to_seqrecord(filename)
     else:
         raise ValueError('Unknown format for file: %s' % filename)
+    if upperize:
+        record = record.upper()
     record.linear = linear
     if id == 'auto':
         id = record.id
@@ -81,6 +83,7 @@ def load_record(filename, linear=True, id='auto'):
     elif id is not None:
         record.id = id
         record.name = id.replace(" ", "_")[:20]
+
     return record
 
 
