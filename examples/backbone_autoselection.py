@@ -1,7 +1,7 @@
 """
 
 """
-from dnacauldron import load_genbank, insert_parts_on_backbones, BackboneChoice
+from dnacauldron import load_record, insert_parts_on_backbones, BackboneChoice
 import flametree  # for getting/writing files and folders
 
 root = flametree.file_tree('.')
@@ -9,12 +9,12 @@ output_dir = root._dir('output_data')._dir('backbone_autoselection')
 
 # load lists of genbanks: one list for parts, one list for potential backbones
 part_records = [
-    load_genbank(f._path, linear=False, name=f._name_no_extension)
+    load_record(f._path, linear=False, id=f._name_no_extension)
     for f in root.data.assemblies._all_files
     if f._name_no_extension in ['partA', 'partB']
 ]
 backbone_records = [
-    load_genbank(f._path, linear=False, name=f._name_no_extension)
+    load_record(f._path, linear=False, id=f._name_no_extension)
     for f in root.data.backbones._all_files
 ]
 

@@ -1,10 +1,10 @@
 import flametree # for getting/writing files and folders
 from Bio import SeqIO  # for exporting to Genbank
-from dnacauldron import RestrictionLigationMix, load_genbank
+from dnacauldron import RestrictionLigationMix, load_record
 
 root = flametree.file_tree('.')
 parts = [
-    load_genbank(f._path, linear=False)
+    load_record(f._path, linear=False)
     for f in root.data.assemblies._all_files
 ]
 mix = RestrictionLigationMix(parts, enzyme='BsmBI')

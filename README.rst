@@ -59,8 +59,7 @@ final assembly, and (optionally) writes it to a Genbank file.
 
     from dnacauldron.utils import single_assembly
     final_construct = single_assembly(
-        parts=["partA.gb", "partB.gb", "partC.gb", "partD.gb"],
-        receptor="receptor.gb", # Receptor plasmid for the final assembly
+        parts=["partA.gb", "partB.gb", "partC.gb", "partD.gb", "receptor.gb"]
         outfile="final_construct.gb", # Name of the output
         enzyme="BsmBI" # enzyme used for the assembly
     )
@@ -77,12 +76,12 @@ as these are unstable.
 
     from Bio import SeqIO # for exporting to Genbank
     from dnacauldron import (RestrictionLigationMix, NoRestrictionSiteFilter,
-                             load_genbank)
+                             load_record)
 
     # Load all the parts (including the receptor)
-    parts_files = ["partA.gb", "partA2.gb", "partB.gb", "partB2.gb", "partC.gb",
-                   "receptor.gb"]
-    parts = [load_genbank(filename, linear=False, name=filename)
+    parts_files = ["partA.gb", "partA2.gb", "partB.gb", "partB2.gb",
+                   "partC.gb", "receptor.gb"]
+    parts = [load_record(filename, linear=False, id=filename)
              for filename in parts_files]
 
     # Create the "reaction mix"

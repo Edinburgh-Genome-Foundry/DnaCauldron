@@ -1,6 +1,12 @@
 from dnacauldron import single_assembly
 import os
-os.chdir("data")
-single_assembly(parts=["partA.gb", "partB.gb", "partC.gb"],
-                receptor="receptor.gb", enzyme="BsmBI",
-                outfile=os.path.join("..", "output_data", "final_sequence.gb"))
+
+parts_path = [
+    os.path.join("data", "assemblies", part)
+    for part in ["partA.gb", "partB.gb", "partC.gb", "receptor.gb"]
+]
+single_assembly(
+    parts=parts_path,
+    enzyme="BsmBI",
+    outfile=os.path.join("output_data", "final_sequence.gb")
+)
