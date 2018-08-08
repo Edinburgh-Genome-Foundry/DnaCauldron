@@ -118,6 +118,25 @@ def test_full_report(tmpdir):
     assert os.path.exists(os.path.join(target1, 'assemblies', 'asm_005.gb'))
     assert os.path.exists(target2)
 
+def test_full_assembly_plan_report(tmpdir):
+    constructs = {
+        "C1": ["receptor", "partA", "partB", "partC"],
+        "C2": ["receptor", "partA2", "partB2", "partC"],
+        "C3": ["receptor", "partA", "partA2", "partB", "partC"]
+    }
+    part_names = set([p for parts in constructs.values() for p in parts])
+    parts = {
+        name: records_dict[name]
+        for name in part_names
+    }
+    plan = [
+        (construct, [parts[p] for p in construct_parts])
+        for construct, construct_parts in constructs.items()
+    ]
+    errors, zip_data = dc.full_assembly_plan_report(plan, "@memory",
+        enzyme="BsmBI", assert_single_assemblies=False, fail_silently=True)
+    assert errors == []
+
 def test_random_constructs_generator():
     enzyme = "BsmBI"
     part_names = ["partA", "partA2", "partB", "partB2", "partC", "receptor",
