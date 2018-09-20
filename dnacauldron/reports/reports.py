@@ -289,7 +289,9 @@ def full_assembly_plan_report(assembly_plan, target, part_records=None,
     f.write("construct, parts\n")
     for f_ in root._all_files:
         if f_._name_no_extension == 'report':
-            name, _, _, parts = f_.read('r').split("\n")[1].split(",")
-            f.write("\n" + ",".join([name] + parts.split(" & ")))
+            first_row = f_.read('r').split("\n")[1].split(",")
+            if len(first_row) == 4:
+                name, _, _, parts = first_row
+                f.write("\n" + ",".join([name] + parts.split(" & ")))
 
     return errored_assemblies, root._close()
