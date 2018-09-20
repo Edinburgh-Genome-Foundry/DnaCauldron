@@ -286,7 +286,7 @@ def full_assembly_plan_report(assembly_plan, target, part_records=None,
             for name, error in errored_assemblies
         ]))
     f = root._file('assembly_plan.csv')
-    f.write("construct, parts\n")
+    f.write("construct, parts")
     for f_ in root._all_files:
         if f_._name_no_extension == 'report':
             first_row = f_.read('r').split("\n")[1].split(",")
