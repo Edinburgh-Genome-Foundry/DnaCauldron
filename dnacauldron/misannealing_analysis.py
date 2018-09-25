@@ -1,3 +1,5 @@
+"""This is some very experimental code tht shouldn't be here, but hey."""
+
 from itertools import count
 from collections import Counter
 
@@ -67,11 +69,17 @@ def predict_good_clones_proportion(parts_overhangs, annealing_data):
         return tuple(construct)
 
     constructs = [
-        c for c in [simulate_construct("backbone_left", "backbone_right", "right") for i in range(5000)]
+        c for c in [
+            simulate_construct("backbone_left", "backbone_right", "right")
+            for i in range(5000)
+        ]
         if c[-1] == "backbone_right"
     ]
     constructs += [
-        c for c in [simulate_construct("backbone_right", "backbone_left", "left") for i in range(5000)]
+        c for c in [
+            simulate_construct("backbone_right", "backbone_left", "left")
+            for i in range(5000)
+        ]
         if c[0][-1] == "backbone_left"
     ]
     cnt = Counter(constructs)
