@@ -1,10 +1,12 @@
 import numpy as np
+from copy import deepcopy
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import DNAAlphabet
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 from snapgene_reader import snapgene_file_to_seqrecord
 from Bio.Seq import Seq
+
 import os
 
 def complement(dna_sequence):
@@ -141,3 +143,11 @@ def annotate_record(seqrecord, location="full", feature_type="misc_feature",
             type=feature_type
         )
     )
+
+def write_record(record, target, fmt='genbank'):
+    """Write a record as genbank, fasta, etc. via Biopython, with fixes"""
+    record = deepcopy(record)
+    record.name = record.name[:20]
+    if hasattr(target, 'open'):
+        target = target.open('w')
+    SeqIO.write(record, target, fmt)

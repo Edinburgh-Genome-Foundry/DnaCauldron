@@ -3,7 +3,6 @@ from copy import deepcopy
 
 from flametree import file_tree
 import matplotlib.pyplot as plt
-from Bio import SeqIO
 from dna_features_viewer import BiopythonTranslator
 import pandas
 from proglog import default_bar_logger
@@ -12,6 +11,7 @@ from proglog import default_bar_logger
 from ..AssemblyMix import (RestrictionLigationMix, NoRestrictionSiteFilter,
                            FragmentSetContainsPartsFilter, AssemblyError)
 from .plots import (plot_cuts, plot_slots_graph, AssemblyTranslator)
+from ..tools import write_record
 
 def name_fragment(fragment):
     """Return the name of the fragment, or `r_NAME` if the fragment is the
@@ -76,6 +76,11 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
       Prefix for the file names of all assemblies. They will be named
       ``PRE01.gb``,``PRE02.gb``, ``PRE03.gb`` where ``PRE`` is the prefix.
 
+    include_parts_plots, include_assembly_plots
+      These two parameters control the rendering of extra figures which are
+      great for troubleshooting, but not strictly necessary, and they slow
+      down the report generation considerably.
+
 
     """
 
@@ -117,7 +122,7 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
             ax.figure.savefig(f, format='pdf', bbox_inches="tight")
             plt.close(ax.figure)
             gb_file = provided_parts_dir._file(part.name + ".gb")
-            SeqIO.write(part, gb_file.open('w'), 'genbank')
+            write_record(part, gb_file, 'genbank')
 
     # FRAGMENTS
     if include_fragments_plots:
@@ -125,7 +130,7 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
         seenfragments = defaultdict(lambda *a: 0)
         for fragment in mix.fragments:
             gr = BiopythonTranslator().translate_record(fragment)
-            ax, pos = gr.plot()
+            ax, _ = gr.plot()
             name = name_fragment(fragment)
             seenfragments[name] += 1
             file_name = "%s_%02d.pdf" % (name, seenfragments[name])
@@ -179,8 +184,7 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
             number_of_parts=len(asm.fragments),
             assembly_size=len(asm)
         ))
-        SeqIO.write(asm, assemblies_dir._file(name + '.gb').open('w'),
-                    'genbank')
+        write_record(asm, assemblies_dir._file(name + '.gb'), 'genbank')
         if include_assembly_plots:
             gr_record = AssemblyTranslator().translate_record(asm)
             ax, gr = gr_record.plot(figure_width=16)
@@ -249,7 +253,7 @@ def full_assembly_plan_report(assembly_plan, target, part_records=None,
     if isinstance(list(assembly_plan.values())[0][0], str):
         if not hasattr(part_records, 'items'):
             part_records = {r.name: r for r in part_records}
-        for part, record in part_records.items():
+        for part in list(part_records):
             part_records[part] = deepcopy(part_records[part])
             part_records[part].name = part_records[part].id = part
         assembly_plan = OrderedDict([

@@ -3,10 +3,9 @@ most common operations."""
 
 import pandas
 from ..AssemblyMix import RestrictionLigationMix, AssemblyError
-from ..tools import reverse_complement
+from ..tools import reverse_complement, write_record
 from .utils import autoselect_enzyme
 import flametree
-from Bio import SeqIO
 
 class BackboneChoice:
     """Class to represent the result of a backbone autoselection.
@@ -92,7 +91,7 @@ class BackboneChoice:
                 record.name = choice.record.name
                 record.id = choice.record.id
                 target_file = target_dir._file('%s.gb' % choice.record.id)
-                SeqIO.write(record, target_file, 'genbank')
+                write_record(record, target_file, 'genbank')
 
 
 def _get_insert_from_record(record, enzyme='BsmBI'):

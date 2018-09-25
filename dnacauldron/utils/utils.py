@@ -1,12 +1,12 @@
 """Useful functions built on top of the DnaCauldron classes to simplify the
 most common operations."""
 
-from Bio import SeqIO, Restriction
+from Bio import Restriction
 
 
 from ..AssemblyMix import (RestrictionLigationMix, AssemblyError,
                            FragmentSetContainsPartsFilter)
-from ..tools import reverse_complement, load_genbank
+from ..tools import reverse_complement, load_genbank, write_record
 
 def autoselect_enzyme(parts, enzymes=('BsmBI', 'BsaI', 'BbsI')):
     """Finds the enzyme that the parts were probably meant to be assembled with
@@ -81,7 +81,7 @@ def single_assembly(parts, outfile=None, enzyme="autoselect",
 
     assembly = first_assemblies[0][0]
     if outfile is not None:
-        SeqIO.write(assembly, outfile, "genbank")
+        write_record(assembly, outfile, "genbank")
     return assembly
 
 def complement_parts(parts, candidates_parts, enzyme='autoselect'):

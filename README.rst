@@ -74,9 +74,8 @@ as these are unstable.
 
 .. code:: python
 
-    from Bio import SeqIO # for exporting to Genbank
     from dnacauldron import (RestrictionLigationMix, NoRestrictionSiteFilter,
-                             load_record)
+                             load_record, write_record)
 
     # Load all the parts (including the receptor)
     parts_files = ["partA.gb", "partA2.gb", "partB.gb", "partB2.gb",
@@ -92,7 +91,8 @@ as these are unstable.
 
     # Iter through all possible constructs and write them on disk as Genbanks.
     for i, assembly in enumerate(assemblies):
-        SeqIO.write(assembly, os.path.join("..", "%03d.gb" % i), "genbank")
+        out_path = os.path.join("..", "%03d.gb" % i)
+        write_record(assembly, out_path, "genbank")
 
 
 Full Assembly report

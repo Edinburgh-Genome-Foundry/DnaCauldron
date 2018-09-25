@@ -3,7 +3,6 @@ import pytest
 import matplotlib
 matplotlib.use("Agg")
 import dnacauldron as dc
-from Bio import SeqIO
 import flametree
 
 
@@ -72,12 +71,12 @@ def test_combinatorial_assembly(tmpdir):
     assert len(assemblies) == 4
     for i, assembly in enumerate(assemblies):
         filepath = os.path.join(str(tmpdir), "%03d.gb" % i)
-        SeqIO.write(assembly, filepath, "genbank")
+        dc.write_record(assembly, filepath, "genbank")
 
 def test_swap_donor_vector_part():
     for part_names in [("partA", "partA2"), ("partB", "partB2")]:
         donor, insert = [records_dict[name] for name in part_names]
-        record = dc.swap_donor_vector_part(donor, insert, enzyme='BsmBI')
+        _ = dc.swap_donor_vector_part(donor, insert, enzyme='BsmBI')
 
 
 def test_autoselect_connectors():
