@@ -13,11 +13,11 @@ from ..AssemblyMix import (RestrictionLigationMix, NoRestrictionSiteFilter,
 from .plots import (plot_cuts, plot_slots_graph, AssemblyTranslator)
 from ..tools import write_record
 
-def name_fragment(fragment):
-    """Return the name of the fragment, or `r_NAME` if the fragment is the
-    reverse of another framgnet."""
+def name_fragment(fragment mark_reverse=False):
+    """Return the name of the fragment, or optionally `NAME_r` if the fragment
+    is the reverse of another fragment."""
     return (fragment.original_construct.name +
-            ("_r" if fragment.is_reverse else ""))
+            ("_r" if (fragment.is_reverse amd mark_reverse) else ""))
 
 def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
                          connector_records=(),

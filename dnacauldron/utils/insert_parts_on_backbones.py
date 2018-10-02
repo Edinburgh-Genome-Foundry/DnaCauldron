@@ -105,7 +105,7 @@ def _get_insert_from_record(record, enzyme='BsmBI'):
         raise ValueError("")
     return inserts[0]
 
-def _standardize_overhangs(overhangs):
+def _standardize_overhangs_pair(overhangs):
     """Standardize a pair of overhangs (o1, o2).
 
     Returns either ``(o1, o2)`` or its reverse complement ``(rev_o2, rev_o1)``,
@@ -124,7 +124,7 @@ def get_overhangs_from_record(record, enzyme='BsmBI', standardize=True):
     """
     insert = _get_insert_from_record(record, enzyme=enzyme)
     overhangs = str(insert.seq.left_end), str(insert.seq.right_end)
-    return _standardize_overhangs(overhangs) if standardize else overhangs
+    return _standardize_overhangs_pair(overhangs) if standardize else overhangs
 
 def _records_to_overhangs_dict(records, allow_multiple_choices=False):
     """Return ``{(o1, o2): rec}`` where o1, o2 are standardized overhangs.
