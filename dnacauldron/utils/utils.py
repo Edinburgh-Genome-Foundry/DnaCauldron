@@ -6,7 +6,7 @@ from Bio import Restriction
 
 from ..AssemblyMix import (RestrictionLigationMix, AssemblyError,
                            FragmentSetContainsPartsFilter)
-from ..tools import reverse_complement, load_genbank, write_record
+from ..tools import reverse_complement, load_record, write_record
 
 def autoselect_enzyme(parts, enzymes=('BsmBI', 'BsaI', 'BbsI')):
     """Finds the enzyme that the parts were probably meant to be assembled with
@@ -63,7 +63,7 @@ def single_assembly(parts, outfile=None, enzyme="autoselect",
     for part in parts:
         if isinstance(part, str):
             name = part.split("/")[-1].split(".")[0].lower()
-            part = load_genbank(part, linear=False, name=name)
+            part = load_record(part, linear=False, name=name)
         part_records.append(part)
     if enzyme == 'autoselect':
         enzyme = autoselect_enzyme(parts, ['BsmBI', 'BsaI', 'BbsI'])
@@ -91,3 +91,35 @@ def complement_parts(parts, candidates_parts, enzyme='autoselect'):
         enzyme = autoselect_enzyme(parts + complement_parts)
     mix = RestrictionLigationMix(parts, enzyme=enzyme)
     return mix.autoselect_connectors(complement_parts)
+
+def get_overhangs_from_record(rec):
+    """Return a least of the (probable) overhangs used building the construct
+    """
+    def is_overhang(h):
+        return (len(h) == 4) and (set(h) <= set("ATGC"))
+    if isinstance(rec, str):
+        rec = load_record(rec)
+    rec.seq = rec.seq.upper()
+    overhangs = [
+        "".join(f.qualifiers.get("label", ""))
+        for f in sorted(rec.features,
+            key=lambda f: 0 if (f.location is None) else f.location.start)
+        if f.type == "homology"
+    ]
+    overhangs = [o for o in overhangs if is_overhang(o)]
+    if overhangs == []:
+        part_locs = []
+        for f in rec.features:
+            if f.type == "misc_feature":
+                note = "".join(f.qualifiers.get("note", ""))
+                if note.startswith("From "):
+                    part_locs.append((int(f.location.start),
+                                      int(f.location.end)))
+        part_locs = [(0, 0)] + sorted(part_locs) + [(len(rec), len(rec))]
+        seq = str(rec.seq)
+        inter_parts = [
+            seq[f1[1]:f2[0]]
+            for f1, f2 in zip(part_locs, part_locs[1:])
+        ]
+        overhangs = [o for o in inter_parts if is_overhang(o)]
+    return overhangs

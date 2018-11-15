@@ -34,10 +34,10 @@ class AssemblyTranslator(BiopythonTranslator):
     @staticmethod
     def compute_feature_label(feature):
         if AssemblyTranslator.is_source(feature):
-            return feature.qualifiers['source']
+            return "".join(feature.qualifiers['source'])
         elif abs(feature.location.end - feature.location.start) > 100:
             label = BiopythonTranslator.compute_feature_label(feature)
-            return abreviate_string(label, 30)
+            return abreviate_string("".join(label), 30)
         else:
             return None
 

@@ -207,6 +207,7 @@ def full_assembly_plan_report(assembly_plan, target, part_records=None,
                               enzyme="BsmBI", assert_single_assemblies=True,
                               logger='bar', connector_records=(),
                               fail_silently=True,
+                              errors_with_traceback=False,
                               **report_kwargs):
     """Makes a full report for a plan (list of single assemblies)
 
@@ -280,6 +281,9 @@ def full_assembly_plan_report(assembly_plan, target, part_records=None,
                     f.copy(all_records_folder)
         except Exception as err:
             if fail_silently:
+                err_string = str(err)
+                if errors_with_traceback:
+                    err_string += str(err.__traceback__)
                 errored_assemblies.append((asm_name, str(err)))
             else:
                 raise err
@@ -291,11 +295,15 @@ def full_assembly_plan_report(assembly_plan, target, part_records=None,
         ]))
     f = root._file('assembly_plan.csv')
     f.write("construct, parts")
+    all_parts = []
     for f_ in root._all_files:
         if f_._name_no_extension == 'report':
             first_row = f_.read('r').split("\n")[1].split(",")
             if len(first_row) == 4:
                 name, _, _, parts = first_row
-                f.write("\n" + ",".join([name] + parts.split(" & ")))
-
+                parts = parts.split(" & ")
+                all_parts += parts
+                f.write("\n" + ",".join([name] + parts))
+    all_parts = sorted(set(all_parts))
+    root._file('all_parts.csv').write(",\n".join(all_parts))
     return errored_assemblies, root._close()
