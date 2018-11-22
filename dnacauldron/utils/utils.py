@@ -153,13 +153,13 @@ def substitute_overhangs(record, substitutions, enzyme='auto'):
     mix = RestrictionLigationMix([record], enzyme=enzyme)
     fragments = [f for f in mix.fragments if not f.is_reverse]
     for fragment in fragments:
-        left, right = fragment.seq.left_end, fragment.seq.right_end
-        print (left, right)
-        if str(left) in substitutions:
-            end = StickyEnd(substitutions[str(left)], left.strand)
+        left = fragment.seq.left_end
+        if str(left).upper() in substitutions:
+            end = StickyEnd(substitutions[str(left).upper()], left.strand)
             fragment.seq.left_end = end
-        if str(right) in substitutions:
-            end = StickyEnd(substitutions[str(right)], right.strand)
+        right = fragment.seq.right_end
+        if str(right).upper() in substitutions:
+            end = StickyEnd(substitutions[str(right).upper()], right.strand)
             fragment.seq.right_end = end
     new_mix = RestrictionLigationMix(
         fragments=fragments, enzyme=enzyme, fragments_filters=())
