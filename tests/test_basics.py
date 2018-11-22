@@ -160,3 +160,13 @@ def test_insert_parts_on_backbones(tmpdir):
     dataframe = dc.BackboneChoice.list_to_infos_spreadsheet(choices)
     dataframe.to_excel(os.path.join(str(tmpdir), 'summary.xls'), index=False)
     dc.BackboneChoice.write_final_records(choices, str(tmpdir))
+
+def test_list_overhangs():
+    record = records_dict['partA2']
+    assert dc.utils.list_overhangs([record]) == ['ATTG', 'GGCT']
+
+def test_substitute_overhangs():
+    record = records_dict['partA2']
+    assert dc.utils.list_overhangs([record]) == ['ATTG', 'GGCT']
+    new_record = dc.utils.substitute_overhangs(record, {'ATTG': 'ATAA'})
+    assert dc.utils.list_overhangs([new_record]) == ['ATAA', 'GGCT']

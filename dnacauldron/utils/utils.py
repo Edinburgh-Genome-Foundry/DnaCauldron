@@ -6,6 +6,7 @@ from Bio import Restriction
 
 from ..AssemblyMix import (RestrictionLigationMix, AssemblyError,
                            FragmentSetContainsPartsFilter)
+from ..StickyEndsSeq import StickyEnd
 from ..tools import reverse_complement, load_record, write_record
 
 def autoselect_enzyme(parts, enzymes=('BsmBI', 'BsaI', 'BbsI')):
@@ -63,7 +64,7 @@ def single_assembly(parts, outfile=None, enzyme="autoselect",
     for part in parts:
         if isinstance(part, str):
             name = part.split("/")[-1].split(".")[0].lower()
-            part = load_record(part, linear=False, name=name)
+            part = load_record(part, linear=False, id=name)
         part_records.append(part)
     if enzyme == 'autoselect':
         enzyme = autoselect_enzyme(parts, ['BsmBI', 'BsaI', 'BbsI'])
@@ -123,3 +124,67 @@ def get_overhangs_from_record(rec):
         ]
         overhangs = [o for o in inter_parts if is_overhang(o)]
     return overhangs
+
+def substitute_overhangs(record, substitutions, enzyme='auto'):
+    """Replace the record's subsequence that corresponds to overhangs.
+
+    This is practical to change the position of a part in a Type-2S
+    assembly standard
+
+    Examples
+    ----------
+
+    >>> new_record = replace_overhangs(record, {'ATGC': 'CTCG'})
+
+    Parameters
+    ----------
+
+    record
+      A Biopython record whose internal sequence needs to be replaced
+    
+    substitutions
+      A dict {overhang: new_overhang} of which overhangs must be replaced
+    
+    enzyme
+      Either 'BsmBI', 'BsaI', etc. or just "auto" for automatic selection.
+    """
+    if enzyme == 'auto':
+        enzyme = autoselect_enzyme([record])
+    mix = RestrictionLigationMix([record], enzyme=enzyme)
+    fragments = [f for f in mix.fragments if not f.is_reverse]
+    for fragment in fragments:
+        left, right = fragment.seq.left_end, fragment.seq.right_end
+        print (left, right)
+        if str(left) in substitutions:
+            end = StickyEnd(substitutions[str(left)], left.strand)
+            fragment.seq.left_end = end
+        if str(right) in substitutions:
+            end = StickyEnd(substitutions[str(right)], right.strand)
+            fragment.seq.right_end = end
+    new_mix = RestrictionLigationMix(
+        fragments=fragments, enzyme=enzyme, fragments_filters=())
+    return list(new_mix.compute_circular_assemblies())[0]
+
+def list_overhangs(records, enzyme='auto', parts_only=True):
+    """List all overhangs created by restriction in the provided records.
+    
+    Warning: only overhangs on non-reversed fragments are returned, not
+    their reverse-complement.
+
+    Parameters
+    ----------
+
+    records
+      List of records
+    
+    enzyme
+      Either 'BsmBI', 'BsaI', etc. or just "auto" for automatic selection.
+    
+    parts_only
+      If true, overhangs created by restriction which are not on a part
+      (so for instance inside a backbone) will be ignored.
+    """
+    if enzyme == 'auto':
+        enzyme = autoselect_enzyme(records)
+    mix = RestrictionLigationMix(records, enzyme=enzyme)
+    return mix.list_overhangs(filtered_fragments_only=parts_only)

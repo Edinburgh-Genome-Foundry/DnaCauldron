@@ -53,7 +53,26 @@ class AssemblyMix:
                 self.connections_graph.add_edge(i1, i2)
             if self.will_clip_in_this_order(fragment2, fragment1):
                 self.connections_graph.add_edge(i2, i1)
+    def list_overhangs(self, filtered_fragments_only=False):
+        """Return a list of overhangs in the mix.
+    
+        Warning: only overhangs on non-reversed fragments are returned, not
+        their reverse-complement.
 
+        Parameters
+        ----------
+
+        filtered_fragments_only
+          If true, only overhangs from filtered fragments are returned
+        """
+        fragments = (self.filtered_fragments if filtered_fragments_only
+                     else self.fragments)
+        return sorted(set([
+            str(end)
+            for fragment in fragments
+            if not fragment.is_reverse
+            for end in (fragment.seq.left_end, fragment.seq.right_end)
+        ]))
     @property
     def filtered_connections_graph(self):
         """Networkx Graph of the filered fragments and how they assemble.
