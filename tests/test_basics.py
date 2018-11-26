@@ -170,3 +170,9 @@ def test_substitute_overhangs():
     assert dc.utils.list_overhangs([record]) == ['ATTG', 'GGCT']
     new_record = dc.utils.substitute_overhangs(record, {'ATTG': 'ATAA'})
     assert dc.utils.list_overhangs([new_record]) == ['ATAA', 'GGCT']
+    new_record = dc.utils.substitute_overhangs(record, {'ATTG': 'ATAA'})
+    assert dc.utils.list_overhangs([new_record]) == ['ATAA', 'GGCT']
+    new_record = dc.utils.substitute_overhangs(record, {'ATTG': 'ATAA'},
+                                               return_linear_parts=True)
+    assert str(new_record.seq[:12]) == "CGTCTCAATAAT"
+    

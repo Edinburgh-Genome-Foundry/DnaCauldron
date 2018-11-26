@@ -7,7 +7,8 @@ from Bio import Restriction
 from ..AssemblyMix import (RestrictionLigationMix, AssemblyError,
                            FragmentSetContainsPartsFilter)
 from ..StickyEndsSeq import StickyEnd
-from ..tools import reverse_complement, load_record, write_record
+from ..tools import (sequence_to_biopython_record, reverse_complement,
+                     annotate_record, load_record, write_record)
 
 def autoselect_enzyme(parts, enzymes=('BsmBI', 'BsaI', 'BbsI')):
     """Finds the enzyme that the parts were probably meant to be assembled with
@@ -125,7 +126,8 @@ def get_overhangs_from_record(rec):
         overhangs = [o for o in inter_parts if is_overhang(o)]
     return overhangs
 
-def substitute_overhangs(record, substitutions, enzyme='auto'):
+def substitute_overhangs(record, substitutions, enzyme='auto',
+                         return_linear_parts=False):
     """Replace the record's subsequence that corresponds to overhangs.
 
     This is practical to change the position of a part in a Type-2S
@@ -163,7 +165,19 @@ def substitute_overhangs(record, substitutions, enzyme='auto'):
             fragment.seq.right_end = end
     new_mix = RestrictionLigationMix(
         fragments=fragments, enzyme=enzyme, fragments_filters=())
-    return list(new_mix.compute_circular_assemblies())[0]
+    if return_linear_parts:
+        fragment = [f for f in new_mix.filtered_fragments
+                    if not f.is_reverse][0]
+        site = sequence_to_biopython_record(mix.enzyme.site)
+        rev_site = site.reverse_complement()
+        annotate_record(site, label='%s' % enzyme)
+        left_end = sequence_to_biopython_record(str(fragment.seq.left_end))
+        right_end = sequence_to_biopython_record(str(fragment.seq.right_end))
+        for end in left_end, right_end:
+            annotate_record(end, label='overhang')
+        return site + 'A' + left_end + fragment + right_end + 'A' + rev_site 
+    else:
+        return list(new_mix.compute_circular_assemblies())[0]
 
 def list_overhangs(records, enzyme='auto', parts_only=True):
     """List all overhangs created by restriction in the provided records.
