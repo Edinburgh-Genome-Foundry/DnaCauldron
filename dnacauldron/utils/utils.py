@@ -169,12 +169,13 @@ def substitute_overhangs(record, substitutions, enzyme='auto',
         fragment = [f for f in new_mix.filtered_fragments
                     if not f.is_reverse][0]
         site = sequence_to_biopython_record(mix.enzyme.site)
+        annotate_record(site, label='%s' % enzyme)
         rev_site = site.reverse_complement()
         annotate_record(site, label='%s' % enzyme)
         left_end = sequence_to_biopython_record(str(fragment.seq.left_end))
         right_end = sequence_to_biopython_record(str(fragment.seq.right_end))
         for end in left_end, right_end:
-            annotate_record(end, label='overhang')
+            annotate_record(end, (0, len(end), 0), label='overhang')
         return site + 'A' + left_end + fragment + right_end + 'A' + rev_site 
     else:
         return list(new_mix.compute_circular_assemblies())[0]
