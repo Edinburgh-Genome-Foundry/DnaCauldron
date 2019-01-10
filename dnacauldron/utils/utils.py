@@ -94,7 +94,7 @@ def complement_parts(parts, candidates_parts, enzyme='autoselect'):
     mix = RestrictionLigationMix(parts, enzyme=enzyme)
     return mix.autoselect_connectors(complement_parts)
 
-def get_overhangs_from_record(rec):
+def get_overhangs_from_record(rec, with_locations=False):
     """Return a least of the (probable) overhangs used building the construct
     """
     def is_overhang(h):
@@ -103,13 +103,14 @@ def get_overhangs_from_record(rec):
         rec = load_record(rec)
     rec.seq = rec.seq.upper()
     overhangs = [
-        "".join(f.qualifiers.get("label", ""))
+        (f.location.start, "".join(f.qualifiers.get("label", "")))
         for f in sorted(rec.features,
             key=lambda f: 0 if (f.location is None) else f.location.start)
         if f.type == "homology"
     ]
-    overhangs = [o for o in overhangs if is_overhang(o)]
+    overhangs = [(start, o) for start, o in overhangs if is_overhang(o)]
     if overhangs == []:
+        # try to identify overhangs another way
         part_locs = []
         for f in rec.features:
             if f.type == "misc_feature":
@@ -120,11 +121,14 @@ def get_overhangs_from_record(rec):
         part_locs = [(0, 0)] + sorted(part_locs) + [(len(rec), len(rec))]
         seq = str(rec.seq)
         inter_parts = [
-            seq[f1[1]:f2[0]]
+            (f1[1], seq[f1[1]:f2[0]])
             for f1, f2 in zip(part_locs, part_locs[1:])
         ]
-        overhangs = [o for o in inter_parts if is_overhang(o)]
-    return overhangs
+        overhangs = [(start, o) for start, o in inter_parts if is_overhang(o)]
+    if with_locations:
+        return overhangs
+    else:
+        return [o for start, o in overhangs]
 
 def substitute_overhangs(record, substitutions, enzyme='auto',
                          return_linear_parts=False):

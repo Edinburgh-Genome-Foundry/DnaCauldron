@@ -148,6 +148,8 @@ def write_record(record, target, fmt='genbank'):
     """Write a record as genbank, fasta, etc. via Biopython, with fixes"""
     record = deepcopy(record)
     record.name = record.name[:20]
+    if str(record.seq.alphabet.__class__.__name__) != 'DNAAlphabet':
+        record.seq.alphabet = DNAAlphabet()
     if hasattr(target, 'open'):
         target = target.open('w')
     SeqIO.write(record, target, fmt)
