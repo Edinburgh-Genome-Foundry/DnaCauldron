@@ -139,7 +139,7 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
             plt.close(ax.figure)
 
     # GRAPH
-    if connector_records is not None:
+    if len(connector_records):
         highlighted_parts = part_names
     else:
         highlighted_parts = []
