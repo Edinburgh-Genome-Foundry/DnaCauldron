@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from Bio import Restriction
 from dna_features_viewer import (BiopythonTranslator, CircularGraphicRecord,
                                  GraphicRecord)
-
+from matplotlib.patches import Circle
 from dnacauldron.tools import annotate_record
 try:
     import pygraphviz
@@ -99,7 +99,8 @@ def plot_cuts(record, enzyme_name, linear=True, figure_width=5, ax=None):
                                                  record_class=record_class)
     return graphic_record.plot(ax=ax, figure_width=figure_width)
 
-def plot_slots_graph(mix, ax=None, with_overhangs=False, show_missing=True):
+def plot_slots_graph(mix, ax=None, with_overhangs=False, show_missing=True,
+                     highlighted_parts=None):
     """Plot a map of the different assemblies.
 
     Parameters
@@ -114,6 +115,8 @@ def plot_slots_graph(mix, ax=None, with_overhangs=False, show_missing=True):
       If true, the overhangs appear in the graph
     """
     slots = mix.compute_slots()
+    highlighted_parts = set([] if highlighted_parts is None
+                            else highlighted_parts)
     graph = mix.slots_graph(with_overhangs=with_overhangs)
 
     # Positioning - a bit complex to deal with multi-components graphs
@@ -129,17 +132,29 @@ def plot_slots_graph(mix, ax=None, with_overhangs=False, show_missing=True):
         x, y = xy - np.array([0.05, 0.05])
         return (np.arctan2(x, -y), -np.sqrt(x**2 + y**2))
     sorted_pos = sorted(pos.items(), key=lambda c: polar(c[1]))
-    fig, ax = plt.subplots(1, figsize=(13, 0.4*len(parts)))
+    fig, ax = plt.subplots(1, figsize=(13, 0.4 * len(parts)))
     nx.draw(graph, pos=pos, node_color='w', node_size=100, ax=ax,
             edge_color='#eeeeee')
+    
+    # Draw a "highlights graph" above the other graph
+    def highlight_slot(slot):
+        return any([part in highlighted_parts for part in slots.get(slot, [])])
+    highlighted_nodes = [n for n in graph.nodes() if highlight_slot(n)]
+    if len(highlighted_nodes):
+        highlighted_subgraph = graph.subgraph(highlighted_nodes)
+        nx.draw(highlighted_subgraph, pos=pos, node_color="#3a3aad",
+                node_size=300, ax=ax, edge_color='#aaaaaa')
     legend = []
     for i, (n, (x, y)) in enumerate(sorted_pos):
         if n in parts:
             slot_parts = list(slots[n])
+            color = "w" if highlight_slot(n) else "#3a3aad"
             legend.append("\n     ".join(sorted(slot_parts)))
-            fontdict = {'weight': 'bold'} if len(slot_parts) > 1 else {}
+            fontdict = {}
+            if highlight_slot(n) or len(slot_parts) > 1:
+                fontdict = {'weight': 'bold'}
             ax.text(x, y, len(legend), ha='center', va='center',
-                    color='#3a3aad', fontdict=fontdict)
+                    color=color, fontdict=fontdict)
         else:
             ax.text(x, y, n, ha='center', va='center', color='#333333',
                     size=9, fontdict=dict(family='Inconsolata'))

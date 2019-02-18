@@ -139,8 +139,13 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
             plt.close(ax.figure)
 
     # GRAPH
+    if connector_records is not None:
+        highlighted_parts = part_names
+    else:
+        highlighted_parts = []
     ax = plot_slots_graph(mix, with_overhangs=show_overhangs_in_graph,
-                          show_missing=True)
+                          show_missing=True,
+                          highlighted_parts=highlighted_parts)
     f = report._file('parts_graph.pdf')
     ax.figure.savefig(f.open('wb'), format='pdf', bbox_inches='tight')
     plt.close(ax.figure)
