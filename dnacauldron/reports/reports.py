@@ -106,7 +106,8 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
             mix.autoselect_connectors(connector_records)
         except AssemblyError as err:
             ax = plot_slots_graph(mix, with_overhangs=show_overhangs_in_graph,
-                                  show_missing=True)
+                                  show_missing=True,
+                                  highlighted_parts=part_names)
             f = report._file('parts_graph.pdf')
             ax.figure.savefig(f.open('wb'), format='pdf', bbox_inches='tight')
             plt.close(ax.figure)
