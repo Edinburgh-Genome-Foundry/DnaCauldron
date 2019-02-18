@@ -140,7 +140,7 @@ def full_assembly_report(parts, target, enzyme="BsmBI", max_assemblies=40,
 
     # GRAPH
     if len(connector_records):
-        highlighted_parts = [p.id for p in parts]
+        highlighted_parts = part_names
     else:
         highlighted_parts = []
     ax = plot_slots_graph(mix, with_overhangs=show_overhangs_in_graph,
