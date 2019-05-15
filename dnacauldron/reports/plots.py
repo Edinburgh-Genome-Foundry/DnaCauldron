@@ -18,25 +18,22 @@ except ImportError:
 class AssemblyTranslator(BiopythonTranslator):
     """Custom theme for plotting GENBANK assemblies w. Dna Features Viewer."""
 
-    @staticmethod
-    def is_source(feature):
+    def is_source(self, feature):
         return ((feature.type == 'misc_feature') and
                 feature.qualifiers.get('source', False))
 
-    @staticmethod
-    def compute_feature_color(feature):
+    def compute_feature_color(self, feature):
         if feature:
-            if AssemblyTranslator.is_source(feature):
+            if self.is_source(feature):
                 return '#ff4c4c'
             else:
                 return '#f9edbb'
 
-    @staticmethod
-    def compute_feature_label(feature):
-        if AssemblyTranslator.is_source(feature):
+    def compute_feature_label(self, feature):
+        if self.is_source(feature):
             return "".join(feature.qualifiers['source'])
         elif abs(feature.location.end - feature.location.start) > 100:
-            label = BiopythonTranslator.compute_feature_label(feature)
+            label = BiopythonTranslator.compute_feature_label(self, feature)
             return abreviate_string("".join(label), 30)
         else:
             return None
@@ -78,16 +75,14 @@ def plot_cuts(record, enzyme_name, linear=True, figure_width=5, ax=None):
                         enzyme=enzyme_name)
     class MyTranslator(BiopythonTranslator):
 
-        @staticmethod
-        def compute_feature_label(feature):
+        def compute_feature_label(self, feature):
             if abs(feature.location.end - feature.location.start) > 100:
-                label = BiopythonTranslator.compute_feature_label(feature)
+                label = BiopythonTranslator.compute_feature_label(self, feature)
                 return abreviate_string(label, 10)
             else:
                 return feature.qualifiers.get("enzyme", None)
 
-        @staticmethod
-        def compute_feature_color(feature):
+        def compute_feature_color(self, feature):
             if (feature.qualifiers.get("enzyme", False) and
                 (feature.type == 'misc_feature')):
                 return '#f5eaff'
@@ -122,6 +117,11 @@ def plot_slots_graph(mix, ax=None, with_overhangs=False, show_missing=True,
     # Positioning - a bit complex to deal with multi-components graphs
     pos = {}
     components = list(nx.components.connected_component_subgraphs(graph))
+    if components == []:
+        raise ValueError("Empty connections graph. This probably means your "
+                         "parts were filtered out, possibly because they do "
+                         "not contain the right enzyme sites or something "
+                         "that")
     max_len = 1.0 * max(len(c) for c in components)
     for i, g in enumerate(components):
         pos.update(nx.layout.kamada_kawai_layout(g, center=(0, -i),
