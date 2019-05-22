@@ -143,7 +143,7 @@ Licence
 
 Dna Cauldron is an open-source software originally written at the `Edinburgh Genome Foundry
 <http://www.genomefoundry.io>`_ by `Zulko <https://github.com/Zulko>`_
-and `released on Github <https://github.com/Edinburgh-Genome-Foundry/DnaCauldron>`_ under the MIT licence (¢ Edinburgh Genome Foundry).
+and `released on Github <https://github.com/Edinburgh-Genome-Foundry/DnaCauldron>`_ under the MIT licence (Copyright Edinburgh Genome Foundry).
 Everyone is welcome to contribute !
 
 More biology software
