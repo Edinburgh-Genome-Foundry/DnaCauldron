@@ -1,7 +1,9 @@
 """Useful functions built on top of the DnaCauldron classes to simplify the
 most common operations."""
+import os
 
 from Bio import Restriction
+
 
 
 from ..AssemblyMix import (RestrictionLigationMix, AssemblyError,
@@ -44,11 +46,11 @@ def single_assembly(parts, outfile=None, enzyme="autoselect",
     ----------
 
     parts
-      A list of either filenames or Biopython records or parts. They are
-      assumed circular (i.e. parts on backbones) but linear parts should
-      work too as long as the receptor is circular. To make sure that
-      a part will be treated as linear DNA, provide a Biopython record
-      for that part, with a ``.linear`` attribute set to true.
+      A list of either filenames or Biopython records of parts.
+      The parts are assumed circular (i.e. parts on backbones) but linear
+      parts should work too as long as the receptor is circular. To make
+      sure that a part will be treated as linear DNA, provide a Biopython
+      record for that part, with a ``.linear`` attribute set to true.
 
     outfile
       Name of a genbank file where to output the result
@@ -64,7 +66,7 @@ def single_assembly(parts, outfile=None, enzyme="autoselect",
     part_records = []
     for part in parts:
         if isinstance(part, str):
-            name = part.split("/")[-1].split(".")[0].lower()
+            name = os.path.basename(part).split(".")[0].lower()
             part = load_record(part, linear=False, id=name)
         part_records.append(part)
     if enzyme == 'autoselect':

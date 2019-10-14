@@ -9,6 +9,7 @@ from Bio.Seq import Seq
 
 import os
 
+
 def complement(dna_sequence):
     """Return the complement of the DNA sequence.
 
@@ -28,11 +29,18 @@ def reverse_complement(sequence):
     """
     return complement(sequence)[::-1]
 
-def sequence_to_biopython_record(sequence, id='<unknown id>',
-                                 name='<unknown name>', features=()):
+
+def sequence_to_biopython_record(
+    sequence, id="<unknown id>", name="<unknown name>", features=()
+):
     """Return a SeqRecord of the sequence, ready to be Genbanked."""
-    return SeqRecord(Seq(sequence, alphabet=DNAAlphabet()),
-                     id=id, name=name, features=list(features))
+    return SeqRecord(
+        Seq(sequence, alphabet=DNAAlphabet()),
+        id=id,
+        name=name,
+        features=list(features),
+    )
+
 
 def random_dna_sequence(length, probas=None, seed=None):
     """Return a random DNA sequence ("ATGGCGT...") with the specified length.
@@ -64,21 +72,21 @@ def random_dna_sequence(length, probas=None, seed=None):
     return "".join(sequence)
 
 
-def load_record(filename, linear=True, id='auto', upperize=True):
+def load_record(filename, linear=True, id="auto", upperize=True):
     if filename.lower().endswith(("gb", "gbk")):
         record = SeqIO.read(filename, "genbank")
-    elif filename.lower().endswith(('fa', 'fasta')):
+    elif filename.lower().endswith(("fa", "fasta")):
         record = SeqIO.read(filename, "fasta")
-    elif filename.lower().endswith('.dna'):
+    elif filename.lower().endswith(".dna"):
         record = snapgene_file_to_seqrecord(filename)
     else:
-        raise ValueError('Unknown format for file: %s' % filename)
+        raise ValueError("Unknown format for file: %s" % filename)
     if upperize:
         record = record.upper()
     record.linear = linear
-    if id == 'auto':
+    if id == "auto":
         id = record.id
-        if id in [None, '', "<unknown id>", '.', ' ']:
+        if id in [None, "", "<unknown id>", ".", " "]:
             id = os.path.splitext(os.path.basename(filename))[0]
             record.name = id.replace(" ", "_")[:20]
         record.id = id
@@ -110,8 +118,13 @@ def load_genbank(filename, linear=True, name="unnamed"):
     return record
 
 
-def annotate_record(seqrecord, location="full", feature_type="misc_feature",
-                    margin=0, **qualifiers):
+def annotate_record(
+    seqrecord,
+    location="full",
+    feature_type="misc_feature",
+    margin=0,
+    **qualifiers
+):
     """Add a feature to a Biopython SeqRecord.
 
     Parameters
@@ -133,23 +146,24 @@ def annotate_record(seqrecord, location="full", feature_type="misc_feature",
       Dictionnary that will be the Biopython feature's `qualifiers` attribute.
     """
     if location == "full":
-        location = (margin, len(seqrecord)-margin)
+        location = (margin, len(seqrecord) - margin)
 
     strand = location[2] if len(location) == 3 else 1
     seqrecord.features.append(
         SeqFeature(
             FeatureLocation(location[0], location[1], strand),
             qualifiers=qualifiers,
-            type=feature_type
+            type=feature_type,
         )
     )
 
-def write_record(record, target, fmt='genbank'):
+
+def write_record(record, target, fmt="genbank"):
     """Write a record as genbank, fasta, etc. via Biopython, with fixes"""
     record = deepcopy(record)
     record.name = record.name[:20]
-    if str(record.seq.alphabet.__class__.__name__) != 'DNAAlphabet':
+    if str(record.seq.alphabet.__class__.__name__) != "DNAAlphabet":
         record.seq.alphabet = DNAAlphabet()
-    if hasattr(target, 'open'):
-        target = target.open('w')
+    if hasattr(target, "open"):
+        target = target.open("w")
     SeqIO.write(record, target, fmt)

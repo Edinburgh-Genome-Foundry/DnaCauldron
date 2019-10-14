@@ -6,11 +6,11 @@ from copy import copy
 from Bio import Restriction
 
 
-
 from ..tools import annotate_record
 from ..StickyEndsSeq import StickyEndsSeqRecord
 from .AssemblyMix import AssemblyMix
 from .Filter import NoRestrictionSiteFilter
+
 
 class RestrictionLigationMix(AssemblyMix):
     """Assembly mix for an enzymatic Restriction Ligation assembly.
@@ -31,14 +31,19 @@ class RestrictionLigationMix(AssemblyMix):
       Name of the ligation enzyme to use, e.g. 'BsmBI'
     """
 
-    def __init__(self, constructs=None, enzyme=None, fragments=None,
-                 fragments_filters='default'):
+    def __init__(
+        self,
+        constructs=None,
+        enzyme=None,
+        fragments=None,
+        fragments_filters="default",
+    ):
         # shallow copy seems sufficient and problem-free.
         # deepcopy would be safer but it is a computational bottleneck.
         self.constructs = copy(constructs) if constructs else constructs
         self.fragments = copy(fragments) if fragments else fragments
         self.enzyme = None if enzyme is None else Restriction.__dict__[enzyme]
-        if fragments_filters == 'default':
+        if fragments_filters == "default":
             if enzyme is not None:
                 fragments_filters = [NoRestrictionSiteFilter(str(self.enzyme))]
             else:
@@ -49,7 +54,8 @@ class RestrictionLigationMix(AssemblyMix):
     def compute_digest(self, construct):
         """Compute the fragments resulting from the digestion"""
         return StickyEndsSeqRecord.list_from_record_digestion(
-            construct, self.enzyme, linear=construct.linear)
+            construct, self.enzyme, linear=construct.linear
+        )
 
     def compute_fragments(self):
         """Compute the (sticky-ended) fragments resulting from the digestion of
@@ -60,7 +66,6 @@ class RestrictionLigationMix(AssemblyMix):
         """
         self.fragments = []
         for construct in self.constructs:
-
             for fragment in self.compute_digest(construct):
                 if not isinstance(fragment, StickyEndsSeqRecord):
                     continue
@@ -70,7 +75,6 @@ class RestrictionLigationMix(AssemblyMix):
                     feature_type="misc_feature",
                     source=construct.name,
                     note="From " + construct.name,
-
                 )
                 self.fragments.append(fragment)
 
@@ -96,7 +100,7 @@ class RestrictionLigationMix(AssemblyMix):
         return StickyEndsSeqRecord.assemble(
             fragments,
             circularize=circularize,
-            annotate_homologies=annotate_homologies
+            annotate_homologies=annotate_homologies,
         )
 
     @staticmethod

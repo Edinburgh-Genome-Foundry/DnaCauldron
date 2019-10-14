@@ -1,5 +1,6 @@
 from Bio.Seq import Seq
 
+
 class StickyEnd(Seq):
     """A class to represent the sticky end of a sequence.
 
@@ -26,15 +27,16 @@ class StickyEnd(Seq):
         return StickyEnd(
             str(Seq.reverse_complement(self)),
             strand=-self.strand,
-            alphabet=self.alphabet
+            alphabet=self.alphabet,
         )
 
     def __repr__(self):
-        return "%s(%s)" % (Seq.__str__(self),
-                           {1: "+", -1: "-"}[self.strand])
+        return "%s(%s)" % (Seq.__str__(self), {1: "+", -1: "-"}[self.strand])
 
     def will_clip_directly_with(self, other):
-        return ((other is not None) and
-                (len(self) > 0) and
-                (self.strand == -other.strand) and
-                (str(self) == str(other)))
+        return (
+            (other is not None)
+            and (len(self) > 0)
+            and (self.strand == -other.strand)
+            and (str(self) == str(other))
+        )
