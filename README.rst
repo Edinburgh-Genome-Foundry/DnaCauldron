@@ -80,7 +80,7 @@ as these are unstable.
     # Load all the parts (including the receptor)
     parts_files = ["partA.gb", "partA2.gb", "partB.gb", "partB2.gb",
                    "partC.gb", "receptor.gb"]
-    parts = [load_record(filename, linear=False, id=filename)
+    parts = [load_record(filename, topology='circular', id=filename)
              for filename in parts_files]
 
     # Create the "reaction mix"
@@ -107,12 +107,12 @@ The following code produces a structured directory with various reports:
 
 .. code:: python
 
-    from dnacauldron import load_genbank, full_assembly_report
+    from dnacauldron import load_record, full_assembly_report
     parts = [
-        load_genbank("partA.gb", linear=False, name="PartA"),
-        load_genbank("partB.gb", linear=False, name="PartB"),
-        load_genbank("partC.gb", linear=False, name="PartC"),
-        load_genbank("receptor.gb", linear=False, name="Receptor")
+        load_record("partA.gb", topology='circular', name="PartA"),
+        load_record("partB.gb", topology='circular', name="PartB"),
+        load_record("partC.gb", topology='circular', name="PartC"),
+        load_record("receptor.gb", topology='circular', name="Receptor")
     ]
     dc.full_assembly_report(parts, target="./my_report", enzyme="BsmBI",
                             max_assemblies=40, fragments_filters='auto',

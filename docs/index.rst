@@ -69,12 +69,12 @@ as these are unstable.
 .. code:: python
 
     from dnacauldron import (RestrictionLigationMix, NoRestrictionSiteFilter,
-                             load_genbank, write_record)
+                             load_record, write_record)
     enzyme = "BsmBI"
     filters = [NoRestrictionSiteFilter(enzyme)]
     parts_files = ["partA.gb", "partA2.gb", "partB.gb", "partB2.gb", "partC.gb",
                 "receptor.gb"]
-    parts = [load_genbank(filename, linear=False) for filename in parts_files]
+    parts = [load_record(filename, topology='circular') for filename in parts_files]
     mix = RestrictionLigationMix(parts, enzyme)
     assemblies = mix.compute_circular_assemblies(seqrecord_filters=filters)
     for i, assembly in enumerate(assemblies):
@@ -94,9 +94,9 @@ The following code produces a structured directory with various reports:
 
     import dnacauldron as dc
     parts = [
-        dc.load_genbank("partA.gb", linear=False, name="PartA"),
-        dc.load_genbank("partB.gb", linear=False, name="PartB"),
-        dc.load_genbank("receptor.gb", linear=False, name="Receptor"),
+        dc.load_record("partA.gb", topology='circular', name="PartA"),
+        dc.load_record("partB.gb", topology='circular', name="PartB"),
+        dc.load_record("receptor.gb", topology='circular', name="Receptor"),
     ]
     dc.full_assembly_report(parts, target="./my_report", enzyme="BsmBI",
                             max_assemblies=40, fragments_filters='auto',

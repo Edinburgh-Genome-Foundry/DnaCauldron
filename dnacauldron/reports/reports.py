@@ -15,7 +15,7 @@ from ..AssemblyMix import (
     AssemblyError,
 )
 from .plots import plot_cuts, plot_slots_graph, AssemblyTranslator
-from ..tools import write_record
+from ..tools import write_record, record_is_linear
 
 
 def name_fragment(fragment, mark_reverse=False):
@@ -134,7 +134,7 @@ def full_assembly_report(
     if include_parts_plots:
         provided_parts_dir = report._dir("provided_parts")
         for part in parts:
-            linear = part.linear if hasattr(part, "linear") else False
+            linear = record_is_linear(part, default=False)
             ax, gr = plot_cuts(part, enzyme, linear=linear)
             f = provided_parts_dir._file(part.name + ".pdf").open("wb")
             ax.figure.savefig(f, format="pdf", bbox_inches="tight")

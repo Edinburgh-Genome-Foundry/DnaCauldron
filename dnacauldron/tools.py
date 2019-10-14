@@ -20,6 +20,20 @@ def complement(dna_sequence):
     return str(Seq(dna_sequence).complement())
 
 
+def set_record_topology(record, topology, pass_if_already_set=False):
+    record_topology = record.annotations.get("topology", None)
+    do_nothing = pass_if_already_set and (record_topology is not None)
+    if not do_nothing:
+        record.annotations["topology"] = topology
+
+
+def record_is_linear(record, default=True):
+    if "topology" not in record.annotations:
+        return default
+    else:
+        return record.annotations["topology"] == "linear"
+
+
 def reverse_complement(sequence):
     """Return the reverse-complement of the DNA sequence.
 
@@ -72,7 +86,13 @@ def random_dna_sequence(length, probas=None, seed=None):
     return "".join(sequence)
 
 
-def load_record(filename, linear=True, id="auto", upperize=True):
+def load_record(
+    filename,
+    topology="auto",
+    id="auto",
+    upperize=True,
+    default_topology="linear",
+):
     if filename.lower().endswith(("gb", "gbk")):
         record = SeqIO.read(filename, "genbank")
     elif filename.lower().endswith(("fa", "fasta")):
@@ -83,7 +103,10 @@ def load_record(filename, linear=True, id="auto", upperize=True):
         raise ValueError("Unknown format for file: %s" % filename)
     if upperize:
         record = record.upper()
-    record.linear = linear
+    if topology == "auto":
+        set_record_topology(record, default_topology, pass_if_already_set=True)
+    else:
+        set_record_topology(record, topology)
     if id == "auto":
         id = record.id
         if id in [None, "", "<unknown id>", ".", " "]:
@@ -94,27 +117,6 @@ def load_record(filename, linear=True, id="auto", upperize=True):
         record.id = id
         record.name = id.replace(" ", "_")[:20]
 
-    return record
-
-
-def load_genbank(filename, linear=True, name="unnamed"):
-    """Load a genbank file
-
-    Parameters
-    ----------
-
-    linear
-      Set to True for linear constructs, False for circular constructs
-
-    name
-      The name of the record. Should be the name of the part if the record
-      represents a part.
-
-    """
-    record = SeqIO.read(filename, "genbank")
-    record.linear = linear
-    record.id = name
-    record.name = name.replace(" ", "_")[:20]
     return record
 
 

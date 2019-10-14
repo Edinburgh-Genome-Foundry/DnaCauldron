@@ -9,7 +9,7 @@ import flametree
 records_dict = {
     name: dc.load_record(
         os.path.join('tests', 'data', 'assemblies', name + '.gb'),
-        id=name, linear=False
+        id=name, topology='circular'
     )
     for name in ("partA", "partA2", "partB", "partB2", "partC", "receptor",
                  "connector_A2C")
@@ -82,12 +82,12 @@ def test_swap_donor_vector_part():
 def test_autoselect_connectors():
     data_root = flametree.file_tree(".").tests.data.select_connectors
     parts = [
-        dc.load_record(f._path, linear=False, id=f._name_no_extension)
+        dc.load_record(f._path, topology='circular', id=f._name_no_extension)
         for f in data_root.parts_missing_connectors._all_files
         if f._extension == "gb"
     ]
     connectors = [
-            dc.load_record(f._path, linear=False, id=f._name_no_extension)
+            dc.load_record(f._path, topology='circular', id=f._name_no_extension)
         for f in data_root.connectors._all_files
         if f._extension == "gb"
     ]

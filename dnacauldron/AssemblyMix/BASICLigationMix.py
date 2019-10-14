@@ -4,7 +4,7 @@
 from Bio.Alphabet import DNAAlphabet
 
 
-from ..tools import annotate_record
+from ..tools import annotate_record, set_record_topology
 from ..StickyEndsSeq import StickyEndsSeqRecord, StickyEndsSeq, StickyEnd
 from .Filter import NoRestrictionSiteFilter, TextSearchFilter
 from .RestrictionLigationMix import RestrictionLigationMix
@@ -55,8 +55,8 @@ class BASICLigationMix(RestrictionLigationMix):
     def assemble_constructs_and_linkers(records_list, enzyme="BsaI"):
         fragments = []
         for linker_left, part, linker_right in records_list:
-            linker_left.linear = True
-            linker_right.linear = True
+            set_record_topology(linker_left, topology='linear')
+            set_record_topology(linker_right, topology='linear')
             if not isinstance(part, list):
                 part = [part]
 

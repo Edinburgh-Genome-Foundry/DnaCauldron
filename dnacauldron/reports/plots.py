@@ -15,6 +15,8 @@ try:
 except ImportError:
     GRAPHVIZ_AVAILABLE = False
 
+from ..tools import record_is_linear
+
 class AssemblyTranslator(BiopythonTranslator):
     """Custom theme for plotting GENBANK assemblies w. Dna Features Viewer."""
 
@@ -42,7 +44,7 @@ def abreviate_string(string, max_length=30):
     """Truncate and add '...' if the string is too long"""
     return string[:max_length] + ('' if len(string) < max_length else '...')
 
-def plot_cuts(record, enzyme_name, linear=True, figure_width=5, ax=None):
+def plot_cuts(record, enzyme_name, linear='auto', figure_width=5, ax=None):
     """Plot a construct and highlight where an enzyme cuts.
 
     Parameters
@@ -68,9 +70,11 @@ def plot_cuts(record, enzyme_name, linear=True, figure_width=5, ax=None):
     """
     enzyme = Restriction.__dict__[enzyme_name]
     record = deepcopy(record)
+    if linear == "auto":
+        linear = record_is_linear(record, True)
     cuts = enzyme.search(record.seq, linear=linear)
     for cut in cuts:
-        annotate_record(record, (cut, cut+1),
+        annotate_record(record, (cut, cut + 1),
                         feature_type='misc_feature',
                         enzyme=enzyme_name)
     class MyTranslator(BiopythonTranslator):

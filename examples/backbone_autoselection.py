@@ -9,12 +9,12 @@ output_dir = root._dir('output_data')._dir('backbone_autoselection')
 
 # load lists of genbanks: one list for parts, one list for potential backbones
 part_records = [
-    load_record(f._path, linear=False, id=f._name_no_extension)
+    load_record(f._path, topology='circular', id=f._name_no_extension)
     for f in root.data.assemblies._all_files
     if f._name_no_extension in ['partA', 'partB']
 ]
 backbone_records = [
-    load_record(f._path, linear=False, id=f._name_no_extension)
+    load_record(f._path, topology='circular', id=f._name_no_extension)
     for f in root.data.backbones._all_files
 ]
 

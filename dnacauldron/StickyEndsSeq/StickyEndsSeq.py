@@ -1,6 +1,8 @@
 from Bio.Seq import Seq
 from .StickyEnd import StickyEnd
 
+from ..tools import set_record_topology
+
 
 class StickyEndsSeq(Seq):
     """Represent sequences with sticky ends.
@@ -39,7 +41,7 @@ class StickyEndsSeq(Seq):
                 " can be circularized"
             )
         result = Seq(str(self.left_end)) + self
-        result.linear = False
+        set_record_topology(result, 'circular')
         return result
 
     def __repr__(self):

@@ -24,7 +24,7 @@ class RestrictionLigationMix(AssemblyMix):
     constructs
       List of Biopython Seqrecords. Each seqrecord should have an attribute
       `linear` set to true or false (for circular constructs). It is advised to
-      use method `load_genbank(filename, linear=True)` from `dnacauldron.tools`
+      use method `load_record(filename, linear=True)` from `dnacauldron.tools`
       to load the constructs.
 
     enzyme
@@ -54,7 +54,7 @@ class RestrictionLigationMix(AssemblyMix):
     def compute_digest(self, construct):
         """Compute the fragments resulting from the digestion"""
         return StickyEndsSeqRecord.list_from_record_digestion(
-            construct, self.enzyme, linear=construct.linear
+            construct, self.enzyme
         )
 
     def compute_fragments(self):

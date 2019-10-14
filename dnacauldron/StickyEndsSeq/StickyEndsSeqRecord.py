@@ -3,6 +3,8 @@ from Bio.SeqRecord import SeqRecord
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 from Bio.Alphabet import DNAAlphabet
 
+from ..tools import set_record_topology
+
 from .StickyEnd import StickyEnd
 from .StickyEndsSeq import StickyEndsSeq
 
@@ -47,8 +49,7 @@ class StickyEndsSeqRecord(SeqRecord):
                 )
             ]
         result = connector + self
-        result.linear = False
-        result.annotations['topology'] = 'circular'
+        set_record_topology(result, "circular")
         return result
 
     @staticmethod
@@ -110,11 +111,16 @@ class StickyEndsSeqRecord(SeqRecord):
     #     return hash("StickyEndSeqRecord"+str(self.seq))
 
     @staticmethod
-    def list_from_record_digestion(record, enzyme, linear=True):
+    def list_from_record_digestion(record, enzyme, linear="auto"):
+        if linear == "auto":
+            linear = record.annotations.get("topology", "linear") == "linear"
         n_cuts = len(enzyme.search(record.seq, linear=linear))
         if n_cuts == 0:
             return [record]
         if not linear:
+            record.features = [
+                f for f in record.features if f.location is not None
+            ]
             record_fragments = StickyEndsSeqRecord.list_from_record_digestion(
                 record + record, enzyme=enzyme, linear=True
             )

@@ -8,6 +8,8 @@ restriction sites of the digestion enzyme (these are unstable)
 from Bio import Restriction
 from Bio.Seq import Seq
 
+from ..tools import record_is_linear
+
 
 class NoRestrictionSiteFilter:
     """Filters to ignore fragments and final assemblies containing a given
@@ -19,14 +21,14 @@ class NoRestrictionSiteFilter:
         self.enzyme = Restriction.__dict__[enzyme_name]
 
     def __call__(self, seqrecord):
-        linear = seqrecord.linear if hasattr(seqrecord, "linear") else True
-        if linear:
+        is_linear = record_is_linear(seqrecord, default=True)
+        if is_linear:
             # Shameful hack so that enzyme sites of enzymes cutting outside
             # of the sequence (but have their site inside) will be detected
             seq = "AAAAAA" + Seq(str(seqrecord.seq)) + "AAAAAA"
         else:
             seq = seqrecord.seq
-        return (self.enzyme.search(seq, linear=linear) == [])
+        return (self.enzyme.search(seq, linear=is_linear) == [])
 
     def __repr__(self):
         return ("NoRestriction(%s)" % self.enzyme_name)

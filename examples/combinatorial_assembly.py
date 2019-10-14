@@ -3,7 +3,8 @@ from dnacauldron import RestrictionLigationMix, load_record, write_record
 
 root = flametree.file_tree(".")
 parts = [
-    load_record(f._path, linear=False) for f in root.data.assemblies._all_files
+    load_record(f._path, topology="circular")
+    for f in root.data.assemblies._all_files
 ]
 mix = RestrictionLigationMix(parts, enzyme="BsmBI")
 assemblies_records = mix.compute_circular_assemblies()
