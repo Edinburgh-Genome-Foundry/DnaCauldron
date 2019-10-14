@@ -92,6 +92,7 @@ def load_record(
     id="auto",
     upperize=True,
     default_topology="linear",
+    max_name_length=20
 ):
     if filename.lower().endswith(("gb", "gbk")):
         record = SeqIO.read(filename, "genbank")
@@ -111,11 +112,11 @@ def load_record(
         id = record.id
         if id in [None, "", "<unknown id>", ".", " "]:
             id = os.path.splitext(os.path.basename(filename))[0]
-            record.name = id.replace(" ", "_")[:20]
+            record.name = id.replace(" ", "_")[:max_name_length]
         record.id = id
     elif id is not None:
         record.id = id
-        record.name = id.replace(" ", "_")[:20]
+        record.name = id.replace(" ", "_")[:max_name_length]
 
     return record
 
