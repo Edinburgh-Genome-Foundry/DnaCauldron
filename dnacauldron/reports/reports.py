@@ -210,6 +210,7 @@ def full_assembly_report(
             name = assemblies_prefix
         else:
             name = "%s_%03d" % (assemblies_prefix, (i + 1))
+        asm.name = asm.id = name
         assemblies_data.append(
             dict(
                 assembly_name=name,
