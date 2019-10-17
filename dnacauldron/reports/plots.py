@@ -120,7 +120,7 @@ def plot_slots_graph(mix, ax=None, with_overhangs=False, show_missing=True,
 
     # Positioning - a bit complex to deal with multi-components graphs
     pos = {}
-    components = list(nx.components.connected_component_subgraphs(graph))
+    components = list(nx.components.connected_components(graph))
     if components == []:
         raise ValueError("Empty connections graph. This probably means your "
                          "parts were filtered out, possibly because they do "

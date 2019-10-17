@@ -497,7 +497,7 @@ class AssemblyMix:
         self.initialize()
         graph = self.filtered_connections_graph
         components = sorted(
-            nx.components.connected_component_subgraphs(graph.to_undirected()),
+            nx.components.connected_components(graph.to_undirected()),
             key=lambda graph_: -len(graph_),
         )
 
@@ -505,7 +505,7 @@ class AssemblyMix:
 
             newgraph = graph.copy()  # deepcopy(graph)
             newgraph.remove_nodes_from(
-                set(newgraph.nodes()).difference(component.nodes())
+                set(newgraph.nodes()).difference(component)
             )
             all_paths = dict(nx.all_pairs_shortest_path(graph))
             parts_ids = set([rec.id for rec in slotted_parts_records])
