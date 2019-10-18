@@ -95,6 +95,8 @@ def full_assembly_report(
 
 
     """
+    # Make prefix Genbank friendly
+    assemblies_prefix = assemblies_prefix.replace(" ", "_")[:18]
 
     if mix_class == "restriction":
         mix_class = RestrictionLigationMix
@@ -224,6 +226,7 @@ def full_assembly_report(
             gr_record = AssemblyTranslator().translate_record(asm)
             ax, gr = gr_record.plot(figure_width=16)
             ax.set_title(name)
+            ax.set_ylim(top=ax.get_ylim()[1] + 1)
             ax.figure.savefig(
                 assemblies_dir._file(name + ".pdf").open("wb"),
                 format="pdf",
