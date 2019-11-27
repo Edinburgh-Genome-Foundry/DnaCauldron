@@ -5,6 +5,7 @@ from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import DNAAlphabet
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 from snapgene_reader import snapgene_file_to_seqrecord
+from Bio import Restriction
 from Bio.Seq import Seq
 
 import os
@@ -92,7 +93,7 @@ def load_record(
     id="auto",
     upperize=True,
     default_topology="linear",
-    max_name_length=20
+    max_name_length=20,
 ):
     if filename.lower().endswith(("gb", "gbk")):
         record = SeqIO.read(filename, "genbank")
@@ -170,3 +171,31 @@ def write_record(record, target, fmt="genbank"):
     if hasattr(target, "open"):
         target = target.open("w")
     SeqIO.write(record, target, fmt)
+
+
+def autoselect_enzyme(parts, enzymes=("BsmBI", "BsaI", "BbsI", "SapI")):
+    """Finds the enzyme that the parts were probably meant to be assembled with
+
+    Parameters
+    ----------
+
+    parts
+      A list of SeqRecord files. They should have a "linear" attribute set to
+      True or False, otherwise
+
+    Returns
+    --------
+    The enzyme that has as near as possible as exactly 2 sites in the different
+    constructs.
+    """
+
+    def enzyme_fit_score(enzyme_name):
+        enzyme = Restriction.__dict__[enzyme_name]
+
+        def number_of_sites(part):
+            linear = record_is_linear(part, default=False)
+            return len(enzyme.search(part.seq, linear=linear))
+
+        return sum([abs(2 - number_of_sites(part)) for part in parts])
+
+    return min(enzymes, key=enzyme_fit_score)

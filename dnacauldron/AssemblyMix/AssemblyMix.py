@@ -105,6 +105,45 @@ class AssemblyMix:
         )
         return graph
 
+    @property
+    def uniquified_connection_graph(self, filtered=True):
+        def transform(n):
+            return self.fragments_dict[n].original_construct.id
+
+        def graph_hash(g):
+            sorted_edges = tuple(sorted([tuple(sorted(e)) for e in g.edges]))
+            signature = tuple(tuple(sorted(g.nodes)) + sorted_edges)
+            return hash(signature)
+
+        def graph_with_transformed_nodes(graph, transformation):
+            transformations = {n: transformation(n) for n in graph}
+            new_graph = graph.__class__(
+                [
+                    (transformations[n1], transformations[n2])
+                    for n1, n2 in graph.edges()
+                ]
+            )
+            for n in transformations.values():
+                if n not in new_graph:
+                    new_graph.add_node(n)
+            return new_graph
+
+        if filtered:
+            graph = self.filtered_connections_graph
+        else:
+            graph = self.connections_graph
+        components = list(nx.connected_components(graph.to_undirected()))
+        nodes_by_hash = {}
+        for nodes in components:
+            component = graph.subgraph(nodes)
+            component = graph_with_transformed_nodes(component, transform)
+            component_hash = graph_hash(component)
+            if component_hash in nodes_by_hash:
+                continue
+            nodes_by_hash[component_hash] = nodes
+        kept_nodes = set().union(*nodes_by_hash.values())
+        return graph.subgraph(kept_nodes)
+
     def compute_slots(self):
         """Return a dict {standardized_slot: set(fragments_id)}.
 
@@ -135,7 +174,7 @@ class AssemblyMix:
             slots[f_slot].add(f.original_construct.id)
         return slots
 
-    def slots_graph(self, with_overhangs=True):
+    def slots_graph(self, with_overhangs=True, directed=True):
         """Compute the slots graph of the graph.
 
         In this graph, a node represents a slot (i.e. left-right overhangs)
@@ -150,12 +189,37 @@ class AssemblyMix:
         slots_list = list(self.compute_slots().keys())
         edges = []
         if with_overhangs:
-            edges = [
-                (slot, std_overhang(e))
-                for slot in slots_list
-                for e in slot
-                if e != ""
-            ]
+            # THE CODE BLOCK BELOW IS COMPLICATED AND DOESNT BRING MUCH,
+            # JUST ARROW DIRECTIONS WITH LITTLE INFORMATIVE VALUE IN THE
+            # SLOTS GRAPH
+            if directed:
+
+                def slot_to_edges(slot):
+                    left, right = slot
+                    std_left, std_right = [std_overhang(o) for o in slot]
+                    edges = []
+                    if left != "":
+                        edge = (std_left, slot)
+                        if std_left != left:
+                            edge = edge[::-1]
+                        edges.append(edge)
+                    if right != "":
+                        edge = (slot, std_right)
+                        if std_left != left:
+                            edge = edge[::-1]
+                        edges.append(edge)
+                    return edges
+
+                edges = [
+                    edge for slot in slots_list for edge in slot_to_edges(slot)
+                ]
+            else:
+                edges = [
+                    (slot, std_overhang(e))
+                    for slot in slots_list
+                    for e in slot
+                    if e != ""
+                ]
         else:
 
             def slots_have_common_overhang(s1, s2):
@@ -168,7 +232,10 @@ class AssemblyMix:
                 for (s1, s2) in itt.combinations(slots_list, 2)
                 if slots_have_common_overhang(s1, s2)
             ]
-        return nx.Graph(edges)
+        if with_overhangs and directed:
+            return nx.DiGraph(edges)
+        else:
+            return nx.Graph(edges)
 
     def compute_reverse_fragments(self):
         """Precompute self.reverse_fragments.

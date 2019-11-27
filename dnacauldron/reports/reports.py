@@ -14,8 +14,13 @@ from ..AssemblyMix import (
     FragmentSetContainsPartsFilter,
     AssemblyError,
 )
-from .plots import plot_cuts, plot_slots_graph, AssemblyTranslator
-from ..tools import write_record, record_is_linear
+from .plots import (
+    plot_cuts,
+    plot_slots_graph,
+    AssemblyTranslator,
+    plot_connections_graph,
+)
+from ..tools import write_record, record_is_linear, autoselect_enzyme
 
 
 def name_fragment(fragment, mark_reverse=False):
@@ -32,14 +37,16 @@ def full_assembly_report(
     enzyme="BsmBI",
     max_assemblies=40,
     connector_records=(),
-    include_fragments_plots=True,
-    include_parts_plots=True,
+    include_fragments_plots="on_failure",
+    include_parts_plots="on_failure",
+    include_fragments_connection_graph="on_failure",
     include_assembly_plots=True,
+    n_expected_assemblies=None,
+    no_skipped_parts=False,
     fragments_filters="auto",
     assemblies_prefix="assembly",
     show_overhangs_in_graph=True,
-    show_overhangs_in_genbank=False,
-    no_skipped_parts=False,
+    show_overhangs_in_genbank=True,
     mix_class="restriction",
 ):
     """Write a full assembly report in a folder or a zip.
@@ -91,7 +98,15 @@ def full_assembly_report(
     include_parts_plots, include_assembly_plots
       These two parameters control the rendering of extra figures which are
       great for troubleshooting, but not strictly necessary, and they slow
-      down the report generation considerably.
+      down the report generation considerably. They can be True, False, or
+      "on_failure" to be True only if the number of assemblies differs from
+      n_expected_assemblies
+    
+    n_expected_assemblies
+      Expected number of assemblies. No exception is raised if this number is
+      not met, however, if parameters ``include_parts_plots`` and
+      ``include_assembly_plots`` are set to "on_failure", then extra plots
+      will be plotted. 
 
 
     """
@@ -130,70 +145,14 @@ def full_assembly_report(
             f = report._file("parts_graph.pdf")
             ax.figure.savefig(f.open("wb"), format="pdf", bbox_inches="tight")
             plt.close(ax.figure)
+
+            # PLOT CONNEXIONS GRAPH (BIGGER, MORE INFOS)
+            ax = plot_connections_graph(mix)
+            f = report._file("connections_graph.pdf")
+            ax.figure.savefig(f.open("wb"), format="pdf", bbox_inches="tight")
+            plt.close(ax.figure)
+
             raise err
-
-    # PROVIDED PARTS
-    if include_parts_plots:
-        provided_parts_dir = report._dir("provided_parts")
-        for part in parts:
-            linear = record_is_linear(part, default=False)
-            ax, gr = plot_cuts(part, enzyme, linear=linear)
-            f = provided_parts_dir._file(part.name + ".pdf").open("wb")
-            ax.figure.savefig(f, format="pdf", bbox_inches="tight")
-            plt.close(ax.figure)
-            gb_file = provided_parts_dir._file(part.name + ".gb")
-            write_record(part, gb_file, "genbank")
-
-    # FRAGMENTS
-    if include_fragments_plots:
-        fragments_dir = report._dir("fragments")
-        seenfragments = defaultdict(lambda *a: 0)
-        for fragment in mix.fragments:
-            gr = BiopythonTranslator().translate_record(fragment)
-            ax, _ = gr.plot()
-            name = name_fragment(fragment)
-            seenfragments[name] += 1
-            file_name = "%s_%02d.pdf" % (name, seenfragments[name])
-            ax.figure.savefig(
-                fragments_dir._file(file_name).open("wb"),
-                format="pdf",
-                bbox_inches="tight",
-            )
-            plt.close(ax.figure)
-
-    # GRAPH
-    if len(connector_records):
-        highlighted_parts = part_names
-    else:
-        highlighted_parts = []
-    ax = plot_slots_graph(
-        mix,
-        with_overhangs=show_overhangs_in_graph,
-        show_missing=True,
-        highlighted_parts=highlighted_parts,
-    )
-    f = report._file("parts_graph.pdf")
-    ax.figure.savefig(f.open("wb"), format="pdf", bbox_inches="tight")
-    plt.close(ax.figure)
-    graph = mix.slots_graph(with_overhangs=False)
-    slots_dict = {
-        s: "|".join(list(pts)) for s, pts in mix.compute_slots().items()
-    }
-    non_linear_slots = [
-        (slots_dict[n], "|".join([slots_dict[b] for b in graph.neighbors(n)]))
-        for n in graph.nodes()
-        if graph.degree(n) != 2
-    ]
-    if len(non_linear_slots):
-        report._file("non_linear_nodes.csv").write(
-            "\n".join(
-                ["part,neighbours"]
-                + [
-                    "%s,%s" % (part, neighbours)
-                    for part, neighbours in non_linear_slots
-                ]
-            )
-        )
 
     # ASSEMBLIES
     filters = (FragmentSetContainsPartsFilter(part_names),)
@@ -233,6 +192,93 @@ def full_assembly_report(
                 bbox_inches="tight",
             )
             plt.close(ax.figure)
+
+    is_failure = (len(assemblies) == 0) or (
+        (n_expected_assemblies is not None)
+        and (len(assemblies) != n_expected_assemblies)
+    )
+    if include_fragments_plots == "on_failure":
+        include_fragments_plots = is_failure
+    if include_parts_plots == "on_failure":
+        include_parts_plots = is_failure
+    if include_fragments_connection_graph == "on_failure":
+        include_fragments_connection_graph = is_failure
+
+    # PROVIDED PARTS
+    if include_parts_plots:
+        provided_parts_dir = report._dir("provided_parts")
+        for part in parts:
+            linear = record_is_linear(part, default=False)
+            ax, gr = plot_cuts(part, enzyme, linear=linear)
+            f = provided_parts_dir._file(part.name + ".pdf").open("wb")
+            ax.figure.savefig(f, format="pdf", bbox_inches="tight")
+            plt.close(ax.figure)
+            gb_file = provided_parts_dir._file(part.name + ".gb")
+            write_record(part, gb_file, "genbank")
+
+    # FRAGMENTS
+    if include_fragments_plots:
+        fragments_dir = report._dir("fragments")
+        seenfragments = defaultdict(lambda *a: 0)
+        for fragment in mix.fragments:
+            gr = BiopythonTranslator().translate_record(fragment)
+            ax, _ = gr.plot()
+            name = name_fragment(fragment)
+            seenfragments[name] += 1
+            file_name = "%s_%02d.pdf" % (name, seenfragments[name])
+            ax.figure.savefig(
+                fragments_dir._file(file_name).open("wb"),
+                format="pdf",
+                bbox_inches="tight",
+            )
+            plt.close(ax.figure)
+    
+    # FRAGMENTS CONNECTION GRAPH
+
+    # PLOT CONNEXIONS GRAPH (BIGGER, MORE INFOS)
+    if include_fragments_connection_graph:
+        ax = plot_connections_graph(mix)
+        f = report._file("connections_graph.pdf")
+        ax.figure.savefig(f.open("wb"), format="pdf", bbox_inches="tight")
+        plt.close(ax.figure)
+
+    graph = mix.slots_graph(with_overhangs=False)
+    slots_dict = {
+        s: "|".join(list(pts)) for s, pts in mix.compute_slots().items()
+    }
+    non_linear_slots = [
+        (slots_dict[n], "|".join([slots_dict[b] for b in graph.neighbors(n)]))
+        for n in graph.nodes()
+        if graph.degree(n) != 2
+    ]
+
+    # PLOT SLOTS GRAPH
+    if len(connector_records):
+        highlighted_parts = part_names
+    else:
+        highlighted_parts = []
+    ax = plot_slots_graph(
+        mix,
+        with_overhangs=show_overhangs_in_graph,
+        show_missing=True,
+        highlighted_parts=highlighted_parts,
+    )
+    f = report._file("parts_graph.pdf")
+    ax.figure.savefig(f.open("wb"), format="pdf", bbox_inches="tight")
+    plt.close(ax.figure)
+
+    
+    if len(non_linear_slots):
+        report._file("non_linear_nodes.csv").write(
+            "\n".join(
+                ["part,neighbours"]
+                + [
+                    "%s,%s" % (part, neighbours)
+                    for part, neighbours in non_linear_slots
+                ]
+            )
+        )
+
     df = pandas.DataFrame.from_records(
         assemblies_data,
         columns=["assembly_name", "number_of_parts", "assembly_size", "parts"],
@@ -251,7 +297,7 @@ def full_assembly_plan_report(
     assembly_plan,
     target,
     part_records=None,
-    enzyme="BsmBI",
+    enzyme="autoselect",
     assert_single_assemblies=True,
     logger="bar",
     connector_records=(),
@@ -295,7 +341,8 @@ def full_assembly_plan_report(
       an assembly will be automatically selected and added to the other parts.
 
     **report_kwargs
-      Any other parameter of ``full_assembly_report``
+      Any other parameter of ``full_assembly_report``. For instance:
+      include_fragments_plots, include_parts_plot, include_assembly_plots
 
     """
     logger = default_bar_logger(logger)
@@ -317,15 +364,22 @@ def full_assembly_plan_report(
     all_records_folder = root._dir("all_records")
     errored_assemblies = []
     assemblies = list(assembly_plan.items())
+    selected_enzymes = []  # Used to keep track of autoselected enzymes
     for asm_name, parts in logger.iter_bar(assembly=assemblies):
+        if enzyme == "autoselect":
+            selected_enzyme = autoselect_enzyme(parts)
+            selected_enzymes.append((asm_name, selected_enzyme))
+        else:
+            selected_enzyme = enzyme
         asm_folder = root._dir(asm_name)
         try:
             n = full_assembly_report(
                 parts,
                 target=asm_folder,
                 assemblies_prefix=asm_name,
-                enzyme=enzyme,
+                enzyme=selected_enzyme,
                 connector_records=connector_records,
+                n_expected_assemblies=1 if assert_single_assemblies else None,
                 **report_kwargs
             )
             if assert_single_assemblies and (n != 1):
@@ -366,4 +420,8 @@ def full_assembly_plan_report(
                 f.write("\n" + ",".join([name] + parts))
     all_parts = sorted(set(all_parts))
     root._file("all_parts.csv").write(",\n".join(all_parts))
+    if enzyme == "autoselect":
+        root._file("selected_enzymes_per_construct.csv").write(
+            ",\n".join([",".join(selection) for selection in selected_enzymes])
+        )
     return errored_assemblies, root._close()

@@ -3,8 +3,7 @@ most common operations."""
 
 import pandas
 from ..AssemblyMix import RestrictionLigationMix, AssemblyError
-from ..tools import reverse_complement, write_record
-from .utils import autoselect_enzyme
+from ..tools import reverse_complement, write_record, autoselect_enzyme
 import flametree
 
 class BackboneChoice:
