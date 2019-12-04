@@ -1,10 +1,10 @@
 from copy import deepcopy
 
 
-from .AssemblyMix import AssemblyMix
+from .AssemblyMixBase import AssemblyMixBase
 from ..StickyEndsSeq import StickyEndsSeqRecord
 
-class GibsonAssemblyMix(AssemblyMix):
+class GibsonAssemblyMix(AssemblyMixBase):
     """In construction. Do not use."""
 
     def __init__(self, constructs, min_homology=15, max_homology=200):

@@ -4,7 +4,7 @@
 
 from .Filter import (NoPatternFilter, TextSearchFilter,
                      NoRestrictionSiteFilter, FragmentSetContainsPartsFilter)
-from .AssemblyMix import (AssemblyMix, AssemblyError)
+from .AssemblyMixBase import (AssemblyMixBase, AssemblyError)
 from .RestrictionLigationMix import RestrictionLigationMix
 from .BASICLigationMix import  BASICLigationMix
 from .GibsonAssemblyMix import  GibsonAssemblyMix

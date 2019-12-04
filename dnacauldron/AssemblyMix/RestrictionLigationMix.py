@@ -8,11 +8,11 @@ from Bio import Restriction
 
 from ..tools import annotate_record
 from ..StickyEndsSeq import StickyEndsSeqRecord
-from .AssemblyMix import AssemblyMix
+from .AssemblyMixBase import AssemblyMixBase
 from .Filter import NoRestrictionSiteFilter
 
 
-class RestrictionLigationMix(AssemblyMix):
+class RestrictionLigationMix(AssemblyMixBase):
     """Assembly mix for an enzymatic Restriction Ligation assembly.
 
     This includes modern assembly techniques such as Golden Gate as well as
