@@ -15,9 +15,7 @@ from ..AssemblyMix import (
 )
 from .plots import (
     plot_cuts,
-    plot_slots_graph,
     AssemblyTranslator,
-    plot_connections_graph,
 )
 from ..tools import write_record, record_is_linear
 

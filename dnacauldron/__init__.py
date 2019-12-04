@@ -34,7 +34,5 @@ from .version import __version__
 from .reports import (
     plot_cuts,
     full_assembly_report,
-    plot_slots_graph,
-    plot_connections_graph,
     full_assembly_plan_report,
 )
