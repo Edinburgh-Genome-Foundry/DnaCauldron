@@ -7,6 +7,7 @@ from proglog import default_bar_logger
 from ..tools import autoselect_enzyme
 from .full_assembly_report import full_assembly_report
 
+
 def full_assembly_plan_report(
     assembly_plan,
     target,

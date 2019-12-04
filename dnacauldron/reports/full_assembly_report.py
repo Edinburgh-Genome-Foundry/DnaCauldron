@@ -260,7 +260,6 @@ def full_assembly_report(
     ax.figure.savefig(f.open("wb"), format="pdf", bbox_inches="tight")
     plt.close(ax.figure)
 
-    
     if len(non_linear_slots):
         report._file("non_linear_nodes.csv").write(
             "\n".join(
