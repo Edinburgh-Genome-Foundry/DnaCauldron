@@ -6,7 +6,7 @@ from .AssemblyMixConnectorsMixin import AssemblyMixConnectorsMixin
 from .AssemblyMixConstructsMixin import AssemblyMixConstructsMixin
 from .AssemblyMixFragmentsMixin import AssemblyMixFragmentsMixin
 from .AssemblyMixGraphsMixin import AssemblyMixGraphsMixin
-
+from .AssemblyMixPlotsMixin import AssemblyMixPlotsMixin
 
 class AssemblyError(Exception):
     pass
@@ -17,6 +17,7 @@ class AssemblyMixBase(
     AssemblyMixConstructsMixin,
     AssemblyMixFragmentsMixin,
     AssemblyMixGraphsMixin,
+    AssemblyMixPlotsMixin
 ):
     """Base class for assembly mixes.
 

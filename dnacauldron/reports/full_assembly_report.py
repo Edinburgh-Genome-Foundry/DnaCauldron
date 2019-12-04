@@ -135,8 +135,7 @@ def full_assembly_report(
         try:
             mix.autoselect_connectors(connector_records)
         except AssemblyError as err:
-            ax = plot_slots_graph(
-                mix,
+            ax = mix.plot_slots_graph(
                 with_overhangs=show_overhangs_in_graph,
                 show_missing=True,
                 highlighted_parts=part_names,
@@ -146,7 +145,7 @@ def full_assembly_report(
             plt.close(ax.figure)
 
             # PLOT CONNEXIONS GRAPH (BIGGER, MORE INFOS)
-            ax = plot_connections_graph(mix)
+            ax = mix.plot_connections_graph()
             f = report._file("connections_graph.pdf")
             ax.figure.savefig(f.open("wb"), format="pdf", bbox_inches="tight")
             plt.close(ax.figure)
@@ -234,7 +233,7 @@ def full_assembly_report(
 
     # PLOT CONNEXIONS GRAPH (BIGGER, MORE INFOS)
     if include_fragments_connection_graph:
-        ax = plot_connections_graph(mix)
+        ax = mix.plot_connections_graph()
         f = report._file("connections_graph.pdf")
         ax.figure.savefig(f.open("wb"), format="pdf", bbox_inches="tight")
         plt.close(ax.figure)
@@ -254,8 +253,7 @@ def full_assembly_report(
         highlighted_parts = part_names
     else:
         highlighted_parts = []
-    ax = plot_slots_graph(
-        mix,
+    ax = mix.plot_slots_graph(
         with_overhangs=show_overhangs_in_graph,
         show_missing=True,
         highlighted_parts=highlighted_parts,
