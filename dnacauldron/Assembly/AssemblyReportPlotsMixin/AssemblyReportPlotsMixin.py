@@ -7,10 +7,10 @@ from .plot_cuts import plot_cuts
 class AssemblyReportPlotsMixin:
 
     def plot_construct(self, construct, directory):
-        target = directory._file(construct.name + ".pdf").open("wb")
+        target = directory._file(construct.id + ".pdf").open("wb")
         gr_record = AssemblyPlotTranslator().translate_record(construct)
         ax, gr = gr_record.plot(figure_width=16)
-        ax.set_title(construct.name)
+        ax.set_title(construct.id)
         ax.set_ylim(top=ax.get_ylim()[1] + 1)
         ax.figure.savefig(target, format="pdf", bbox_inches="tight")
         plt.close(ax.figure)
@@ -20,10 +20,10 @@ class AssemblyReportPlotsMixin:
         for part in parts_records:
             linear = record_is_linear(part, default=False)
             ax, gr = plot_cuts(part, enzymes, linear=linear)
-            f = provided_parts_dir._file(part.name + ".pdf").open("wb")
+            f = provided_parts_dir._file(part.id + ".pdf").open("wb")
             ax.figure.savefig(f, format="pdf", bbox_inches="tight")
             plt.close(ax.figure)
-            gb_file = provided_parts_dir._file(part.name + ".gb")
+            gb_file = provided_parts_dir._file(part.id + ".gb")
             write_record(part, gb_file, "genbank")
 
     def plot_fragments(self, mix, report):

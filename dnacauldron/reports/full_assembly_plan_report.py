@@ -72,10 +72,10 @@ def full_assembly_plan_report(
         assembly_plan = OrderedDict(assembly_plan)
     if isinstance(list(assembly_plan.values())[0][0], str):
         if not hasattr(part_records, "items"):
-            part_records = {r.name: r for r in part_records}
+            part_records = {r.id: r for r in part_records}
         for part in list(part_records):
             part_records[part] = deepcopy(part_records[part])
-            part_records[part].name = part_records[part].id = part
+            part_records[part].id = part
         assembly_plan = OrderedDict(
             [
                 (name, [part_records[p] for p in parts])

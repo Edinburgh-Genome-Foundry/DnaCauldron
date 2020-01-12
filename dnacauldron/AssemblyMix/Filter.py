@@ -94,5 +94,5 @@ class FragmentSetContainsPartsFilter:
         self.mandatory_part_names = set(part_names)
 
     def __call__(self, fragments):
-        fragments = set([f.original_part.name for f in fragments])
+        fragments = set([f.original_part.id for f in fragments])
         return fragments >= self.mandatory_part_names

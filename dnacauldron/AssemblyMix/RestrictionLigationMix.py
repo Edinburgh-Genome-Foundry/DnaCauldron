@@ -54,8 +54,8 @@ class RestrictionLigationMix(AssemblyMixBase):
                 annotate_record(
                     fragment,
                     feature_type="misc_feature",
-                    source=part.name,
-                    note="From " + part.name,
+                    source=part.id,
+                    note="From " + part.id,
                 )
                 self.fragments.append(fragment)
 

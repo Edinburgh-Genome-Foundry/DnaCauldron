@@ -11,7 +11,7 @@ from .AssemblyMix import (
     TextSearchFilter,
     NoRestrictionSiteFilter,
 )
-from .SequencesRepository import SequencesRepository
+from .SequenceRepository import SequenceRepository
 
 
 from .Assembly import (

@@ -74,7 +74,7 @@ def load_records_from_zip_file(zip_file):
                     number = "" if single_record else ("%04d" % i)
                     name = f._name_no_extension.replace(" ", "_") + number
                 record.id = name
-                record.name = name
+                record.id = name
                 record.file_name = f._name_no_extension
             for record in new_records:
                 record.source_file = f._path
@@ -128,17 +128,17 @@ def load_record(
         id = record.id
         if id in [None, "", "<unknown id>", ".", " "]:
             id = os.path.splitext(os.path.basename(filename))[0]
-            record.name = id.replace(" ", "_")[:max_name_length]
+            record.id = id.replace(" ", "_")[:max_name_length]
         record.id = id
     elif id is not None:
         record.id = id
-        record.name = id.replace(" ", "_")[:max_name_length]
+        record.id = id.replace(" ", "_")[:max_name_length]
 
     return record
 
 
 def load_records_from_files(
-    file_paths=None, folder=None, use_file_name_as_id=False
+    file_paths=None, folder=None, use_file_names_as_ids=False
 ):
     """Automatically convert files or a folder's content to biopython records.
     """
@@ -171,11 +171,11 @@ def load_records_from_files(
             # will be good
             if str(record.id).strip() in UNKNOWN_IDS:
                 record.id = name
-            if str(record.name).strip() in UNKNOWN_IDS:
-                record.name = name
+            if str(record.id).strip() in UNKNOWN_IDS:
+                record.id = name
             record.file_name = name_no_extension
         records += recs
-    if use_file_name_as_id:
+    if use_file_names_as_ids:
         for record in records:
             basename = os.path.basename(record.source_file)
             basename_no_extension = os.path.splitext(basename)[0]
@@ -186,7 +186,7 @@ def load_records_from_files(
 def write_record(record, target, fmt="genbank"):
     """Write a record as genbank, fasta, etc. via Biopython, with fixes"""
     record = deepcopy(record)
-    record.name = record.name[:20]
+    record.id = record.id[:20]
     if str(record.seq.alphabet.__class__.__name__) != "DNAAlphabet":
         record.seq.alphabet = DNAAlphabet()
     if hasattr(target, "open"):

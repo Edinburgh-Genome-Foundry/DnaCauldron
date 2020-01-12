@@ -39,11 +39,11 @@ class Type2sRestrictionAssembly(AssemblyBase):
     def get_extra_construct_data(self):
         return dict(enzyme=self.enzyme)
 
-    def simulate(self, sequences_repository, annotate_parts_homologies=True):
-        records = sequences_repository.get_records(self.parts)
+    def simulate(self, sequence_repository, annotate_parts_homologies=True):
+        records = sequence_repository.get_records(self.parts)
         mix = Type2sRestrictionMix(parts=records, enzyme=self.enzyme)
         self.enzyme = mix.enzyme_name  # in case the enzyme needs autoselection
-        connectors_records = self.get_connectors_records(sequences_repository)
+        connectors_records = self.get_connectors_records(sequence_repository)
         if len(connectors_records) != 0:
             mix.autoselect_connectors(connectors_records)
         filters = ()

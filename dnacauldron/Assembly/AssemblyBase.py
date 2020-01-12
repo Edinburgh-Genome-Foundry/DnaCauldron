@@ -50,14 +50,14 @@ class AssemblyBase:
                 parts.append(cell)
         return cls(name=assembly_name, parts=parts, **parameters)
 
-    def get_connectors_records(self, sequences_repository):
+    def get_connectors_records(self, sequence_repository):
         collection = self.connectors_collection
         if collection is None:
             return []
         if isinstance(collection, (tuple, list)):
-            return sequences_repository.get_records(collection)
+            return sequence_repository.get_records(collection)
         # last case: the collection is a string (collection name)
-        collections = sequences_repository.connectors_collections
+        collections = sequence_repository.connectors_collections
         return list(collections[collection].values())
 
     

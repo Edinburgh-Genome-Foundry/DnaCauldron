@@ -71,7 +71,7 @@ class BASICLigationMix(Type2sRestrictionMix):
                     annotate_homologies=False
                 ))
                 if len(new_fragment) != 1:
-                    part_names = str([linker_left.name, p.name,
+                    part_names = str([linker_left.name, p.id,
                                       linker_right.name])
                     raise ValueError(
                         "Something weird happened when trying to assemble "

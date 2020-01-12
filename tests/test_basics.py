@@ -116,12 +116,12 @@ def test_autoselect_connectors():
     selected_connectors = mix.autoselect_connectors(connectors)
     assert sorted([c.id for c in selected_connectors]) == sorted(
         [
-            "conn J-K",
-            "conn L-N",
-            "conn R-W",
-            "conn W-Z",
+            "conn_J-K",
+            "conn_L-N",
+            "conn_R-W",
+            "conn_W-Z",
             "conn_a_b",
-            "conn D-F",
+            "conn_D-F",
         ]
     )
 

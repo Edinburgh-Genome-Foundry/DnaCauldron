@@ -99,7 +99,7 @@ class BackboneChoice:
             else:
                 record = choice.final_record
             if record is not None:
-                record.name = choice.record.name
+                record.id = choice.record.id
                 record.id = choice.record.id
                 target_file = target_dir._file("%s.gb" % choice.record.id)
                 write_record(record, target_file, "genbank")

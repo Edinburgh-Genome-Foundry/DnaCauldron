@@ -23,7 +23,7 @@ from ..biotools import write_record, record_is_linear
 def name_fragment(fragment, mark_reverse=False):
     """Return the name of the fragment, or optionally `NAME_r` if the fragment
     is the reverse of another fragment."""
-    return fragment.original_part.name + (
+    return fragment.original_part.id + (
         "_r" if (fragment.is_reverse and mark_reverse) else ""
     )
 
@@ -112,7 +112,7 @@ def full_assembly_report(
 
     if mix_class == "restriction":
         mix_class = Type2sRestrictionMix
-    part_names = [p.name for p in parts]
+    part_names = [p.id for p in parts]
     non_unique = [e for (e, count) in Counter(part_names).items() if count > 1]
     non_unique = list(set(non_unique))
     if len(non_unique) > 0:
@@ -167,7 +167,7 @@ def full_assembly_report(
             name = assemblies_prefix
         else:
             name = "%s_%03d" % (assemblies_prefix, (i + 1))
-        asm.name = asm.id = name
+        asm.id = name
         assemblies_data.append(
             dict(
                 assembly_name=name,
@@ -206,10 +206,10 @@ def full_assembly_report(
         for part in parts:
             linear = record_is_linear(part, default=False)
             ax, gr = plot_cuts(part, enzyme, linear=linear)
-            f = provided_parts_dir._file(part.name + ".pdf").open("wb")
+            f = provided_parts_dir._file(part.id + ".pdf").open("wb")
             ax.figure.savefig(f, format="pdf", bbox_inches="tight")
             plt.close(ax.figure)
-            gb_file = provided_parts_dir._file(part.name + ".gb")
+            gb_file = provided_parts_dir._file(part.id + ".gb")
             write_record(part, gb_file, "genbank")
 
     # FRAGMENTS

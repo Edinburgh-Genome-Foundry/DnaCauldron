@@ -56,7 +56,6 @@ class AssemblyReportGenerator(AssemblyReportPlotsMixin):
         include_assembly_plots=False,
         show_overhangs_in_graph=True,
         annotate_parts_homologies=True,
-        mix_class="restriction",
     ):
         self.include_fragments_plots = include_fragments_plots
         self.include_parts_plots = include_parts_plots
@@ -71,7 +70,7 @@ class AssemblyReportGenerator(AssemblyReportPlotsMixin):
     def name_fragment(fragment, mark_reverse=False):
         """Return the name of the fragment, or optionally `NAME_r` if the fragment
         is the reverse of another fragment."""
-        return fragment.original_part.name + (
+        return fragment.original_part.id + (
             "_r" if (fragment.is_reverse and mark_reverse) else ""
         )
 
@@ -90,7 +89,7 @@ class AssemblyReportGenerator(AssemblyReportPlotsMixin):
     def extract_simulated_construct_data(self, construct):
         parts = [self.name_fragment(f_) for f_ in construct.fragments]
         return dict(
-            construct_name=construct.name,
+            construct_id=construct.id,
             parts=" & ".join(parts),
             number_of_parts=len(construct.fragments),
             construct_size=len(construct),
@@ -124,7 +123,7 @@ class AssemblyReportGenerator(AssemblyReportPlotsMixin):
     def get_data_columns(self, assembly):
         first_columns = [
             "assembly_name",
-            "construct_name",
+            "construct_id",
             "assembly_level",
             "construct_size",
             "number_of_parts",
@@ -141,14 +140,14 @@ class AssemblyReportGenerator(AssemblyReportPlotsMixin):
         target = report._file("assembly_summary.csv")
         dataframe.to_csv(target.open("w"), index=False)
 
-    def generate_report(self, assembly, sequences_repository, target):
+    def generate_report(self, assembly, sequence_repository, target):
         report = file_tree(target, replace=True)
 
         # SIMULATE, GENERATE CONSTRUCTS RECORDS
 
         try:
             assembly_mix, constructs_records = assembly.simulate(
-                sequences_repository=sequences_repository,
+                sequence_repository=sequence_repository,
                 annotate_parts_homologies=self.annotate_parts_homologies,
             )
         except AssemblyMixError as err:
@@ -165,7 +164,7 @@ class AssemblyReportGenerator(AssemblyReportPlotsMixin):
             name = assembly.name
             if n_assemblies > 1:
                 name += "_%03d" % (i + 1)
-            construct_record.name = construct_record.id = name
+            construct_record.id = name
             data = self.extract_simulated_construct_data(construct_record)
             constructs_data.append(data)
             data.update(assembly.get_extra_construct_data())
@@ -186,7 +185,7 @@ class AssemblyReportGenerator(AssemblyReportPlotsMixin):
         # WRITE GENBANKs
 
         for construct_data in constructs_data:
-            filename = construct_data["construct_name"] + ".gb"
+            filename = construct_data["construct_id"] + ".gb"
             target = assemblies_dir._file(filename)
             write_record(construct_data["record"], target, "genbank")
 
@@ -205,7 +204,7 @@ class AssemblyReportGenerator(AssemblyReportPlotsMixin):
             return is_failure if v == "on_failure" else v
 
         if evaluate(self.include_fragments_plots):
-            parts_records = sequences_repository.get_records(assembly.parts)
+            parts_records = sequence_repository.get_records(assembly.parts)
             enzymes = assembly.enzymes if hasattr(assembly, "enzymes") else []
             self.plot_provided_parts(
                 report=report, parts_records=parts_records, enzymes=enzymes,

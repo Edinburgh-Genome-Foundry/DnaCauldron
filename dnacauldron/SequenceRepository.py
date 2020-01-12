@@ -1,7 +1,7 @@
 from .biotools import load_records_from_files
 
 
-class SequencesRepository:
+class SequenceRepository:
     def __init__(self, parts=None, connectors=None, constructs=None):
         def process(records):
             if records is None:
@@ -37,15 +37,15 @@ class SequencesRepository:
         file_paths=None,
         folder=None,
         as_connector_collection=None,
-        use_file_name_as_id=True,
+        use_file_names_as_ids=True,
     ):
         if folder is not None:
             records = load_records_from_files(
-                folder=folder, use_file_name_as_id=use_file_name_as_id
+                folder=folder, use_file_names_as_ids=use_file_names_as_ids
             )
         elif file_paths is not None:
             records = load_records_from_files(
-                file_paths=file_paths, use_file_name_as_id=use_file_name_as_id
+                file_paths=file_paths, use_file_names_as_ids=use_file_names_as_ids
             )
         else:
             raise ValueError("Provide either ``file_paths`` or ``folder``")

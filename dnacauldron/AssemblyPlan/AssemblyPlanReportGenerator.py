@@ -2,12 +2,12 @@ from proglog import default_bar_logger
 from flametree import file_tree
 import pandas
 from ..biotools import write_record
-
+from ..Assembly import AssemblyReportGenerator
 
 class AssemblyPlanReportGenerator:
     def __init__(
         self,
-        assembly_report_generator,
+        assembly_report_generator="default",
         assert_single_assemblies=True,
         logger="bar",
         fail_silently=True,
@@ -47,13 +47,15 @@ class AssemblyPlanReportGenerator:
         between two other parts), from which only the essential elements to form
         an assembly will be automatically selected and added to the other parts.
         """
+        if assembly_report_generator == "default":
+            assembly_report_generator = AssemblyReportGenerator()
         self.assembly_report_generator = assembly_report_generator
         self.logger = default_bar_logger(logger)
         self.assert_single_assemblies = assert_single_assemblies
         self.fail_silently = fail_silently
         self.errors_with_traceback = errors_with_traceback
 
-    def generate_report(self, assembly_plan, sequences_repository, target):
+    def generate_report(self, assembly_plan, sequence_repository, target):
         logger = self.logger
         root = file_tree(target, replace=True)
         all_records_folder = root._dir("all_records")
@@ -72,7 +74,7 @@ class AssemblyPlanReportGenerator:
                 constructs_data = report_generator.generate_report(
                     target=assembly_folder,
                     assembly=assembly,
-                    sequences_repository=sequences_repository,
+                    sequence_repository=sequence_repository,
                 )
                 assemblies_data.extend(constructs_data)
                 if assembly.expected_constructs is not None:
@@ -84,7 +86,7 @@ class AssemblyPlanReportGenerator:
                         )
                 for construct_data in constructs_data:
                     record = construct_data["record"]
-                    sequences_repository.constructs[record.id] = record
+                    sequence_repository.constructs[record.id] = record
                     target = all_records_folder._file(record.id + ".gb")
                     write_record(record, target.open("w"), "genbank")
             except Exception as err:
@@ -108,7 +110,7 @@ class AssemblyPlanReportGenerator:
 
         for level, subdata in data.groupby("assembly_level"):
             construct_parts = [
-                (row.construct_name, row.parts.split(" & "))
+                (row.construct_id, row.parts.split(" & "))
                 for i, row in subdata.iterrows()
             ]
             if assembly_plan_has_single_level:
@@ -132,7 +134,7 @@ class AssemblyPlanReportGenerator:
 
         # PLOT SUMMARY
 
-        if (data.assembly_name == data.construct_name).all():
+        if (data.assembly_name == data.construct_id).all():
             # Means only 1 construct per assembly. Remove redundant column.
             data = data[columns[1:]]
         

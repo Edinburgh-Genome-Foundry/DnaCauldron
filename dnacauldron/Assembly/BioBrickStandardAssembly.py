@@ -21,8 +21,8 @@ class BioBrickStandardAssembly(AssemblyBase):
         self.enzymes = ["EcoRI", "SpeI", "XbaI"]
         self.extra_construct_data = dict(enzymes=self.enzymes)
 
-    def simulate(self, sequences_repository, annotate_parts_homologies=True):
-        left_part, right_part = sequences_repository.get_records(self.parts)
+    def simulate(self, sequence_repository, annotate_parts_homologies=True):
+        left_part, right_part = sequence_repository.get_records(self.parts)
         E, X, S = "EcoRI", "XbaI", "SpeI"
         mix_1 = RestrictionLigationMix(parts=[left_part], enzymes=[E, S])
         fragments = mix_1.fragments + mix_1.reverse_fragments
