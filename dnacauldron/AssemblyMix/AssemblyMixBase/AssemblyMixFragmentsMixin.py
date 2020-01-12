@@ -27,5 +27,5 @@ class AssemblyMixFragmentsMixin:
             new_fragment.is_reverse = True
             new_fragment.reverse_fragment = fragment
             fragment.reverse_fragment = new_fragment
-            new_fragment.original_construct = fragment.original_construct
+            new_fragment.original_part = fragment.original_part
             self.reverse_fragments.append(new_fragment)

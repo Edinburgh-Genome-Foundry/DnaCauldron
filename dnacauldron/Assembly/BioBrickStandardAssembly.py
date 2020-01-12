@@ -24,11 +24,11 @@ class BioBrickStandardAssembly(AssemblyBase):
     def simulate(self, sequences_repository, annotate_parts_homologies=True):
         left_part, right_part = sequences_repository.get_records(self.parts)
         E, X, S = "EcoRI", "XbaI", "SpeI"
-        mix_1 = RestrictionLigationMix(constructs=[left_part], enzymes=[E, S])
+        mix_1 = RestrictionLigationMix(parts=[left_part], enzymes=[E, S])
         fragments = mix_1.fragments + mix_1.reverse_fragments
         insert = [f for f in fragments if str(f.seq.right_end) == "CTAG"][0]
 
-        mix_2 = RestrictionLigationMix(constructs=[right_part], enzymes=[E, X])
+        mix_2 = RestrictionLigationMix(parts=[right_part], enzymes=[E, X])
         fragments = mix_2.fragments + mix_2.reverse_fragments
         backbone = [f for f in fragments if str(f.seq.left_end) == "CTAG"][0]
         mix = RestrictionLigationMix(fragments=[insert, backbone])
@@ -38,7 +38,7 @@ class BioBrickStandardAssembly(AssemblyBase):
                 return False
             f1, f2 = fragments
             uses_both_parts = (
-                f1.original_construct.id != f2.original_construct.id
+                f1.original_part.id != f2.original_part.id
             )
             return uses_both_parts and not f1.is_reverse
 

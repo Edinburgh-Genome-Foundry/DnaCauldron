@@ -1,11 +1,12 @@
 import networkx as nx
+from .AssemblyMixError import AssemblyMixError
 
 
 class AssemblyMixConnectorsMixin:
     def autoselect_connectors(self, connectors_records):
         """Select connectors necessary for circular assemblie(s) in this mix.
 
-        This method assumes that the constructs provided in the mix are the
+        This method assumes that the parts provided in the mix are the
         main parts of either a single or a combinatorial assembly (with
         well-defined slots), and the provided list of ``connector_records``
         contains "bridging" parts, some of which may be necessary for bridging
@@ -19,17 +20,17 @@ class AssemblyMixConnectorsMixin:
 
         Else, an exception is raised.
         """
-        original_constructs = self.constructs
-        all_construct_ids = [c.id for c in original_constructs]
+        original_parts = self.parts
+        all_part_ids = [c.id for c in original_parts]
         connectors_records = [
-            c for c in connectors_records if c.id not in all_construct_ids
+            c for c in connectors_records if c.id not in all_part_ids
         ]
 
         slotted_parts_records = [
-            self.constructs_dict[list(parts)[0]]
+            self.parts_dict[list(parts)[0]]
             for parts in self.compute_slots().values()
         ]
-        self.constructs = slotted_parts_records + connectors_records
+        self.parts = slotted_parts_records + connectors_records
         self.compute_fragments()
         self.initialize()
         graph = self.filtered_connections_graph
@@ -49,7 +50,7 @@ class AssemblyMixConnectorsMixin:
             parts_nodes = [
                 n
                 for n in newgraph.nodes()
-                if self.fragments_dict[n].original_construct.id in parts_ids
+                if self.fragments_dict[n].original_part.id in parts_ids
             ]
             parts_graph = nx.DiGraph()
             parts_graph.add_edges_from(
@@ -64,7 +65,7 @@ class AssemblyMixConnectorsMixin:
                 ]
             )
             cycle = []
-            if len(parts_graph) != len(original_constructs):
+            if len(parts_graph) != len(original_parts):
                 continue
             for cycle in nx.cycles.simple_cycles(parts_graph):
 
@@ -73,7 +74,9 @@ class AssemblyMixConnectorsMixin:
             if len(cycle) == len(parts_graph):
                 break
         else:
-            err = AssemblyMixError(message="No construct found involving all parts", mix=mix)
+            err = AssemblyMixError(
+                message="No construct found involving all parts", mix=mix
+            )
             err.graph = graph
             err.mix = self
             raise err
@@ -81,13 +84,13 @@ class AssemblyMixConnectorsMixin:
             raise ValueError("No solution found - a connector may be missing.")
 
         selected_connectors = [
-            self.fragments_dict[n].original_construct
+            self.fragments_dict[n].original_part
             for (node1, node2) in zip(cycle, cycle[1:] + [cycle[0]])
             for n in all_paths[node1][node2][1:-1]
         ]
 
         # initialize the mix with the selected connectors
-        self.constructs = original_constructs + selected_connectors
+        self.parts = original_parts + selected_connectors
         self.compute_fragments()
         self.initialize()
         return selected_connectors

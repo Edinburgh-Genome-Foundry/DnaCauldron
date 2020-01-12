@@ -23,7 +23,7 @@ from ..biotools import write_record, record_is_linear
 def name_fragment(fragment, mark_reverse=False):
     """Return the name of the fragment, or optionally `NAME_r` if the fragment
     is the reverse of another fragment."""
-    return fragment.original_construct.name + (
+    return fragment.original_part.name + (
         "_r" if (fragment.is_reverse and mark_reverse) else ""
     )
 

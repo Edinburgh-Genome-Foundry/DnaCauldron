@@ -1,4 +1,4 @@
-from .biotools import load_records_from_files, record
+from .biotools import load_records_from_files
 
 
 class SequencesRepository:
@@ -41,11 +41,11 @@ class SequencesRepository:
     ):
         if folder is not None:
             records = load_records_from_files(
-                file_paths, use_file_name_as_id=use_file_name_as_id
+                folder=folder, use_file_name_as_id=use_file_name_as_id
             )
         elif file_paths is not None:
             records = load_records_from_files(
-                file_paths, use_file_name_as_id=use_file_name_as_id
+                file_paths=file_paths, use_file_name_as_id=use_file_name_as_id
             )
         else:
             raise ValueError("Provide either ``file_paths`` or ``folder``")

@@ -74,7 +74,7 @@ class FragmentsChain:
         backbones = [
             (i, fragment)
             for i, fragment in enumerate(self.fragments)
-            if fragment.original_construct.__dict__.get("is_backbone", False)
+            if fragment.original_part.__dict__.get("is_backbone", False)
         ]
         if len(backbones) == 1:
             backbone_index, backbone = backbones[0]

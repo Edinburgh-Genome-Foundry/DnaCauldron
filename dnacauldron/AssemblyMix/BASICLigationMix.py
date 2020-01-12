@@ -78,7 +78,7 @@ class BASICLigationMix(Type2sRestrictionMix):
                         "%s. %d assemblies found" % (
                             part_names, len(new_fragment)))
                 new_fragment = new_fragment[0]
-                new_fragment.original_construct = p
+                new_fragment.original_part = p
                 fragments.append(new_fragment)
         final_mix = BASICLigationMix(fragments=fragments)
         final_mix.compute_reverse_fragments()

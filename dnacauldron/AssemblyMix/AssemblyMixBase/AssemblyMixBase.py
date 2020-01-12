@@ -18,18 +18,18 @@ class AssemblyMixBase(
     """Base class for assembly mixes.
 
     The subclasses (Type2sRestrictionMix and GibsonAssemblyMix) implement
-    their own version of how the original constructs are broken into
+    their own version of how the original parts are broken into
     fragments, when two fragments will clip together, etc.
     """
 
     def initialize(self):
         """Precompute the fragments and connections graph of the mix."""
-        if self.constructs is not None:
-            for construct in self.constructs:
+        if self.parts is not None:
+            for part in self.parts:
                 set_record_topology(
-                    construct, topology="linear", pass_if_already_set=True
+                    part, topology="linear", pass_if_already_set=True
                 )
-            self.constructs_dict = {cst.id: cst for cst in self.constructs}
+            self.parts_dict = {cst.id: cst for cst in self.parts}
         if not hasattr(self, "fragments") or self.fragments is None:
             self.compute_fragments()
         self.compute_reverse_fragments()

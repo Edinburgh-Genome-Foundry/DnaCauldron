@@ -125,7 +125,7 @@ class AssemblyMixPlotsMixin:
         )
         if show_missing:
             all_mix_parts = set(
-                [f.original_construct.id for f in self.fragments]
+                [f.original_part.id for f in self.fragments]
             )
             all_slots_parts = set(
                 [p for plist in slots.values() for p in plist]
@@ -156,7 +156,7 @@ class AssemblyMixPlotsMixin:
             return "\n".join(
                 [
                     str(fragment.seq.left_end),
-                    r"$\bf{%s}$" % fragment.original_construct.id,
+                    r"$\bf{%s}$" % fragment.original_part.id,
                     str(fragment.seq.right_end),
                 ]
             )

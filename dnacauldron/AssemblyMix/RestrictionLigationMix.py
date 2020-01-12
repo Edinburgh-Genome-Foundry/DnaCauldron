@@ -14,7 +14,7 @@ class RestrictionLigationMix(AssemblyMixBase):
 
     def __init__(
         self,
-        constructs=None,
+        parts=None,
         enzymes=None,
         fragments=None,
         fragments_filters=(),
@@ -22,7 +22,7 @@ class RestrictionLigationMix(AssemblyMixBase):
     ):
         # shallow copy seems sufficient and problem-free.
         # deepcopy would be safer but it is a computational bottleneck.
-        self.constructs = copy(constructs) if constructs else constructs
+        self.parts = copy(parts) if parts else parts
         self.fragments = copy(fragments) if fragments else fragments
         if enzymes is not None:
             enzymes = [Restriction.__dict__[e] for e in enzymes]
@@ -31,31 +31,31 @@ class RestrictionLigationMix(AssemblyMixBase):
         self.name = name
         self.initialize()
     
-    def compute_digest(self, construct):
+    def compute_digest(self, part):
         """Compute the fragments resulting from the digestion"""
         return StickyEndsSeqRecord.list_from_record_digestion(
-            construct, self.enzymes
+            part, self.enzymes
         )
 
     def compute_fragments(self):
         """Compute the (sticky-ended) fragments resulting from the digestion of
-        the mix's constructs by the mix's enzyme.
+        the mix's parts by the mix's enzyme.
 
         Note that all fragments receive an annotation (feature) of type
         "source" that will show in the genbank of final constructs.
         """
         self.fragments = []
-        for construct in self.constructs:
-            for fragment in self.compute_digest(construct):
+        for part in self.parts:
+            for fragment in self.compute_digest(part):
                 # print (fragment)
                 if not isinstance(fragment, StickyEndsSeqRecord):
                     continue
-                fragment.original_construct = construct
+                fragment.original_part = part
                 annotate_record(
                     fragment,
                     feature_type="misc_feature",
-                    source=construct.name,
-                    note="From " + construct.name,
+                    source=part.name,
+                    note="From " + part.name,
                 )
                 self.fragments.append(fragment)
 

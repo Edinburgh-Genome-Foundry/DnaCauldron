@@ -76,7 +76,7 @@ class AssemblyMixGraphsMixin:
     @property
     def uniquified_connection_graph(self, filtered=True):
         def transform(n):
-            return self.fragments_dict[n].original_construct.id
+            return self.fragments_dict[n].original_part.id
 
         def graph_hash(g):
             sorted_edges = tuple(sorted([tuple(sorted(e)) for e in g.edges]))
@@ -139,7 +139,7 @@ class AssemblyMixGraphsMixin:
             f_slot = slot(f)
             if f_slot not in slots:
                 slots[f_slot] = set()
-            slots[f_slot].add(f.original_construct.id)
+            slots[f_slot].add(f.original_part.id)
         return slots
 
     def slots_graph(self, with_overhangs=True, directed=True):

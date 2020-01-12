@@ -15,11 +15,9 @@ class Type2sRestrictionMix(RestrictionLigationMix):
     Parameters
     ----------
 
-    constructs
+    parts
       List of Biopython Seqrecords. Each seqrecord should have an attribute
-      `linear` set to true or false (for circular constructs). It is advised to
-      use method `load_record(filename, linear=True)` from `dnacauldron.tools`
-      to load the constructs.
+      `record.annotations['topology]` set to 'circular' or 'linear'.
 
     enzyme
       Name of the ligation enzyme to use, e.g. 'BsmBI'
@@ -27,7 +25,7 @@ class Type2sRestrictionMix(RestrictionLigationMix):
 
     def __init__(
         self,
-        constructs=None,
+        parts=None,
         enzyme="auto",
         fragments=None,
         fragments_filters="default",
@@ -35,10 +33,10 @@ class Type2sRestrictionMix(RestrictionLigationMix):
     ):
         # shallow copy seems sufficient and problem-free.
         # deepcopy would be safer but it is a computational bottleneck.
-        self.constructs = copy(constructs) if constructs else constructs
+        self.parts = copy(parts) if parts else parts
         self.fragments = copy(fragments) if fragments else fragments
         if enzyme == "auto":
-            enzyme = autoselect_enzyme(constructs)
+            enzyme = autoselect_enzyme(parts)
         self.enzyme_name = enzyme
         self.enzyme = None if enzyme is None else Restriction.__dict__[enzyme]
         self.enzymes = None if self.enzyme is None else [self.enzyme]
@@ -51,8 +49,8 @@ class Type2sRestrictionMix(RestrictionLigationMix):
         self.name = None
         self.initialize()
     
-    def compute_digest(self, construct):
+    def compute_digest(self, part):
         """Compute the fragments resulting from the digestion"""
         return StickyEndsSeqRecord.list_from_record_digestion(
-            construct, self.enzyme
+            part, self.enzyme
         )
