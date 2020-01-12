@@ -1,6 +1,7 @@
 import networkx as nx
 import numpy as np
 from .FragmentsChain import FragmentsChain
+from .AssemblyMixError import AssemblyMixError
 
 
 class AssemblyMixConstructsMixin:
@@ -131,7 +132,7 @@ class AssemblyMixConstructsMixin:
         self,
         fragments_sets_filters=(),
         seqrecord_filters=(),
-        annotate_homologies=False,
+        annotate_parts_homologies=False,
         randomize=False,
         randomization_staling_cutoff=100,
     ):
@@ -151,7 +152,7 @@ class AssemblyMixConstructsMixin:
           "record" is the biopython record of a circular assembly found.
           Only records passing all these tests will be returned
 
-        annotate_homologies
+        annotate_parts_homologies
           If True, the junctions between assembled fragments will be annotated
           in the final record with a feature of type 'homology' and label
           equal to the homology (if <8bp), else simply 'homology'.
@@ -188,7 +189,7 @@ class AssemblyMixConstructsMixin:
                 construct = self.assemble(
                     fragments,
                     circularize=True,
-                    annotate_homologies=annotate_homologies,
+                    annotate_homologies=annotate_parts_homologies,
                 )
                 if all(fl(construct) for fl in seqrecord_filters):
                     construct.fragments = fragments
@@ -201,7 +202,7 @@ class AssemblyMixConstructsMixin:
         fragments_sets_filters=(),
         min_parts=2,
         seqrecord_filters=(),
-        annotate_homologies=False,
+        annotate_parts_homologies=False,
     ):
         """Return a generator listing the possible linear assemblies.
 
@@ -222,7 +223,7 @@ class AssemblyMixConstructsMixin:
           "record" is the biopython record of a circular assembly found.
           Only records passing all these tests will be returned
 
-        annotate_homologies
+        annotate_parts_homologies
           If True, the junctions between assembled fragments will be annotated
           in the final record with a feature of type 'homology' and label
           equal to the homology (if <8bp), else simply 'homology'.
@@ -264,7 +265,7 @@ class AssemblyMixConstructsMixin:
                     continue
                 seen_hashes.add(chain_hash)
                 fragments_assembly = self.assemble(
-                    fragments, annotate_homologies=annotate_homologies
+                    fragments, annotate_homologies=annotate_parts_homologies
                 )
                 if all([fl(fragments_assembly) for fl in seqrecord_filters]):
                     yield (fragments_assembly)

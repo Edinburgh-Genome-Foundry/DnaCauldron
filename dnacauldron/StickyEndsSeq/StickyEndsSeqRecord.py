@@ -3,7 +3,7 @@ from Bio.SeqRecord import SeqRecord
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 from Bio.Alphabet import DNAAlphabet
 
-from ..tools import set_record_topology
+from ..biotools import set_record_topology
 
 from .StickyEnd import StickyEnd
 from .StickyEndsSeq import StickyEndsSeq
@@ -114,7 +114,13 @@ class StickyEndsSeqRecord(SeqRecord):
     def list_from_record_digestion(record, enzyme, linear="auto"):
         if linear == "auto":
             linear = record.annotations.get("topology", "linear") == "linear"
-        n_cuts = len(enzyme.search(record.seq, linear=linear))
+        if isinstance(enzyme, (list, tuple)):
+            n_cuts = sum([
+                len(e.search(record.seq, linear=linear))
+                for e in enzyme
+            ])
+        else:
+            n_cuts = len(enzyme.search(record.seq, linear=linear))
         if n_cuts == 0:
             return [record]
         if not linear:

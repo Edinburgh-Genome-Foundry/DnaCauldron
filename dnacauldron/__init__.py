@@ -3,18 +3,20 @@
 # __all__ = []
 
 from .AssemblyMix import (
+    Type2sRestrictionMix,
     RestrictionLigationMix,
     BASICLigationMix,
-    AssemblyError,
+    AssemblyMixError,
     NoPatternFilter,
     TextSearchFilter,
     NoRestrictionSiteFilter,
 )
 
+from .Assembly import BioBrickStandardAssembly, Type2sRestrictionAssembly
+
 from .StickyEndsSeq import StickyEndsSeq, StickyEndsSeqRecord, StickyEnd
 
-from .tools import (
-    random_dna_sequence,
+from .biotools import (
     load_record,
     annotate_record,
     sequence_to_biopython_record,

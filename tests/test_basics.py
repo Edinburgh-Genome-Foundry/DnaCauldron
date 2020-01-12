@@ -34,7 +34,7 @@ def test_filters():
     assert not filter1(to_record("ACGGAGACGG"))
 
     filter2 = dc.TextSearchFilter("GFP", is_forbidden=True)
-    record = to_record(dc.random_dna_sequence(50))
+    record = to_record("ATCGCGTGCGTGCACCACACGT")
     assert filter2(record)
     dc.annotate_record(record, location=(20, 40), label="Here's some GFP!")
     assert not filter2(record)
@@ -57,7 +57,7 @@ def test_single_assembly_with_skipped_part(tmpdir):
         for part in ["partA", "connector_A2C", "partC", "receptor"]
     ]
     outfile = os.path.join(str(tmpdir), "final_sequence.gb")
-    with pytest.raises(dc.AssemblyError) as exc:
+    with pytest.raises(dc.AssemblyMixError) as exc:
         dc.single_assembly(parts=parts_files, enzyme="BsmBI", outfile=outfile)
     assert "0 assemblies" in str(exc.value)
 
@@ -70,7 +70,7 @@ def test_autoselect_enzyme():
 
 def test_single_assembly_with_wrong_enzyme(tmpdir):
     parts_files = [records_dict[part] for part in ["partA", "partB", "partC"]]
-    with pytest.raises(dc.AssemblyError) as exc:
+    with pytest.raises(dc.AssemblyMixError) as exc:
         dc.single_assembly(
             parts=parts_files,
             enzyme="BsaI",
@@ -84,7 +84,7 @@ def test_combinatorial_assembly(tmpdir):
     enzyme = "BsmBI"
     part_names = ["partA", "partB", "partC", "partA2", "partB2", "receptor"]
     parts = [records_dict[name] for name in part_names]
-    mix = dc.RestrictionLigationMix(parts, enzyme)
+    mix = dc.Type2sRestrictionMix(parts, enzyme)
     filters = [dc.NoRestrictionSiteFilter(enzyme)]
     assemblies = mix.compute_circular_assemblies(seqrecord_filters=filters)
     assemblies = list(assemblies)
@@ -112,7 +112,7 @@ def test_autoselect_connectors():
         for f in data_root.connectors._all_files
         if f._extension == "gb"
     ]
-    mix = dc.RestrictionLigationMix(parts, enzyme="BsmBI")
+    mix = dc.Type2sRestrictionMix(parts, enzyme="BsmBI")
     selected_connectors = mix.autoselect_connectors(connectors)
     assert sorted([c.id for c in selected_connectors]) == sorted(
         [
@@ -202,7 +202,7 @@ def test_random_constructs_generator():
         "connector_A2C",
     ]
     parts = [records_dict[name] for name in part_names]
-    mix = dc.RestrictionLigationMix(parts, enzyme)
+    mix = dc.Type2sRestrictionMix(parts, enzyme)
     circular_assemblies = mix.compute_circular_assemblies(randomize=True)
     assembly_list = list(zip([1, 2, 3], circular_assemblies))
     assert len(assembly_list) == 3

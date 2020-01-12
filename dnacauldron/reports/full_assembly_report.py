@@ -8,16 +8,16 @@ import pandas
 
 
 from ..AssemblyMix import (
-    RestrictionLigationMix,
+    Type2sRestrictionMix,
     NoRestrictionSiteFilter,
     FragmentSetContainsPartsFilter,
-    AssemblyError,
+    AssemblyMixError,
 )
 from .plots import (
     plot_cuts,
     AssemblyTranslator,
 )
-from ..tools import write_record, record_is_linear
+from ..biotools import write_record, record_is_linear
 
 
 def name_fragment(fragment, mark_reverse=False):
@@ -43,7 +43,7 @@ def full_assembly_report(
     fragments_filters="auto",
     assemblies_prefix="assembly",
     show_overhangs_in_graph=True,
-    show_overhangs_in_genbank=True,
+    annotate_parts_homologies=True,
     mix_class="restriction",
 ):
     """Write a full assembly report in a folder or a zip.
@@ -111,7 +111,7 @@ def full_assembly_report(
     assemblies_prefix = assemblies_prefix.replace(" ", "_")[:18]
 
     if mix_class == "restriction":
-        mix_class = RestrictionLigationMix
+        mix_class = Type2sRestrictionMix
     part_names = [p.name for p in parts]
     non_unique = [e for (e, count) in Counter(part_names).items() if count > 1]
     non_unique = list(set(non_unique))
@@ -132,7 +132,7 @@ def full_assembly_report(
     if len(connector_records):
         try:
             mix.autoselect_connectors(connector_records)
-        except AssemblyError as err:
+        except AssemblyMixError as err:
             ax = mix.plot_slots_graph(
                 with_overhangs=show_overhangs_in_graph,
                 show_missing=True,
@@ -153,7 +153,7 @@ def full_assembly_report(
     # ASSEMBLIES
     filters = (FragmentSetContainsPartsFilter(part_names),)
     assemblies = mix.compute_circular_assemblies(
-        annotate_homologies=show_overhangs_in_genbank,
+        annotate_parts_homologies=annotate_parts_homologies,
         fragments_sets_filters=filters if no_skipped_parts else (),
     )
     assemblies = sorted(

@@ -4,13 +4,13 @@
 from Bio.Alphabet import DNAAlphabet
 
 
-from ..tools import annotate_record, set_record_topology
+from ..biotools import annotate_record, set_record_topology
 from ..StickyEndsSeq import StickyEndsSeqRecord, StickyEndsSeq, StickyEnd
 from .Filter import NoRestrictionSiteFilter, TextSearchFilter
-from .RestrictionLigationMix import RestrictionLigationMix
+from .Type2sRestrictionMix import Type2sRestrictionMix
 
 
-class BASICLigationMix(RestrictionLigationMix):
+class BASICLigationMix(Type2sRestrictionMix):
 
     @staticmethod
     def find_adapter(record):
@@ -49,7 +49,7 @@ class BASICLigationMix(RestrictionLigationMix):
             return [record]
         else:
             # No feature shows that this is an adapter: use simple restriction
-            return RestrictionLigationMix.compute_digest(self, construct)
+            return Type2sRestrictionMix.compute_digest(self, construct)
 
     @staticmethod
     def assemble_constructs_and_linkers(records_list, enzyme="BsaI"):

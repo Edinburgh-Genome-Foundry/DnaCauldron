@@ -6,55 +6,35 @@ from copy import copy
 from Bio import Restriction
 
 
-from ..tools import annotate_record
+from ..biotools import annotate_record, autoselect_enzyme
 from ..StickyEndsSeq import StickyEndsSeqRecord
 from .AssemblyMixBase import AssemblyMixBase
-from .Filter import NoRestrictionSiteFilter
-
 
 class RestrictionLigationMix(AssemblyMixBase):
-    """Assembly mix for an enzymatic Restriction Ligation assembly.
-
-    This includes modern assembly techniques such as Golden Gate as well as
-    classical enzyme-based assembly.
-
-    Parameters
-    ----------
-
-    constructs
-      List of Biopython Seqrecords. Each seqrecord should have an attribute
-      `linear` set to true or false (for circular constructs). It is advised to
-      use method `load_record(filename, linear=True)` from `dnacauldron.tools`
-      to load the constructs.
-
-    enzyme
-      Name of the ligation enzyme to use, e.g. 'BsmBI'
-    """
 
     def __init__(
         self,
         constructs=None,
-        enzyme=None,
+        enzymes=None,
         fragments=None,
-        fragments_filters="default",
+        fragments_filters=(),
+        name=None
     ):
         # shallow copy seems sufficient and problem-free.
         # deepcopy would be safer but it is a computational bottleneck.
         self.constructs = copy(constructs) if constructs else constructs
         self.fragments = copy(fragments) if fragments else fragments
-        self.enzyme = None if enzyme is None else Restriction.__dict__[enzyme]
-        if fragments_filters == "default":
-            if enzyme is not None:
-                fragments_filters = [NoRestrictionSiteFilter(str(self.enzyme))]
-            else:
-                fragments_filters = ()
+        if enzymes is not None:
+            enzymes = [Restriction.__dict__[e] for e in enzymes]
+        self.enzymes = enzymes
         self.fragments_filters = fragments_filters
+        self.name = name
         self.initialize()
-
+    
     def compute_digest(self, construct):
         """Compute the fragments resulting from the digestion"""
         return StickyEndsSeqRecord.list_from_record_digestion(
-            construct, self.enzyme
+            construct, self.enzymes
         )
 
     def compute_fragments(self):
@@ -67,6 +47,7 @@ class RestrictionLigationMix(AssemblyMixBase):
         self.fragments = []
         for construct in self.constructs:
             for fragment in self.compute_digest(construct):
+                # print (fragment)
                 if not isinstance(fragment, StickyEndsSeqRecord):
                     continue
                 fragment.original_construct = construct

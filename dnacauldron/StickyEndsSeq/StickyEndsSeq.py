@@ -1,7 +1,7 @@
 from Bio.Seq import Seq
 from .StickyEnd import StickyEnd
 
-from ..tools import set_record_topology
+from ..biotools import set_record_topology
 
 
 class StickyEndsSeq(Seq):
@@ -41,7 +41,7 @@ class StickyEndsSeq(Seq):
                 " can be circularized"
             )
         result = Seq(str(self.left_end)) + self
-        set_record_topology(result, 'circular')
+        set_record_topology(result, "circular")
         return result
 
     def __repr__(self):
@@ -77,18 +77,37 @@ class StickyEndsSeq(Seq):
 
     @staticmethod
     def list_from_sequence_digestion(sequence, enzyme, linear=True):
+        # print (enzyme)
+        if isinstance(enzyme, (list, tuple)):
+            if len(enzyme) == 1:
+                enzyme = enzyme[0]
+            else:
+                enzyme, other_enzymes = enzyme[0], enzyme[1:]
+                sticky_fragments = StickyEndsSeq.list_from_sequence_digestion(
+                    sequence=sequence, enzyme=other_enzymes, linear=linear
+                )
+                if not (sticky_fragments[0] is sequence):
+                    linear = True
+                return [
+                    fragment
+                    for sticky in sticky_fragments
+                    for fragment in StickyEndsSeq.list_from_sequence_digestion(
+                        sequence=sticky, enzyme=enzyme, linear=linear
+                    )
+                ]
         n_cuts = len(enzyme.search(sequence, linear=linear))
         if n_cuts == 0:
-            return sequence
+            return [sequence]
         overhang = abs(enzyme.ovhg)
         right_end_sign = +1 if enzyme.is_3overhang() else -1
-        fragments = enzyme.catalyse(sequence, linear=linear)
+        # fragments = enzyme.catalyse(sequence, linear=linear)
+
         if linear:
             fragments = enzyme.catalyse(sequence, linear=True)
         else:
-            fragments = enzyme.catalyse(sequence + sequence, linear=True)[
-                1 : n_cuts + 1
-            ]
+            fragments = enzyme.catalyse(sequence + sequence, linear=True)
+            fragments = fragments[1 : n_cuts + 1]
+
         if right_end_sign == -1:
             if not linear:
                 overhang_bit = fragments[0][:overhang]
@@ -141,4 +160,14 @@ class StickyEndsSeq(Seq):
                 sticky_fragments.append(
                     StickyEndsSeq(fragments[-1], left_end=left_end)
                 )
+        if (
+            hasattr(sequence, "left_end")
+            and sticky_fragments[0].left_end is None
+        ):
+            sticky_fragments[0].left_end = sequence.left_end
+        if (
+            hasattr(sequence, "right_end")
+            and sticky_fragments[-1].right_end is None
+        ):
+            sticky_fragments[-1].right_end = sequence.right_end
         return sticky_fragments

@@ -13,12 +13,12 @@ DNA Cauldron Reference manual
         StickyEndSeq["StickyEndSeq<br/>(DNA fragment with sticky ends)"]
         StickyEndRecord["StickyEndRecord<br/>(BioPython record with StickyEndSeq sequence)"]
         AssemblyMix
-        RestrictionLigationMix
+        Type2sRestrictionMix
         StickyEnd-->|can be found at the end of...| StickyEndSeq;
         StickyEndSeq-->StickyEndRecord;
         StickyEndRecord -->|several can be grouped into...| FragmentsChain
-        AssemblyMix  --> |is base class of...| RestrictionLigationMix
-        RestrictionLigationMix -->|computes digestions resulting in...| StickyEndRecord
+        AssemblyMix  --> |is base class of...| Type2sRestrictionMix
+        Type2sRestrictionMix -->|computes digestions resulting in...| StickyEndRecord
         FragmentsChain --> |fragments are assembled together into a...| Biopython-SeqRecord
         style Biopython-SeqRecord fill:#fff;
 

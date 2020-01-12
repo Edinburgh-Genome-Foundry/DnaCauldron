@@ -6,20 +6,21 @@ from Bio import Restriction
 
 
 from ..AssemblyMix import (
-    RestrictionLigationMix,
-    AssemblyError,
+    Type2sRestrictionMix,
+    AssemblyMixError,
     FragmentSetContainsPartsFilter,
 )
 from ..StickyEndsSeq import StickyEnd
-from ..tools import (
+from ..biotools import (
     sequence_to_biopython_record,
     reverse_complement,
     annotate_record,
     load_record,
     write_record,
     autoselect_enzyme,
-    record_is_linear
+    record_is_linear,
 )
+
 
 def single_assembly(
     parts,
@@ -50,7 +51,7 @@ def single_assembly(
     """
 
     if mix_class == "restriction":
-        mix_class = RestrictionLigationMix
+        mix_class = Type2sRestrictionMix
 
     part_records = []
     for part in parts:
@@ -64,13 +65,15 @@ def single_assembly(
     mix = mix_class(part_records, enzyme)
     part_names = [p.id for p in part_records]
     assemblies = mix.compute_circular_assemblies(
-        annotate_homologies=annotate_homologies,
+        annotate_parts_homologies=annotate_homologies,
         fragments_sets_filters=(FragmentSetContainsPartsFilter(part_names),),
     )
     first_assemblies = list(zip(assemblies, [1, 2]))
     N = len(first_assemblies)
     if N != 1:
-        raise AssemblyError("Found %d assemblies instead of 1 expected" % N)
+        raise AssemblyMixError(
+            "Found %d assemblies instead of 1 expected" % N, mix=mix
+        )
 
     assembly = first_assemblies[0][0]
     if outfile is not None:
@@ -83,7 +86,7 @@ def complement_parts(parts, candidates_parts, enzyme="autoselect"):
     complement_parts = list(candidates_parts)
     if enzyme == "autoselect":
         enzyme = autoselect_enzyme(parts + complement_parts)
-    mix = RestrictionLigationMix(parts, enzyme=enzyme)
+    mix = Type2sRestrictionMix(parts, enzyme=enzyme)
     return mix.autoselect_connectors(complement_parts)
 
 
@@ -156,7 +159,7 @@ def substitute_overhangs(
     """
     if enzyme == "auto":
         enzyme = autoselect_enzyme([record])
-    mix = RestrictionLigationMix([record], enzyme=enzyme)
+    mix = Type2sRestrictionMix([record], enzyme=enzyme)
     fragments = [f for f in mix.fragments if not f.is_reverse]
     for fragment in fragments:
         left = fragment.seq.left_end
@@ -167,7 +170,7 @@ def substitute_overhangs(
         if str(right).upper() in substitutions:
             end = StickyEnd(substitutions[str(right).upper()], right.strand)
             fragment.seq.right_end = end
-    new_mix = RestrictionLigationMix(
+    new_mix = Type2sRestrictionMix(
         fragments=fragments, enzyme=enzyme, fragments_filters=()
     )
     if return_linear_parts:
@@ -208,5 +211,5 @@ def list_overhangs(records, enzyme="auto", parts_only=True):
     """
     if enzyme == "auto":
         enzyme = autoselect_enzyme(records)
-    mix = RestrictionLigationMix(records, enzyme=enzyme)
+    mix = Type2sRestrictionMix(records, enzyme=enzyme)
     return mix.list_overhangs(filtered_fragments_only=parts_only)

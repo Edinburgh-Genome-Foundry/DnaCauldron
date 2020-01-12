@@ -4,7 +4,7 @@ from copy import deepcopy
 from flametree import file_tree
 from proglog import default_bar_logger
 
-from ..tools import autoselect_enzyme
+from ..biotools import autoselect_enzyme
 from .full_assembly_report import full_assembly_report
 
 
@@ -130,7 +130,7 @@ def full_assembly_plan_report(
             )
         )
     f = root._file("assembly_plan.csv")
-    f.write("construct, parts")
+    f.write("construct,parts")
     all_parts = []
     for f_ in root._all_files:
         if f_._name_no_extension == "report":

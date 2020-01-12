@@ -1,12 +1,12 @@
 import flametree  # for getting/writing files and folders
-from dnacauldron import RestrictionLigationMix, load_record, write_record
+from dnacauldron import Type2sRestrictionMix, load_record, write_record
 
 root = flametree.file_tree(".")
 parts = [
     load_record(f._path, topology="circular")
     for f in root.data.assemblies._all_files
 ]
-mix = RestrictionLigationMix(parts, enzyme="BsmBI")
+mix = Type2sRestrictionMix(parts, enzyme="BsmBI")
 assemblies_records = mix.compute_circular_assemblies()
 output_folder = root._dir("output_data")._dir("combinatorial_assemblies")
 for i, record in enumerate(assemblies_records):

@@ -1,16 +1,12 @@
 """
 """
 
-from dnacauldron.tools import set_record_topology
+from ...biotools import set_record_topology
 from .AssemblyMixConnectorsMixin import AssemblyMixConnectorsMixin
 from .AssemblyMixConstructsMixin import AssemblyMixConstructsMixin
 from .AssemblyMixFragmentsMixin import AssemblyMixFragmentsMixin
 from .AssemblyMixGraphsMixin import AssemblyMixGraphsMixin
 from .AssemblyMixPlotsMixin import AssemblyMixPlotsMixin
-
-class AssemblyError(Exception):
-    pass
-
 
 class AssemblyMixBase(
     AssemblyMixConnectorsMixin,
@@ -21,7 +17,7 @@ class AssemblyMixBase(
 ):
     """Base class for assembly mixes.
 
-    The subclasses (RestrictionLigationMix and GibsonAssemblyMix) implement
+    The subclasses (Type2sRestrictionMix and GibsonAssemblyMix) implement
     their own version of how the original constructs are broken into
     fragments, when two fragments will clip together, etc.
     """

@@ -9,7 +9,7 @@ from dna_features_viewer import (
     CircularGraphicRecord,
     GraphicRecord,
 )
-from dnacauldron.tools import annotate_record
+from ..biotools import annotate_record
 
 try:
     import pygraphviz
@@ -19,7 +19,7 @@ try:
 except ImportError:
     GRAPHVIZ_AVAILABLE = False
 
-from ..tools import record_is_linear
+from ..biotools import record_is_linear
 
 
 class AssemblyTranslator(BiopythonTranslator):
@@ -42,14 +42,15 @@ class AssemblyTranslator(BiopythonTranslator):
             return "".join(feature.qualifiers["source"])
         elif abs(feature.location.end - feature.location.start) > 100:
             label = BiopythonTranslator.compute_feature_label(self, feature)
-            return abreviate_string("".join(label), 30)
+            return self.abreviate_string("".join(label), 30)
         else:
             return None
 
-
-def abreviate_string(string, max_length=30):
-    """Truncate and add '...' if the string is too long"""
-    return string[:max_length] + ("" if len(string) < max_length else "...")
+    @staticmethod
+    def abreviate_string(string, max_length=30):
+        """Truncate and add '...' if the string is too long"""
+        suffix = "" if len(string) < max_length else "..."
+        return string[:max_length] + suffix
 
 
 def plot_cuts(record, enzyme_name, linear="auto", figure_width=5, ax=None):

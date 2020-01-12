@@ -73,7 +73,7 @@ class AssemblyMixConnectorsMixin:
             if len(cycle) == len(parts_graph):
                 break
         else:
-            err = AssemblyError("No construct found involving all parts")
+            err = AssemblyMixError(message="No construct found involving all parts", mix=mix)
             err.graph = graph
             err.mix = self
             raise err

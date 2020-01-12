@@ -74,7 +74,7 @@ as these are unstable.
 
 .. code:: python
 
-    from dnacauldron import (RestrictionLigationMix, NoRestrictionSiteFilter,
+    from dnacauldron import (Type2sRestrictionMix, NoRestrictionSiteFilter,
                              load_record, write_record)
 
     # Load all the parts (including the receptor)
@@ -84,7 +84,7 @@ as these are unstable.
              for filename in parts_files]
 
     # Create the "reaction mix"
-    mix = RestrictionLigationMix(parts, enzyme='BsmBI')
+    mix = Type2sRestrictionMix(parts, enzyme='BsmBI')
 
     # Find all final assemblies (containing no sites from the restriction enzyme)
     assemblies = mix.compute_circular_assemblies()

@@ -1,6 +1,6 @@
 import itertools as itt
 import networkx as nx
-from dnacauldron.tools import reverse_complement
+from ...biotools import reverse_complement
 
 
 class AssemblyMixGraphsMixin:

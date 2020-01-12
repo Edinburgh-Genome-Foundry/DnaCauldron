@@ -4,7 +4,6 @@ import numpy as np
 
 
 class AssemblyMixPlotsMixin:
-
     def plot_slots_graph(
         self,
         ax=None,
@@ -125,7 +124,9 @@ class AssemblyMixPlotsMixin:
             ]
         )
         if show_missing:
-            all_mix_parts = set([f.id for f in self.constructs])
+            all_mix_parts = set(
+                [f.original_construct.id for f in self.fragments]
+            )
             all_slots_parts = set(
                 [p for plist in slots.values() for p in plist]
             )
@@ -142,11 +143,14 @@ class AssemblyMixPlotsMixin:
             fontdict=dict(size=12, family="Inconsolata"),
         )
         ax.set_aspect("equal")
+        if self.name is not None:
+            ax.set_title(self.name, loc="left")
         return ax
 
     def plot_connections_graph(self, ax=None, figsize=(20, 20)):
 
         graph = self.uniquified_connection_graph
+
         def fragment_label(i):
             fragment = self.fragments_dict[i]
             return "\n".join(
@@ -170,4 +174,6 @@ class AssemblyMixPlotsMixin:
                 node_color="w",
                 node_size=3000,
             )
+        if self.name is not None:
+            ax.set_title(self.name, loc="left")
         return ax

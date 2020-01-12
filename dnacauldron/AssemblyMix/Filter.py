@@ -8,7 +8,7 @@ restriction sites of the digestion enzyme (these are unstable)
 from Bio import Restriction
 from Bio.Seq import Seq
 
-from ..tools import record_is_linear
+from ..biotools import record_is_linear
 
 
 class NoRestrictionSiteFilter:

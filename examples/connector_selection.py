@@ -1,5 +1,5 @@
 import flametree
-from dnacauldron import RestrictionLigationMix, load_record
+from dnacauldron import Type2sRestrictionMix, load_record
 
 data_root = flametree.file_tree(".").data.select_connectors
 
@@ -13,6 +13,6 @@ connectors = [
     for f in data_root.connectors._all_files
     if f._extension == "gb"
 ]
-mix = RestrictionLigationMix(parts, enzyme='BsmBI')
+mix = Type2sRestrictionMix(parts, enzyme='BsmBI')
 selected_connectors = mix.autoselect_connectors(connectors)
 print ("Selected connectors: ", ", ".join([c.id for c in selected_connectors]))
