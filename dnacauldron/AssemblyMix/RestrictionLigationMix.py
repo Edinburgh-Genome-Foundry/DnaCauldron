@@ -7,18 +7,19 @@ from Bio import Restriction
 
 
 from ..biotools import annotate_record, autoselect_enzyme
-from ..StickyEndsSeq import StickyEndsSeqRecord
-from .AssemblyMixBase import AssemblyMixBase
+from ..Fragment.StickyEndFragment import StickyEndFragment
+from .StickyEndAssemblyMix import StickyEndAssemblyMix
 
-class RestrictionLigationMix(AssemblyMixBase):
 
+class RestrictionLigationMix(StickyEndAssemblyMix):
     def __init__(
         self,
         parts=None,
         enzymes=None,
         fragments=None,
         fragments_filters=(),
-        name=None
+        name="restriction_mix",
+        annotate_fragments_with_parts=True,
     ):
         # shallow copy seems sufficient and problem-free.
         # deepcopy would be safer but it is a computational bottleneck.
@@ -29,13 +30,12 @@ class RestrictionLigationMix(AssemblyMixBase):
         self.enzymes = enzymes
         self.fragments_filters = fragments_filters
         self.name = name
+        self.annotate_fragments_with_parts = annotate_fragments_with_parts
         self.initialize()
-    
+
     def compute_digest(self, part):
         """Compute the fragments resulting from the digestion"""
-        return StickyEndsSeqRecord.list_from_record_digestion(
-            part, self.enzymes
-        )
+        return StickyEndFragment.list_from_record_digestion(part, self.enzymes)
 
     def compute_fragments(self):
         """Compute the (sticky-ended) fragments resulting from the digestion of
@@ -48,15 +48,10 @@ class RestrictionLigationMix(AssemblyMixBase):
         for part in self.parts:
             for fragment in self.compute_digest(part):
                 # print (fragment)
-                if not isinstance(fragment, StickyEndsSeqRecord):
+                if not isinstance(fragment, StickyEndFragment):
                     continue
                 fragment.original_part = part
-                annotate_record(
-                    fragment,
-                    feature_type="misc_feature",
-                    source=part.id,
-                    note="From " + part.id,
-                )
+                self.annotate_fragment_with_part(fragment)
                 self.fragments.append(fragment)
 
     @staticmethod
@@ -67,7 +62,7 @@ class RestrictionLigationMix(AssemblyMixBase):
         ----------
 
         fragments
-          List of StickyEndsSeqRecord fragments
+          List of StickyEndFragment fragments
 
         circularize
           If True and if the two ends of the final assembly are compatible,
@@ -78,7 +73,7 @@ class RestrictionLigationMix(AssemblyMixBase):
           If True, all homology regions that where formerly sticky ends will
           be annotated in the final record.
         """
-        return StickyEndsSeqRecord.assemble(
+        return StickyEndFragment.assemble(
             fragments,
             circularize=circularize,
             annotate_homologies=annotate_homologies,

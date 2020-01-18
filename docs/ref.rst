@@ -16,10 +16,10 @@ DNA Cauldron Reference manual
         Type2sRestrictionMix
         StickyEnd-->|can be found at the end of...| StickyEndSeq;
         StickyEndSeq-->StickyEndRecord;
-        StickyEndRecord -->|several can be grouped into...| FragmentsChain
+        StickyEndRecord -->|several can be grouped into...| FragmentChain
         AssemblyMix  --> |is base class of...| Type2sRestrictionMix
         Type2sRestrictionMix -->|computes digestions resulting in...| StickyEndRecord
-        FragmentsChain --> |fragments are assembled together into a...| Biopython-SeqRecord
+        FragmentChain --> |fragments are assembled together into a...| Biopython-SeqRecord
         style Biopython-SeqRecord fill:#fff;
 
 
@@ -60,14 +60,14 @@ Filters
 .. automodule:: dnacauldron.AssemblyMix.Filter
    :members:
 
-StickyEndsSeq
+StickyEndSeq
 ~~~~~~~~~~~~~
 
-.. autoclass:: dnacauldron.StickyEndsSeq.StickyEnd
+.. autoclass:: dnacauldron.StickyEndSeq.StickyEnd
    :members:
-.. autoclass:: dnacauldron.StickyEndsSeq.StickyEndsSeq
+.. autoclass:: dnacauldron.StickyEndSeq.StickyEndSeq
    :members:
-.. autoclass:: dnacauldron.StickyEndsSeq.StickyEndsSeqRecord
+.. autoclass:: dnacauldron.StickyEndSeq.StickyEndFragment
    :members:
 
 BackBoneChoice

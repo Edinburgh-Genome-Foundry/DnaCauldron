@@ -8,7 +8,7 @@ import pandas
 
 
 from ..AssemblyMix import (
-    Type2sRestrictionMix,
+    # Type2sRestrictionMix,
     NoRestrictionSiteFilter,
     FragmentSetContainsPartsFilter,
     AssemblyMixError,
@@ -24,7 +24,7 @@ def name_fragment(fragment, mark_reverse=False):
     """Return the name of the fragment, or optionally `NAME_r` if the fragment
     is the reverse of another fragment."""
     return fragment.original_part.id + (
-        "_r" if (fragment.is_reverse and mark_reverse) else ""
+        "_r" if (fragment.is_reversed and mark_reverse) else ""
     )
 
 

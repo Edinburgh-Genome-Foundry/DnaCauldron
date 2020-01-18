@@ -13,12 +13,110 @@
   :target: https://coveralls.io/github/Edinburgh-Genome-Foundry/DnaCauldron?branch=master
 
 
-DNA Cauldron (complete documentation `here <https://edinburgh-genome-foundry.github.io/DnaCauldron/>`_)
-is a Python library to simulate restriction-based assembly operations.
-Provided the sequences of genetic parts and receptor vectors, DNA Cauldron will compute the assembli(es) that could result from the mix.
+DNA Cauldron
+============
 
-DNA Cauldron was written for Synthetic Biology applications - typically, to predict and validate batches of parts-based assemblies. It is simple to use, plays well with BioPython, can import and export Genbank (it conserves all features), and provides advanced methods such as connector part auto-selection, backbone selection for linear parts, methods to select constructs subsets when dealing with large combinatorial assemblies.
+Don't you hate it when you are planning a large batch of DNA assembly with many parts and possibly several assembly levels but you're not sure whether everything will assemble correctly and what the final sequence will be and then some assemblies fail because some part was probably missing or badly designed and you spend hours checking your designs again? If so, DNA Cauldron might be for you!
 
+The library implements a generic and highly automated cloning simulation engine
+to predict the restriction and ligation of DNA fragments into constructs. It supports  combinatorial assemblies, enzymes autoselection, connector parts autoselection, and design flaw detections (missing parts, presence of problematic
+restriction sites in the parts, wrong overhang designs, etc.)
+
+DNA Cauldron also focuses on generating clear, complete reports for traceability and troubleshooting, for your assembly or assembly plans.
+
+Usage
+-----
+
+Providing part sequences
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+To simulate an assembly, you need first to provide parts sequences. In DNA Cauldron, these
+are managed via a ``SequenceRepository``:
+
+.. code:: python
+
+    import dnacauldron as dc
+    
+    # Create a repository from BioPython records
+    repository = dc.SequenceRepository(parts={"part_A": record_1, "part_B":...})
+    
+    # Or use "import_sequences" to import files from folders, zip files, etc.
+    repository = dc.SequenceRepository()
+    repository.import_sequences(folder="my_sequences/", use_file_names_as_ids=True)
+
+One important thing is to make sure the parts topology (as set in Biopython records at ``record.annotations['topology']``) is accurate. This can be done at import time by setting ``topology='linear'``, ``topology='circular'``, or ``topology='auto'`` to use the topology specified by each Genbank file.  
+
+Parts assembly
+~~~~~~~~~~~~~~
+
+You define and simulate an assembly by explaining which parts of the repository should
+be assembled together:
+
+.. code:: python
+
+    assembly = dc.Type2sRestrictionAssembly(parts=["part_A", "part_B", "receptor"])
+    simulation = assembly.simulate(sequence_repository=repository)
+
+Note that we could have provided ``enzyme='BsmBI'`` in ``Type2sRestrictionAssembly``
+but the enzyme will be auto-selected by the framework.
+
+If you want to simulate other restriction-based assembly reactions such as IGEM Biobricks
+or BASIC assembly instead of Type2s restriction, use the corresponding built-in Assembly subclass:
+
+.. code:: python
+
+    assembly = dc.BioBrickStandardAssembly(parts=['part_A', 'part_B'])
+    assembly = dc.BASICAssembly(parts=['part_A', 'part_B'])
+    
+
+Now you can 
+
+.. code:: python
+
+    # Print the ID and length of the generated construct(s)
+    for record in simulation.construct_records:
+        print (record.id, len(record))
+    
+    # Get a list of dictionnaries with data on each construct
+    constructs_data = simulation.get_all_constructs_data()
+    
+    # Write a full report with sequences and figures
+    simulation.write_report("report/")
+
+DNA Cauldron shines in the informative reports it produces to help you pinpoint problems
+These reports can be configured and customized to show more or less information.
+[Report screenshot]
+
+Assembly Plans
+~~~~~~~~~~~~~~
+
+An assembly plan is simply defined by a list of assemblies:
+
+.. code:: python
+   # Define an assembly plan as a list of Assembly objects
+   assembly_plan = dc.AssemblyPlan(assemblies=[...])
+   
+   # Or import an assembly plan from spreadsheets:
+   assembly_plan = dc.AssemblyPlan.from_spreadsheet(
+       spreadsheet="batch_1.csv", # could also be an xls(x) file
+       assembly_class=dc.Type2sRestrictionAssembly
+   )
+See this example for a spreadsheet defining assemblies (or this example for a spreadsheet with more parameters).
+   
+A nice thing is that assembly plans can be hierarchical (i.e. have an assembly's construct serve as a part
+of another assembly). DNA Cauldron will automatically figure out the dependencies
+between assemblies and sort the order in which they should be simulated.
+
+The simulation and reporting on an assembly plan is very similar to that of a single assembly:
+
+.. code:: python
+
+   plan_simulation = assembly_plan.simulate(sequence_repository=sequence_respository)
+   
+   # Get a list of dictionnaries with data on each construct
+   plan_simulation.get_all_constructs_data()
+   
+   plan_simulation.write_report("my_assembly_simulation.zip")
 **Try it online !** Use `this web service <http://cuba.genomefoundry.org/simulate_gg_assemblies>`_ to predict the outcome of a batch of (possibly combinatorial) Type 2S assemblies.
 
 Installation

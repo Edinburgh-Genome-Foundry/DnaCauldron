@@ -1,5 +1,6 @@
 from .AssemblyPlan import AssemblyPlan
-from .AssemblyPlanReportGenerator import AssemblyPlanReportGenerator
+from .AssemblyPlanSimulation import AssemblyPlanSimulation
+
 
 __all__ = [
     "AssemblyPlan",

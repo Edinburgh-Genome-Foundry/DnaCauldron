@@ -1,8 +1,8 @@
-"""Useful functions built on top of the DnaCauldron classes to simplify the
+"""Useful functions built on top of the DnaCauldron classes to simplify the`````
 most common operations."""
 
 import pandas
-from ..AssemblyMix import Type2sRestrictionMix, AssemblyMixError
+from ..AssemblyMix import AssemblyMixError
 from ..biotools import reverse_complement, write_record, autoselect_enzyme
 import flametree
 
@@ -108,7 +108,7 @@ class BackboneChoice:
 def _get_insert_from_record(record, enzyme="BsmBI"):
     """Return the record of the one digested fragment without enzyme site."""
     mix = Type2sRestrictionMix([record], enzyme=enzyme)
-    inserts = [frag for frag in mix.filtered_fragments if not frag.is_reverse]
+    inserts = [frag for frag in mix.filtered_fragments if not frag.is_reversed]
     if len(inserts) != 1:
         raise ValueError("")
     return inserts[0]
@@ -175,7 +175,7 @@ def record_contains_backbone(record, enzyme="BsmBI", min_backbone_length=500):
     """
     mix = Type2sRestrictionMix([record], enzyme="BsmBI")
     fragments = [
-        frag for frag in mix.filtered_fragments if not frag.is_reverse
+        frag for frag in mix.filtered_fragments if not frag.is_reversed
     ]
     if fragments == []:
         raise AssemblyMixError(

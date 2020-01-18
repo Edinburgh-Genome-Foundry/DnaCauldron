@@ -6,7 +6,7 @@ matplotlib.use("Agg")
 import dnacauldron as dc
 import flametree
 
-
+RECORDS_FOLDER = os.path.join("tests", "data", "assemblies")
 records_dict = {
     name: dc.load_record(
         os.path.join("tests", "data", "assemblies", name + ".gb"),
@@ -40,26 +40,8 @@ def test_filters():
     assert not filter2(record)
 
 
-def test_single_assembly(tmpdir):
-    parts_files = [
-        records_dict[part] for part in ["partA", "partB", "partC", "receptor"]
-    ]
-    dc.single_assembly(
-        parts=parts_files,
-        enzyme="BsmBI",
-        outfile=os.path.join(str(tmpdir), "final_sequence.gb"),
-    )
 
 
-def test_single_assembly_with_skipped_part(tmpdir):
-    parts_files = [
-        records_dict[part]
-        for part in ["partA", "connector_A2C", "partC", "receptor"]
-    ]
-    outfile = os.path.join(str(tmpdir), "final_sequence.gb")
-    with pytest.raises(dc.AssemblyMixError) as exc:
-        dc.single_assembly(parts=parts_files, enzyme="BsmBI", outfile=outfile)
-    assert "0 assemblies" in str(exc.value)
 
 
 def test_autoselect_enzyme():
@@ -68,36 +50,10 @@ def test_autoselect_enzyme():
     assert selected == "BsmBI"
 
 
-def test_single_assembly_with_wrong_enzyme(tmpdir):
-    parts_files = [records_dict[part] for part in ["partA", "partB", "partC"]]
-    with pytest.raises(dc.AssemblyMixError) as exc:
-        dc.single_assembly(
-            parts=parts_files,
-            enzyme="BsaI",
-            outfile=os.path.join(str(tmpdir), "final_sequence.gb"),
-        )
-    assert "0 assemblies" in str(exc.value)
 
 
-def test_combinatorial_assembly(tmpdir):
-
-    enzyme = "BsmBI"
-    part_names = ["partA", "partB", "partC", "partA2", "partB2", "receptor"]
-    parts = [records_dict[name] for name in part_names]
-    mix = dc.Type2sRestrictionMix(parts, enzyme)
-    filters = [dc.NoRestrictionSiteFilter(enzyme)]
-    assemblies = mix.compute_circular_assemblies(seqrecord_filters=filters)
-    assemblies = list(assemblies)
-    assert len(assemblies) == 4
-    for i, assembly in enumerate(assemblies):
-        filepath = os.path.join(str(tmpdir), "%03d.gb" % i)
-        dc.write_record(assembly, filepath, "genbank")
 
 
-def test_swap_donor_vector_part():
-    for part_names in [("partA", "partA2"), ("partB", "partB2")]:
-        donor, insert = [records_dict[name] for name in part_names]
-        _ = dc.swap_donor_vector_part(donor, insert, enzyme="BsmBI")
 
 
 def test_autoselect_connectors():
@@ -206,39 +162,4 @@ def test_random_constructs_generator():
     circular_assemblies = mix.compute_circular_assemblies(randomize=True)
     assembly_list = list(zip([1, 2, 3], circular_assemblies))
     assert len(assembly_list) == 3
-
-
-def test_insert_parts_on_backbones(tmpdir):
-    backbone_names = ["partA2", "partB2", "partC", "receptor"]
-    backbone_records = [records_dict[name] for name in backbone_names]
-    part_records = [records_dict[name] for name in ["partA", "partB"]]
-
-    choices = resultA, resultB = dc.insert_parts_on_backbones(
-        part_records, backbone_records, process_parts_with_backbone=True
-    )
-    assert resultA.already_on_backbone
-    assert resultB.already_on_backbone
-    assert resultA.backbone_record.id == "partA2"
-    assert resultB.backbone_record.id == "partB2"
-    dataframe = dc.BackboneChoice.list_to_infos_spreadsheet(choices)
-    dataframe.to_excel(os.path.join(str(tmpdir), "summary.xls"), index=False)
-    dc.BackboneChoice.write_final_records(choices, str(tmpdir))
-
-
-def test_list_overhangs():
-    record = records_dict["partA"]
-    assert dc.utils.list_overhangs([record]) == ["ATTG", "GGCT"]
-
-
-def test_substitute_overhangs():
-    record = records_dict["partA"]
-    assert dc.utils.list_overhangs([record]) == ["ATTG", "GGCT"]
-    new_record = dc.utils.substitute_overhangs(record, {"ATTG": "ATAA"})
-    assert dc.utils.list_overhangs([new_record]) == ["ATAA", "GGCT"]
-    new_record = dc.utils.substitute_overhangs(record, {"ATTG": "ATAA"})
-    assert dc.utils.list_overhangs([new_record]) == ["ATAA", "GGCT"]
-    new_record = dc.utils.substitute_overhangs(
-        record, {"ATTG": "ATAA"}, return_linear_parts=True
-    )
-    assert str(new_record.seq[:12]) == "CGTCTCAATAAT"
 

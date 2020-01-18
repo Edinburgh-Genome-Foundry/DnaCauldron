@@ -138,14 +138,19 @@ def load_record(
 
 
 def load_records_from_files(
-    file_paths=None, folder=None, use_file_names_as_ids=False
+    files=None, folder=None, use_file_names_as_ids=False
 ):
     """Automatically convert files or a folder's content to biopython records.
     """
+    if files is not None:
+        for file in files:
+            if isinstance(file, str) and not os.path.exists(file):
+                raise IOError("File %s not found" % file)
+
     if folder is not None:
-        file_paths = [f._path for f in flametree.file_tree(folder)._all_files]
+        files = [f._path for f in flametree.file_tree(folder)._all_files]
     records = []
-    for filepath in file_paths:
+    for filepath in files:
         filename = os.path.basename(filepath)
         if filename.lower().endswith("zip"):
             records += load_records_from_zip_file(filepath)

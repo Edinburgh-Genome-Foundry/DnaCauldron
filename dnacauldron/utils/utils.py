@@ -6,11 +6,11 @@ from Bio import Restriction
 
 
 from ..AssemblyMix import (
-    Type2sRestrictionMix,
+    # Type2sRestrictionMix,
     AssemblyMixError,
-    FragmentSetContainsPartsFilter,
 )
-from ..StickyEndsSeq import StickyEnd
+from ..Filter import FragmentSetContainsPartsFilter
+from ..Fragment.StickyEndFragment import StickyEnd
 from ..biotools import (
     sequence_to_biopython_record,
     reverse_complement,
@@ -160,7 +160,7 @@ def substitute_overhangs(
     if enzyme == "auto":
         enzyme = autoselect_enzyme([record])
     mix = Type2sRestrictionMix([record], enzyme=enzyme)
-    fragments = [f for f in mix.fragments if not f.is_reverse]
+    fragments = [f for f in mix.fragments if not f.is_reversed]
     for fragment in fragments:
         left = fragment.seq.left_end
         if str(left).upper() in substitutions:
@@ -174,7 +174,7 @@ def substitute_overhangs(
         fragments=fragments, enzyme=enzyme, fragments_filters=()
     )
     if return_linear_parts:
-        fragment = [f for f in new_mix.filtered_fragments if not f.is_reverse][
+        fragment = [f for f in new_mix.filtered_fragments if not f.is_reversed][
             0
         ]
         site = sequence_to_biopython_record(mix.enzyme.site)

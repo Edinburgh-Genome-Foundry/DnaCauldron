@@ -4,6 +4,7 @@ from .records_operations import (
     set_record_topology,
     reverse_complement,
     annotate_record,
+    crop_record_with_saddling_features
 )
 from .records_io import (
     load_record,

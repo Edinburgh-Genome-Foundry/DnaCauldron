@@ -1,3 +1,5 @@
+
+from copy import copy
 from Bio.Alphabet import DNAAlphabet
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
@@ -87,3 +89,26 @@ def annotate_record(
             type=feature_type,
         )
     )
+
+
+def crop_record_with_saddling_features(record, start, end, filters=()):
+    cropped = record[start:end]
+
+    def is_saddling(f_start, f_end):
+        return (f_start < start <= f_end) or (f_start <= end < f_end)
+
+    saddling_features = [
+        copy(f)
+        for f in record.features
+        if all([fl(f) for fl in filters])
+        and f.location is not None
+        and is_saddling(f.location.start, f.location.end)
+    ]
+    for f in saddling_features:
+        f.location = FeatureLocation(
+            start=max(f.location.start, start),
+            end=min(f.location.end, end),
+            strand=f.location.strand,
+        )
+        cropped.features.append(f)
+    return cropped
