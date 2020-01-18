@@ -144,3 +144,30 @@ class PlotsMixin:
         if self.name is not None:
             ax.set_title(self.name, loc="left")
         return ax
+    
+    def plot_graphs(self, report_root, assembly, with_overhangs=True):
+        file_prefix = assembly.name + "_"
+
+        # SLOTS GRAPH
+
+        highlighted_parts = []
+        if hasattr(assembly, "connectors_collection"):
+            if assembly.connectors_collection is not None:
+                highlighted_parts = assembly.parts
+        ax = self.plot_slots_graph(
+            with_overhangs=with_overhangs,
+            show_missing=True,
+            highlighted_parts=highlighted_parts,
+        )
+        
+        f = report_root._file(file_prefix + "parts_graph.pdf")
+        ax.figure.savefig(f.open("wb"), format="pdf", bbox_inches="tight")
+        plt.close(ax.figure)
+
+        # CONNECTIONS GRAPH
+
+        ax = self.plot_connections_graph()
+        f = report_root._file(file_prefix + "connections_graph.pdf")
+        ax.figure.savefig(f.open("wb"), format="pdf", bbox_inches="tight")
+        plt.close(ax.figure)
+    

@@ -37,3 +37,10 @@ class HomologousAssemblyMix(AssemblyMix):
         """Return True iff f1's right sticky end fits f2's left."""
         homology = homology_checker.find_end_homologies(self, self)
         return fragment1.will_clip_in_this_order_with(fragment2)
+
+    def plot_graphs(self, report_root, assembly, with_overhangs=True):
+        file_prefix = assembly.name + "_"
+        ax = self.plot_connections_graph()
+        f = report_root._file(file_prefix + "connections_graph.pdf")
+        ax.figure.savefig(f.open("wb"), format="pdf", bbox_inches="tight")
+        plt.close(ax.figure)

@@ -52,7 +52,7 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
         self,
         include_fragments_plots="on_error",
         include_parts_plots="on_error",
-        include_fragments_connection_graph="on_error",
+        include_mix_graphs="on_error",
         include_parts_records=True,
         include_assembly_plots=False,
         show_overhangs_in_graph=True,
@@ -60,9 +60,7 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
     ):
         self.include_fragments_plots = include_fragments_plots
         self.include_parts_plots = include_parts_plots
-        self.include_fragments_connection_graph = (
-            include_fragments_connection_graph
-        )
+        self.include_mix_graphs = include_mix_graphs
         self.include_assembly_plots = include_assembly_plots
         self.show_overhangs_in_graph = show_overhangs_in_graph
         self.annotate_parts_homologies = annotate_parts_homologies
@@ -106,7 +104,7 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
         errors_detected = len(assembly_simulation.errors) != 0
         plot_options = self.get_plots_options(errors_detected)
 
-        if plot_options["fragments_plots"]:
+        if plot_options["parts_plots"]:
             repository = assembly_simulation.sequence_repository
             parts = assembly_simulation.list_all_parts_used()
             parts_records = repository.get_records(parts)
@@ -116,24 +114,18 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
                 parts_records=parts_records,
                 enzymes=enzymes,
             )
-        if plot_options["fragments_connection_graph"]:
+        if plot_options["fragments_plots"]:
             for mix in assembly_simulation.mixes:
-                self.plot_fragments(report_root=report_root, mix=mix)
-        if plot_options["parts_plots"]:
-            highlighted_parts = []
-            if assembly.connectors_collection is not None:
-                highlighted_parts = assembly.parts
+                mix.plot_fragments(report_root=report_root, mix=mix)
+        if plot_options["mix_graphs_plots"]:
             for mix in assembly_simulation.mixes:
-                self.plot_connections_graph(report_root=report_root, mix=mix)
-                self.plot_slots_graph(
-                    mix=mix,
+                mix.plot_graphs(
                     report_root=report_root,
-                    highlighted_parts=highlighted_parts,
+                    assembly=assembly,
+                    with_overhangs=self.show_overhangs_in_graph,
                 )
         if len(assembly_simulation.construct_records):
-            self._write_constructs_spreadsheet(
-                assembly_simulation, report_root
-            )
+            self._write_constructs_spreadsheet(assembly_simulation, report_root)
 
         if target == "@memory":
             return report_root._close()

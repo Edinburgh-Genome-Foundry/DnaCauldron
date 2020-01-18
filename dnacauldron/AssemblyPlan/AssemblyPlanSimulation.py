@@ -11,11 +11,16 @@ from ..Assembly.AssemblyReportWriter import AssemblyReportWriter
 
 class AssemblyPlanSimulation:
     def __init__(
-        self, assembly_plan, assembly_simulations, sequence_repository=None
+        self,
+        assembly_plan,
+        assembly_simulations,
+        sequence_repository=None,
+        cancelled=(),
     ):
         self.assembly_plan = assembly_plan
         self.assembly_simulations = assembly_simulations
         self.sequence_repository = sequence_repository
+        self.cancelled = cancelled
 
     def compute_all_construct_data_dicts(self):
         return [
@@ -44,6 +49,15 @@ class AssemblyPlanSimulation:
         data = format_data_dicts_records_for_spreadsheet(construct_data_dicts)
         return pandas.DataFrame(data, columns=columns)
 
+    def compute_simulations_stats(self):
+        errored = [s for s in self.assembly_simulations if len(s.errors)]
+        valid = [s for s in self.assembly_simulations if len(s.errors) == 0]
+        return {
+            "cancelled_assemblies": len(self.cancelled),
+            "errored_assemblies": len(errored),
+            "valid_assemblies": valid,
+        }
+
     def write_report(
         self,
         target,
@@ -52,21 +66,20 @@ class AssemblyPlanSimulation:
         logger="bar",
     ):
         if assembly_report_writer == "default":
-            assembly_report_writer = AssemblyReportWriter(
-                # We'll write all records into one folder for the whole plan
-                write_part_records=False
-            )
+            # We'll write all records into one folder for the whole plan
+            assembly_report_writer = AssemblyReportWriter(write_part_records=False)
         logger = proglog.default_bar_logger(logger)
         if folder_name == "auto":
             folder_name = self.assembly_plan.name + "_assembly_report"
         report_root = file_tree(target)._dir(folder_name, replace=True)
-        self._write_assembly_reports(
-            report_root, assembly_report_writer, logger=logger
-        )
+        self._write_assembly_reports(report_root, assembly_report_writer, logger=logger)
         self._write_errors_spreadsheet(report_root)
         self._write_all_required_parts(report_root)
-        self._write_summary_spreadsheet(report_root)
+        self._write_construct_summary_spreadsheet(report_root)
         self._write_assembly_plan_spreadsheets(report_root)
+        if len(self.cancelled):
+            self._write_cancelled_assemblies(report_root)
+        self._write_summary_stats(report_root)
         if target == "@memory":
             return report_root._close()
 
@@ -74,6 +87,20 @@ class AssemblyPlanSimulation:
         name = self.assembly_plan.name
         prefix = (name + "_") if (name and len(name)) else ""
         return prefix + filename
+
+    def _write_summary_stats(self, report_root):
+        filename = self._get_file_name("simulation_stats.csv")
+        stats = self.compute_simulations_stats()
+        lines = ["%s: %s" % (k, v) for (k, v) in sorted(stats.items())]
+        report_root._file(filename).write("\n".join(lines))
+
+    def _write_cancelled_assemblies(self, report_root):
+        filename = self._get_file_name("cancelled_assemblies.csv")
+        columns = ",".join(["cancelled_assembly", "failed_parent_assembly"])
+        cancelled = [
+            ",".join([c.assembly_name, c.failed_dependency]) for c in self.cancelled
+        ]
+        report_root._file(filename).write("\n".join([columns] + cancelled))
 
     def _write_errors_spreadsheet(self, report_root):
         all_errors = [
@@ -112,7 +139,7 @@ class AssemblyPlanSimulation:
                 target = all_records_folder._file(record.id + ".gb")
                 write_record(record, target.open("w"), "genbank")
 
-    def _write_summary_spreadsheet(self, report_root):
+    def _write_construct_summary_spreadsheet(self, report_root):
         data = self.compute_summary_dataframe()
         file_name = self._get_file_name("summary.csv")
         data.to_csv(report_root._file(file_name).open("w"), index=False)
@@ -124,8 +151,7 @@ class AssemblyPlanSimulation:
             for part in simulation.list_all_parts_used()
         ]
         assemblies = [
-            simulation.assembly.name
-            for simulation in self.assembly_simulations
+            simulation.assembly.name for simulation in self.assembly_simulations
         ]
         parts_that_arent_assembled = set(all_parts).difference(set(assemblies))
         return sorted(parts_that_arent_assembled)

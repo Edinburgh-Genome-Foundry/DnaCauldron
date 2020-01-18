@@ -135,19 +135,8 @@ class AssemblyPlan:
         cancelled_assemblies = {}  # cancelled because dependencies failed
         for assembly in self.logger.iter_bar(assembly=ordered_assemblies):
             if assembly.name in cancelled_assemblies:
-                failed_dependency = cancelled_assemblies[assembly.name]
-                error = AssemblySimulationError(
-                    assembly=assembly,
-                    message="Cancelled: depends on failed %s"
-                    % failed_dependency,
-                )
-                simulation_result = AssemblySimulation(
-                    assembly=assembly,
-                    sequence_repository=sequence_repository,
-                    errors=(error,),
-                )
-            else:
-                simulation_result = assembly.simulate(sequence_repository)
+                continue
+            simulation_result = assembly.simulate(sequence_repository)
             simulation_results.append(simulation_result)
             for record in simulation_result.construct_records:
                 sequence_repository.constructs[record.id] = record
@@ -159,4 +148,14 @@ class AssemblyPlan:
             assembly_plan=self,
             assembly_simulations=simulation_results,
             sequence_repository=sequence_repository,
+            cancelled = [
+                AssemblySimulationCancellation(assembly_name, dependency)
+                for (assembly_name, dependency) in cancelled_assemblies.items()
+            ]
         )
+
+class AssemblySimulationCancellation:
+
+    def __init__(self, assembly_name, failed_dependency):
+        self.assembly_name = assembly_name
+        self.failed_dependency = failed_dependency

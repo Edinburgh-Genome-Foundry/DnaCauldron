@@ -35,3 +35,20 @@ class PlotsMixin:
         if self.name is not None:
             ax.set_title(self.name, loc="left")
         return ax
+    
+    def plot_fragments(self, report_root):
+        fragments_dir = report_root._dir("fragments_in_" + self.name)
+        seen_fragments = {}
+        for fragment in self.fragments:
+            name = fragment.original_part.id
+            if name not in seen_fragments:
+                seen_fragments[name] = 0
+            seen_fragments[name] += 1
+            file_name = "%s_%02d.pdf" % (name, seen_fragments[name])
+            ax = fragment.plot()
+            ax.figure.savefig(
+                fragments_dir._file(file_name).open("wb"),
+                format="pdf",
+                bbox_inches="tight",
+            )
+            plt.close(ax.figure)
