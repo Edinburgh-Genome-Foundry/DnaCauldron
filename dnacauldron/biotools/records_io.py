@@ -18,8 +18,6 @@ def string_to_record(string):
     Can also be used to detect a format.
     """
     matches = re.match("([ATGC][ATGC]*)", string)
-    # print("============", len(matches.groups()[0]), len(string))
-    # print (matches.groups()[0] == string)
     if (matches is not None) and (matches.groups()[0] == string):
         return sequence_to_biopython_record(string), "ATGC"
 

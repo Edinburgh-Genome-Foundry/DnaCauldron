@@ -16,13 +16,20 @@
 DNA Cauldron
 ============
 
-Don't you hate it when you are planning a large batch of DNA assembly with many parts and possibly several assembly levels but you're not sure whether everything will assemble correctly and what the final sequence will be and then some assemblies fail because some part was probably missing or badly designed and you spend hours checking your designs again? If so, DNA Cauldron might be for you!
+Don't you hate it when you are planning a large DNA assembly batch and you're not sure how the many parts will assemble together, so when some assemblies fail at the bench you spend hours checking your files for design flaws?
 
-The library implements a generic and highly automated cloning simulation engine
-to predict the restriction and ligation of DNA fragments into constructs. It supports  combinatorial assemblies, enzymes autoselection, connector parts autoselection, and design flaw detections (missing parts, presence of problematic
+DNA Cauldron might be for you! The library provides a generic cloning simulation framework to predict constructs sequences and detect assembly design flaws for various cloning methods:
+
+- Advanced design flaw detection (missing parts, presence of problematic
 restriction sites in the parts, wrong overhang designs, etc.)
+- Awesome support for Type 2S assembly (automatic enzyme and connector part selection)
+- Support for other restriction-based assemblies (BioBrick, BASIC) or homology based assemblies (Gibson Assembly, Ligase Cycling Reaction Assembly).
 
-DNA Cauldron also focuses on generating clear, complete reports for traceability and troubleshooting, for your assembly or assembly plans.
+The library also enables the management of large, complex assembly batches:
+
+- Import assembly plans from spreadsheets
+- Simulate and validate hierarchical assembly plans where some assembly products are used as parts in the next level of assembly.
+- Generate complete, self contained reports, in folders, zip files, in memory or in JSON format (for use on servers).
 
 Usage
 -----

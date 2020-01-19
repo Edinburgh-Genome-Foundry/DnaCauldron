@@ -40,13 +40,13 @@ def reverse_complement(sequence):
 
 
 def sequence_to_biopython_record(
-    sequence, id="<unknown id>", name="<unknown name>", features=()
+    sequence, id="<unknown id>", name="same_as_id", features=()
 ):
     """Return a SeqRecord of the sequence, ready to be Genbanked."""
     return SeqRecord(
         Seq(sequence, alphabet=DNAAlphabet()),
         id=id,
-        name=name,
+        name=id if name == "same_as_id" else name,
         features=list(features),
     )
 

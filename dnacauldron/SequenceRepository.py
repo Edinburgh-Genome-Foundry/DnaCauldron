@@ -1,4 +1,8 @@
-from .biotools import load_records_from_files, set_record_topology
+from .biotools import (
+    load_records_from_files,
+    set_record_topology,
+    sequence_to_biopython_record,
+)
 
 
 class NotInRepositoryError(Exception):
@@ -22,50 +26,55 @@ class SequenceRepository:
     assembly), ``constructs``
     """
 
-
-    def __init__(
-        self, parts=None, connectors=None, constructs=None, name="repo"
-    ):
-        def process(records):
-            if records is None:
-                return {}
-            elif isinstance(records, list):
-                return {r.id: r for r in records}
-            else:
-                return records
-
-        self.parts = process(parts)
-        self.connectors = process(connectors)
-        self.constructs = process(constructs)
+    def __init__(self, collections=None, name="repo"):
+        self.collections = {}
         self.name = name
 
-    def contains_part(self, name):
-        repos = [self.parts, self.constructs] + list(self.connectors.values())
-        return any([name in repo for repo in repos])
+    def add_record(self, record, collection="parts"):
+        if collection not in self.collections:
+            self.collections[collection] = {}
+        self.collections[collection][record.id] = record
+    
+    def add_records(self, records, collection="parts"):
+        elif isinstance(records, list):
+            if len(records) == 0:
+                return
+            if isinstance(records[0], (tuple, list)):
+                records = [
+                    sequence_to_biopython_record(_record, id=_id)
+                    for _record, _id in records
+                ]
+            return {r.id: r for r in records}
+        else:
+            return records
+
+    def contains_record(self, name):
+        collections = self.collections.values()
+        return any(name in collection for collection in collections)
 
     def get_record(self, name):
-        for repo in [self.parts, self.connectors, self.constructs]:
-            if name in repo:
-                return repo[name]
+        for collection in self.collections.values():
+            if name in collection:
+                return collection[name]
         raise NotInRepositoryError(name, self)
 
     def get_records(self, names):
         records = []
         not_in_repository = []
         for name in names:
-            if self.contains_part(name):
+            if self.contains_record(name):
                 records.append(self.get_record(name))
             else:
                 not_in_repository.append(name)
         if len(not_in_repository):
             raise NotInRepositoryError(not_in_repository, self)
-        return [self.get_record(name) for name in names]
+        return records
 
     def import_records(
         self,
         files=None,
         folder=None,
-        as_connector_collection=None,
+        collection="parts",
         use_file_names_as_ids=True,
         topology="auto",
     ):
@@ -75,16 +84,12 @@ class SequenceRepository:
             )
         elif files is not None:
             records = load_records_from_files(
-                files=files,
-                use_file_names_as_ids=use_file_names_as_ids,
+                files=files, use_file_names_as_ids=use_file_names_as_ids,
             )
         else:
             raise ValueError("Provide either ``files`` or ``folder``")
         if topology in ["circular", "linear"]:
             for r in records:
                 set_record_topology(r, topology)
-        records = {r.id: r for r in records}
-        if as_connector_collection is not None:
-            self.connectors[as_connector_collection] = records
-        else:
-            self.parts.update(records)
+
+        self.add_records(records, collection=collection)
