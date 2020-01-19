@@ -139,7 +139,7 @@ class AssemblyPlan:
             simulation_result = assembly.simulate(sequence_repository)
             simulation_results.append(simulation_result)
             for record in simulation_result.construct_records:
-                sequence_repository.constructs[record.id] = record
+                sequence_repository.add_record(record, collection="constructs")
             if len(simulation_result.construct_records) != 1:
                 for next_assembly in assembly.dependencies["used_in"]:
                     cancelled_assemblies[next_assembly] = assembly.name

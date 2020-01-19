@@ -10,7 +10,8 @@ class Assembly:
         parts,
         name="unnamed_assembly",
         max_constructs=40,
-        dependencies=None
+        dependencies=None,
+        connectors_collection=None
     ):
         self.name = name
         self.parts = parts
@@ -18,6 +19,7 @@ class Assembly:
         if dependencies is None:
             dependencies = dict(level=1, depends_on=[], used_in=[])
         self.dependencies = dependencies
+        self.connectors_collection = connectors_collection
 
     def get_extra_construct_data(self):
         return dict()
@@ -59,11 +61,8 @@ class Assembly:
         collection = self.connectors_collection
         if collection is None:
             return []
-        if isinstance(collection, (tuple, list)):
-            return sequence_repository.get_records(collection)
-        # last case: the collection is a string (collection name)
-        collections = sequence_repository.connectors_collections
-        return list(collections[collection].values())
+        else:
+            return list(sequence_repository.collections[collection].values())
 
 
 def format_string(value):

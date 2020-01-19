@@ -64,6 +64,7 @@ class AssemblyPlanSimulation:
         folder_name="auto",
         assembly_report_writer="default",
         logger="bar",
+        include_original_parts_records=True,
     ):
         if assembly_report_writer == "default":
             # We'll write all records into one folder for the whole plan
@@ -77,9 +78,11 @@ class AssemblyPlanSimulation:
         self._write_all_required_parts(report_root)
         self._write_construct_summary_spreadsheet(report_root)
         self._write_assembly_plan_spreadsheets(report_root)
+        self._write_summary_stats(report_root)
         if len(self.cancelled):
             self._write_cancelled_assemblies(report_root)
-        self._write_summary_stats(report_root)
+        if include_original_parts_records:
+            self._write_all_required_parts_records(report_root)
         if target == "@memory":
             return report_root._close()
 
@@ -164,7 +167,7 @@ class AssemblyPlanSimulation:
     def _write_all_required_parts_records(self, report_root):
         all_parts = self.list_all_original_parts()
         part_records = self.sequence_repository.get_records(all_parts)
-        records_dir = self._dir("part_records")
+        records_dir = report_root._dir("part_records")
         for part_record in part_records:
             filename = part_record.id + ".gb"
             target = records_dir._file(filename)
