@@ -3,7 +3,7 @@ from ...Filter import NoRestrictionSiteFilter
 from ...AssemblyMix import RestrictionLigationMix, AssemblyMixError
 from ..Assembly import Assembly
 from ..AssemblySimulation import AssemblySimulation
-from ..AssemblySimulationError import AssemblySimulationError
+from ..AssemblyFlaw import AssemblyFlaw
 
 
 class Type2sRestrictionAssembly(Assembly):
@@ -15,10 +15,6 @@ class Type2sRestrictionAssembly(Assembly):
         "expect_no_unused_parts",
         "connectors_collection",
     )
-
-    spreadsheet_columns = [
-        "enzyme",
-    ]
 
     def __init__(
         self,
@@ -42,7 +38,6 @@ class Type2sRestrictionAssembly(Assembly):
         self.connectors_collection = connectors_collection
         self.expected_constructs = expected_constructs
         self.expect_no_unused_parts = expect_no_unused_parts
-        
 
     def get_extra_construct_data(self):
         return dict(enzymes=self.enzymes)
@@ -50,7 +45,7 @@ class Type2sRestrictionAssembly(Assembly):
     def _detect_constructs_number_error(self, found):
         expected = self.expected_constructs
         if expected != found:
-            return AssemblySimulationError(
+            return AssemblyFlaw(
                 assembly=self,
                 message="Wrong number of constructs",
                 suggestion="Check assembly or parts design",
@@ -69,7 +64,7 @@ class Type2sRestrictionAssembly(Assembly):
                 suggestion = "Check assembly plan"
             else:
                 suggestion = "Check parts design"
-            return AssemblySimulationError(
+            return AssemblyFlaw(
                 assembly=self,
                 message="Some parts are unused",
                 suggestion=suggestion,
@@ -77,7 +72,7 @@ class Type2sRestrictionAssembly(Assembly):
             )
 
     def _detect_parts_connections_errors(self, assembly_mix):
-        errors = []
+        warnings = []
         slots_graph = assembly_mix.slots_graph(with_overhangs=False)
         slots_degrees = {
             slot: slots_graph.degree(slot) for slot in slots_graph.nodes()
@@ -93,13 +88,13 @@ class Type2sRestrictionAssembly(Assembly):
             for part in slots_parts[slot]
         ]
         if len(deadend_parts):
-            error = AssemblySimulationError(
+            warning = AssemblyFlaw(
                 assembly=self,
                 message="Part(s) with single-sided sticky end",
                 suggestion="Check restriction sites or assembly plan",
                 data={"parts": deadend_parts},
             )
-            errors.append(error)
+            warnings.append(warning)
 
         # CHECK PARTS WITH MORE THAN 2 SLOT CONNECTIONS (FORK/CROSSROAD)
 
@@ -110,14 +105,14 @@ class Type2sRestrictionAssembly(Assembly):
             for part in slots_parts[slot]
         ]
         if len(fork_parts):
-            error = AssemblySimulationError(
+            warning = AssemblyFlaw(
                 assembly=self,
                 message="Warning: parts at graph forking positions",
                 suggestion="Check restriction sites in part sequences",
                 data={"parts": fork_parts},
             )
-            errors.append(error)
-        return errors
+            warnings.append(warning)
+        return warnings
 
     @property
     def enzymes(self):
@@ -126,6 +121,8 @@ class Type2sRestrictionAssembly(Assembly):
     def simulate(self, sequence_repository, annotate_parts_homologies=True):
 
         # CREATE THE MIX
+
+        warnings = []
 
         records = sequence_repository.get_records(self.parts)
         if self.enzyme == "auto":
@@ -142,18 +139,26 @@ class Type2sRestrictionAssembly(Assembly):
         connectors_records = self.get_connectors_records(sequence_repository)
         if len(connectors_records) != 0:
             try:
-                mix.autoselect_connectors(connectors_records)
+                connectors = mix.autoselect_connectors(connectors_records)
+                if len(connectors):
+                    connectors_ids = [c.id for c in connectors]
+                    connectors_string = ", ".join(connectors_ids)
+                    warning = AssemblyFlaw(
+                        assembly=self,
+                        message="Added connectors %s" % connectors_string,
+                        suggestion="",
+                        data={"selected_connectors": connectors_ids},
+                    )
+                    warnings.append(warning)
             except AssemblyMixError as err:
-                error = AssemblySimulationError(
+                error = AssemblyFlaw(
                     assembly=self,
                     message="Failed to find suitable connectors",
                     suggestion="Check assembly plan or parts design",
-                    mixes=(err.mix,),
                 )
                 return AssemblySimulation(
                     assembly=self,
                     construct_records=[],
-                    mixes=(mix,),
                     errors=[error],
                     sequence_repository=sequence_repository,
                 )
@@ -181,12 +186,13 @@ class Type2sRestrictionAssembly(Assembly):
             if unused_error is not None:
                 errors.append(constructs_number_error)
         if errors != []:
-            errors.extend(self._detect_parts_connections_errors(mix))
+            warnings.extend(self._detect_parts_connections_errors(mix))
 
         return AssemblySimulation(
             assembly=self,
             construct_records=construct_records,
             mixes=(mix,),
             errors=errors,
+            warnings=warnings,
             sequence_repository=sequence_repository,
         )

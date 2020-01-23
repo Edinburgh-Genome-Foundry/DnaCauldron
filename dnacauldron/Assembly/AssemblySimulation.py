@@ -10,13 +10,15 @@ class AssemblySimulation:
         sequence_repository,
         construct_records=(),
         mixes=(),
-        errors=[],
+        warnings=(),
+        errors=(),
     ):
         self.assembly = assembly
         self.construct_records = construct_records
         self.sequence_repository = sequence_repository
-        self.mixes = mixes
-        self.errors = errors
+        self.mixes = list(mixes)
+        self.errors = list(errors)
+        self.warnings = list(warnings)
 
     @staticmethod
     def fragment_part(fragment, mark_reverse=False):

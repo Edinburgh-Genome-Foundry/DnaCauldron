@@ -4,7 +4,7 @@ import networkx as nx
 from proglog import default_bar_logger
 from .AssemblyPlanSimulation import AssemblyPlanSimulation
 from ..Assembly.AssemblySimulation import AssemblySimulation
-from ..Assembly.AssemblySimulationError import AssemblySimulationError
+from ..Assembly.AssemblyFlaw import AssemblyFlaw
 
 
 class AssemblyPlan:
@@ -12,8 +12,9 @@ class AssemblyPlan:
         self, assemblies, assembly_class="auto", name="", logger="bar"
     ):
         self.assemblies = assemblies
+        self._raise_an_error_if_duplicate_assembly_names()
         self.assemblies_dict = {a.name: a for a in self.assemblies}
-        self.compute_assemblies_levels()
+        self._compute_assemblies_levels()
         self.logger = default_bar_logger(logger)
         if assembly_class == "auto":
             if len(set([a.__class__ for a in assemblies])) == 1:
@@ -22,8 +23,22 @@ class AssemblyPlan:
                 assembly_class = None
         self.name = name
         self.assembly_class = assembly_class
+    
+    def _raise_an_error_if_duplicate_assembly_names(self):
+        names_indices = {}
+        for i, assembly in enumerate(self.assemblies):
+            if assembly.name not in names_indices:
+                names_indices[assembly.name] = []
+            names_indices[assembly.name].append(i)
+        if any(len(indices) > 1 for indices in names_indices.values()):
+            duplicates = ", ".join([
+                "%s (%s)" % (name, "-".join([str(i) for i in indices]))
+                for name, indices in sorted(names_indices.items())
+            ])
+            raise ValueError("Multiple assemblies named " + duplicates)
 
-    def compute_assemblies_levels(self):
+
+    def _compute_assemblies_levels(self):
         graph_edges = [
             (part, assembly.name)
             for assembly in self.assemblies
@@ -40,19 +55,20 @@ class AssemblyPlan:
             nodes_levels[node] = max(nodes_levels[node], depth)
             for child in graph.successors(node):
                 mark_depth(child, depth + 1)
-
+        self.all_parts = [
+            n for n in graph if len(list(graph.predecessors(n))) == 0
+        ]
         for node in level_0_nodes:
             mark_depth(node, 0)
         for assembly in self.assemblies:
             assembly.dependencies = dict(
                 level=nodes_levels[assembly.name],
-                depends_on=graph.predecessors(assembly.name),
-                used_in=graph.successors(assembly.name),
+                depends_on=[
+                    part for part in graph.predecessors(assembly.name)
+                    if part not in self.all_parts
+                ],
+                used_in=list(graph.successors(assembly.name)),
             )
-
-        self.all_parts = [
-            n for n in graph if len(list(graph.predecessors(n))) == 0
-        ]
         levels = sorted(set(a.dependencies["level"] for a in self.assemblies))
         self.levels = {
             level: [
@@ -71,6 +87,8 @@ class AssemblyPlan:
         sheet_name="all",
         header=None,
         name="auto_from_filename",
+        logger="bar",
+        **assembly_params
     ):
         if name == "auto_from_filename":
             if path is None:
@@ -84,6 +102,7 @@ class AssemblyPlan:
             return AssemblyPlan(
                 name=name,
                 assembly_class=assembly_class,
+                logger=logger,
                 assemblies=[
                     assembly
                     for _sheet_name in excel_file.sheet_names
@@ -92,6 +111,7 @@ class AssemblyPlan:
                         path=path,
                         sheet_name=_sheet_name,
                         header=header,
+                        **assembly_params
                     ).assemblies
                 ],
             )
@@ -113,17 +133,28 @@ class AssemblyPlan:
             not in ["nan", "construct name", "construct", "none", ""]
         ]
         return AssemblyPlan(
-            assemblies, assembly_class=assembly_class, name=name
+            assemblies, assembly_class=assembly_class, name=name, logger=logger
         )
 
     def to_spreadsheet(self, path):
-        lines = [
-            ",".join([asm] + parts) for asm, parts in self.assemblies.items()
-        ]
+        lines = [",".join([asm.name] + asm.parts) for asm in self.assemblies]
         with open(path, "w") as f:
             f.write("\n".join(["construct,parts"] + lines))
 
-    def simulate(self, sequence_repository, logger=None):
+    def to_dataframe(self):
+        sorted_assemblies = sorted(
+            self.assemblies, key=lambda a: (a.dependencies["level"], a.name)
+        )
+        return pandas.DataFrame.from_records(
+            [
+                {"assembly": assembly.name, "parts": ", ".join(assembly.parts)}
+                for assembly in sorted_assemblies
+            ],
+            columns=["assembly", "parts"],
+            index="assembly",
+        )
+
+    def simulate(self, sequence_repository):
 
         ordered_assemblies = [
             assembly
@@ -140,7 +171,7 @@ class AssemblyPlan:
             simulation_results.append(simulation_result)
             for record in simulation_result.construct_records:
                 sequence_repository.add_record(record, collection="constructs")
-            if len(simulation_result.construct_records) != 1:
+            if len(simulation_result.errors):
                 for next_assembly in assembly.dependencies["used_in"]:
                     cancelled_assemblies[next_assembly] = assembly.name
 
@@ -148,14 +179,14 @@ class AssemblyPlan:
             assembly_plan=self,
             assembly_simulations=simulation_results,
             sequence_repository=sequence_repository,
-            cancelled = [
+            cancelled=[
                 AssemblySimulationCancellation(assembly_name, dependency)
                 for (assembly_name, dependency) in cancelled_assemblies.items()
-            ]
+            ],
         )
 
-class AssemblySimulationCancellation:
 
+class AssemblySimulationCancellation:
     def __init__(self, assembly_name, failed_dependency):
         self.assembly_name = assembly_name
         self.failed_dependency = failed_dependency

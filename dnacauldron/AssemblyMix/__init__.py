@@ -1,14 +1,19 @@
-""" dnacauldron/__init__.py """
+"""AssemblyMix module"""
 
-# __all__ = []
-
-# from ..Filter import (NoPatternFilter, TextSearchFilter,
-#                      NoRestrictionSiteFilter, FragmentSetContainsPartsFilter)
 from .AssemblyMix import AssemblyMix
 from .AssemblyMixError import AssemblyMixError
-from .RestrictionLigationMix import RestrictionLigationMix
+from .RestrictionLigationMix import (
+    RestrictionLigationMix,
+    generate_type2s_restriction_mix,
+)
 from .StickyEndAssemblyMix import StickyEndAssemblyMix
 from .HomologousAssemblyMix import HomologousAssemblyMix
-# from .Type2sRestrictionMix import Type2sRestrictionMix
-# from .BASICLigationMix import  BASICLigationMix
-# from .GibsonAssemblyMix import  GibsonAssemblyMix
+
+__all__ = [
+    "AssemblyMix",
+    "AssemblyMixError",
+    "RestrictionLigationMix",
+    "generate_type2s_restriction_mix",
+    "StickyEndAssemblyMix",
+    "HomologousAssemblyMix"
+]

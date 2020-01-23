@@ -13,9 +13,7 @@ class PlotsMixin:
             fragment = self.fragments_dict[i]
             return "\n".join(
                 [
-                    str(fragment.seq.left_end),
-                    r"$\bf{%s}$" % fragment.original_part.id,
-                    str(fragment.seq.right_end),
+                    fragment.text_representation_in_plots()
                 ]
             )
 

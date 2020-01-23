@@ -14,12 +14,31 @@ def complement(dna_sequence):
     """
     return str(Seq(dna_sequence).complement())
 
+def set_record_topology(record, topology):
+    """Set the Biopython record's topology, possibly passing if already set.
 
-def set_record_topology(record, topology, pass_if_already_set=False):
-    record_topology = record.annotations.get("topology", None)
-    do_nothing = pass_if_already_set and (record_topology is not None)
-    if not do_nothing:
-        record.annotations["topology"] = topology
+    This actually sets the ``record.annotations['topology']``.The ``topology``
+    parameter can be "circular", "linear", "default_to_circular" (will default
+    to circular if ``annotations['topology']`` is not already set) or
+    "default_to_linear".
+    """
+    valid_topologies = [
+        "circular",
+        "linear",
+        "default_to_circular",
+        "default_to_linear",
+    ]
+    if topology not in valid_topologies:
+        raise ValueError(
+            "topology should be one of %s." % ", ".join(valid_topologies)
+        )
+    annotations = record.annotations
+    default_prefix = "default_to_"
+    if topology.startswith(default_prefix):
+        if "topology" not in annotations:
+            annotations["topology"] = topology[len(default_prefix) :]
+    else:
+        annotations["topology"] = topology
 
 
 def record_is_linear(record, default=True):

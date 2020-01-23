@@ -52,7 +52,7 @@ class Assembly:
             construct_records[0].id = self.name
         else:
             digits = int(numpy.ceil(numpy.log10(n_records - 1)))
-            for i, record in construct_records:
+            for i, record in enumerate(construct_records):
                 record.id = "{name}_{num:0{digits}}".format(
                     num=i, digits=digits, name=self.name
                 )

@@ -1,14 +1,15 @@
 from copy import deepcopy
 from Bio.SeqRecord import SeqRecord
-from Bio.SeqFeature import SeqFeature, FeatureLocation
+from ..Fragment import Fragment
 from Bio.Alphabet import DNAAlphabet
-from ...biotools import set_record_topology
+from ...biotools import set_record_topology, crop_record_with_saddling_features
 
-class HomologousFragment(SeqRecord):
 
+class HomologousFragment(Fragment):
     @staticmethod
     def from_standard_record(biopython_record):
         new_record = deepcopy(biopython_record)
+        new_record.original_part = biopython_record
         new_record.__class__ = HomologousFragment
         return new_record
 
@@ -16,7 +17,7 @@ class HomologousFragment(SeqRecord):
         self,
         homology_checker,
         annotate_homology=False,
-        annotation_type="homology"
+        annotation_type="homology",
     ):
         """Return the biopython record obtained by cirularizing the result.
 
@@ -30,7 +31,15 @@ class HomologousFragment(SeqRecord):
             annotate_homology=True,
             annotation_type="homology",
         )
-        result = double_self[:len(self)]
+        def only_parts_indicators(feature):
+            return feature.qualifiers.get("indicates_part", False)
+        result = crop_record_with_saddling_features(
+            record=double_self,
+            start=len(self),
+            end=len(double_self),
+            filters=(only_parts_indicators,),
+        )
+        result.__class__ = SeqRecord
         set_record_topology(result, "circular")
         return result
 
@@ -48,6 +57,12 @@ class HomologousFragment(SeqRecord):
                     f.location.start = max(f.location.start, homology_size)
                     f.location.end = max(f.location.end, homology_size)
 
+    def will_clip_in_this_order_with(self, other_fragment, homology_checker):
+        homology_size = homology_checker.find_end_homologies(
+            self, other_fragment
+        )
+        return homology_size > 0
+
     def assemble_with(
         self,
         fragment,
@@ -55,7 +70,7 @@ class HomologousFragment(SeqRecord):
         annotate_homology=True,
         annotation_type="homology",
     ):
-        homology_size = homology_checker.find_end_homologies(self, self)
+        homology_size = homology_checker.find_end_homologies(self, fragment)
         if homology_size == 0:
             raise ValueError(
                 "Only fragments with end homologies ends can be assembled."
@@ -64,13 +79,28 @@ class HomologousFragment(SeqRecord):
         new_fragment = deepcopy(fragment)
         new_self.push_source_features(homology_size, side="left")
         new_fragment.push_source_features(homology_size, side="right")
-        feature = SeqFeature(
-            FeatureLocation(0, homology_size, 1),
-            type=annotation_type,
-            qualifiers={"label": "homology"},
+        if annotate_homology:
+            feature = self.create_homology_annotation(
+                start=0,
+                end=homology_size,
+                annotation_type=annotation_type,
+                label="homology",
+            )
+            new_fragment.features.append(feature)
+
+        def only_parts_indicators(feature):
+            return feature.qualifiers.get("indicates_part", False)
+
+        self_subrecord = crop_record_with_saddling_features(
+            record=self,
+            start=0,
+            end=len(self) - homology_size,
+            filters=(only_parts_indicators,),
         )
-        new_fragment.features.append(feature)
-        return new_self[:-homology_size] + new_fragment
+        assert len(self_subrecord) == len(self[:-homology_size])
+        result = self_subrecord + new_fragment
+        result.__class__ = HomologousFragment
+        return result
 
     @staticmethod
     def assemble(

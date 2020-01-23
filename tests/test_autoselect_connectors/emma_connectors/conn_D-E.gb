@@ -1,0 +1,75 @@
+LOCUS       .                       1855 bp    DNA              UNK 01-JAN-1980
+DEFINITION  .
+ACCESSION   <unknown id>
+VERSION     <unknown id>
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     terminator      392..419
+                     /note="T7Te terminator"
+                     /note="phage T7 early transcription terminator"
+     rep_origin      complement(431..1018)
+                     /direction=LEFT
+                     /note="ori"
+                     /note="high-copy-number ColE1/pMB1/pBR322/pUC origin of
+                     replication"
+     terminator      1040..1069
+                     /note="T3Te terminator"
+                     /note="phage T3 early transcription terminator"
+     misc_feature    1143..1148
+                     /note="BsmBI"
+     source          5..1149
+                     /note="From Exported"
+                     /source="Exported"
+     misc_feature    complement(1154..1195)
+                     /note="conn D-E"
+     source          complement(1154..1195)
+                     /note="From Exported"
+                     /source="Exported"
+     misc_feature    complement(1201..1206)
+                     /note="BsmBI"
+     terminator      1273..1304
+                     /note="tonB terminator"
+                     /note="bidirectional E. coli tonB-P14 transcription
+                     terminator"
+     promoter        1305..1407
+                     /note="cat promoter"
+                     /note="promoter of the E. coli cat gene"
+     source          1200..1855
+                     /note="From Exported"
+                     /source="Exported"
+ORIGIN
+        1 ctcaggcgca atcacgaatg aataacggtt tggttggtgc gagtgatttt gatgacgagc
+       61 gtaatggctg gcctgttgaa caagtctgga aagaaatgca taagcttttg ccattctcac
+      121 cggattcagt cgtcactcat ggtgatttct cacttgataa ccttattttt gacgagggga
+      181 aattaatagg ttgtattgat gttggacgag tcggaatcgc agaccgatac caggatcttg
+      241 ccatcctatg gaactgcctc ggtgagtttt ctccttcatt acagaaacgg ctttttcaaa
+      301 aatatggtat tgataatcct gatatgaata aattgcagtt tcacttgatg ctcgatgagt
+      361 ttttctaatg agggcccaaa tgtaatcacc tggctcacct tcgggtgggc ctttctgcgt
+      421 tgctggcgtt tttccatagg ctccgccccc ctgacgagca tcacaaaaat cgatgctcaa
+      481 gtcagaggtg gcgaaacccg acaggactat aaagatacca ggcgtttccc cctggaagct
+      541 ccctcgtgcg ctctcctgtt ccgaccctgc cgcttaccgg atacctgtcc gcctttctcc
+      601 cttcgggaag cgtggcgctt tctcatagct cacgctgtag gtatctcagt tcggtgtagg
+      661 tcgttcgctc caagctgggc tgtgtgcacg aaccccccgt tcagcccgac cgctgcgcct
+      721 tatccggtaa ctatcgtctt gagtccaacc cggtaagaca cgacttatcg ccactggcag
+      781 cagccactgg taacaggatt agcagagcga ggtatgtagg cggtgctaca gagttcttga
+      841 agtggtggcc taactacggc tacactagaa gaacagtatt tggtatctgc gctctgctga
+      901 agccagttac ctcggaaaaa gagttggtag ctcttgatcc ggcaaacaaa ccaccgctgg
+      961 tagcggtggt ttttttgttt gcaagcagca gattacgcgc agaaaaaaag gatctcaaga
+     1021 agatcctttg attttctacc gaagaaaggc ccacccgtga aggtgagcca gtgagttgat
+     1081 tgcagtccag ttacgctgga gtctgaggct cgtcctgaat gatatcaagc ttgaattcgt
+     1141 tacgtctcgc ggatagatcg atctgaatta attctgacgg ttcactaaag gctaagtccc
+     1201 gagacgaaga cgaattctct agatatcgct caatactgac catttaaatc atacctgacc
+     1261 tccatagcag aaagtcaaaa gcctccgacc ggaggctttt gacttgatcg gcacgtaaga
+     1321 ggttccaact ttcaccataa tgaaataaga tcactaccgg gcgtattttt tgagttatcg
+     1381 agattttcag gagctaagga agctaaaatg agccatattc aacgggaaac gtcttgctcg
+     1441 aggccgcgat taaattccaa catggatgct gatttatatg ggtataaatg ggctcgcgat
+     1501 aatgtcgggc aatcaggtgc gacaatctat cgattgtatg ggaagcccga tgcgccagag
+     1561 ttgtttctga aacatggcaa aggtagcgtt gccaatgatg ttacagatga gatggtcagg
+     1621 ctaaactggc tgacggaatt tatgcctctt ccgaccatca agcattttat ccgtactcct
+     1681 gatgatgcat ggttactcac cactgcgatc ccagggaaaa cagcattcca ggtattagaa
+     1741 gaatatcctg attcaggtga aaatattgtt gatgcgctgg cagtgttcct gcgccggttg
+     1801 cattcgattc ctgtttgtaa ttgtcctttt aacggcgatc gcgtatttcg tctcg
+//

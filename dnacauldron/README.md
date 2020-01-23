@@ -8,8 +8,8 @@ The short story is that an ***AssemblyPlan*** contains ***Assemblies*** simulate
 - A ***SequenceRepository*** provides parts sequences to simulate an ***Assembly***.
 - Simulating an ***Assembly*** results in an ***AssemblySimulation***, which contains:
   - Biopython *SeqRecords* of the predicted assembly constructs.
-  - The list of ***AssemblyMix*** instances created during the simulation
-  - The list of ***AssemblySimulationError*** detected during the simulation
+  - The list of ***AssemblyMix*** instances created during the simulation.
+  - The list of ***AssemblyFlaw*** instances (errors and warnings) detected during the simulation.
 - Simulating an ***AssemblyPlan*** results in an ***AssemblyPlanSimulation*** which is mostly a list of ***AssemblySimulation*** instances.
 - An ***AssemblySimulation*** or ***AssemblyPlanSimulation*** can be written to a file using an ***AssemblyReportWriter***
 

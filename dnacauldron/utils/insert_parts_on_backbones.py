@@ -2,7 +2,11 @@
 most common operations."""
 
 import pandas
-from ..AssemblyMix import AssemblyMixError
+from ..AssemblyMix import (
+    AssemblyMixError,
+    generate_type2s_restriction_mix,
+    RestrictionLigationMix,
+)
 from ..biotools import reverse_complement, write_record, autoselect_enzyme
 import flametree
 
@@ -107,7 +111,7 @@ class BackboneChoice:
 
 def _get_insert_from_record(record, enzyme="BsmBI"):
     """Return the record of the one digested fragment without enzyme site."""
-    mix = Type2sRestrictionMix([record], enzyme=enzyme)
+    mix = generate_type2s_restriction_mix(parts=[record], enzyme=enzyme)
     inserts = [frag for frag in mix.filtered_fragments if not frag.is_reversed]
     if len(inserts) != 1:
         raise ValueError("")
@@ -173,7 +177,7 @@ def record_contains_backbone(record, enzyme="BsmBI", min_backbone_length=500):
     given enzyme, there is one fragment with no site (the insert), and the rest
     has a total size above the given ``min_backbone_length``.
     """
-    mix = Type2sRestrictionMix([record], enzyme="BsmBI")
+    mix = generate_type2s_restriction_mix(parts=[record], enzyme="BsmBI")
     fragments = [
         frag for frag in mix.filtered_fragments if not frag.is_reversed
     ]
@@ -213,26 +217,26 @@ def swap_donor_vector_part(
 
     """
 
-    mix = Type2sRestrictionMix([donor_vector], enzyme=enzyme)
+    mix = generate_type2s_restriction_mix(parts=[donor_vector], enzyme=enzyme)
     donor_fragments = [
         f
         for f in mix.fragments
-        if len(mix.enzyme.search("A" + f.seq.to_standard_sequence())) > 0
+        if len(mix.enzymes[0].search("A" + f.seq.to_standard_sequence())) > 0
     ]
     for fr in donor_fragments:
         fr.features = [f for f in fr.features if "source" not in f.qualifiers]
     assert len(donor_fragments) == len(mix.fragments) - 1
 
-    mix = Type2sRestrictionMix([insert], enzyme=enzyme)
+    mix = generate_type2s_restriction_mix(parts=[insert], enzyme=enzyme)
     insert_fragments = [
         f
         for f in mix.fragments
-        if len(mix.enzyme.search("A" + f.seq.to_standard_sequence())) == 0
+        if len(mix.enzymes[0].search("A" + f.seq.to_standard_sequence())) == 0
     ]
     assert len(insert_fragments) == 1
-    mix = Type2sRestrictionMix(
+    mix = RestrictionLigationMix(
         fragments=[insert_fragments[0]] + donor_fragments,
-        enzyme=enzyme,
+        enzymes=[enzyme],
         fragments_filters=(),
     )
     assemblies = list(mix.compute_circular_assemblies())
@@ -282,7 +286,9 @@ def insert_parts_on_backbones(
     """
 
     if enzyme == "autodetect":
-        enzyme = autoselect_enzyme(part_records, ["BsmBI", "BsaI", "BbsI"])
+        enzyme = autoselect_enzyme(
+            part_records, ["BsmBI", "BsaI", "BbsI", "SapI", "AarI"]
+        )
 
     overhangs_dict = _records_to_overhangs_dict(backbone_records)
     backbone_choices = []

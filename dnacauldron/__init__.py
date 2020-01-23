@@ -5,6 +5,8 @@
 from .AssemblyMix import (
     # Type2sRestrictionMix,
     RestrictionLigationMix,
+    generate_type2s_restriction_mix,
+    HomologousAssemblyMix,
     # BASICLigationMix,
     AssemblyMixError
 )
@@ -14,8 +16,10 @@ from .SequenceRepository import SequenceRepository
 from .Assembly import (
     BioBrickStandardAssembly,
     Type2sRestrictionAssembly,
+    GibsonAssembly,
     AssemblyReportWriter,
     AssemblyPlotTranslator,
+    Assembly
 )
 
 from .AssemblyPlan import AssemblyPlan
@@ -36,12 +40,10 @@ from .biotools import (
     autoselect_enzyme,
 )
 from .utils import (
-    single_assembly,
     swap_donor_vector_part,
     insert_parts_on_backbones,
     BackboneChoice,
-    complement_parts,
-    get_overhangs_from_record,
+    list_overhangs_from_record_annotations,
 )
 from .version import __version__
 

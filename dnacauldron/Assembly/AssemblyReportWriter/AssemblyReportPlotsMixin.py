@@ -26,7 +26,7 @@ class AssemblyReportPlotsMixin:
         plt.close(ax.figure)
 
     def plot_provided_parts(self, report_root, parts_records, enzymes):
-        provided_parts_dir = report_root._dir("provided_parts")
+        provided_parts_dir = report_root._dir("provided_parts_plots")
         for part in parts_records:
             linear = record_is_linear(part, default=False)
             ax, gr = plot_cuts(part, enzymes, linear=linear)

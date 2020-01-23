@@ -40,8 +40,7 @@ class PlotsMixin:
             raise ValueError(
                 "Empty connections graph. This probably means your "
                 "parts were filtered out, possibly because they do "
-                "not contain the right enzyme sites or something "
-                "that"
+                "not contain the right enzyme sites"
             )
         max_len = 1.0 * max(len(c) for c in components)
         for i, g in enumerate(components):
@@ -146,23 +145,25 @@ class PlotsMixin:
         return ax
     
     def plot_graphs(self, report_root, assembly, with_overhangs=True):
-        file_prefix = assembly.name + "_"
+        file_prefix = assembly.name + "_" + self.name + "_"
 
         # SLOTS GRAPH
-
-        highlighted_parts = []
-        if hasattr(assembly, "connectors_collection"):
-            if assembly.connectors_collection is not None:
-                highlighted_parts = assembly.parts
-        ax = self.plot_slots_graph(
-            with_overhangs=with_overhangs,
-            show_missing=True,
-            highlighted_parts=highlighted_parts,
-        )
-        
-        f = report_root._file(file_prefix + "parts_graph.pdf")
-        ax.figure.savefig(f.open("wb"), format="pdf", bbox_inches="tight")
-        plt.close(ax.figure)
+        slots_graph = self.slots_graph()
+        if len(slots_graph):
+            highlighted_parts = []
+            if hasattr(assembly, "connectors_collection"):
+                if assembly.connectors_collection is not None:
+                    highlighted_parts = assembly.parts
+            # if hasattr(self, 'plot')
+            ax = self.plot_slots_graph(
+                with_overhangs=with_overhangs,
+                show_missing=True,
+                highlighted_parts=highlighted_parts,
+            )
+            
+            f = report_root._file(file_prefix + "parts_graph.pdf")
+            ax.figure.savefig(f.open("wb"), format="pdf", bbox_inches="tight")
+            plt.close(ax.figure)
 
         # CONNECTIONS GRAPH
 

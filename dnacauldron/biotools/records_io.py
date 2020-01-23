@@ -37,8 +37,67 @@ def string_to_record(string):
     raise ValueError("Invalid sequence format")
 
 
+def load_record(
+    filepath,
+    topology="default_to_linear",
+    id="auto",
+    upperize=True,
+    max_name_length=20,
+):
+    """Return a Biopython record read from a Fasta/Genbank/Snapgene file.
+    
+    Parameters
+    ----------
+
+    filepath
+      Path to a Genbank, Fasta, or Snapgene (.dna) file.
+
+    topology
+      Can be "circular", "linear", "default_to_circular" (will default
+      to circular if ``annotations['topology']`` is not already set) or
+      "default_to_linear".
+    
+    id
+      Sets the record.id. If "auto", the original record.id is used, and if
+      none is set the name of the file (without extension) is used instead.
+    
+    upperize
+      If true, the sequence will get upperized (recommended in this library,
+      as the mix of upper and lower case can cause problems in Biopython's
+      enzyme sites search)
+    
+    max_name_length
+      The name of the record will be truncated if too long to avoid Biopython
+      exceptions being raised.
+    """
+    if filepath.lower().endswith(("gb", "gbk")):
+        record = SeqIO.read(filepath, "genbank")
+    elif filepath.lower().endswith(("fa", "fasta")):
+        record = SeqIO.read(filepath, "fasta")
+    elif filepath.lower().endswith(".dna"):
+        record = snapgene_file_to_seqrecord(filepath)
+    else:
+        raise ValueError("Unknown format for file: %s" % filepath)
+    if upperize:
+        record = record.upper()
+    set_record_topology(record, topology)
+    if id == "auto":
+        id = record.id
+        if id in [None, "", "<unknown id>", ".", " "]:
+            id = os.path.splitext(os.path.basename(filepath))[0]
+            id = id.replace(" ", "_")[:max_name_length]
+        record.id = id
+    elif id is not None:
+        record.id = id.replace(" ", "_")[:max_name_length]
+
+    return record
+
 def load_records_from_zip_file(zip_file):
-    """Return all fasta/genbank/snapgene in a zip as biopython records."""
+    """Return all fasta/genbank/snapgene in a zip as biopython records.
+    
+    Each record gets a ``source_file`` attribute from the zip's file name
+    without the .zip extension.
+    """
     zip_file = flametree.file_tree(zip_file)
     records = []
     for f in zip_file._all_files:
@@ -100,45 +159,24 @@ def load_records_from_file(filepath):
     return records, fmt
 
 
-def load_record(
-    filename,
-    topology="auto",
-    id="auto",
-    upperize=True,
-    default_topology="linear",
-    max_name_length=20,
-):
-    if filename.lower().endswith(("gb", "gbk")):
-        record = SeqIO.read(filename, "genbank")
-    elif filename.lower().endswith(("fa", "fasta")):
-        record = SeqIO.read(filename, "fasta")
-    elif filename.lower().endswith(".dna"):
-        record = snapgene_file_to_seqrecord(filename)
-    else:
-        raise ValueError("Unknown format for file: %s" % filename)
-    if upperize:
-        record = record.upper()
-    if topology == "auto":
-        set_record_topology(record, default_topology, pass_if_already_set=True)
-    else:
-        set_record_topology(record, topology)
-    if id == "auto":
-        id = record.id
-        if id in [None, "", "<unknown id>", ".", " "]:
-            id = os.path.splitext(os.path.basename(filename))[0]
-            record.id = id.replace(" ", "_")[:max_name_length]
-        record.id = id
-    elif id is not None:
-        record.id = id
-        record.id = id.replace(" ", "_")[:max_name_length]
-
-    return record
-
-
 def load_records_from_files(
     files=None, folder=None, use_file_names_as_ids=False
 ):
     """Automatically convert files or a folder's content to biopython records.
+
+    Parameters
+    ----------
+
+    files
+      A list of path to files. A ``folder`` can be provided instead
+    
+    folder
+      A path to a folder containing sequence files.
+    
+    use_file_names_as_ids
+      If True, for every file containing a single record, the file name
+      (without extension) will be set as the record's ID. 
+      
     """
     if files is not None:
         for file in files:
@@ -177,12 +215,11 @@ def load_records_from_files(
             if str(record.id).strip() in UNKNOWN_IDS:
                 record.id = name
             record.file_name = name_no_extension
+            if use_file_names_as_ids and single_record:
+                basename = os.path.basename(record.source_file)
+                basename_no_extension = os.path.splitext(basename)[0]
+                record.id = basename_no_extension
         records += recs
-    if use_file_names_as_ids:
-        for record in records:
-            basename = os.path.basename(record.source_file)
-            basename_no_extension = os.path.splitext(basename)[0]
-            record.id = basename_no_extension
     return records
 
 

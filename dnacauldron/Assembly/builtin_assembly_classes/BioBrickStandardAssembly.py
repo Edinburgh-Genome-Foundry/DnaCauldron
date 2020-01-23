@@ -4,7 +4,8 @@
 from ..Assembly import Assembly
 from ...AssemblyMix import RestrictionLigationMix
 from ..AssemblySimulation import AssemblySimulation
-from ..AssemblySimulationError import AssemblySimulationError
+from ..AssemblyFlaw import AssemblyFlaw
+
 
 class BioBrickStandardAssembly(Assembly):
     def __init__(
@@ -14,7 +15,7 @@ class BioBrickStandardAssembly(Assembly):
         connectors_collection=None,
         expected_constructs=1,
         max_constructs=40,
-        dependencies=None
+        dependencies=None,
     ):
         Assembly.__init__(
             self,
@@ -31,7 +32,7 @@ class BioBrickStandardAssembly(Assembly):
     def simulate(self, sequence_repository, annotate_parts_homologies=True):
 
         if len(self.parts) != 2:
-            error = AssemblySimulationError(
+            error = AssemblyFlaw(
                 assembly=self,
                 message="BioBrick Std Assembly requires 2 parts exactly.",
                 suggestion="Check assembly plan",
@@ -62,7 +63,7 @@ class BioBrickStandardAssembly(Assembly):
         ]
         if len(inserts) != 1:
             prefix = "No" if len(inserts) == 0 else "Multiple"
-            error = AssemblySimulationError(
+            error = AssemblyFlaw(
                 assembly=self,
                 message=prefix + " AATT-CTAG fragments in E+S digestion.",
                 suggestion=(
@@ -75,7 +76,7 @@ class BioBrickStandardAssembly(Assembly):
             errors.append(error)
 
         # E+X MIX TO DIGEST THE RIGHT PART (BACKBONE)
-   
+
         mix_2 = RestrictionLigationMix(
             parts=[right_part],
             enzymes=["EcoRI", "XbaI"],
@@ -90,7 +91,7 @@ class BioBrickStandardAssembly(Assembly):
         ]
         if len(backbones) != 1:
             prefix = "No" if len(backbones) == 0 else "Multiple"
-            error = AssemblySimulationError(
+            error = AssemblyFlaw(
                 assembly=self,
                 message=prefix + " left-CTAG overhang found in E+X mix.",
                 suggestion="Check EcoRI/XbaI sites in %s" % right_part.id,
@@ -144,7 +145,7 @@ class BioBrickStandardAssembly(Assembly):
         # self.attribute_ids_to_constructs(construct_records)
         # n_constructs = len(construct_records)
         # if n_constructs != 1:
-        #     error = AssemblySimulationError(
+        #     error = AssemblyFlaw(
         #         assembly=self,
         #         message="Found %d constructs instead of 1." % n_constructs,
         #         suggestion="Hmmmm",

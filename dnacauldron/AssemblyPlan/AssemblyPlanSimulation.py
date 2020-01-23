@@ -49,13 +49,13 @@ class AssemblyPlanSimulation:
         data = format_data_dicts_records_for_spreadsheet(construct_data_dicts)
         return pandas.DataFrame(data, columns=columns)
 
-    def compute_simulations_stats(self):
+    def compute_stats(self):
         errored = [s for s in self.assembly_simulations if len(s.errors)]
         valid = [s for s in self.assembly_simulations if len(s.errors) == 0]
         return {
             "cancelled_assemblies": len(self.cancelled),
             "errored_assemblies": len(errored),
-            "valid_assemblies": valid,
+            "valid_assemblies": len(valid),
         }
 
     def write_report(
@@ -68,13 +68,19 @@ class AssemblyPlanSimulation:
     ):
         if assembly_report_writer == "default":
             # We'll write all records into one folder for the whole plan
-            assembly_report_writer = AssemblyReportWriter(write_part_records=False)
+            assembly_report_writer = AssemblyReportWriter(
+                include_part_records=False
+            )
         logger = proglog.default_bar_logger(logger)
         if folder_name == "auto":
             folder_name = self.assembly_plan.name + "_assembly_report"
         report_root = file_tree(target)._dir(folder_name, replace=True)
-        self._write_assembly_reports(report_root, assembly_report_writer, logger=logger)
-        self._write_errors_spreadsheet(report_root)
+        self._write_assembly_reports(
+            report_root, assembly_report_writer, logger=logger
+        )
+        self._write_errors_spreadsheet(report_root, error_type="error")
+        self._write_errors_spreadsheet(report_root, error_type="warning")
+        
         self._write_all_required_parts(report_root)
         self._write_construct_summary_spreadsheet(report_root)
         self._write_assembly_plan_spreadsheets(report_root)
@@ -93,7 +99,7 @@ class AssemblyPlanSimulation:
 
     def _write_summary_stats(self, report_root):
         filename = self._get_file_name("simulation_stats.csv")
-        stats = self.compute_simulations_stats()
+        stats = self.compute_stats()
         lines = ["%s: %s" % (k, v) for (k, v) in sorted(stats.items())]
         report_root._file(filename).write("\n".join(lines))
 
@@ -101,15 +107,20 @@ class AssemblyPlanSimulation:
         filename = self._get_file_name("cancelled_assemblies.csv")
         columns = ",".join(["cancelled_assembly", "failed_parent_assembly"])
         cancelled = [
-            ",".join([c.assembly_name, c.failed_dependency]) for c in self.cancelled
+            ",".join([c.assembly_name, c.failed_dependency])
+            for c in self.cancelled
         ]
         report_root._file(filename).write("\n".join([columns] + cancelled))
 
-    def _write_errors_spreadsheet(self, report_root):
+    def _write_errors_spreadsheet(self, report_root, error_type="error"):
         all_errors = [
             error
             for simulation in self.assembly_simulations
-            for error in simulation.errors
+            for error in (
+                simulation.errors
+                if error_type == "errors"
+                else simulation.warnings
+            )
         ]
         if len(all_errors) > 0:
             columns = ";".join(
@@ -126,7 +137,8 @@ class AssemblyPlanSimulation:
                 )
                 for err in all_errors
             ]
-            errors_spreadsheet = report_root._file("assembly_errors.csv")
+            filename = "assembly_%s.csv" % error_type
+            errors_spreadsheet = report_root._file(filename)
             errors_spreadsheet.write("\n".join([columns] + all_error_rows))
 
     def _write_assembly_reports(self, report_root, report_writer, logger):
@@ -154,7 +166,8 @@ class AssemblyPlanSimulation:
             for part in simulation.list_all_parts_used()
         ]
         assemblies = [
-            simulation.assembly.name for simulation in self.assembly_simulations
+            simulation.assembly.name
+            for simulation in self.assembly_simulations
         ]
         parts_that_arent_assembled = set(all_parts).difference(set(assemblies))
         return sorted(parts_that_arent_assembled)
@@ -184,7 +197,7 @@ class AssemblyPlanSimulation:
             if assembly_plan_has_single_level:
                 file_name = self._get_file_name("assembly_plan.csv")
             else:
-                file_name = "assembly_plan_level_%s.csv" % level
+                file_name = "constructs_level_%s.csv" % level
                 file_name = self._get_file_name(file_name)
             f = report_root._file(file_name)
             lines = [",".join([c] + parts) for c, parts in construct_parts]

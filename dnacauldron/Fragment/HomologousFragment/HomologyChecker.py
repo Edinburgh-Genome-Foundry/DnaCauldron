@@ -42,9 +42,10 @@ class HomologyChecker:
         return 0
 
     def check_homology(self, sequence, other_sequence=None):
-        sequence, other_sequence = self.sequence_to_string(sequence)
+        sequence = self.sequence_to_string(sequence)
 
         if other_sequence is not None:
+            other_sequence = self.sequence_to_string(other_sequence)
             if self.max_distance == 0:
                 if sequence != other_sequence:
                     return False
@@ -63,3 +64,12 @@ class HomologyChecker:
             if tm > (self.max_tm or 1e8):
                 return False
         return True
+
+    def parameters_as_string(self):
+        return "%d-%dbp, %.1f-%sC Tm" % (
+            self.min_size,
+            self.max_size,
+            self.min_tm,
+            "+" if (self.max_tm is None) else ("%.1f" % self.max_tm),
+        )
+

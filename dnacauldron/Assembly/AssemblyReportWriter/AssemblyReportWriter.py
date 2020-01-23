@@ -53,7 +53,7 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
         include_fragments_plots="on_error",
         include_parts_plots="on_error",
         include_mix_graphs="on_error",
-        include_parts_records=True,
+        include_part_records=True,
         include_assembly_plots=False,
         show_overhangs_in_graph=True,
         annotate_parts_homologies=True,
@@ -64,7 +64,7 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
         self.include_assembly_plots = include_assembly_plots
         self.show_overhangs_in_graph = show_overhangs_in_graph
         self.annotate_parts_homologies = annotate_parts_homologies
-        self.include_parts_records = include_parts_records
+        self.include_part_records = include_part_records
 
     def _write_constructs_spreadsheet(self, simulation, report_root):
         dataframe = simulation.compute_summary_dataframe()
@@ -82,6 +82,11 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
             target = assemblies_dir._file(filename)
             write_record(construct_record, target, "genbank")
 
+    def _write_part_records(self, simulation, parts_records, report_root):
+        provided_parts_dir = report_root._dir("provided_parts_records")
+        for part in parts_records:
+            write_record(part, provided_parts_dir._file(part.id + ".gb"))
+
     def _write_records_plots(self, assembly_simulation, report_root):
 
         if len(assembly_simulation.construct_records) > 1:
@@ -95,9 +100,18 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
         report_root = file_tree(target, replace=True)
         assembly = assembly_simulation.assembly
 
-        # CREATE THE CONSTRUCTS INFOS
-        if self.include_parts_records:
-            self._write_records(assembly_simulation, report_root)
+        # The 3 next lines cover the case where connectors were added to
+        # the assembly, and where no assembly was found.
+        used_parts = assembly_simulation.list_all_parts_used()
+        parts = sorted(set(assembly.parts + used_parts))
+        repository = assembly_simulation.sequence_repository
+        part_records = repository.get_records(parts)
+
+        self._write_records(assembly_simulation, report_root)
+        if self.include_part_records:
+            self._write_part_records(
+                assembly_simulation, part_records, report_root
+            )
         if self.include_assembly_plots:
             self._write_records_plots(assembly_simulation, report_root)
 
@@ -105,18 +119,15 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
         plot_options = self.get_plots_options(errors_detected)
 
         if plot_options["parts_plots"]:
-            repository = assembly_simulation.sequence_repository
-            parts = assembly_simulation.list_all_parts_used()
-            parts_records = repository.get_records(parts)
             enzymes = assembly.enzymes if hasattr(assembly, "enzymes") else []
             self.plot_provided_parts(
                 report_root=report_root,
-                parts_records=parts_records,
+                parts_records=part_records,
                 enzymes=enzymes,
             )
         if plot_options["fragments_plots"]:
             for mix in assembly_simulation.mixes:
-                mix.plot_fragments(report_root=report_root, mix=mix)
+                mix.plot_fragments(report_root=report_root)
         if plot_options["mix_graphs_plots"]:
             for mix in assembly_simulation.mixes:
                 mix.plot_graphs(
@@ -125,7 +136,9 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
                     with_overhangs=self.show_overhangs_in_graph,
                 )
         if len(assembly_simulation.construct_records):
-            self._write_constructs_spreadsheet(assembly_simulation, report_root)
+            self._write_constructs_spreadsheet(
+                assembly_simulation, report_root
+            )
 
         if target == "@memory":
             return report_root._close()

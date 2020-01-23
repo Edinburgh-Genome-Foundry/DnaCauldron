@@ -34,19 +34,18 @@ class SequenceRepository:
         if collection not in self.collections:
             self.collections[collection] = {}
         self.collections[collection][record.id] = record
-    
+
     def add_records(self, records, collection="parts"):
-        elif isinstance(records, list):
-            if len(records) == 0:
-                return
-            if isinstance(records[0], (tuple, list)):
-                records = [
-                    sequence_to_biopython_record(_record, id=_id)
-                    for _record, _id in records
-                ]
-            return {r.id: r for r in records}
-        else:
-            return records
+
+        if len(records) == 0:
+            return
+        if isinstance(records[0], (tuple, list)):
+            records = [
+                sequence_to_biopython_record(_record, id=_id)
+                for _record, _id in records
+            ]
+        for record in records:
+            self.add_record(record, collection=collection)
 
     def contains_record(self, name):
         collections = self.collections.values()
@@ -56,7 +55,7 @@ class SequenceRepository:
         for collection in self.collections.values():
             if name in collection:
                 return collection[name]
-        raise NotInRepositoryError(name, self)
+        raise NotInRepositoryError([name], self)
 
     def get_records(self, names):
         records = []
@@ -93,3 +92,17 @@ class SequenceRepository:
                 set_record_topology(r, topology)
 
         self.add_records(records, collection=collection)
+
+    def get_part_names_by_collection(self, format="dict"):
+        """Format: dict or string"""
+        result = {
+            collection_name: list(parts.keys())
+            for collection_name, parts in self.collections.items()
+        }
+        if format == "dict":
+            return result
+        else:
+            return "\n".join(
+                "\n".join([name] + ["- " + part for part in sorted(parts)])
+                for name, parts in result.items()
+            )

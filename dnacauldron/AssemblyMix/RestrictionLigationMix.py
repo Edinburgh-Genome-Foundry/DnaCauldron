@@ -5,9 +5,8 @@ from copy import copy
 
 from Bio import Restriction
 
-
-from ..biotools import annotate_record, autoselect_enzyme
 from ..Fragment.StickyEndFragment import StickyEndFragment
+from ..Filter import NoRestrictionSiteFilter
 from .StickyEndAssemblyMix import StickyEndAssemblyMix
 
 
@@ -47,8 +46,9 @@ class RestrictionLigationMix(StickyEndAssemblyMix):
         self.fragments = []
         for part in self.parts:
             for fragment in self.compute_digest(part):
-                # print (fragment)
-                if not isinstance(fragment, StickyEndFragment):
+                # The part is not a fragment if it hasn't been cut at all and
+                # therefore doesn't have sticky ends. Exclude from fragments.
+                if not hasattr(fragment.seq, "left_end"):
                     continue
                 fragment.original_part = part
                 self.annotate_fragment_with_part(fragment)
@@ -83,3 +83,11 @@ class RestrictionLigationMix(StickyEndAssemblyMix):
     def will_clip_in_this_order(fragment1, fragment2):
         """Return True iff f1's right sticky end fits f2's left."""
         return fragment1.will_clip_in_this_order_with(fragment2)
+
+def generate_type2s_restriction_mix(parts, enzyme, name="type2s_mix"):
+    return RestrictionLigationMix(
+        parts=parts,
+        enzymes=[enzyme],
+        fragments_filters=[NoRestrictionSiteFilter(str(enzyme))],
+        name=name,
+    )

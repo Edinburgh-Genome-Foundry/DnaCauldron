@@ -6,91 +6,19 @@ from Bio import Restriction
 
 
 from ..AssemblyMix import (
-    # Type2sRestrictionMix,
-    AssemblyMixError,
+    RestrictionLigationMix,
+    generate_type2s_restriction_mix
 )
-from ..Filter import FragmentSetContainsPartsFilter
+from ..Filter import FragmentSetContainsPartsFilter, NoRestrictionSiteFilter
 from ..Fragment.StickyEndFragment import StickyEnd
 from ..biotools import (
     sequence_to_biopython_record,
-    reverse_complement,
     annotate_record,
     load_record,
-    write_record,
     autoselect_enzyme,
-    record_is_linear,
 )
 
-
-def single_assembly(
-    parts,
-    outfile=None,
-    enzyme="autoselect",
-    annotate_homologies=True,
-    mix_class="restriction",
-):
-    """Return the single assembly obtained by assembling together different
-    parts on a receptor vector.
-
-    Parameters
-    ----------
-
-    parts
-      A list of either filenames or Biopython records of parts.
-      The parts are assumed circular (i.e. parts on backbones) but linear
-      parts should work too as long as the receptor is circular. To make
-      sure that a part will be treated as linear DNA, provide a Biopython
-      record for that part, with a ``.linear`` attribute set to true.
-
-    outfile
-      Name of a genbank file where to output the result
-
-    enzyme
-      Name of the enzyme used for the assembly.
-
-    """
-
-    if mix_class == "restriction":
-        mix_class = Type2sRestrictionMix
-
-    part_records = []
-    for part in parts:
-        if isinstance(part, str):
-            name = os.path.basename(part).split(".")[0].lower()
-            part = load_record(part, topology="circular", id=name)
-        part_records.append(part)
-    if enzyme == "autoselect":
-        enzyme = autoselect_enzyme(parts, ["BsmBI", "BsaI", "BbsI", "SapI"])
-
-    mix = mix_class(part_records, enzyme)
-    part_names = [p.id for p in part_records]
-    assemblies = mix.compute_circular_assemblies(
-        annotate_parts_homologies=annotate_homologies,
-        fragments_sets_filters=(FragmentSetContainsPartsFilter(part_names),),
-    )
-    first_assemblies = list(zip(assemblies, [1, 2]))
-    N = len(first_assemblies)
-    if N != 1:
-        raise AssemblyMixError(
-            "Found %d assemblies instead of 1 expected" % N, mix=mix
-        )
-
-    assembly = first_assemblies[0][0]
-    if outfile is not None:
-        write_record(assembly, outfile, "genbank")
-    return assembly
-
-
-def complement_parts(parts, candidates_parts, enzyme="autoselect"):
-    parts = list(parts)
-    complement_parts = list(candidates_parts)
-    if enzyme == "autoselect":
-        enzyme = autoselect_enzyme(parts + complement_parts)
-    mix = Type2sRestrictionMix(parts, enzyme=enzyme)
-    return mix.autoselect_connectors(complement_parts)
-
-
-def get_overhangs_from_record(rec, with_locations=False):
+def list_overhangs_from_record_annotations(rec, with_locations=False):
     """Return a least of the (probable) overhangs used building the construct
     """
 
@@ -159,7 +87,7 @@ def substitute_overhangs(
     """
     if enzyme == "auto":
         enzyme = autoselect_enzyme([record])
-    mix = Type2sRestrictionMix([record], enzyme=enzyme)
+    mix = generate_type2s_restriction_mix(parts=[record], enzyme=enzyme)
     fragments = [f for f in mix.fragments if not f.is_reversed]
     for fragment in fragments:
         left = fragment.seq.left_end
@@ -170,14 +98,14 @@ def substitute_overhangs(
         if str(right).upper() in substitutions:
             end = StickyEnd(substitutions[str(right).upper()], right.strand)
             fragment.seq.right_end = end
-    new_mix = Type2sRestrictionMix(
-        fragments=fragments, enzyme=enzyme, fragments_filters=()
+    new_mix = RestrictionLigationMix(
+        fragments=fragments, enzymes=[enzyme], fragments_filters=()
     )
     if return_linear_parts:
         fragment = [f for f in new_mix.filtered_fragments if not f.is_reversed][
             0
         ]
-        site = sequence_to_biopython_record(mix.enzyme.site)
+        site = sequence_to_biopython_record(mix.enzymes[0].site)
         annotate_record(site, label="%s" % enzyme)
         rev_site = site.reverse_complement()
         annotate_record(site, label="%s" % enzyme)
@@ -190,7 +118,7 @@ def substitute_overhangs(
         return list(new_mix.compute_circular_assemblies())[0]
 
 
-def list_overhangs(records, enzyme="auto", parts_only=True):
+def list_digestion_overhangs(records, enzyme="auto", parts_only=True):
     """List all overhangs created by restriction in the provided records.
     
     Warning: only overhangs on non-reversed fragments are returned, not
@@ -211,5 +139,5 @@ def list_overhangs(records, enzyme="auto", parts_only=True):
     """
     if enzyme == "auto":
         enzyme = autoselect_enzyme(records)
-    mix = Type2sRestrictionMix(records, enzyme=enzyme)
+    mix = generate_type2s_restriction_mix(parts=records, enzyme=enzyme)
     return mix.list_overhangs(filtered_fragments_only=parts_only)

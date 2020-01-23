@@ -1,7 +1,7 @@
 from ..tools import format_value_for_spreadsheet
 
 
-class AssemblySimulationError(Exception):
+class AssemblyFlaw(Exception):
     def __init__(self, message, assembly, suggestion="", data=None):
         self.message = message
         self.assembly = assembly

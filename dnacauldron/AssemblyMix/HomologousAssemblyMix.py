@@ -1,5 +1,5 @@
 from copy import deepcopy
-
+import matplotlib.pyplot as plt
 
 from .AssemblyMix import AssemblyMix
 from ..Fragment.HomologousFragment import HomologousFragment
@@ -9,22 +9,31 @@ class HomologousAssemblyMix(AssemblyMix):
     """In construction. Do not use."""
 
     def __init__(
-        self, parts, homology_checker, annotate_fragments_with_parts=True
+        self,
+        parts,
+        homology_checker,
+        name="homology_mix",
+        annotate_fragments_with_parts=True,
     ):
 
         self.parts = deepcopy(parts)
+        self.name = name
         self.homology_checker = homology_checker
         self.annotate_fragments_with_parts = annotate_fragments_with_parts
+        self.fragments_filters = ()
         self.initialize()
 
     def compute_fragments(self):
-        self.fragments = [
-            HomologousFragment.from_standard_record(part)
-            for part in self.parts
-        ]
+        self.fragments = []
+        for part in self.parts:
+            fragment = HomologousFragment.from_standard_record(part)
+            self.annotate_fragment_with_part(fragment)
+            self.fragments.append(fragment)
 
-    @staticmethod
-    def assemble(fragments, circularize=False, annotate_homologies=False):
+
+    def assemble(
+        self, fragments, circularize=False, annotate_homologies=False
+    ):
         return HomologousFragment.assemble(
             fragments,
             homology_checker=self.homology_checker,
@@ -32,11 +41,11 @@ class HomologousAssemblyMix(AssemblyMix):
             annotate_homologies=annotate_homologies,
         )
 
-    @staticmethod
-    def will_clip_in_this_order(fragment1, fragment2):
+    def will_clip_in_this_order(self, fragment1, fragment2):
         """Return True iff f1's right sticky end fits f2's left."""
-        homology = homology_checker.find_end_homologies(self, self)
-        return fragment1.will_clip_in_this_order_with(fragment2)
+        return fragment1.will_clip_in_this_order_with(
+            fragment2, homology_checker=self.homology_checker
+        )
 
     def plot_graphs(self, report_root, assembly, with_overhangs=True):
         file_prefix = assembly.name + "_"

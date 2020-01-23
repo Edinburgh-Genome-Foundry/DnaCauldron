@@ -1,14 +1,14 @@
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
-from Bio.SeqFeature import SeqFeature, FeatureLocation
 from Bio.Alphabet import DNAAlphabet
 
 from ...biotools import set_record_topology, crop_record_with_saddling_features
+from ..Fragment import Fragment
 from .StickyEnd import StickyEnd
 from .StickyEndSeq import StickyEndSeq
 
 
-class StickyEndFragment(SeqRecord):
+class StickyEndFragment(Fragment):
     """Biopython SeqRecord whose sequence has sticky ends."""
 
     def will_clip_in_this_order_with(self, other):
@@ -36,20 +36,28 @@ class StickyEndFragment(SeqRecord):
                 "Only constructs with two compatible sticky ends"
                 " can be circularized"
             )
-        connector_str = str(self.seq.left_end)
         connector = SeqRecord(Seq(str(self.seq.left_end)))
         if annotate_homology:
-            label = "homology" if (len(connector) > 8) else connector_str
-            connector.features = [
-                SeqFeature(
-                    FeatureLocation(0, len(connector), 1),
-                    type=annotation_type,
-                    qualifiers={"label": label},
-                )
-            ]
+            self.annotate_connector(connector, annotation_type=annotation_type)
         result = connector + self
+        result.__class__ = SeqRecord
         set_record_topology(result, "circular")
+
         return result
+    
+    def annotate_connector(self, connector, annotation_type="homology"):
+        """Annotate a connector to indicate it used to be a sticky end."""
+        if len(connector) > 8:
+            label = "homology"
+        else:
+            label = str(connector.seq)
+        feature = self.create_homology_annotation(
+            start=0,
+            end=len(connector),
+            annotation_type=annotation_type,
+            label=label,
+        )
+        connector.features = [feature]
 
     @staticmethod
     def assemble(fragments, circularize=False, annotate_homologies=False):
@@ -71,22 +79,12 @@ class StickyEndFragment(SeqRecord):
         self,
         other,
         annotate_homology=False,
-        annotation_type="homology",
-        **qualifiers
+        annotation_type="homology"
     ):
         connector_str = str(self.seq.right_end)
         connector = SeqRecord(Seq(connector_str))
-        if len(qualifiers) == 0:
-            label = "homology" if (len(connector) > 8) else connector_str
-            qualifiers = {"label": label}
         if annotate_homology:
-            connector.features = [
-                SeqFeature(
-                    FeatureLocation(0, len(connector), 1),
-                    type=annotation_type,
-                    qualifiers=qualifiers,
-                )
-            ]
+            self.annotate_connector(connector, annotation_type=annotation_type)
         selfc = SeqRecord(
             seq=Seq(str(self.seq)),
             features=self.features,
@@ -98,16 +96,10 @@ class StickyEndFragment(SeqRecord):
         new_record.seq.alphabet = DNAAlphabet()
         return new_record
 
-    def reverse_complement(self):
-        new_record = SeqRecord.reverse_complement(self)
-        new_record.__class__ = StickyEndFragment
-        return new_record
-
-    def __add__(self, other):
-        return self.assemble_with(other)
-
     # def __hash__(self):
     #     return hash("StickyEndFragment"+str(self.seq))
+    # def __add__(self, other):
+    #     return self.assemble_with(other)
 
     @staticmethod
     def list_from_record_digestion(record, enzyme, linear="auto"):
@@ -137,6 +129,7 @@ class StickyEndFragment(SeqRecord):
             index = record.seq.find(fragment)
             if index == -1:
                 continue
+
             def only_parts_indicators(feature):
                 return feature.qualifiers.get("indicates_part", False)
 
@@ -152,4 +145,17 @@ class StickyEndFragment(SeqRecord):
                 annotations=subrecord.annotations,
             )
             record_fragments.append(new_stickyend_record)
+
         return record_fragments
+
+    def to_standard_string(self):
+
+        return "%s%s%s" % (self.seq.left_end, self.seq, self.seq.right_end)
+    
+    def text_representation_in_plots(self):
+        lines = [
+            str(self.seq.left_end),
+            r"$\bf{%s}$" % self.original_part.id,
+            str(self.seq.right_end)
+        ]
+        return "\n".join(lines)
