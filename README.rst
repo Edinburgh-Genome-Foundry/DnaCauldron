@@ -100,6 +100,7 @@ Assembly Plans
 An assembly plan is simply defined by a list of assemblies:
 
 .. code:: python
+
    # Define an assembly plan as a list of Assembly objects
    assembly_plan = dc.AssemblyPlan(assemblies=[...])
    
