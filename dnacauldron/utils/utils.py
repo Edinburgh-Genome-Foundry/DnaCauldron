@@ -99,7 +99,7 @@ def substitute_overhangs(
             end = StickyEnd(substitutions[str(right).upper()], right.strand)
             fragment.seq.right_end = end
     new_mix = RestrictionLigationMix(
-        fragments=fragments, enzymes=[enzyme], fragments_filters=()
+        fragments=fragments, enzymes=[enzyme], fragment_filters=()
     )
     if return_linear_parts:
         fragment = [f for f in new_mix.filtered_fragments if not f.is_reversed][

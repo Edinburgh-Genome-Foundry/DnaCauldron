@@ -42,16 +42,6 @@ class GibsonAssembly(Assembly):
         description = self.homology_checker.parameters_as_string()
         return dict(homology_condition=description)
 
-    def _detect_constructs_number_error(self, found):
-        expected = self.expected_constructs
-        if expected != found:
-            return AssemblyFlaw(
-                assembly=self,
-                message="Wrong number of constructs",
-                suggestion="Check assembly or parts design",
-                data={"expected_": expected, "found": found},
-            )
-
     def _detect_unused_parts_error(self, construct_records):
         used_parts = [
             fragment.original_part.id
@@ -170,13 +160,12 @@ class GibsonAssembly(Assembly):
 
         errors = []
         found = len(construct_records)
-        constructs_number_error = self._detect_constructs_number_error(found)
-        if constructs_number_error is not None:
-            errors.append(constructs_number_error)
+        self._detect_constructs_number_error(found, errors)
+        self._detect_max_constructs_reached(found, warnings)
         if self.expect_no_unused_parts:
             unused_error = self._detect_unused_parts_error(construct_records)
             if unused_error is not None:
-                errors.append(constructs_number_error)
+                errors.append(unused_error)
         if errors != []:
             warnings.extend(self._detect_parts_connections_errors(mix))
 

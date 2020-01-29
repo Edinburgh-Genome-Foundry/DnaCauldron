@@ -99,7 +99,7 @@ The following code produces a structured directory with various reports:
         dc.load_record("receptor.gb", topology='circular', name="Receptor"),
     ]
     dc.full_assembly_report(parts, target="./my_report", enzyme="BsmBI",
-                            max_assemblies=40, fragments_filters='auto',
+                            max_assemblies=40, fragment_filters='auto',
                             assemblies_prefix='asm')
 
 Result:

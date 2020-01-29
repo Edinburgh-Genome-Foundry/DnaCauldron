@@ -7,7 +7,7 @@ class HomologyChecker:
     tm_dict = {"A": 2, "T": 2, "G": 4, "C": 4}
 
     def __init__(
-        self, min_size=15, max_size=30, min_tm=0, max_tm=None, max_distance=0
+        self, min_size=15, max_size=70, min_tm=0, max_tm=None, max_distance=0
     ):
         self.min_size = min_size
         self.max_size = max_size

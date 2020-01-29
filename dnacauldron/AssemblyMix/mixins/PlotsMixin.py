@@ -13,7 +13,7 @@ class PlotsMixin:
             fragment = self.fragments_dict[i]
             return "\n".join(
                 [
-                    fragment.text_representation_in_plots()
+                    fragment.text_representation_in_plots().replace("_", "-")
                 ]
             )
 
@@ -30,6 +30,7 @@ class PlotsMixin:
                 node_color="w",
                 node_size=3000,
             )
+        
         if self.name is not None:
             ax.set_title(self.name, loc="left")
         return ax

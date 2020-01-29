@@ -1,5 +1,7 @@
 import numpy
 
+from .AssemblyFlaw import AssemblyFlaw
+
 
 class Assembly:
 
@@ -11,7 +13,8 @@ class Assembly:
         name="unnamed_assembly",
         max_constructs=40,
         dependencies=None,
-        connectors_collection=None
+        expected_constructs=1,
+        connectors_collection=None,
     ):
         self.name = name
         self.parts = parts
@@ -19,6 +22,7 @@ class Assembly:
         if dependencies is None:
             dependencies = dict(level=1, depends_on=[], used_in=[])
         self.dependencies = dependencies
+        self.expected_constructs = expected_constructs
         self.connectors_collection = connectors_collection
 
     def get_extra_construct_data(self):
@@ -63,6 +67,30 @@ class Assembly:
             return []
         else:
             return list(sequence_repository.collections[collection].values())
+
+    def _detect_constructs_number_error(self, found, flaws_list):
+        """Add a new flaw to the list if unexpected constructs_number"""
+        expected = self.expected_constructs
+        if (expected is not None) and (expected != found):
+            flaw = AssemblyFlaw(
+                assembly=self,
+                message="Wrong number of constructs",
+                suggestion="Check assembly or parts design",
+                data={"expected_": expected, "found": found},
+            )
+            flaws_list.append(flaw)
+
+    def _detect_max_constructs_reached(self, found, flaws_list):
+        """Add a new flaw to the list if max constructs is reached"""
+        max_allowed = self.max_constructs
+        if (max_allowed is not None) and (max_allowed <= found):
+            flaw = AssemblyFlaw(
+                assembly=self,
+                message="Wrong number of constructs",
+                suggestion="Check assembly or parts design",
+                data={"max": max_allowed, "found": found},
+            )
+            flaws_list.append(flaw)
 
 
 def format_string(value):

@@ -24,9 +24,11 @@ class AssemblySimulation:
     def fragment_part(fragment, mark_reverse=False):
         """Return the name of the fragment, or optionally `NAME_r` if the
         fragment is the reverse of another fragment."""
-        return fragment.original_part.id + (
-            "_r" if (fragment.is_reversed and mark_reverse) else ""
-        )
+        if hasattr(fragment, "original_part"):
+            name = fragment.original_part.id 
+        else:
+            name = fragment.id
+        return name + ("_r" if (fragment.is_reversed and mark_reverse) else "")
 
     def list_all_parts_used(self):
         parts = [

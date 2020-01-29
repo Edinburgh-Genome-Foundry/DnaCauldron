@@ -7,6 +7,8 @@ from ..tools import (
 )
 from ..biotools import write_record
 from ..Assembly.AssemblyReportWriter import AssemblyReportWriter
+from .plot_leveled_graph import plot_leveled_graph
+import matplotlib.pyplot as plt
 
 
 class AssemblyPlanSimulation:
@@ -73,14 +75,14 @@ class AssemblyPlanSimulation:
             )
         logger = proglog.default_bar_logger(logger)
         if folder_name == "auto":
-            folder_name = self.assembly_plan.name + "_assembly_report"
+            folder_name = self.assembly_plan.name + "_simulation"
         report_root = file_tree(target)._dir(folder_name, replace=True)
         self._write_assembly_reports(
             report_root, assembly_report_writer, logger=logger
         )
         self._write_errors_spreadsheet(report_root, error_type="error")
         self._write_errors_spreadsheet(report_root, error_type="warning")
-        
+
         self._write_all_required_parts(report_root)
         self._write_construct_summary_spreadsheet(report_root)
         self._write_assembly_plan_spreadsheets(report_root)
@@ -89,8 +91,14 @@ class AssemblyPlanSimulation:
             self._write_cancelled_assemblies(report_root)
         if include_original_parts_records:
             self._write_all_required_parts_records(report_root)
+        if not self.has_single_level:
+            self._plot_assembly_graph(report_root)
         if target == "@memory":
             return report_root._close()
+
+    @property
+    def has_single_level(self):
+        return len(self.assembly_plan.levels) == 1
 
     def _get_file_name(self, filename):
         name = self.assembly_plan.name
@@ -111,6 +119,40 @@ class AssemblyPlanSimulation:
             for c in self.cancelled
         ]
         report_root._file(filename).write("\n".join([columns] + cancelled))
+
+    def _plot_assembly_graph(self, report_root):
+        all_parts = []
+
+        def parts_sort_key(name):
+            assemblies = enumerate(self.assembly_plan.assemblies)
+            return [i for i, asm in assemblies if name in asm.parts][0]
+
+        all_parts = (
+            self.list_all_original_parts_used() + self.assembly_plan.all_parts
+        )
+        all_parts = sorted(set(all_parts), key=parts_sort_key)
+
+        def sort_key(name):
+            assemblies = enumerate(self.assembly_plan.assemblies)
+            return [i for i, asm in assemblies if asm.name == name][0]
+
+        levels_dict = self.assembly_plan.levels
+        levels = [all_parts] + [
+            sorted([assembly.name for assembly in assemblies], key=sort_key)
+            for lvl, assemblies in sorted(levels_dict.items())
+        ]
+        edges = list(self.assembly_plan.graph.edges())
+
+        def draw_node(x, y, node, ax):
+            text = node.replace("_", " ")
+            ax.text(x, y, text, bbox={"facecolor": "white"})
+
+        _, ax = plot_leveled_graph(
+            levels=levels, edges=edges, draw_node=draw_node
+        )
+        target = report_root._file("assembly_plan_graph.pdf")
+        ax.figure.savefig(target.open("wb"), format="pdf")
+        plt.close(ax.figure)
 
     def _write_errors_spreadsheet(self, report_root, error_type="error"):
         all_errors = [
@@ -159,7 +201,7 @@ class AssemblyPlanSimulation:
         file_name = self._get_file_name("summary.csv")
         data.to_csv(report_root._file(file_name).open("w"), index=False)
 
-    def list_all_original_parts(self):
+    def list_all_original_parts_used(self):
         all_parts = [
             part
             for simulation in self.assembly_simulations
@@ -173,12 +215,12 @@ class AssemblyPlanSimulation:
         return sorted(parts_that_arent_assembled)
 
     def _write_all_required_parts(self, report_root):
-        all_parts = self.list_all_original_parts()
+        all_parts = self.list_all_original_parts_used()
         file_name = self._get_file_name("all_required_parts.txt")
         report_root._file(file_name).write("\n".join(all_parts))
 
     def _write_all_required_parts_records(self, report_root):
-        all_parts = self.list_all_original_parts()
+        all_parts = self.list_all_original_parts_used()
         part_records = self.sequence_repository.get_records(all_parts)
         records_dir = report_root._dir("part_records")
         for part_record in part_records:
@@ -188,13 +230,12 @@ class AssemblyPlanSimulation:
 
     def _write_assembly_plan_spreadsheets(self, report_root):
         data = self.compute_summary_dataframe()
-        assembly_plan_has_single_level = set(data["assembly_level"]) == {1}
         for level, subdata in data.groupby("assembly_level"):
             construct_parts = [
                 (row.construct_id, row.parts.split(" & "))
                 for i, row in subdata.iterrows()
             ]
-            if assembly_plan_has_single_level:
+            if self.has_single_level:
                 file_name = self._get_file_name("assembly_plan.csv")
             else:
                 file_name = "constructs_level_%s.csv" % level

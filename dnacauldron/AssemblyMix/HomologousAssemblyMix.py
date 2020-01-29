@@ -20,13 +20,13 @@ class HomologousAssemblyMix(AssemblyMix):
         self.name = name
         self.homology_checker = homology_checker
         self.annotate_fragments_with_parts = annotate_fragments_with_parts
-        self.fragments_filters = ()
+        self.fragment_filters = ()
         self.initialize()
 
     def compute_fragments(self):
         self.fragments = []
         for part in self.parts:
-            fragment = HomologousFragment.from_standard_record(part)
+            fragment = HomologousFragment.from_biopython_record(part)
             self.annotate_fragment_with_part(fragment)
             self.fragments.append(fragment)
 

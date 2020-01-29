@@ -78,6 +78,8 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
             assemblies_dir = report_root
 
         for construct_record in assembly_simulation.construct_records:
+            if hasattr(construct_record, "as_biopython_record"):
+                construct_record = construct_record.as_biopython_record()
             filename = construct_record.id + ".gb"
             target = assemblies_dir._file(filename)
             write_record(construct_record, target, "genbank")
@@ -85,6 +87,8 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
     def _write_part_records(self, simulation, parts_records, report_root):
         provided_parts_dir = report_root._dir("provided_parts_records")
         for part in parts_records:
+            if hasattr(part, "as_biopython_record"):
+                part = part.as_biopython_record()
             write_record(part, provided_parts_dir._file(part.id + ".gb"))
 
     def _write_records_plots(self, assembly_simulation, report_root):
@@ -94,6 +98,8 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
         else:
             plots_dir = report_root
         for construct_record in assembly_simulation.construct_records:
+            if hasattr(construct_record, "as_biopython_record"):
+                construct_record = construct_record.as_biopython_record()
             self.plot_construct(construct_record, plots_dir)
 
     def write_report(self, assembly_simulation, target):
@@ -106,6 +112,8 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
         parts = sorted(set(assembly.parts + used_parts))
         repository = assembly_simulation.sequence_repository
         part_records = repository.get_records(parts)
+
+        
 
         self._write_records(assembly_simulation, report_root)
         if self.include_part_records:

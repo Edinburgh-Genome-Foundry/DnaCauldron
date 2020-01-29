@@ -100,7 +100,7 @@ def test_full_report(tmpdir):
         "@memory",
         enzyme="BsmBI",
         max_assemblies=40,
-        fragments_filters="auto",
+        fragment_filters="auto",
         assemblies_prefix="asm",
     )
     assert n == 5
@@ -109,7 +109,7 @@ def test_full_report(tmpdir):
         target1,
         enzyme="BsmBI",
         max_assemblies=40,
-        fragments_filters="auto",
+        fragment_filters="auto",
         assemblies_prefix="asm",
     )
     dc.full_assembly_report(
@@ -117,7 +117,7 @@ def test_full_report(tmpdir):
         target2,
         enzyme="BsmBI",
         max_assemblies=40,
-        fragments_filters="auto",
+        fragment_filters="auto",
         assemblies_prefix="asm",
     )
     assert os.path.exists(os.path.join(target1, "assemblies", "asm_005.gb"))

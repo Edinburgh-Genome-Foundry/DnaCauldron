@@ -63,7 +63,7 @@ class GraphsMixin:
                 if not all(
                     [
                         fl(self.fragments_dict[node])
-                        for fl in self.fragments_filters
+                        for fl in self.fragment_filters
                     ]
                 )
             ]

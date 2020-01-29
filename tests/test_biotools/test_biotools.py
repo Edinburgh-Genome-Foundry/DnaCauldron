@@ -50,3 +50,8 @@ def test_ids_of_multifile_import_are_set_correctly():
         "frag_1",
         "frag_2",
     ]
+
+def test_load_records_from_zip_file():
+    zip_path = os.path.join(this_directory, "records.zip")
+    records = biotools.load_records_from_files(files=[zip_path])
+    assert len(records) == 5

@@ -16,20 +16,39 @@
 DNA Cauldron
 ============
 
-Don't you hate it when you are planning a large DNA assembly batch and you're not sure how the many parts will assemble together, so when some assemblies fail at the bench you spend hours checking your files for design flaws?
+Have you ever had a large DNA assembly batch fail at the bench, and then you
+spent spent hours checking your part sequence files for design flaws?
 
-DNA Cauldron might be for you! The library provides a generic cloning simulation framework to predict constructs sequences and detect assembly design flaws for various cloning methods:
+DNA Cauldron provides a generic cloning simulation framework to predict
+constructs sequences and detect assembly flaws. The idea is that, if
+your assemblies work with Cauldron, they should work at the bench. It is
+especially useful for people and machines tasked with assembling DNA with
+minimal knowledge of the project's specifics.
 
+Features for assembly simulation:
+
+- Great support for Golden Gate assembly and its derivatives (MoClo, EMMA, Phytobrick, etc.),
+  Assembly simulation is as simple as
+  `dropping sequence files in a web interface <http://cuba.genomefoundry.org/simulate_gg_assemblies>`_.
+- Good support for Gibson Assembly, BASIC Assembly, Biobrick assembly, 
+  Biobrick assembly.
+- Provide assembly parts in any order, with or without annotations, in reverse or direct
+sense, linear or circular... Cauldron will get it!
+- If your assembly is combinatorial, Cauldron will find all the possible combinations.
+- If you forgot to add connector parts in your assembly (that happens with
+  assemblies like EMMA), Cauldron can add them for you!
 - Advanced design flaw detection (missing parts, presence of problematic
-restriction sites in the parts, wrong overhang designs, etc.)
-- Awesome support for Type 2S assembly (automatic enzyme and connector part selection)
-- Support for other restriction-based assemblies (BioBrick, BASIC) or homology based assemblies (Gibson Assembly, Ligase Cycling Reaction Assembly).
+  restriction sites in the parts, wrong overhang designs, etc.).
+- Comprehensive reports with constructs sequences, fragment sequences, summary
+  spreadsheets.
 
 The library also enables the management of large, complex assembly batches:
 
-- Import assembly plans from spreadsheets
-- Simulate and validate hierarchical assembly plans where some assembly products are used as parts in the next level of assembly.
-- Generate complete, self contained reports, in folders, zip files, in memory or in JSON format (for use on servers).
+- Import assembly plans from spreadsheets.
+- Simulate and validate hierarchical assembly plans where some assembly products
+  are used as parts in the next level of assembly.
+- Generate complete, self contained reports as folders, zip files, or in-memory
+  zip files (for use on servers).
 
 Usage
 -----
@@ -51,32 +70,36 @@ are managed via a ``SequenceRepository``:
     repository = dc.SequenceRepository()
     repository.import_sequences(folder="my_sequences/", use_file_names_as_ids=True)
 
-One important thing is to make sure the parts topology (as set in Biopython records at ``record.annotations['topology']``) is accurate. This can be done at import time by setting ``topology='linear'``, ``topology='circular'``, or ``topology='auto'`` to use the topology specified by each Genbank file.  
+**Important:** ensure the parts topology (as set in Biopython records at
+``record.annotations['topology']``) is accurate. This can be done at import
+time by setting ``topology='linear'``, ``topology='circular'``, or
+``topology='auto'`` to use the topology specified by each Genbank file.  
 
 Parts assembly
 ~~~~~~~~~~~~~~
 
-You define and simulate an assembly by explaining which parts of the repository should
-be assembled together:
+An assembly simply defines which parts of the sequence repository should
+be assembled together. Here we use a "Type-2s Restriction" class of assembly,
+which will work for all Golden-Gate-style assemblies:
 
 .. code:: python
 
     assembly = dc.Type2sRestrictionAssembly(parts=["part_A", "part_B", "receptor"])
     simulation = assembly.simulate(sequence_repository=repository)
 
-Note that we could have provided ``enzyme='BsmBI'`` in ``Type2sRestrictionAssembly``
-but the enzyme will be auto-selected by the framework.
+Note that we could have provided the enzyme in ``Type2sRestrictionAssembly`` with
+``enzyme='BsmBI'``, but it will be auto-selected by Cauldron.
 
 If you want to simulate other restriction-based assembly reactions such as IGEM Biobricks
-or BASIC assembly instead of Type2s restriction, use the corresponding built-in Assembly subclass:
+or Gibson Assembly instead of Type2s restriction, use the corresponding built-in Assembly subclass:
 
 .. code:: python
 
     assembly = dc.BioBrickStandardAssembly(parts=['part_A', 'part_B'])
-    assembly = dc.BASICAssembly(parts=['part_A', 'part_B'])
+    assembly = dc.GibsonAssembly(parts=['part_A', 'part_B'])
     
 
-Now you can 
+Now you can explore the results of the simulation:
 
 .. code:: python
 
@@ -85,14 +108,13 @@ Now you can
         print (record.id, len(record))
     
     # Get a list of dictionnaries with data on each construct
-    constructs_data = simulation.get_all_constructs_data()
+    constructs_data = simulation.compute_all_construct_data_dicts()
     
-    # Write a full report with sequences and figures
-    simulation.write_report("report/")
+    # Write a full report with sequences and figures in a zip.
+    simulation.write_report("report.zip")
 
-DNA Cauldron shines in the informative reports it produces to help you pinpoint problems
-These reports can be configured and customized to show more or less information.
-[Report screenshot]
+DNA Cauldron aims at generating reports as useful as possible to help you
+pinpoint any problem when you don't get the expected number of assemblies.
 
 Assembly Plans
 ~~~~~~~~~~~~~~
@@ -100,31 +122,33 @@ Assembly Plans
 An assembly plan is simply defined by a list of assemblies:
 
 .. code:: python
+
    # Define an assembly plan as a list of Assembly objects
-   assembly_plan = dc.AssemblyPlan(assemblies=[...])
+   assembly_plan = dc.AssemblyPlan(assemblies=[assembly_1, ...])
    
    # Or import an assembly plan from spreadsheets:
    assembly_plan = dc.AssemblyPlan.from_spreadsheet(
        spreadsheet="batch_1.csv", # could also be an xls(x) file
        assembly_class=dc.Type2sRestrictionAssembly
    )
-See this example for a spreadsheet defining assemblies (or this example for a spreadsheet with more parameters).
+
+See these different examples for a spreadsheet defining assemblies.
    
-A nice thing is that assembly plans can be hierarchical (i.e. have an assembly's construct serve as a part
-of another assembly). DNA Cauldron will automatically figure out the dependencies
+Assembly plans can be hierarchical (i.e. have an assembly's construct serve as a
+part in another assembly). DNA Cauldron will automatically figure out the dependencies
 between assemblies and sort the order in which they should be simulated.
 
 The simulation and reporting on an assembly plan is very similar to that of a single assembly:
 
 .. code:: python
 
-   plan_simulation = assembly_plan.simulate(sequence_repository=sequence_respository)
+   plan_simulation = assembly_plan.simulate(sequence_respository)
    
    # Get a list of dictionnaries with data on each construct
-   plan_simulation.get_all_constructs_data()
+   plan_simulation.compute_all_construct_data_dicts()
    
+   # Write a detailed report on each assembly and on the plan as a whole
    plan_simulation.write_report("my_assembly_simulation.zip")
-**Try it online !** Use `this web service <http://cuba.genomefoundry.org/simulate_gg_assemblies>`_ to predict the outcome of a batch of (possibly combinatorial) Type 2S assemblies.
 
 Installation
 -------------
@@ -220,7 +244,7 @@ The following code produces a structured directory with various reports:
         load_record("receptor.gb", topology='circular', name="Receptor")
     ]
     dc.full_assembly_report(parts, target="./my_report", enzyme="BsmBI",
-                            max_assemblies=40, fragments_filters='auto',
+                            max_assemblies=40, fragment_filters='auto',
                             assemblies_prefix='asm')
 
 Result:

@@ -16,7 +16,7 @@ class RestrictionLigationMix(StickyEndAssemblyMix):
         parts=None,
         enzymes=None,
         fragments=None,
-        fragments_filters=(),
+        fragment_filters=(),
         name="restriction_mix",
         annotate_fragments_with_parts=True,
     ):
@@ -27,7 +27,7 @@ class RestrictionLigationMix(StickyEndAssemblyMix):
         if enzymes is not None:
             enzymes = [Restriction.__dict__[e] for e in enzymes]
         self.enzymes = enzymes
-        self.fragments_filters = fragments_filters
+        self.fragment_filters = fragment_filters
         self.name = name
         self.annotate_fragments_with_parts = annotate_fragments_with_parts
         self.initialize()
@@ -54,40 +54,10 @@ class RestrictionLigationMix(StickyEndAssemblyMix):
                 self.annotate_fragment_with_part(fragment)
                 self.fragments.append(fragment)
 
-    @staticmethod
-    def assemble(fragments, circularize=False, annotate_homologies=False):
-        """Assemble sticky-end fragments into a single one (sticky or not).
-
-        Parameters
-        ----------
-
-        fragments
-          List of StickyEndFragment fragments
-
-        circularize
-          If True and if the two ends of the final assembly are compatible,
-          circularize the construct, i.e. return a non-sticky record
-          representing the circular assembly of the fragments.
-
-        annotate_homologies
-          If True, all homology regions that where formerly sticky ends will
-          be annotated in the final record.
-        """
-        return StickyEndFragment.assemble(
-            fragments,
-            circularize=circularize,
-            annotate_homologies=annotate_homologies,
-        )
-
-    @staticmethod
-    def will_clip_in_this_order(fragment1, fragment2):
-        """Return True iff f1's right sticky end fits f2's left."""
-        return fragment1.will_clip_in_this_order_with(fragment2)
-
 def generate_type2s_restriction_mix(parts, enzyme, name="type2s_mix"):
     return RestrictionLigationMix(
         parts=parts,
         enzymes=[enzyme],
-        fragments_filters=[NoRestrictionSiteFilter(str(enzyme))],
+        fragment_filters=[NoRestrictionSiteFilter(str(enzyme))],
         name=name,
     )

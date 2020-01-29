@@ -92,11 +92,13 @@ def load_record(
 
     return record
 
-def load_records_from_zip_file(zip_file):
+def _load_records_from_zip_file(zip_file):
     """Return all fasta/genbank/snapgene in a zip as biopython records.
     
     Each record gets a ``source_file`` attribute from the zip's file name
     without the .zip extension.
+
+    Used via "load_records_from_files".
     """
     zip_file = flametree.file_tree(zip_file)
     records = []
@@ -189,7 +191,7 @@ def load_records_from_files(
     for filepath in files:
         filename = os.path.basename(filepath)
         if filename.lower().endswith("zip"):
-            records += load_records_from_zip_file(filepath)
+            records += _load_records_from_zip_file(filepath)
             continue
         recs, fmt = load_records_from_file(filepath)
         single_record = len(recs) == 1

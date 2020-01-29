@@ -166,7 +166,6 @@ class PlotsMixin:
             plt.close(ax.figure)
 
         # CONNECTIONS GRAPH
-
         ax = self.plot_connections_graph()
         f = report_root._file(file_prefix + "connections_graph.pdf")
         ax.figure.savefig(f.open("wb"), format="pdf", bbox_inches="tight")

@@ -3,8 +3,7 @@ import pandas
 import networkx as nx
 from proglog import default_bar_logger
 from .AssemblyPlanSimulation import AssemblyPlanSimulation
-from ..Assembly.AssemblySimulation import AssemblySimulation
-from ..Assembly.AssemblyFlaw import AssemblyFlaw
+from ..Assembly import ASSEMBLY_CLASS_DICT
 
 
 class AssemblyPlan:
@@ -23,7 +22,7 @@ class AssemblyPlan:
                 assembly_class = None
         self.name = name
         self.assembly_class = assembly_class
-    
+
     def _raise_an_error_if_duplicate_assembly_names(self):
         names_indices = {}
         for i, assembly in enumerate(self.assemblies):
@@ -31,12 +30,13 @@ class AssemblyPlan:
                 names_indices[assembly.name] = []
             names_indices[assembly.name].append(i)
         if any(len(indices) > 1 for indices in names_indices.values()):
-            duplicates = ", ".join([
-                "%s (%s)" % (name, "-".join([str(i) for i in indices]))
-                for name, indices in sorted(names_indices.items())
-            ])
+            duplicates = ", ".join(
+                [
+                    "%s (%s)" % (name, "-".join([str(i) for i in indices]))
+                    for name, indices in sorted(names_indices.items())
+                ]
+            )
             raise ValueError("Multiple assemblies named " + duplicates)
-
 
     def _compute_assemblies_levels(self):
         graph_edges = [
@@ -44,19 +44,22 @@ class AssemblyPlan:
             for assembly in self.assemblies
             for part in assembly.parts
         ]
-        graph = nx.DiGraph(graph_edges)
-        if not nx.dag.is_directed_acyclic_graph(graph):
-            cycle = nx.cycles.find_cycle(graph)
+        self.graph = nx.DiGraph(graph_edges)
+        if not nx.dag.is_directed_acyclic_graph(self.graph):
+            cycle = nx.cycles.find_cycle(self.graph)
             raise ValueError("Circular dependency found involving %s" % cycle)
-        level_0_nodes = [n for n in graph if list(graph.predecessors(n)) == []]
-        nodes_levels = {node: 0 for node in graph}
+        level_0_nodes = [
+            n for n in self.graph if list(self.graph.predecessors(n)) == []
+        ]
+        nodes_levels = {node: 0 for node in self.graph}
 
         def mark_depth(node, depth):
             nodes_levels[node] = max(nodes_levels[node], depth)
-            for child in graph.successors(node):
+            for child in self.graph.successors(node):
                 mark_depth(child, depth + 1)
+
         self.all_parts = [
-            n for n in graph if len(list(graph.predecessors(n))) == 0
+            n for n in self.graph if len(list(self.graph.predecessors(n))) == 0
         ]
         for node in level_0_nodes:
             mark_depth(node, 0)
@@ -64,10 +67,11 @@ class AssemblyPlan:
             assembly.dependencies = dict(
                 level=nodes_levels[assembly.name],
                 depends_on=[
-                    part for part in graph.predecessors(assembly.name)
+                    part
+                    for part in self.graph.predecessors(assembly.name)
                     if part not in self.all_parts
                 ],
-                used_in=list(graph.successors(assembly.name)),
+                used_in=list(self.graph.successors(assembly.name)),
             )
         levels = sorted(set(a.dependencies["level"] for a in self.assemblies))
         self.levels = {
@@ -81,13 +85,14 @@ class AssemblyPlan:
 
     @staticmethod
     def from_spreadsheet(
-        assembly_class,
         path=None,
         dataframe=None,
+        assembly_class="from_spreadsheet",
         sheet_name="all",
         header=None,
         name="auto_from_filename",
         logger="bar",
+        assembly_class_dict="default",
         **assembly_params
     ):
         if name == "auto_from_filename":
@@ -126,12 +131,45 @@ class AssemblyPlan:
                 dataframe = pandas.read_excel(
                     path, sheet_name=sheet_name, header=header
                 )
-        assemblies = [
-            assembly_class.from_dataframe_row(row)
-            for i, row in dataframe.iterrows()
-            if str(row[0]).lower()
-            not in ["nan", "construct name", "construct", "none", ""]
+        ignore_list = [
+            "nan",
+            "construct name",
+            "construct",
+            "none",
+            "assembly",
+            "",
         ]
+        if assembly_class == "from_spreadsheet":
+            if assembly_class_dict == "default":
+                assembly_class_dict = ASSEMBLY_CLASS_DICT
+
+            def extract_assembly_class_from_row(row):
+                row = list(row)
+                for i, value in enumerate(row):
+                    if value.startswith("class:"):
+                        break
+                else:
+                    row = ", ".join(row)
+                    msg = "Could not find assembly class in row: %s" % (row)
+                    raise ValueError(msg)
+                row.pop(i)
+                return value[6:].strip(), row
+
+            assembly_classes_and_rows = [
+                extract_assembly_class_from_row(row)
+                for i, row in dataframe.iterrows()
+                if str(row[0]).lower() not in ignore_list
+            ]
+            assemblies = [
+                assembly_class_dict[_class].from_dataframe_row(row)
+                for _class, row in assembly_classes_and_rows
+            ]
+        else:
+            assemblies = [
+                assembly_class.from_dataframe_row(row)
+                for i, row in dataframe.iterrows()
+                if str(row[0]).lower() not in ignore_list
+            ]
         return AssemblyPlan(
             assemblies, assembly_class=assembly_class, name=name, logger=logger
         )

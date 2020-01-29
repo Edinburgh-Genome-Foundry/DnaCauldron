@@ -27,7 +27,7 @@ class SequenceRepository:
     """
 
     def __init__(self, collections=None, name="repo"):
-        self.collections = {}
+        self.collections = collections or {}
         self.name = name
 
     def add_record(self, record, collection="parts"):

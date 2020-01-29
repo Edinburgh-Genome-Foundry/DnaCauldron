@@ -15,7 +15,7 @@ class FragmentsMixin:
         return [
             f
             for f in (self.fragments + self.reverse_fragments)
-            if all([fl(f) for fl in self.fragments_filters])
+            if all([fl(f) for fl in self.fragment_filters])
         ]
 
     def compute_reverse_fragments(self):

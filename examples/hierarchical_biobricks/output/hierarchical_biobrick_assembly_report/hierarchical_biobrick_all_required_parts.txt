@@ -1,0 +1,4 @@
+BBa_E0040_GFP
+BBa_J23119_prom
+BBa_J61048_term
+BBa_K611094_bar

@@ -1,0 +1,4 @@
+construct,parts,
+C1_prom_barcode,BBa_K611094_bar,BBa_J23119_prom
+C2_gfp_term,BBa_E0040_GFP,BBa_J61048_term
+C3_final,C1_prom_barcode,C2_gfp_term

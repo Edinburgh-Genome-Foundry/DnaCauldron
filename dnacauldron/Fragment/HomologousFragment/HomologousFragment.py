@@ -7,7 +7,7 @@ from ...biotools import set_record_topology, crop_record_with_saddling_features
 
 class HomologousFragment(Fragment):
     @staticmethod
-    def from_standard_record(biopython_record):
+    def from_biopython_record(biopython_record):
         new_record = deepcopy(biopython_record)
         new_record.original_part = biopython_record
         new_record.__class__ = HomologousFragment

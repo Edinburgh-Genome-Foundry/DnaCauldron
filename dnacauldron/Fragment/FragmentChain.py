@@ -113,8 +113,8 @@ class FragmentChain:
         reversed_proportion = reversed_nucleotides / float(total_length)
 
         if reversed_proportion == 0.5:
-            f1 = self.fragments[0].to_standardized_string()
-            f2 = self.fragments[-1].to_standardized_string()
+            f1 = self.fragments[0].to_standard_string()
+            f2 = self.fragments[-1].to_standard_string()
             if f1 > f2:
                 std_fragments = self.reverse_complement().fragments
             else:

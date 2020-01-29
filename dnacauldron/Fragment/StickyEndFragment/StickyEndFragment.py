@@ -2,7 +2,12 @@ from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import DNAAlphabet
 
-from ...biotools import set_record_topology, crop_record_with_saddling_features
+from ...biotools import (
+    set_record_topology,
+    crop_record_with_saddling_features,
+    sequence_to_biopython_record,
+    annotate_record
+)
 from ..Fragment import Fragment
 from .StickyEnd import StickyEnd
 from .StickyEndSeq import StickyEndSeq
@@ -44,7 +49,7 @@ class StickyEndFragment(Fragment):
         set_record_topology(result, "circular")
 
         return result
-    
+
     def annotate_connector(self, connector, annotation_type="homology"):
         """Annotate a connector to indicate it used to be a sticky end."""
         if len(connector) > 8:
@@ -76,10 +81,7 @@ class StickyEndFragment(Fragment):
         return result
 
     def assemble_with(
-        self,
-        other,
-        annotate_homology=False,
-        annotation_type="homology"
+        self, other, annotate_homology=False, annotation_type="homology"
     ):
         connector_str = str(self.seq.right_end)
         connector = SeqRecord(Seq(connector_str))
@@ -95,11 +97,6 @@ class StickyEndFragment(Fragment):
         new_record.__class__ = StickyEndFragment
         new_record.seq.alphabet = DNAAlphabet()
         return new_record
-
-    # def __hash__(self):
-    #     return hash("StickyEndFragment"+str(self.seq))
-    # def __add__(self, other):
-    #     return self.assemble_with(other)
 
     @staticmethod
     def list_from_record_digestion(record, enzyme, linear="auto"):
@@ -151,11 +148,18 @@ class StickyEndFragment(Fragment):
     def to_standard_string(self):
 
         return "%s%s%s" % (self.seq.left_end, self.seq, self.seq.right_end)
-    
+
     def text_representation_in_plots(self):
         lines = [
             str(self.seq.left_end),
             r"$\bf{%s}$" % self.original_part.id,
-            str(self.seq.right_end)
+            str(self.seq.right_end),
         ]
         return "\n".join(lines)
+
+    def as_biopython_record(self):
+        record_left = self.seq.left_end.as_biopython_record()
+        record_right = self.seq.right_end.as_biopython_record()
+        record = record_left + self + record_right
+        record.id = self.id
+        return record

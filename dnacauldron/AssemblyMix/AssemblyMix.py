@@ -21,7 +21,7 @@ class AssemblyMix(
 
     def initialize(self):
         """Precompute the fragments and connections graph of the mix."""
-        if self.parts is not None:
+        if hasattr(self, 'parts') and self.parts is not None:
             for part in self.parts:
                 set_record_topology(part, topology="default_to_linear")
             self.parts_dict = {cst.id: cst for cst in self.parts}

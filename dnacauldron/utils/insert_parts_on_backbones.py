@@ -237,7 +237,7 @@ def swap_donor_vector_part(
     mix = RestrictionLigationMix(
         fragments=[insert_fragments[0]] + donor_fragments,
         enzymes=[enzyme],
-        fragments_filters=(),
+        fragment_filters=(),
     )
     assemblies = list(mix.compute_circular_assemblies())
     assert len(assemblies) == 1

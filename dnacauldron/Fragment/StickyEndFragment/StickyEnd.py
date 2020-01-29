@@ -1,5 +1,5 @@
 from Bio.Seq import Seq
-
+from ...biotools import sequence_to_biopython_record, annotate_record
 
 class StickyEnd(Seq):
     """A class to represent the sticky end of a sequence.
@@ -40,3 +40,10 @@ class StickyEnd(Seq):
             and (self.strand == -other.strand)
             and (str(self) == str(other))
         )
+    
+    def as_biopython_record(self):
+        record = sequence_to_biopython_record(str(self))
+        sign = "+" if self.strand == 1 else "-"
+        annotate_record(record, label="(%s) strand" % sign)
+        return record
+

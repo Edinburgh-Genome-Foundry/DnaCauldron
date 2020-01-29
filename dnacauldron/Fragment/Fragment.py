@@ -50,3 +50,6 @@ class Fragment(SeqRecord):
     
     def text_representation_in_plots(self):
         return r"$\bf{%s}$" % self.original_part.id
+    
+    def as_bioptyhon_record(self):
+        return self
