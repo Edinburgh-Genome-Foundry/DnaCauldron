@@ -4,8 +4,11 @@ import numpy as np
 
 
 class PlotsMixin:
+    """Mixin for AssemblyMix"""
+
 
     def plot_connections_graph(self, ax=None, figsize=(20, 20)):
+        """Plot the mix's graph of connections between fragments."""
 
         graph = self.uniquified_connection_graph
 
@@ -36,6 +39,7 @@ class PlotsMixin:
         return ax
     
     def plot_fragments(self, report_root):
+        """Plot schemas of the different fragments in the mix."""
         fragments_dir = report_root._dir("fragments_in_" + self.name)
         seen_fragments = {}
         for fragment in self.fragments:

@@ -6,10 +6,10 @@ from .AssemblyReportPlotsMixin import AssemblyReportPlotsMixin
 
 
 class AssemblyReportWriter(AssemblyReportPlotsMixin):
-    """Write a full assembly report in a folder or a zip.
+    """Class to configure assembly simulation reports writing.
 
-    The report contains the final sequence(s) of the assembly in Genbank format
-    as well as a .csv report on all assemblies produced and PDF figures
+    Responsible to write the final sequence(s) of the assembly in Genbank
+    format as well as a .csv report on all assemblies produced and PDF figures
     to allow a quick overview or diagnostic.
 
     Folder ``assemblies`` contains the final assemblies, ``assembly_graph``
@@ -21,29 +21,29 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
     Parameters
     ----------
 
-    parts
-      List of Biopython records representing the parts, potentially on entry
-      vectors. All the parts provided should have different attributes ``name``
-      as it is used to name the files.
+    include_fragments_plots
+      Either True/False/"on_error" to plot schemas of the fragments used in
+      the different AssemblyMix throughout the simulation.
 
-    target
-      Either a path to a folder, or to a zip file, or ``@memory`` to return
-      a string representing zip data (the latter is particularly useful for
-      website backends).
+    include_parts_plots
+      Either True/False/"on_error" to plot schemas of the parts used, possibly
+      with restriction sites relevant to the AssemblyMix.
+    include_mix_graphs
+      Either True/False/"on_error" to plot representations of fragments
+      connectivity in the AssemblyMix created during the simulation.
 
-    enzyme
-      Name of the enzyme to be used in the assembly
+    include_part_records
+      True/False to include the parts records in the simulation results (makes
+      for larger folders and zips, but is better for traceability)
 
-    max_assemblies
-      Maximal number of assemblies to consider. If there are more than this
-      the additional ones won't be returned.
-
-    include_parts_plots, include_assembly_plots
-      These two parameters control the rendering of extra figures which are
-      great for troubleshooting, but not strictly necessary, and they slow
-      down the report generation considerably. They can be True, False, or
-      "on_error" to be True only if the number of assemblies differs from
-      n_expected_assemblies
+    include_assembly_plots
+      True/False to include assembly schemas in the reports (makes the
+      report generation slower, but makes it easier to check assemblies at a
+      glance)
+    
+    show_overhangs_in_graph
+      If true, the AssemblyMix graph representations will display the sequence
+      of all fragments overhangs.
 
 
     """
@@ -56,15 +56,15 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
         include_part_records=True,
         include_assembly_plots=False,
         show_overhangs_in_graph=True,
-        annotate_parts_homologies=True,
+        annotate_parts_homologies=True
     ):
         self.include_fragments_plots = include_fragments_plots
         self.include_parts_plots = include_parts_plots
         self.include_mix_graphs = include_mix_graphs
         self.include_assembly_plots = include_assembly_plots
         self.show_overhangs_in_graph = show_overhangs_in_graph
-        self.annotate_parts_homologies = annotate_parts_homologies
         self.include_part_records = include_part_records
+        self.annotate_parts_homologies = annotate_parts_homologies
 
     def _write_constructs_spreadsheet(self, simulation, report_root):
         dataframe = simulation.compute_summary_dataframe()
@@ -103,6 +103,12 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
             self.plot_construct(construct_record, plots_dir)
 
     def write_report(self, assembly_simulation, target):
+        """Write a comprehensive report for an AssemblySimulation instance.
+
+        ``target`` can be either a path to a folder, to a zip file, or
+        ``"@memory"`` to write into a virtual zip file whose raw data is then
+        returned.
+        """
         report_root = file_tree(target, replace=True)
         assembly = assembly_simulation.assembly
 
@@ -113,8 +119,6 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
         repository = assembly_simulation.sequence_repository
         part_records = repository.get_records(parts)
 
-        
-
         self._write_records(assembly_simulation, report_root)
         if self.include_part_records:
             self._write_part_records(
@@ -124,7 +128,7 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
             self._write_records_plots(assembly_simulation, report_root)
 
         errors_detected = len(assembly_simulation.errors) != 0
-        plot_options = self.get_plots_options(errors_detected)
+        plot_options = self._get_plots_options(errors_detected)
 
         if plot_options["parts_plots"]:
             enzymes = assembly.enzymes if hasattr(assembly, "enzymes") else []

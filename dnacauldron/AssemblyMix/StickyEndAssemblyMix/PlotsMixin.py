@@ -4,6 +4,7 @@ import numpy as np
 
 
 class PlotsMixin:
+    """Mixin for StickyEndAssemblyMix"""
     def plot_slots_graph(
         self,
         ax=None,

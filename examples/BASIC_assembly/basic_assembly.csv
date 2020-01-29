@@ -1,0 +1,10 @@
+L2RBS-1P,class: oligo_annealing,L2RBS-1P_fwd,L2RBS-1P_adapter,,,,,,,,,,
+LMA-S,class: oligo_annealing,LMA-S_fwd,LMA-S_adapter,,,,,,,,,,
+L1RBS-xS,class: oligo_annealing,L1RBS-xS_fwd,L1RBS-xS_adapter,,,,,,,,,,
+L1RBS-1P,class: oligo_annealing,L1RBS-1P_fwd,L1RBS-1P_adapter,,,,,,,,,,
+L2RBS-xS,class: oligo_annealing,L2RBS-xS_fwd,L2RBS-xS_adapter,,,,,,,,,,
+LMA-P,class: oligo_annealing,LMA-P_fwd,LMA-P_adapter,,,,,,,,,,
+LMB-S,class: oligo_annealing,LMB-S_fwd,LMB-S_adapter,,,,,,,,,,
+LMB-P,class: oligo_annealing,LMB-P_fwd,LMB-P_adapter,,,,,,,,,,
+asm_GFP_RFP,class: BASIC_assembly,LMA-P,promoter,L1RBS-xS,L1RBS-1P,GFP,L2RBS-xS,L2RBS-1P,RFP,LMB-S,LMB-P,p15A_kan,LMA-S
+asm_RFP_GFP,class: BASIC_assembly,LMA-P,promoter,L1RBS-xS,L1RBS-1P,RFP,L2RBS-xS,L2RBS-1P,GFP,LMB-S,LMB-P,p15A_kan,LMA-S

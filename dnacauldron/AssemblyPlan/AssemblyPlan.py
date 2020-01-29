@@ -7,21 +7,27 @@ from ..Assembly import ASSEMBLY_CLASS_DICT
 
 
 class AssemblyPlan:
-    def __init__(
-        self, assemblies, assembly_class="auto", name="", logger="bar"
-    ):
+    def __init__(self, assemblies, name="plan", logger="bar"):
+        """Class to represent, analyze and simulate assembly plans
+        
+        Parameters
+        ----------
+
+        assemblies
+          List of Assembly instances.
+        
+        name
+          Assembly plan name as it will appear in reports.
+        
+        logger
+          Either "bar" for a progress bar, or None, or any Proglog logger.
+        """
         self.assemblies = assemblies
         self._raise_an_error_if_duplicate_assembly_names()
         self.assemblies_dict = {a.name: a for a in self.assemblies}
         self._compute_assemblies_levels()
         self.logger = default_bar_logger(logger)
-        if assembly_class == "auto":
-            if len(set([a.__class__ for a in assemblies])) == 1:
-                assembly_class = assemblies[0].__class__
-            else:
-                assembly_class = None
         self.name = name
-        self.assembly_class = assembly_class
 
     def _raise_an_error_if_duplicate_assembly_names(self):
         names_indices = {}
@@ -95,6 +101,38 @@ class AssemblyPlan:
         assembly_class_dict="default",
         **assembly_params
     ):
+        """Import an assembly plan from a spreadsheet.
+
+        You can either read these docs or browse the examples in the repo.
+
+        Parameters
+        -----------
+        
+        path
+          Path to a spreadsheet file (a dataframe can be used instead)
+        
+        dataframe
+          A pandas dataframe, possibly obatined from a spreadsheet.
+        
+        sheet_name
+          Name of the spreadsheet's sheet on which the assembly plan is
+          defined. Use "all" to load assemblies from all the sheets.
+
+        header
+          True or False, indicates whether there is a header in the
+          spreadsheet.
+
+        name
+          Name of the assembly plan (leave to "auto_from_filename" to use the
+          file name as assembly plan name)
+
+        logger
+          Logger of the created assembly plan. Either "bar" for a progress bar
+          or None for none, or any Proglog logger. 
+
+         **assembly_params
+           Extra keyword parameters which will be fed to each assembly.
+        """
         if name == "auto_from_filename":
             if path is None:
                 name = "unnamed"
@@ -106,16 +144,15 @@ class AssemblyPlan:
             excel_file = pandas.ExcelFile(path)
             return AssemblyPlan(
                 name=name,
-                assembly_class=assembly_class,
                 logger=logger,
                 assemblies=[
                     assembly
                     for _sheet_name in excel_file.sheet_names
                     for assembly in AssemblyPlan.from_spreadsheet(
-                        assembly_class=assembly_class,
                         path=path,
                         sheet_name=_sheet_name,
                         header=header,
+                        assembly_class=assembly_class,
                         **assembly_params
                     ).assemblies
                 ],
@@ -170,9 +207,7 @@ class AssemblyPlan:
                 for i, row in dataframe.iterrows()
                 if str(row[0]).lower() not in ignore_list
             ]
-        return AssemblyPlan(
-            assemblies, assembly_class=assembly_class, name=name, logger=logger
-        )
+        return AssemblyPlan(assemblies, name=name, logger=logger)
 
     def to_spreadsheet(self, path):
         lines = [",".join([asm.name] + asm.parts) for asm in self.assemblies]
@@ -180,6 +215,7 @@ class AssemblyPlan:
             f.write("\n".join(["construct,parts"] + lines))
 
     def to_dataframe(self):
+        """Return a dataframe describing the assembly plan."""
         sorted_assemblies = sorted(
             self.assemblies, key=lambda a: (a.dependencies["level"], a.name)
         )
@@ -193,6 +229,8 @@ class AssemblyPlan:
         )
 
     def simulate(self, sequence_repository):
+        """Simulate the whole assembly plan, return an AssemblyPlanSimulation.
+        """
 
         ordered_assemblies = [
             assembly

@@ -3,6 +3,8 @@ from ..AssemblyMixError import AssemblyMixError
 
 
 class ConnectorsMixin:
+    """Mixin for AssemblyMix"""
+    
     def autoselect_connectors(self, connectors_records):
         """Select connectors necessary for circular assemblie(s) in this mix.
 

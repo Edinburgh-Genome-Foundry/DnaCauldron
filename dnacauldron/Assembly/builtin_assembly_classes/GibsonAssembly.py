@@ -5,6 +5,44 @@ from ..AssemblyFlaw import AssemblyFlaw
 from ..Assembly import Assembly
 
 class GibsonAssembly(Assembly):
+    """Representation and simulation of Gibson Assembly
+
+    Parameters
+    ----------
+
+    parts
+      A list of parts names corresponding to records in a repository.
+      The parts will be considered as assembling together if they
+      have end homologies, as checked by the homology_checker.
+    
+    homology_checker
+      An HomologyChecker instance defining which homology sizes and melting
+      temperatures are valid.
+
+    name
+      Name of the assembly as it will appear in reports.
+
+    max_constructs
+      None or a number of maximum assemblies to compute (avoids complete
+      freeze for combinatorial assemblies with extremely many possibilities).
+
+    expected_constructs
+      Either a number or a string ``'any_number'``. If the number of constructs
+      doesn't match this value, the assembly will be considered invalid in
+      reports and summaries
+
+    connectors_collection
+      Name of a collection in the repository from which to get candidates for
+      connector autocompletion.
+    
+    expect_no_unused_parts
+      If True and some parts are unused, this will be considered an invalid
+      assembly in summaries and reports.
+
+    dependencies
+      (do not use). Metadata indicating which assemblies depend on this
+      assembly, or are depended on by it.
+    """
 
     spreadsheet_import_parameters = (
         "level",
@@ -18,7 +56,7 @@ class GibsonAssembly(Assembly):
         parts,
         homology_checker="default",
         name="homologous_assembly",
-        # connectors_collection=None,
+        connectors_collection=None,
         expected_constructs=1,
         expect_no_unused_parts=True,
         max_constructs=40,
@@ -31,7 +69,7 @@ class GibsonAssembly(Assembly):
             max_constructs=max_constructs,
             dependencies=dependencies,
         )
-        # self.connectors_collection = connectors_collection
+        self.connectors_collection = connectors_collection
         self.expected_constructs = expected_constructs
         self.expect_no_unused_parts = expect_no_unused_parts
         if homology_checker == "default":
@@ -104,6 +142,7 @@ class GibsonAssembly(Assembly):
         return warnings
 
     def simulate(self, sequence_repository, annotate_parts_homologies=True):
+        """Simulate the Gibson Assembly, return an AssemblySimulation."""
 
         # CREATE THE MIX
 
@@ -118,32 +157,32 @@ class GibsonAssembly(Assembly):
 
         # ATTEMPT CONNECTOR AUTOSELECTION IF NECESSARY
 
-        # connectors_records = self.get_connectors_records(sequence_repository)
-        # if len(connectors_records) != 0:
-        #     try:
-        #         connectors = mix.autoselect_connectors(connectors_records)
-        #         if len(connectors):
-        #             connectors_ids = [c.id for c in connectors]
-        #             connectors_string = ", ".join(connectors_ids)
-        #             warning = AssemblyFlaw(
-        #                 assembly=self,
-        #                 message="Added connectors %s" % connectors_string,
-        #                 suggestion="",
-        #                 data={"selected_connectors": connectors_ids},
-        #             )
-        #             warnings.append(warning)
-        #     except AssemblyMixError as err:
-        #         error = AssemblyFlaw(
-        #             assembly=self,
-        #             message="Failed to find suitable connectors",
-        #             suggestion="Check assembly plan or parts design",
-        #         )
-        #         return AssemblySimulation(
-        #             assembly=self,
-        #             construct_records=[],
-        #             errors=[error],
-        #             sequence_repository=sequence_repository,
-        #         )
+        connectors_records = self._get_connectors_records(sequence_repository)
+        if len(connectors_records) != 0:
+            try:
+                connectors = mix.autoselect_connectors(connectors_records)
+                if len(connectors):
+                    connectors_ids = [c.id for c in connectors]
+                    connectors_string = ", ".join(connectors_ids)
+                    warning = AssemblyFlaw(
+                        assembly=self,
+                        message="Added connectors %s" % connectors_string,
+                        suggestion="",
+                        data={"selected_connectors": connectors_ids},
+                    )
+                    warnings.append(warning)
+            except AssemblyMixError as err:
+                error = AssemblyFlaw(
+                    assembly=self,
+                    message="Failed to find suitable connectors",
+                    suggestion="Check assembly plan or parts design",
+                )
+                return AssemblySimulation(
+                    assembly=self,
+                    construct_records=[],
+                    errors=[error],
+                    sequence_repository=sequence_repository,
+                )
 
         # COMPUTE ALL CIRCULAR ASSEMBLIES
 

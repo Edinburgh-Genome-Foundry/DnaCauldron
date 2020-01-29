@@ -8,6 +8,37 @@ from ..AssemblyFlaw import AssemblyFlaw
 
 
 class BioBrickStandardAssembly(Assembly):
+    """Representation and simulation of the Biobrick 2-part assembly standard.
+
+    Parameters
+    ----------
+
+    parts
+      A list of parts names corresponding to records in a repository.
+      There must be exactly 2 parts and they must be represented on a
+      backbone (i.e. circular constructs), and the first part will be inserted
+      in the backbone of the second part, upstream of the second part.
+
+    name
+      Name of the assembly as it will appear in reports.
+
+    max_constructs
+      None or a number of maximum assemblies to compute (avoids complete
+      freeze for combinatorial assemblies with extremely many possibilities).
+
+    expected_constructs
+      Either a number or a string ``'any_number'``. If the number of constructs
+      doesn't match this value, the assembly will be considered invalid in
+      reports and summaries
+
+    connectors_collection
+      Name of a collection in the repository from which to get candidates for
+      connector autocompletion.
+
+    dependencies
+      (do not use). Metadata indicating which assemblies depend on this
+      assembly, or are depended on by it.
+    """
     def __init__(
         self,
         parts,
@@ -30,7 +61,7 @@ class BioBrickStandardAssembly(Assembly):
         self.extra_construct_data = dict(enzymes=self.enzymes)
 
     def simulate(self, sequence_repository, annotate_parts_homologies=True):
-
+        """Simulate the assembly, return an AssemblySimulation."""
         if len(self.parts) != 2:
             error = AssemblyFlaw(
                 assembly=self,

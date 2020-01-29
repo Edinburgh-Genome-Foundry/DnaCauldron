@@ -12,6 +12,46 @@ from ..Assembly import Assembly
 
 
 class BASICAssembly(Assembly):
+    """Representation and simulation of BASIC Assembly.
+
+    In this class, the order of the parts matters! It should be organized as
+    triplets or the form (adapter, part, adapter), as follows:
+
+    >>> a1   PART_1   a2   a3   PART_2   a4   a5   PART_3   ...
+
+    Where a1 and a2 are the BASIC adapters for PART_1, etc. The parts (PART_i)
+    should be standard biopython records, while the adapters should be
+    sticky-ended fragments, obtained for instance from an OligoPairAnnealing
+    assembly (see the provided example).
+
+    Parameters
+    ----------
+
+     parts
+       List of part names corresponding to part records in a repository.
+       See explanations above.
+
+    name
+      Name of the assembly as it will appear in reports.
+
+    max_constructs
+      None or a number of maximum assemblies to compute (avoids complete
+      freeze for combinatorial assemblies with extremely many possibilities).
+
+    expected_constructs
+      Either a number or a string ``'any_number'``. If the number of constructs
+      doesn't match this value, the assembly will be considered invalid in
+      reports and summaries
+
+    connectors_collection
+      Name of a collection in the repository from which to get candidates for
+      connector autocompletion.
+
+    dependencies
+      (do not use). Metadata indicating which assemblies depend on this
+      assembly, or are depended on by it.
+
+    """
     def simulate_adapters_assembly(self, records):
         original_part = records[1]
         mix = RestrictionLigationMix(
@@ -56,6 +96,7 @@ class BASICAssembly(Assembly):
         return construct
 
     def simulate(self, sequence_repository, annotate_parts_homologies=True):
+        """Simulate the BASIC assembly, return an AssemblySimulation."""
 
         parts = sequence_repository.get_records(self.parts)
         L = len(parts)

@@ -3,6 +3,7 @@ import networkx as nx
 from ...biotools import reverse_complement
 
 class SlotsMixin:
+    """Mixin for StickyEndAssemblyMix"""
 
     def compute_slots(self):
         """Return a dict {standardized_slot: set(fragments_id)}.

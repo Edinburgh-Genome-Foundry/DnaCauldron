@@ -1,2 +1,0 @@
-assembly_name,construct_id,assembly_level,construct_size,number_of_parts,depends_on,used_in,parts
-C3_final,C3_final,2,3072,2,C1_prom_barcode & C2_gfp_term,,C1_prom_barcode & C2_gfp_term

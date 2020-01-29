@@ -1,12 +1,53 @@
-from ...biotools import autoselect_enzyme
 from ...Filter import NoRestrictionSiteFilter
-from ...AssemblyMix import RestrictionLigationMix, AssemblyMixError
+from ...AssemblyMix import (
+    RestrictionLigationMix,
+    AssemblyMixError,
+    generate_type2s_restriction_mix,
+)
 from ..Assembly import Assembly
 from ..AssemblySimulation import AssemblySimulation
 from ..AssemblyFlaw import AssemblyFlaw
 
 
 class Type2sRestrictionAssembly(Assembly):
+    """Representation and simulation of type-2s (Golden-Gate) assembly
+
+    Parameters
+    ----------
+
+    parts
+      A list of parts names corresponding to records in a repository. These
+      parts will be restricted and ligated together. They can be linear,
+      circular, and in any order.
+    
+    enzyme
+      Any type-2s enzyme ("BsmBI", "BsaI", "SapI", etc.), or leave to "auto"
+      to autodetect the enzyme.
+
+    name
+      Name of the assembly as it will appear in reports.
+
+    max_constructs
+      None or a number of maximum assemblies to compute (avoids complete
+      freeze for combinatorial assemblies with extremely many possibilities).
+
+    expected_constructs
+      Either a number or a string ``'any_number'``. If the number of constructs
+      doesn't match this value, the assembly will be considered invalid in
+      reports and summaries
+
+    connectors_collection
+      Name of a collection in the repository from which to get candidates for
+      connector autocompletion.
+    
+    expect_no_unused_parts
+      If True and some parts are unused, this will be considered an invalid
+      assembly in summaries and reports.
+
+    dependencies
+      (do not use). Metadata indicating which assemblies depend on this
+      assembly, or are depended on by it.
+    """
 
     spreadsheet_import_parameters = (
         "enzyme",
@@ -109,24 +150,22 @@ class Type2sRestrictionAssembly(Assembly):
         return [self.enzyme]
 
     def simulate(self, sequence_repository, annotate_parts_homologies=True):
+        """Simulate the assembly, return an AssemblySimulation."""
 
         # CREATE THE MIX
 
         warnings = []
 
         records = sequence_repository.get_records(self.parts)
-        if self.enzyme == "auto":
-            self.enzyme = autoselect_enzyme(records)
-        mix = RestrictionLigationMix(
-            parts=records,
-            enzymes=[self.enzyme],
-            fragment_filters=[NoRestrictionSiteFilter(str(self.enzyme))],
-            name=self.name + "_type2s_mix",
+        mix = generate_type2s_restriction_mix(
+            records, enzyme=self.enzyme, name=self.name + "_type2s_mix"
         )
+        if self.enzyme == "auto":
+            self.enzyme = str(mix.enzymes[0])  # it has been autoselected!
 
         # ATTEMPT CONNECTOR AUTOSELECTION IF NECESSARY
 
-        connectors_records = self.get_connectors_records(sequence_repository)
+        connectors_records = self._get_connectors_records(sequence_repository)
         if len(connectors_records) != 0:
             try:
                 connectors = mix.autoselect_connectors(connectors_records)

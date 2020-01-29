@@ -111,6 +111,20 @@ def annotate_record(
 
 
 def crop_record_with_saddling_features(record, start, end, filters=()):
+    """Crop the biopython record, but keep features that are only partially in.
+
+    Parameters
+    ----------
+    record
+      The Biopython record to crop.
+
+    start, end
+      Coordinates of the segment to crop
+
+    filters
+      list of functions (feature=>True/False). Any feature that doesn't pass
+      at least one filter will be filtered out. 
+    """
     cropped = record[start:end]
 
     def is_saddling(f_start, f_end):

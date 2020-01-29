@@ -4,6 +4,8 @@ from ...biotools import reverse_complement
 
 
 class GraphsMixin:
+    """Mixin for AssemblyMix"""
+
     def compute_connections_graph(self):
         """Compute a graph where nodes are fragments and edges indicate
         which fragments can clip together.

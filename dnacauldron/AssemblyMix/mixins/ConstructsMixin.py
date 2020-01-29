@@ -5,6 +5,8 @@ from ..AssemblyMixError import AssemblyMixError
 
 
 class ConstructsMixin:
+    """Mixin for AssemblyMix"""
+
     def compute_random_circular_fragments_sets(
         self, staling_cutoff=100, fragments_sets_filters=()
     ):

@@ -2,8 +2,7 @@ from flametree import file_tree
 import proglog
 import pandas
 from ..tools import (
-    format_data_dicts_records_for_spreadsheet,
-    format_value_for_spreadsheet,
+    format_data_dicts_records_for_spreadsheet
 )
 from ..biotools import write_record
 from ..Assembly.AssemblyReportWriter import AssemblyReportWriter
@@ -19,12 +18,34 @@ class AssemblyPlanSimulation:
         sequence_repository=None,
         cancelled=(),
     ):
+        """Class to represent and report on the simulation of a whole plan.
+
+        This is the product of AssemblyPlan.simulate().
+
+        Parameters
+        ----------
+
+        assembly_plan
+          The AssemblyPlan from which the instance was created.
+
+        assembly_simulations
+          List of AssemblySimulation instances, in the same order as the
+          Assembly instances in the assembly_plan.
+
+        sequence_repository
+          SequenceRepository that provided the part records for the simulation.
+
+        cancelled
+          List of the name of assemblies that were cancelled because they
+          depended on assemblies for which the simulation errored.
+        """
         self.assembly_plan = assembly_plan
         self.assembly_simulations = assembly_simulations
         self.sequence_repository = sequence_repository
         self.cancelled = cancelled
 
     def compute_all_construct_data_dicts(self):
+        """Return the list of data dict for each assembly simulation."""
         return [
             data_dict
             for simulation in self.assembly_simulations
@@ -52,6 +73,11 @@ class AssemblyPlanSimulation:
         return pandas.DataFrame(data, columns=columns)
 
     def compute_stats(self):
+        """Return a dictionnary of stats.
+
+        For instance {"cancelled_assemblies": 2, "errored_assemblies": 1,
+        "valid_assemblies": 5}.
+        """
         errored = [s for s in self.assembly_simulations if len(s.errors)]
         valid = [s for s in self.assembly_simulations if len(s.errors) == 0]
         return {
@@ -68,6 +94,29 @@ class AssemblyPlanSimulation:
         logger="bar",
         include_original_parts_records=True,
     ):
+        """Write a comprehensive report to a folder or zip file
+
+        Parameters
+        ----------
+
+        target
+          Either a path to a folder, to a zip file, or ``"@memory"`` to write
+          into a virtual zip file whose raw data is then returned.
+        
+        folder_name
+          Name of the folder created inside the target to host the report (yes,
+          it is a folder inside a folder, which can be very practical).
+        
+        assembly_report_writer
+          Either the "default" or any AssemblyReportWriter instance.
+        
+        logger
+          Either "bar" for a progress bar, or None, or any Proglog logger.
+
+        include_original_parts_records
+          If true, the original provided part records will be included in the
+          report (creates larger file sizes, but better for traceability). 
+        """ 
         if assembly_report_writer == "default":
             # We'll write all records into one folder for the whole plan
             assembly_report_writer = AssemblyReportWriter(

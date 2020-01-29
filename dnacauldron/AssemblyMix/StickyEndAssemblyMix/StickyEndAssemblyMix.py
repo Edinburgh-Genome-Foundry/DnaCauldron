@@ -4,6 +4,30 @@ from .SlotsMixin import SlotsMixin
 from .PlotsMixin import PlotsMixin
 
 class StickyEndAssemblyMix(AssemblyMix, SlotsMixin, PlotsMixin):
+    """Class to represent and simulate the assembly of sticky-ended fragments.
+
+    Used notably for BASIC assembly and other places where we are mixing
+    sticky-ended fragments, not necessarily from enzyme digestions (see the
+    subclass RestrictionLigationMix for this case).
+
+    Parameters
+    ----------
+
+    fragments
+      A list of StickyEndFragment instances, which will assemble together based
+      of sticky ends perfect homologies.
+    
+    fragment_filters
+      List of functions of the form fragment=>True/False. If a fragment
+      generates a "False" by at least one filter, it is taken out of the mix
+      (this is used to remove unstable fragments that won't make it to the
+      final assembly, for instance fragments with internal restriction sites).
+
+    name
+      Name of the mix as it will appear in reports
+    
+
+    """
     
     def __init__(self, fragments, fragment_filters=(), name='sticky_ends_mix'):
         self.fragments = fragments

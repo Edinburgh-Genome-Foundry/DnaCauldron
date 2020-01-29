@@ -1,4 +1,0 @@
-construct,parts,
-C1_prom_gfp,BBa_J23119_prom,BBa_E0040_GFP
-C2_prom_gfp_trm,C1_prom_gfp,BBa_J61048_term
-C3_br_pr_gfp_tm,BBa_K611094_bar,C2_prom_gfp_trm

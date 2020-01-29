@@ -1,4 +1,0 @@
-assembly_name,construct_id,assembly_level,construct_size,number_of_parts,depends_on,used_in,parts
-C1_prom_barcode,C1_prom_barcode,1,2223,2,,C3_final,BBa_K611094_bar & BBa_J23119_prom
-C2_gfp_term,C2_gfp_term,1,2996,2,,C3_final,BBa_E0040_GFP & BBa_J61048_term
-C3_final,C3_final,2,3072,2,C1_prom_barcode & C2_gfp_term,,C1_prom_barcode & C2_gfp_term

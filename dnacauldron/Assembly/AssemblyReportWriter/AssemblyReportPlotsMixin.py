@@ -6,7 +6,11 @@ from .plot_cuts import plot_cuts
 
 
 class AssemblyReportPlotsMixin:
-    def get_plots_options(self, errors_detected):
+    """Mixin for AssemblyReportWriter"""
+
+    def _get_plots_options(self, errors_detected):
+        """Compute whether the plots should be generated, depending on assembly
+        success or failure."""
         def evaluate(condition):
             return errors_detected if condition == "on_error" else condition
 
@@ -17,6 +21,7 @@ class AssemblyReportPlotsMixin:
         }
 
     def plot_construct(self, construct, directory):
+        """Plot schemas of the predicted constructs."""
         target = directory._file(construct.id + ".pdf").open("wb")
         gr_record = AssemblyPlotTranslator().translate_record(construct)
         ax, gr = gr_record.plot(figure_width=16)
@@ -26,6 +31,8 @@ class AssemblyReportPlotsMixin:
         plt.close(ax.figure)
 
     def plot_provided_parts(self, report_root, parts_records, enzymes):
+        """Plot schemas of the parts provided, with relevant restriction sites.
+        """
         provided_parts_dir = report_root._dir("provided_parts_plots")
         for part in parts_records:
             linear = record_is_linear(part, default=False)
@@ -33,19 +40,3 @@ class AssemblyReportPlotsMixin:
             f = provided_parts_dir._file(part.id + ".pdf").open("wb")
             ax.figure.savefig(f, format="pdf", bbox_inches="tight")
             plt.close(ax.figure)
-
-    # def plot_slots_graph(self, mix, report_root, highlighted_parts):
-    #     ax = mix.plot_slots_graph(
-    #         with_overhangs=self.show_overhangs_in_graph,
-    #         show_missing=True,
-    #         highlighted_parts=highlighted_parts,
-    #     )
-    #     f = report_root._file("parts_graph.pdf")
-    #     ax.figure.savefig(f.open("wb"), format="pdf", bbox_inches="tight")
-    #     plt.close(ax.figure)
-
-    # def plot_connections_graph(self, report_root, mix):
-    #     ax = mix.plot_connections_graph()
-    #     f = report_root._file("connections_graph.pdf")
-    #     ax.figure.savefig(f.open("wb"), format="pdf", bbox_inches="tight")
-    #     plt.close(ax.figure)
