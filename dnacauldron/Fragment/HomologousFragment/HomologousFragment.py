@@ -8,6 +8,8 @@ from ...biotools import set_record_topology, crop_record_with_saddling_features
 class HomologousFragment(Fragment):
     @staticmethod
     def from_biopython_record(biopython_record):
+        """Convert a biopython record into a HomologousFragment (class change).
+        """
         new_record = deepcopy(biopython_record)
         new_record.original_part = biopython_record
         new_record.__class__ = HomologousFragment
@@ -43,7 +45,9 @@ class HomologousFragment(Fragment):
         set_record_topology(result, "circular")
         return result
 
-    def push_source_features(self, homology_size, side="left"):
+    def _push_source_features(self, homology_size, side="left"):
+        """Relocate one end of a feature so it won't be cut out when the
+        fragment is cropped."""
 
         if side == "left":
             maximum = len(self) - homology_size
@@ -58,6 +62,12 @@ class HomologousFragment(Fragment):
                     f.location.end = max(f.location.end, homology_size)
 
     def will_clip_in_this_order_with(self, other_fragment, homology_checker):
+        """Return whether the fragment will assemble with anoter via homology
+        recombination.
+        
+        homology_checker should be an HomologyChecker instance definining the
+        homology conditions.
+        """
         homology_size = homology_checker.find_end_homologies(
             self, other_fragment
         )
@@ -70,6 +80,22 @@ class HomologousFragment(Fragment):
         annotate_homology=True,
         annotation_type="homology",
     ):
+        """Return the fragment resulting from the assembly of this fragment
+        with another, in that order.
+        
+        Parameters
+        ----------
+        
+        fragment
+          The other parameter to assemble with
+        
+        homology_checker
+          An HomologyChecker instance definining the homology conditions.
+        
+        annotate_homology
+          If true, homologies will have an annotation in the final, predicted
+          construct records.
+        """
         homology_size = homology_checker.find_end_homologies(self, fragment)
         if homology_size == 0:
             raise ValueError(
@@ -77,8 +103,8 @@ class HomologousFragment(Fragment):
             )
         new_self = deepcopy(self)
         new_fragment = deepcopy(fragment)
-        new_self.push_source_features(homology_size, side="left")
-        new_fragment.push_source_features(homology_size, side="right")
+        new_self._push_source_features(homology_size, side="left")
+        new_fragment._push_source_features(homology_size, side="right")
         if annotate_homology:
             feature = self.create_homology_annotation(
                 start=0,
@@ -109,7 +135,23 @@ class HomologousFragment(Fragment):
         circularize=False,
         annotate_homologies=False,
     ):
-        """Return the (sticky end) record obtained by assembling the fragments.
+        """Return the record obtained by assembling the fragments.
+
+        Parameters
+        ----------
+
+        fragments
+          List of HomologousFragments to assemble
+
+        homology_checker
+          An HomologyChecker instance definining the homology conditions.
+          
+        circularize
+          True to also assemble the end flanks of the final construct.
+
+        annotate_homologies
+           If true, homologies will have an annotation in the final, predicted
+           construct records.
 
 
         """

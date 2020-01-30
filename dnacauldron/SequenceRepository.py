@@ -17,13 +17,46 @@ class NotInRepositoryError(Exception):
         message = parts + " not found" + repo_name
         super().__init__(message)
 
+class RepositoryDuplicateError(Exception):
+
+    def __init__(self, parts, repository):
+        self.parts = parts
+        self.repository = repository
+        parts_list = ", ".join(parts)
+        if len(parts_list) > 150:
+            parts_list = parts_list[:150] + "..."
+        parts = "Part ID%s %s" % ("s" if len(parts) > 1 else "", parts_list)
+        repo_name = (" in " + repository.name) if repository.name else ""
+        message = parts + " duplicated in " + repo_name
+        super().__init__(message)
+
+
 
 class SequenceRepository:
     """Sequence repositories store and provide sequence records.
+
+    The records are organized into collections, for instance "parts" to host
+    parts, "constructs" for records created during assembly plan simulation,
+    or any other collection name like "emma_connectors" to store EMMA
+    connectors.
+
+    The suggested initialization of a sequence repository is:
+
+    >>> repository = SequenceRepository()
+    >>> repository.import_records(files=['part.fa', 'records.zip', etc.])
+
+
     
-    Sequence records are stored in the repository as Biopython SeqRecords.
-    They are separated into attributes ``parts`` (main components of an
-    assembly), ``constructs``
+    Parameters
+    ----------
+
+    collections
+      A dict {'collection_name': {'record_id': record, ...}, ...} giving for
+      each collection a dict of Biopython records.
+    
+    name
+      The name of the repository as it may appear in error messages and other
+      reports.
     """
 
     def __init__(self, collections=None, name="repo"):
@@ -31,36 +64,47 @@ class SequenceRepository:
         self.name = name
 
     def add_record(self, record, collection="parts"):
+        """Add one record to a collection, using its record.id as key.
+        
+        The collection is created if it doesn't exist.
+
+        The record can also be a pair (id, "ATGTGCC...").
+        """
+        if isinstance(record, (tuple, list)):
+            _id, _sequence = record
+            record = sequence_to_biopython_record(_sequence, id=_id)
+        if self.contains_record(record.id):
+            raise RepositoryDuplicateError([record.id])
         if collection not in self.collections:
             self.collections[collection] = {}
         self.collections[collection][record.id] = record
 
     def add_records(self, records, collection="parts"):
+        """Add """
 
         if len(records) == 0:
             return
-        if isinstance(records[0], (tuple, list)):
-            records = [
-                sequence_to_biopython_record(_record, id=_id)
-                for _record, _id in records
-            ]
         for record in records:
             self.add_record(record, collection=collection)
 
-    def contains_record(self, name):
+    def contains_record(self, record_id):
+        """Return whether the repo has a record corresponding to the given id
+        """
         collections = self.collections.values()
-        return any(name in collection for collection in collections)
+        return any(record_id in collection for collection in collections)
 
-    def get_record(self, name):
+    def get_record(self, record_id):
+        """Return the record from the repository from its ID."""
         for collection in self.collections.values():
-            if name in collection:
-                return collection[name]
-        raise NotInRepositoryError([name], self)
+            if record_id in collection:
+                return collection[record_id]
+        raise NotInRepositoryError([record_id], self)
 
-    def get_records(self, names):
+    def get_records(self, record_ids):
+        """Get a list of records from a list of record IDs."""
         records = []
         not_in_repository = []
-        for name in names:
+        for name in record_ids:
             if self.contains_record(name):
                 records.append(self.get_record(name))
             else:
@@ -75,8 +119,33 @@ class SequenceRepository:
         folder=None,
         collection="parts",
         use_file_names_as_ids=True,
-        topology="auto",
+        topology="default_to_linear",
     ):
+        """Import records into the repository, from files and zips and folders.
+
+        Parameters
+        ----------
+
+        files
+          A list of file paths, either Genbank, Fasta, Snapgene (.dna), or zips
+          containing any of these formats.
+        
+        folder
+          Path to a folder which can be provided instead of ``files``.
+        
+        collection
+          Name of the collection under which to import the new records.
+        
+        use_file_names_as_ids
+          If True, the file name will be used as ID for any record obtained
+          from a single-record file (fasta files with many records will still
+          use the internal ID).
+        
+        topology
+          Can be "circular", "linear", "default_to_circular" (will default
+          to circular if ``annotations['topology']`` is not already set) or
+          "default_to_linear".
+        """
         if folder is not None:
             records = load_records_from_files(
                 folder=folder, use_file_names_as_ids=use_file_names_as_ids
@@ -87,14 +156,16 @@ class SequenceRepository:
             )
         else:
             raise ValueError("Provide either ``files`` or ``folder``")
-        if topology in ["circular", "linear"]:
-            for r in records:
-                set_record_topology(r, topology)
+        for r in records:
+            set_record_topology(r, topology)
 
         self.add_records(records, collection=collection)
 
     def get_part_names_by_collection(self, format="dict"):
-        """Format: dict or string"""
+        """Return a dictionnary or a string representing the repo's content.
+        
+        Format: "dict" or "string"
+        """
         result = {
             collection_name: list(parts.keys())
             for collection_name, parts in self.collections.items()

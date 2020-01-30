@@ -6,7 +6,7 @@ import flametree
 from snapgene_reader import snapgene_file_to_seqrecord
 from Bio import SeqIO
 from Bio.Alphabet import DNAAlphabet
-from .records_operations import (
+from .record_operations import (
     set_record_topology,
     sequence_to_biopython_record,
 )

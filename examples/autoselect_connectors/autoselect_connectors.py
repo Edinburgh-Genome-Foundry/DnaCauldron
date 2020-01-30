@@ -18,6 +18,8 @@ assembly = dc.Type2sRestrictionAssembly(
     parts=all_parts,
     connectors_collection="emma_connectors",
 )
+report_writer = dc.AssemblyReportWriter(include_mix_graphs=True)
 simulation = assembly.simulate(sequence_repository=repository)
 
-simulation.write_report("output")
+simulation.write_report("output", report_writer=report_writer)
+print ("Done! see output/ folder for the results.")

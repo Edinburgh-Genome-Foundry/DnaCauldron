@@ -68,6 +68,21 @@ class StickyEndFragment(Fragment):
     def assemble(fragments, circularize=False, annotate_homologies=False):
         """Return the (sticky end) record obtained by assembling the fragments.
 
+        Parameters
+        ----------
+
+        fragments
+          List of StickyEndFragments to assemble
+          
+        circularize
+          True to also assemble the end flanks of the final construct (results
+          in a Biopython Record), false to not do it (the result is then a
+          StickyEndFragment).
+
+        annotate_homologies
+           If true, homologies will have an annotation in the final, predicted
+           construct records.
+
 
         """
         result = fragments[0]
@@ -146,10 +161,13 @@ class StickyEndFragment(Fragment):
         return record_fragments
 
     def to_standard_string(self):
-
+        """Return a string representation of the fragment, used for quick
+        comparison of fragments and fragments chains."""
         return "%s%s%s" % (self.seq.left_end, self.seq, self.seq.right_end)
 
     def text_representation_in_plots(self):
+        """Plot a fragment as left//PART_NAME//right (where // is a new line)
+        """
         lines = [
             str(self.seq.left_end),
             r"$\bf{%s}$" % self.original_part.id,

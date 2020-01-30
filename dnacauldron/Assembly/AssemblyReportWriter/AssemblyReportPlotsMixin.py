@@ -17,7 +17,7 @@ class AssemblyReportPlotsMixin:
         return {
             "fragments_plots": evaluate(self.include_fragments_plots),
             "mix_graphs_plots": evaluate(self.include_mix_graphs),
-            "parts_plots": evaluate(self.include_parts_plots),
+            "parts_plots": evaluate(self.include_part_plots),
         }
 
     def plot_construct(self, construct, directory):

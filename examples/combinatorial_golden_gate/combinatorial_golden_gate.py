@@ -9,4 +9,8 @@ assembly = dc.Type2sRestrictionAssembly(
     expected_constructs="any_number",
 )
 simulation = assembly.simulate(sequence_repository=repository)
-simulation.write_report(target="output")
+report_writer = dc.AssemblyReportWriter(
+    include_mix_graphs=True, include_part_plots=True
+)
+simulation.write_report(target="output", report_writer=report_writer)
+print ("Done! see output/ folder for the results.")

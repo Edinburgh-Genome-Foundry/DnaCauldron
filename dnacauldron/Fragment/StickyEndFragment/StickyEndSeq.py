@@ -17,6 +17,10 @@ class StickyEndSeq(Seq):
         self.right_end = right_end
 
     def reverse_complement(self):
+        """The reverse is a StickyEndSeq with reversed ends
+
+        left-right versions are interchanged and reverse complemented.
+        """
         return StickyEndSeq(
             str(Seq.reverse_complement(self)),
             left_end=None
@@ -29,6 +33,8 @@ class StickyEndSeq(Seq):
         )
 
     def will_clip_in_this_order_with(self, other):
+        """Return whether this sequence will clip in this order with another.
+        """
         return (
             self.right_end is not None
         ) and self.right_end.will_clip_directly_with(other.left_end)
@@ -66,6 +72,7 @@ class StickyEndSeq(Seq):
         )
 
     def to_standard_sequence(self, discard_sticky_ends=False):
+        """Return a string, basically left + middle + right"""
         if discard_sticky_ends:
             return Seq(str(self))
         else:
@@ -76,7 +83,14 @@ class StickyEndSeq(Seq):
 
     @staticmethod
     def list_from_sequence_digestion(sequence, enzyme, linear=True):
-        # print (enzyme)
+        """Compute the StickyEndSeqs resulting from a sequence digestion.
+
+        This is one of the most important methods in DNA Cauldron. It uses
+        Biopython to find restriction sites, and deals with the case where
+        the sequence is circular, or the sequence is already sticky-ended.
+
+        That was painful to write but hopefully the tests ensure it works well.
+        """
         if isinstance(enzyme, (list, tuple)):
             if len(enzyme) == 1:
                 enzyme = enzyme[0]
@@ -99,7 +113,6 @@ class StickyEndSeq(Seq):
             return [sequence]
         overhang = abs(enzyme.ovhg)
         right_end_sign = +1 if enzyme.is_3overhang() else -1
-        # fragments = enzyme.catalyse(sequence, linear=linear)
 
         if linear:
             fragments = enzyme.catalyse(sequence, linear=True)

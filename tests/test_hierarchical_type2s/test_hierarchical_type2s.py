@@ -34,7 +34,7 @@ def test_type2s_hierarchical_flawed():
 
     report_writer = dc.AssemblyReportWriter(
         include_fragments_plots=True,
-        include_parts_plots=True,
+        include_part_plots=True,
         include_mix_graphs=True,
         include_assembly_plots=True,
         show_overhangs_in_graph=True,

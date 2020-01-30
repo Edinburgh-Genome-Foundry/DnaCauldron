@@ -17,6 +17,8 @@ from .Assembly import (
     BioBrickStandardAssembly,
     Type2sRestrictionAssembly,
     GibsonAssembly,
+    BASICAssembly,
+    OligoPairAnnealing,
     AssemblyReportWriter,
     AssemblyPlotTranslator,
     Assembly

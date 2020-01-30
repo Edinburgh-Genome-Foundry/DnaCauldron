@@ -25,7 +25,7 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
       Either True/False/"on_error" to plot schemas of the fragments used in
       the different AssemblyMix throughout the simulation.
 
-    include_parts_plots
+    include_part_plots
       Either True/False/"on_error" to plot schemas of the parts used, possibly
       with restriction sites relevant to the AssemblyMix.
     include_mix_graphs
@@ -51,7 +51,7 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
     def __init__(
         self,
         include_fragments_plots="on_error",
-        include_parts_plots="on_error",
+        include_part_plots="on_error",
         include_mix_graphs="on_error",
         include_part_records=True,
         include_assembly_plots=False,
@@ -59,7 +59,7 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
         annotate_parts_homologies=True
     ):
         self.include_fragments_plots = include_fragments_plots
-        self.include_parts_plots = include_parts_plots
+        self.include_part_plots = include_part_plots
         self.include_mix_graphs = include_mix_graphs
         self.include_assembly_plots = include_assembly_plots
         self.show_overhangs_in_graph = show_overhangs_in_graph

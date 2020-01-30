@@ -1,5 +1,5 @@
 from Bio import Restriction
-from .records_operations import record_is_linear
+from .record_operations import record_is_linear
 
 type2S_enzymes = ("BsmBI", "BsaI", "BbsI", "AarI", "SapI")
 

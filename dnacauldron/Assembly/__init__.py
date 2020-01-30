@@ -6,7 +6,7 @@ from .builtin_assembly_classes import (
     OligoPairAnnealing
 )
 from .AssemblyReportWriter import AssemblyPlotTranslator, AssemblyReportWriter
-
+from .AssemblySimulation import AssemblySimulation
 ASSEMBLY_CLASS_DICT = {
     "type2s_assembly": Type2sRestrictionAssembly,
     "gibson_assembly": GibsonAssembly,
@@ -18,9 +18,11 @@ ASSEMBLY_CLASS_DICT = {
 __all__ = [
     "Type2sRestrictionAssembly",
     "BioBrickStandardAssembly",
+    "BASICAssembly",
     "GibsonAssembly",
     "AssemblyPlotTranslator",
     "AssemblyReportWriter",
     "OligoPairAnnealing",
+    "AssemblySimulation",
     "ASSEMBLY_CLASS_DICT"
 ]

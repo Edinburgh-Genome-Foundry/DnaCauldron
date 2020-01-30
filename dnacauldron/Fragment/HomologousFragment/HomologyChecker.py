@@ -7,8 +7,30 @@ class HomologyChecker:
     tm_dict = {"A": 2, "T": 2, "G": 4, "C": 4}
 
     def __init__(
-        self, min_size=15, max_size=70, min_tm=0, max_tm=None, max_distance=0
+        self, min_size=15, max_size=80, min_tm=0, max_tm=None, max_distance=0
     ):
+        """Class to define which homologies are acceptable.
+
+        This class is for instance used to detect and validate end-homologies
+        for Gibson Assembly.
+
+        Melting temperatures are currently computed using the naive but
+        efficient technique of A/T = 2C, G/C= 4C.
+
+        Parameters
+        ==========
+
+        min_size, max_size
+          Acceptable size, in nucleotides, for an homology. The upper bound
+          helps reduce computational times
+        
+        min_tm, max_tm
+          Acceptable melting temperature range in Celsius for the homology.
+
+        max_distance
+          If >0, small 1-, or 2- nucleotide differences (edits, deletion) can
+          be accepted in homologies. 
+        """
         self.min_size = min_size
         self.max_size = max_size
         self.min_tm = min_tm
@@ -42,6 +64,8 @@ class HomologyChecker:
         return 0
 
     def check_homology(self, sequence, other_sequence=None):
+        """Return whether there is an acceptable full-sequence homology between
+        two sequences."""
         sequence = self.sequence_to_string(sequence)
 
         if other_sequence is not None:
@@ -66,6 +90,7 @@ class HomologyChecker:
         return True
 
     def parameters_as_string(self):
+        """Return a string of the parameters for errors and reports."""
         return "%d-%dbp, %.1f-%sC Tm" % (
             self.min_size,
             self.max_size,
