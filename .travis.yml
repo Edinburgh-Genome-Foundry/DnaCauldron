@@ -5,6 +5,7 @@ python:
 install:
   - pip install coveralls geneblocks pytest-cov==2.6 pytest==3.2.3
   - pip install -e .
+  - sudo apt-get install ncbi-blast+
 # command to run tests
 script:
   - python -m pytest -v --cov dnacauldron --cov-report term-missing
