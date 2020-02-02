@@ -1,5 +1,7 @@
 import os
 import dnacauldron as dc
+
+try
 from geneblocks import sequences_are_circularly_equal
 
 this_directory = os.path.dirname(os.path.realpath(__file__))
