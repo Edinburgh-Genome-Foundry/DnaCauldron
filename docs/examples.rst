@@ -21,7 +21,7 @@ Hierarchical Golden Gate assembly
 Gibson Assembly Plan
 ++++++++++++++++++++++
 
-.. literalinclude:: ../examples/scenarios/gibson_assembly/gibson_assembly.py
+.. literalinclude:: ../examples/gibson_assembly/gibson_assembly.py
 
 Hierarichical BioBrick assembly
 ++++++++++++++++++++++++++++++++++++++++++

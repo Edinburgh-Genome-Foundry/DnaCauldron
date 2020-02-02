@@ -130,8 +130,8 @@ class AssemblyPlan:
           Logger of the created assembly plan. Either "bar" for a progress bar
           or None for none, or any Proglog logger. 
 
-         **assembly_params
-           Extra keyword parameters which will be fed to each assembly.
+        assembly_params
+          Extra keyword parameters which will be fed to each assembly.
         """
         if name == "auto_from_filename":
             if path is None:

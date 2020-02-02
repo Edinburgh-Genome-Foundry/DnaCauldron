@@ -18,10 +18,6 @@
    
    examples
 
-.. image:: _static/images/principle.png
-   :width: 600px
-   :align: center
-
 .. raw:: html
 
        <a href="https://twitter.com/share" class="twitter-share-button"

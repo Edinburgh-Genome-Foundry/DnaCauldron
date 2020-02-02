@@ -22,7 +22,7 @@ Assembly Plan Simulation
 Assembly Classes
 ~~~~~~~~~~~~~~~~
 
-.. autoclass:: dnacauldron.Type2SRestrictionAssembly
+.. autoclass:: dnacauldron.Type2sRestrictionAssembly
    :members:
 
 .. autoclass:: dnacauldron.GibsonAssembly
