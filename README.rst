@@ -43,8 +43,8 @@ minimal knowledge of the project's specifics.
     <br /><br />
     </p>
 
-Usage
------
+Usage tutorial
+--------------
 
 Providing part sequences
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -155,31 +155,21 @@ You can install DnaCauldron through PIP
 
 Alternatively, you can unzip the sources in a folder and type
 
-
 .. code:: shell
 
     sudo python setup.py install
 
-It works better with the Networkx development version, that you install with
-
-.. code:: shell
-
-    sudo pip3 install git+https://github.com/networkx/networkx.git
-
 How it works
 ------------
 
-Dna Cauldron simulates enzyme digestions and computes sticky ends, then generates
-a graph of the fragments that bind together, and explores circular paths in this graph
-(which correspond to circular constructs), an idea also used in
-`PyDNA <https://github.com/BjornFJohansson/pydna>`_ and first
-described in `Pereira et al. Bioinf. 2015 <http://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0544-x>`_ .
-DNA Cauldron adds methods to deal with combinatorial assemblies,
-selecting constructs based on a marker, routines for report generation, etc.
+Dna Cauldron predicts circular constructs by explores circular paths in parts
+homology graphs , an idea also used in first described in
+`Pereira et al. Bioinf. 2015 <http://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0544-x>`_ .
+and used in the Python library `PyDNA <https://github.com/BjornFJohansson/pydna>`_.
 
 
-Licence
---------
+Contribute!
+-----------
 
 Dna Cauldron is an open-source software originally written at the `Edinburgh Genome Foundry
 <http://www.genomefoundry.io>`_ by `Zulko <https://github.com/Zulko>`_

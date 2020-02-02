@@ -34,6 +34,9 @@ Assembly Classes
 .. autoclass:: dnacauldron.BioBrickStandardAssembly
    :members:
 
+.. autoclass:: dnacauldron.LigaseCyclingReactionAssembly
+   :members:
+
 Assembly Simulation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 

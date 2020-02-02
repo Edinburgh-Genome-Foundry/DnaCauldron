@@ -17,6 +17,9 @@ AssemblyMix
 .. autoclass:: dnacauldron.AssemblyMix.HomologousAssemblyMix
    :members:
 
+.. autoclass:: dnacauldron.AssemblyMix.LigaseCyclingReactionAssemblyMix
+   :members:
+
 Fragment
 ~~~~~~~~~~~
 
