@@ -3,7 +3,8 @@ from .builtin_assembly_classes import (
     BioBrickStandardAssembly,
     BASICAssembly,
     GibsonAssembly,
-    OligoPairAnnealing
+    OligoPairAnnealing,
+    LigaseCyclingReactionAssembly
 )
 from .AssemblyReportWriter import AssemblyPlotTranslator, AssemblyReportWriter
 from .AssemblySimulation import AssemblySimulation
@@ -12,7 +13,8 @@ ASSEMBLY_CLASS_DICT = {
     "gibson_assembly": GibsonAssembly,
     "BASIC_assembly": BASICAssembly,
     "biobrick_assembly": BioBrickStandardAssembly,
-    "oligo_annealing": OligoPairAnnealing
+    "oligo_annealing": OligoPairAnnealing,
+    "lcr_assembly": LigaseCyclingReactionAssembly
 }
 
 __all__ = [
@@ -24,5 +26,6 @@ __all__ = [
     "AssemblyReportWriter",
     "OligoPairAnnealing",
     "AssemblySimulation",
-    "ASSEMBLY_CLASS_DICT"
+    "ASSEMBLY_CLASS_DICT",
+    "LigaseCyclingReactionAssembly"
 ]

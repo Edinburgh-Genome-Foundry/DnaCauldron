@@ -1,3 +1,4 @@
+from copy import deepcopy
 from Bio.SeqRecord import SeqRecord
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 from dna_features_viewer import BiopythonTranslator
@@ -6,6 +7,15 @@ from dna_features_viewer import BiopythonTranslator
 class Fragment(SeqRecord):
     """Base class to represent a DNA fragment that will assemble with other
     fragments, such as HomologousFragments and StickyEndFragments."""
+
+    @staticmethod
+    def from_biopython_record(biopython_record):
+        """Convert a biopython record into a HomologousFragment (class change).
+        """
+        new_record = deepcopy(biopython_record)
+        new_record.original_part = biopython_record
+        new_record.__class__ = Fragment
+        return new_record
 
     def plot(self, ax=None):
         """Plot the fragment and its features on a Matplotlib ax.

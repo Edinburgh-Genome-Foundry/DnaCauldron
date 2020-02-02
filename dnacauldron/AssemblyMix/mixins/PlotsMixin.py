@@ -55,3 +55,10 @@ class PlotsMixin:
                 bbox_inches="tight",
             )
             plt.close(ax.figure)
+    
+    # def plot_graphs(self, report_root, assembly, with_overhangs=True):
+    #     file_prefix = assembly.name + "_"
+    #     ax = self.plot_connections_graph()
+    #     f = report_root._file(file_prefix + "connections_graph.pdf")
+    #     ax.figure.savefig(f.open("wb"), format="pdf", bbox_inches="tight")
+    #     plt.close(ax.figure)

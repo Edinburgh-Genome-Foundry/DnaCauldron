@@ -18,6 +18,7 @@ from .Assembly import (
     Type2sRestrictionAssembly,
     GibsonAssembly,
     BASICAssembly,
+    LigaseCyclingReactionAssembly,
     OligoPairAnnealing,
     AssemblyReportWriter,
     AssemblyPlotTranslator,
@@ -48,11 +49,5 @@ from .utils import (
     list_overhangs_from_record_annotations,
 )
 from .version import __version__
-
-# from .reports import (
-#     plot_cuts,
-#     full_assembly_report,
-#     full_assembly_plan_report,
-# )
 
 from .Filter import NoPatternFilter, TextSearchFilter, NoRestrictionSiteFilter
