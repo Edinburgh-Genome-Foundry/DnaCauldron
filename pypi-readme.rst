@@ -1,15 +1,19 @@
 DNA Cauldron
 ===================
 
-DNA Cauldron is a Python library to simulate restriction-based assembly operations. Provided the sequences of genetic parts and receptor vectors, DNA Cauldron will compute the assembli(es) that could result from the mix.
+DNA Cauldron provides a generic cloning simulation framework to predict
+constructs sequences and detect assembly flaws.
+It can simulate Golden-Gate support, with extra features like enzyme or
+connector parts autoselection, and other methods like Gibson Assembly,
+LCR Assembly, BASIC assembly, BioBrick assembly.
+It supports single and combinatorial assemblies, hierarchical assemblies, and
+produces nice reports for traceability and troubleshooting.
 
-.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaCauldron/master/docs/_static/images/report_screenshot.jpg
+
+.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaCauldron/master/docs/_static/images/report_elements.png
    :alt: [logo]
    :align: center
-   :width: 600px
-
-DNA Cauldron was written for Synthetic Biology applications - typically, to predict and validate batches of parts-based assemblies. It is simple to use, plays well with BioPython, can import and export Genbank (it conserves all features), and provides advanced methods such as connector part auto-selection, backbone selection for linear parts, methods to select constructs subsets when dealing with large combinatorial assemblies.
-
+   :width: 800px
 
 Infos
 -----
