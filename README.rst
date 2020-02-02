@@ -29,14 +29,10 @@ minimal knowledge of the project's specifics.
   `dropping sequence files in a web app <http://cuba.genomefoundry.org/simulate_gg_assemblies>`_.
 - Good support for Gibson, Biobrick, BASIC, LCR Assembly.
 - Provide genetic parts in any order, with or without annotations, in reverse or direct
-  sense, linear or circular... Cauldron will get it!
-- If your assembly is combinatorial, Cauldron will find all the possible combinations.
-- If you forgot to add connector parts in your assembly (that happens with assemblies like EMMA),
-  Cauldron can add them for you!
+  sense, linear or circular, single or combinatorial assembly... Cauldron will get it!
 - Design flaw detection (missing parts, unwanted restriction sites, wrong overhang designs, etc.).
-
-- Import batch assembly plans from spreadsheets.
-- Simulate and validate hierarchical (=multi-step) assembly plans.
+- If your assembly needs connector parts, Cauldron can select them for you!
+- Import batch assembly plans from spreadsheets, including hierarchical (=multi-step) plans.
 - Comprehensive reports with constructs sequences, fragment sequences, summary spreadsheets.
 - Export multi-file reports in folders, zip files, or in-memory zip files (for use on servers).
 

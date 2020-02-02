@@ -119,9 +119,10 @@ class Assembly:
         """Add a new flaw to the list if max constructs is reached"""
         max_allowed = self.max_constructs
         if (max_allowed is not None) and (max_allowed <= found):
+            message = "Max construct number reached, there may be been more!"
             flaw = AssemblyFlaw(
                 assembly=self,
-                message="Wrong number of constructs",
+                message=message,
                 suggestion="Check assembly or parts design",
                 data={"max": max_allowed, "found": found},
             )

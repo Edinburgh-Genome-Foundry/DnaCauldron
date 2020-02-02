@@ -36,5 +36,19 @@ def test_combinatorial_type2s():
     )
     simulation = assembly.simulate(sequence_repository=repository)
     assert len(simulation.errors) == 0
-    assert len(simulation.warnings) == 1
+    assert len(simulation.warnings) == 1  # Max constructs reached warning
     assert len(simulation.construct_records) == 3
+
+    # TEST RANDOMIZED ASSEMBLY PICKING
+    assembly = dc.Type2sRestrictionAssembly(
+        parts_list,
+        max_constructs=2,
+        expected_constructs="any_number",
+        expect_no_unused_parts=False,
+        randomize_constructs=True,
+    )
+    simulation = assembly.simulate(sequence_repository=repository)
+    assert len(simulation.errors) == 0
+    assert len(simulation.warnings) == 1  # Max constructs reached warning
+    assert len(simulation.construct_records) == 2
+

@@ -55,6 +55,7 @@ class Type2sRestrictionAssembly(Assembly):
         "expected_constructs",
         "expect_no_unused_parts",
         "connectors_collection",
+        "randomize_constructs"
     )
 
     def __init__(
@@ -66,6 +67,7 @@ class Type2sRestrictionAssembly(Assembly):
         expected_constructs=1,
         expect_no_unused_parts=True,
         max_constructs=40,
+        randomize_constructs=False,
         dependencies=None,
     ):
         Assembly.__init__(
@@ -79,6 +81,7 @@ class Type2sRestrictionAssembly(Assembly):
         self.connectors_collection = connectors_collection
         self.expected_constructs = expected_constructs
         self.expect_no_unused_parts = expect_no_unused_parts
+        self.randomize_constructs = randomize_constructs
 
     def get_extra_construct_data(self):
         return dict(enzymes=self.enzymes)
@@ -193,9 +196,9 @@ class Type2sRestrictionAssembly(Assembly):
                 )
 
         # COMPUTE ALL CIRCULAR ASSEMBLIES
-
         generator = mix.compute_circular_assemblies(
-            annotate_parts_homologies=annotate_parts_homologies
+            annotate_parts_homologies=annotate_parts_homologies,
+            randomize=self.randomize_constructs
         )
         construct_records = sorted(
             [asm for (i, asm) in zip(range(self.max_constructs), generator)],
