@@ -1,0 +1,96 @@
+LOCUS       part_D                  2682 bp    ds-DNA  circular UNK 30-OCT-2019
+DEFINITION  .
+ACCESSION   part_D
+VERSION     part_D
+KEYWORDS    "Source:Subcloned from vector Andrew" "Sequence" "Freezer" "Shelf"
+            "Box:Mobius box" "Concentration" "Use:Mobius".
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     rep_origin      complement(262..850)
+                     /label="feature"
+                     /ApEinfo_fwdcolor="#ffef86"
+     misc_feature    2642..2671
+                     /label="another feature"
+                     /ApEinfo_fwdcolor="#b1ff67"
+     terminator      1991..2034
+                     /label="yet another feature"
+                     /ApEinfo_fwdcolor="#c6c9d1"
+     CDS             2054..2566
+                     /label="feature"
+                     /ApEinfo_fwdcolor="#84b0dc"
+     misc_feature    1919..1938
+                     /label="another feature"
+                     /ApEinfo_fwdcolor="#f58a5e"
+     misc_feature    2050..2053
+                     /label="yet another feature"
+                     /ApEinfo_fwdcolor="#f8d3a9"
+     misc_feature    2576..2641
+                     /label="feature"
+                     /ApEinfo_fwdcolor="#b7e6d7"
+     terminator      10..67
+                     /label="another feature"
+                     /ApEinfo_fwdcolor="#c6c9d1"
+     misc_feature    143..162
+                     /label="yet another feature"
+                     /ApEinfo_fwdcolor="#75c6a9"
+     misc_feature    2675..2678
+                     /label="feature"
+                     /ApEinfo_fwdcolor="#f8d3a9"
+     CDS             2618..2641
+                     /label="another feature"
+                     /ApEinfo_fwdcolor="#84b0dc"
+     CDS             complement(1148..1807)
+                     /label="yet another feature"
+                     /ApEinfo_fwdcolor="#b7e6d7"
+     terminator      1033..1127
+                     /label="feature"
+                     /ApEinfo_fwdcolor="#c6c9d1"
+ORIGIN
+        1 accctgcagt ccgtgaatta agaccaatcc actggagctc tatacaggac atcagcgatc
+       61 ggtcgagtaa aaccgagttt ctggactccc ttagtctgag aattgtacct tattacgaat
+      121 ccggaaatga agtgcgctca taaaatcttg atcgctaact gttttccgct ttttgaacct
+      181 acagtcagct atttcgccgc aagcgaggtt tatccccttt tgtgtgtgtc agcgggcgaa
+      241 cgtggaggac aattatgacg aatgcctaat aaccaacgta ggcttggctg gtgaggacat
+      301 tgcccttccc cttctactaa ccagtgttgt tcagatcatg taccaagtgc agtaatgcta
+      361 atcccctgaa ttctgacgtt ggatttggag cgtgattggc aattatccgc tgcaaggcgt
+      421 agtatcgcta tctgggaaaa cttagggttg caagcaaggt catcgcccgt ctctagatcc
+      481 gacgggagcc tcaccctgca tgaggaagtc ctaatccgct ctaaacaaga gctgaacact
+      541 ggatgtctcg cagtagattt gctagaatgc aatgctggct cgtgtgcagc ctcaaggtca
+      601 ccatgcttcc gttaaattcc acgctctccg agtctgctgg ttcgggataa atctacgtga
+      661 cattcgcgag gtcccggcct gtagatcgtc tcggcaggag agaacacggt tgatccccca
+      721 cgcggaaccg atagatgcca ggctagatga tgactgaagg tagtttgtac gagtgacctc
+      781 tctagccaag tattttcccg tctcttaagt tatagccgct ctcattccgg gttgtgatat
+      841 ccttcatatc cactctctgt aaaatgctgg gttgttcttc tctccacggt cagggaatcg
+      901 cctcttttcg gataaacgac attatttcgc gccacagaac ggtttggggg tcgaaggacc
+      961 ctagactttg ggtatcccac tcttaccgga tggtaccgct atctccccag ggtccatcgg
+     1021 aatggctagc cacgttaccc ttatctgtca gtatcagtct cagacttaag tataccacgg
+     1081 tagcgacagc tgtcttttaa tggcccgggc agggagccgg gcccaccgtc catggtccac
+     1141 tgtaagggta tctgcaacct tcgccgagct tcttccccaa ggaggtagta ccttaccaaa
+     1201 cttccgagtc agtatcgtca aaggggcccc tagggctcac accatcgagt ttccgcggct
+     1261 taccagtcta gcctgatatg tttcaggtca ggaaataaga ggtatagccc cgtggacacg
+     1321 tactgttcga gcggctagat gtaggttgag ttaagtacag tagacgcgtt ggataccgtc
+     1381 gaacattact ccgtctgcca agggtagccg agtacttctt ccggctcggc cattccgact
+     1441 aagttagttt cgaattgacg tgccaaagcg tggctcccag tcatttgtcc ttaaattaaa
+     1501 cataagtttt ttacctgctc gcgtgccggc cgcttgaggg ggcagcaaga agtcggttca
+     1561 aatggggtgt taagaccggt gttgcaagcg gaccatccag agttagcgtc ctcgacgaaa
+     1621 cgttaacaat cgtgagatta gaggtcgaat atccccttcg tagggggttt tattgtgcaa
+     1681 gatgcgcaaa tgaaccccaa ccttgcgggc ctgtagcgaa caggcgaaaa ggtccaatac
+     1741 ggcgcccgat gcaccgtaaa acaggtcctc taactgtgtg ttctacgctc tccggatcct
+     1801 gtatataaga acgaatcccc ttttcctagg gcccggccgc gtagacccag tacacttgac
+     1861 tttcacgaag atccatccta ctcccatacg cttgagagtg ccaacgtagt ttgtaaccga
+     1921 ccttgcctcg gctagaaagg cattttgtcg catgtggcca gcctgtcagg gcgtgctcta
+     1981 ggcttgacga ttagtgctac gggatgattc gtaaccgagc tgacgggacg cctctggaat
+     2041 tcggtctctt tcgatggtgc ctcctctacg tagatctact ggataaccgt ccccaatatc
+     2101 cgcttcccaa cgtagattgc cgacaggcat aagcttcggg ggcgcaaagg ccgacgtccg
+     2161 cattgcagtg tagctttgtg agcaggaagt gtgatagtct ttcgattatt aaagtctgag
+     2221 ctgaatgaaa aaaggtccaa cgaatggagg acgcgaagac atgggtgtct cttatggccc
+     2281 gagcgggagt aatggcggtt cgtacataaa ggctgaaagg attctggcgt tagctgtctt
+     2341 acgttggatt ggcccttcaa attatcgatg ttagctgatt cggtgtaccg ggcgaggaaa
+     2401 gcgctctcag aacaacttca tatacgaggt tcgactataa tggtctaagc tcctgggcta
+     2461 gtctcaagaa gcgggtacct ttagtagcac gtatcgacgg caaagcaaag aataaaaact
+     2521 tggctttgca tcgtgcaaag atttctaact aggttgttta agggctggta tctatgtccc
+     2581 gctataacag cgcgcctaca gtagaagttt aaccatgaca tacctttgaa gtgttcgtat
+     2641 cacacacaag gaaggagcat gtggacacca ctgagctttg ag
+//
