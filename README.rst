@@ -40,6 +40,13 @@ minimal knowledge of the project's specifics.
 - Comprehensive reports with constructs sequences, fragment sequences, summary spreadsheets.
 - Export multi-file reports in folders, zip files, or in-memory zip files (for use on servers).
 
+.. raw:: html
+
+    <p align="center">
+    <img alt="DNA Cauldron Logo" title="DNA Cauldron Logo" src="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron/raw/master/docs/_static/images/reports_elements.png" width="800">
+    <br /><br />
+    </p>
+
 Usage
 -----
 
