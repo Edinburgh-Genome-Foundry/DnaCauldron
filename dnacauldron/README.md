@@ -15,6 +15,11 @@ The short story is that an ***AssemblyPlan*** contains ***Assemblies*** simulate
 
 The biology of the different cloning techniques is implemented in the subclasses of ***Assembly*** and ***AssemblyMix***.
 
+
+<p align="center">
+<img alt="DNA Cauldron Logo" title="DNA Cauldron Logo" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaCauldron/master/docs/_static/images/schemas/assembly_plan.png" width="600">
+</p>
+
 ### AssemblyMix subclasses
 
 An ***AssemblyMix*** contains a list of ***Fragment*** instances (which subclass BioPython's *SeqRecord*), and can be:
@@ -27,4 +32,14 @@ An ***AssemblyMix*** contains a list of ***Fragment*** instances (which subclass
   - Mixes also require a ***HomologyChecker*** to detect homologies.
   - Subclasses include ***LCRAssemblyMix***
 
+<p align="center">
+<img alt="DNA Cauldron Logo" title="DNA Cauldron Logo" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaCauldron/master/docs/_static/images/schemas/assembly_mix_classes.png" width="600">
+</p>
+<p align="center">
+<img alt="DNA Cauldron Logo" title="DNA Cauldron Logo" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaCauldron/master/docs/_static/images/schemas/fragment_classes.png" width="400">
+</p>
+
 ### Assembly subclasses
+<p align="center">
+<img alt="DNA Cauldron Logo" title="DNA Cauldron Logo" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaCauldron/master/docs/_static/images/schemas/assembly_classes.png" width="400">
+</p>
