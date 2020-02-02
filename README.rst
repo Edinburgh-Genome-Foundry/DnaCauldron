@@ -25,30 +25,20 @@ your assemblies work with Cauldron, they should work at the bench. It is
 especially useful for people and machines tasked with assembling DNA with
 minimal knowledge of the project's specifics.
 
-Features for assembly simulation:
-
-- Great support for Golden Gate assembly and its derivatives (MoClo, EMMA, Phytobrick, etc.),
-  Assembly simulation is as simple as
-  `dropping sequence files in a web interface <http://cuba.genomefoundry.org/simulate_gg_assemblies>`_.
-- Good support for Gibson Assembly, BASIC Assembly, Biobrick assembly, 
-  Biobrick assembly.
-- Provide assembly parts in any order, with or without annotations, in reverse or direct
-sense, linear or circular... Cauldron will get it!
+- Great support for Golden Gate assembly (incl. MoClo, EMMA, Phytobrick, etc.), the simulation is as simple as
+  `dropping sequence files in a web app <http://cuba.genomefoundry.org/simulate_gg_assemblies>`_.
+- Good support for Gibson, Biobrick, BASIC, LCR Assembly.
+- Provide genetic parts in any order, with or without annotations, in reverse or direct
+  sense, linear or circular... Cauldron will get it!
 - If your assembly is combinatorial, Cauldron will find all the possible combinations.
-- If you forgot to add connector parts in your assembly (that happens with
-  assemblies like EMMA), Cauldron can add them for you!
-- Advanced design flaw detection (missing parts, presence of problematic
-  restriction sites in the parts, wrong overhang designs, etc.).
-- Comprehensive reports with constructs sequences, fragment sequences, summary
-  spreadsheets.
+- If you forgot to add connector parts in your assembly (that happens with assemblies like EMMA),
+  Cauldron can add them for you!
+- Design flaw detection (missing parts, unwanted restriction sites, wrong overhang designs, etc.).
 
-The library also enables the management of large, complex assembly batches:
-
-- Import assembly plans from spreadsheets.
-- Simulate and validate hierarchical assembly plans where some assembly products
-  are used as parts in the next level of assembly.
-- Generate complete, self contained reports as folders, zip files, or in-memory
-  zip files (for use on servers).
+- Import batch assembly plans from spreadsheets.
+- Simulate and validate hierarchical (=multi-step) assembly plans.
+- Comprehensive reports with constructs sequences, fragment sequences, summary spreadsheets.
+- Export multi-file reports in folders, zip files, or in-memory zip files (for use on servers).
 
 Usage
 -----
@@ -172,88 +162,6 @@ It works better with the Networkx development version, that you install with
 .. code:: shell
 
     sudo pip3 install git+https://github.com/networkx/networkx.git
-
-Usage
-------
-
-Single assembly
-~~~~~~~~~~~~~~~
-
-To assemble several parts and a receptor plasmid into a single construct,
-use `single_assembly`. The parts can be provided either as paths to genbank
-files or as Biopython records. Dna Cauldron returns a Biopython record of the
-final assembly, and (optionally) writes it to a Genbank file.
-
-.. code:: python
-
-    from dnacauldron.utils import single_assembly
-    final_construct = single_assembly(
-        parts=["partA.gb", "partB.gb", "partC.gb", "partD.gb", "receptor.gb"]
-        outfile="final_construct.gb", # Name of the output
-        enzyme="BsmBI" # enzyme used for the assembly
-    )
-
-Combinatorial assembly
-~~~~~~~~~~~~~~~~~~~~~~
-
-The following example imports parts from Genbank files and outputs all
-possible outcomes of BsmBI-based Golden-Gate assembly as new genbank files
-`001.gb`, `002.gb`, etc. We ignore the final assemblies containing a BsmBI site
-as these are unstable.
-
-.. code:: python
-
-    from dnacauldron import (Type2sRestrictionMix, NoRestrictionSiteFilter,
-                             load_record, write_record)
-
-    # Load all the parts (including the receptor)
-    parts_files = ["partA.gb", "partA2.gb", "partB.gb", "partB2.gb",
-                   "partC.gb", "receptor.gb"]
-    parts = [load_record(filename, topology='circular', id=filename)
-             for filename in parts_files]
-
-    # Create the "reaction mix"
-    mix = Type2sRestrictionMix(parts, enzyme='BsmBI')
-
-    # Find all final assemblies (containing no sites from the restriction enzyme)
-    assemblies = mix.compute_circular_assemblies()
-
-    # Iter through all possible constructs and write them on disk as Genbanks.
-    for i, assembly in enumerate(assemblies):
-        out_path = os.path.join("..", "%03d.gb" % i)
-        write_record(assembly, out_path, "genbank")
-
-
-Full Assembly report
-~~~~~~~~~~~~~~~~~~~~
-
-DNA Cauldron also implements routine to generate reports on the assemblies,
-featuring the resulting constructs (in genbank and PDF format) as well as
-figures for verifying that the parts assembled as expected and help troubleshoot
-if necessary.
-
-The following code produces a structured directory with various reports:
-
-.. code:: python
-
-    from dnacauldron import load_record, full_assembly_report
-    parts = [
-        load_record("partA.gb", topology='circular', name="PartA"),
-        load_record("partB.gb", topology='circular', name="PartB"),
-        load_record("partC.gb", topology='circular', name="PartC"),
-        load_record("receptor.gb", topology='circular', name="Receptor")
-    ]
-    dc.full_assembly_report(parts, target="./my_report", enzyme="BsmBI",
-                            max_assemblies=40, fragment_filters='auto',
-                            assemblies_prefix='asm')
-
-Result:
-
-.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaCauldron/master/docs/_static/images/report_screenshot.jpg
-   :alt: [logo]
-   :align: center
-   :width: 600px
-
 
 How it works
 ------------
