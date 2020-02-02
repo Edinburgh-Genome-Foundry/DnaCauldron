@@ -17,4 +17,4 @@ setup(name='dnacauldron',
     install_requires=['Biopython', 'numpy', 'matplotlib', 'pandas', 'scipy',
                       'networkx', 'dna_features_viewer', 'flametree',
                       'snapgene_reader', 'proglog', 'xlwt', 'openpyxl',
-                      'Levenshtein'])
+                      'python-Levenshtein'])
