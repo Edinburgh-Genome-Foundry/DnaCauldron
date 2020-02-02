@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Useful classes for scripts</title>
+    
+      <link rel="stylesheet" href="../_static/pygments.css">
+      <link rel="stylesheet" href="../_static/theme.css">
+      <link rel="stylesheet" href="../_static/sphinx_press_theme.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+
+      
+      <script src="../_static/theme-vendors.js"></script>
+      <script src="../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="next" title="Useful methods built on top of DNA Cauldron" href="utils.html" />
+  <link rel="prev" title="DNA Cauldron" href="../index.html" /> 
+  </head>
+
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../index.html" class="home-link">
+    
+      <img class="logo" src="../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link  router-link-active">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link  router-link-active">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#more-biology-software">Reference</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 current"><a href="#" class="reference internal current">Useful classes for scripts</a>
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#sequencerepository" class="reference internal">SequenceRepository</a></li>
+                
+                  <li class="toctree-l2"><a href="#assembly-plan" class="reference internal">Assembly Plan</a></li>
+                
+                  <li class="toctree-l2"><a href="#assembly-plan-simulation" class="reference internal">Assembly Plan Simulation</a></li>
+                
+                  <li class="toctree-l2"><a href="#assembly-classes" class="reference internal">Assembly Classes</a></li>
+                
+                  <li class="toctree-l2"><a href="#assembly-simulation" class="reference internal">Assembly Simulation</a></li>
+                
+                  <li class="toctree-l2"><a href="#report-writer" class="reference internal">Report Writer</a></li>
+                
+                  <li class="toctree-l2"><a href="#homologies" class="reference internal">Homologies</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="utils.html" class="reference internal ">Useful methods built on top of DNA Cauldron</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="biotools.html" class="reference internal ">Biotools module</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="core_classes.html" class="reference internal ">Core classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="spreadsheet_reference.html" class="reference internal ">Spreadsheet Reference</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+    <li>Useful classes for scripts</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="../index.html"
+       title="previous chapter">← DNA Cauldron</a>
+  </li>
+  <li class="next">
+    <a href="utils.html"
+       title="next chapter">Useful methods built on top of DNA Cauldron →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <div class="section" id="useful-classes-for-scripts">
+<h1>Useful classes for scripts<a class="headerlink" href="#useful-classes-for-scripts" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="sequencerepository">
+<h2>SequenceRepository<a class="headerlink" href="#sequencerepository" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="dnacauldron.SequenceRepository">
+<em class="property">class </em><code class="sig-prename descclassname">dnacauldron.</code><code class="sig-name descname">SequenceRepository</code><span class="sig-paren">(</span><em class="sig-param">collections=None</em>, <em class="sig-param">name='repo'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/SequenceRepository.html#SequenceRepository"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.SequenceRepository" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sequence repositories store and provide sequence records.</p>
+<p>The records are organized into collections, for instance “parts” to host
+parts, “constructs” for records created during assembly plan simulation,
+or any other collection name like “emma_connectors” to store EMMA
+connectors.</p>
+<p>The suggested initialization of a sequence repository is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">repository</span> <span class="o">=</span> <span class="n">SequenceRepository</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">repository</span><span class="o">.</span><span class="n">import_records</span><span class="p">(</span><span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;part.fa&#39;</span><span class="p">,</span> <span class="s1">&#39;records.zip&#39;</span><span class="p">,</span> <span class="n">etc</span><span class="o">.</span><span class="p">])</span>
+</pre></div>
+</div>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>collections</strong></p>
+<blockquote>
+<div><p>A dict {‘collection_name’: {‘record_id’: record, …}, …} giving for
+each collection a dict of Biopython records.</p>
+</div></blockquote>
+<p><strong>name</strong></p>
+<blockquote>
+<div><p>The name of the repository as it may appear in error messages and other
+reports.</p>
+</div></blockquote>
+</dd>
+</dl>
+<dl class="method">
+<dt id="dnacauldron.SequenceRepository.add_record">
+<code class="sig-name descname">add_record</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">collection='parts'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/SequenceRepository.html#SequenceRepository.add_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.SequenceRepository.add_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add one record to a collection, using its record.id as key.</p>
+<p>The collection is created if it doesn’t exist.</p>
+<p>The record can also be a pair (id, “ATGTGCC…”).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.SequenceRepository.add_records">
+<code class="sig-name descname">add_records</code><span class="sig-paren">(</span><em class="sig-param">records</em>, <em class="sig-param">collection='parts'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/SequenceRepository.html#SequenceRepository.add_records"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.SequenceRepository.add_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.SequenceRepository.contains_record">
+<code class="sig-name descname">contains_record</code><span class="sig-paren">(</span><em class="sig-param">record_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/SequenceRepository.html#SequenceRepository.contains_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.SequenceRepository.contains_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether the repo has a record corresponding to the given id</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.SequenceRepository.get_part_names_by_collection">
+<code class="sig-name descname">get_part_names_by_collection</code><span class="sig-paren">(</span><em class="sig-param">format='dict'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/SequenceRepository.html#SequenceRepository.get_part_names_by_collection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.SequenceRepository.get_part_names_by_collection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionnary or a string representing the repo’s content.</p>
+<p>Format: “dict” or “string”</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.SequenceRepository.get_record">
+<code class="sig-name descname">get_record</code><span class="sig-paren">(</span><em class="sig-param">record_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/SequenceRepository.html#SequenceRepository.get_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.SequenceRepository.get_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the record from the repository from its ID.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.SequenceRepository.get_records">
+<code class="sig-name descname">get_records</code><span class="sig-paren">(</span><em class="sig-param">record_ids</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/SequenceRepository.html#SequenceRepository.get_records"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.SequenceRepository.get_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of records from a list of record IDs.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.SequenceRepository.import_records">
+<code class="sig-name descname">import_records</code><span class="sig-paren">(</span><em class="sig-param">files=None</em>, <em class="sig-param">folder=None</em>, <em class="sig-param">collection='parts'</em>, <em class="sig-param">use_file_names_as_ids=True</em>, <em class="sig-param">topology='default_to_linear'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/SequenceRepository.html#SequenceRepository.import_records"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.SequenceRepository.import_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import records into the repository, from files and zips and folders.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>files</strong></p>
+<blockquote>
+<div><p>A list of file paths, either Genbank, Fasta, Snapgene (.dna), or zips
+containing any of these formats.</p>
+</div></blockquote>
+<p><strong>folder</strong></p>
+<blockquote>
+<div><p>Path to a folder which can be provided instead of <code class="docutils literal notranslate"><span class="pre">files</span></code>.</p>
+</div></blockquote>
+<p><strong>collection</strong></p>
+<blockquote>
+<div><p>Name of the collection under which to import the new records.</p>
+</div></blockquote>
+<p><strong>use_file_names_as_ids</strong></p>
+<blockquote>
+<div><p>If True, the file name will be used as ID for any record obtained
+from a single-record file (fasta files with many records will still
+use the internal ID).</p>
+</div></blockquote>
+<p><strong>topology</strong></p>
+<blockquote>
+<div><p>Can be “circular”, “linear”, “default_to_circular” (will default
+to circular if <code class="docutils literal notranslate"><span class="pre">annotations['topology']</span></code> is not already set) or
+“default_to_linear”.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="assembly-plan">
+<h2>Assembly Plan<a class="headerlink" href="#assembly-plan" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="dnacauldron.AssemblyPlan">
+<em class="property">class </em><code class="sig-prename descclassname">dnacauldron.</code><code class="sig-name descname">AssemblyPlan</code><span class="sig-paren">(</span><em class="sig-param">assemblies</em>, <em class="sig-param">name='plan'</em>, <em class="sig-param">logger='bar'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/AssemblyPlan/AssemblyPlan.html#AssemblyPlan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyPlan" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="dnacauldron.AssemblyPlan.from_spreadsheet">
+<em class="property">static </em><code class="sig-name descname">from_spreadsheet</code><span class="sig-paren">(</span><em class="sig-param">path=None</em>, <em class="sig-param">dataframe=None</em>, <em class="sig-param">assembly_class='from_spreadsheet'</em>, <em class="sig-param">sheet_name='all'</em>, <em class="sig-param">header=None</em>, <em class="sig-param">name='auto_from_filename'</em>, <em class="sig-param">logger='bar'</em>, <em class="sig-param">assembly_class_dict='default'</em>, <em class="sig-param">**assembly_params</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/AssemblyPlan/AssemblyPlan.html#AssemblyPlan.from_spreadsheet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyPlan.from_spreadsheet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import an assembly plan from a spreadsheet.</p>
+<p>You can either read these docs or browse the examples in the repo.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong></p>
+<blockquote>
+<div><p>Path to a spreadsheet file (a dataframe can be used instead)</p>
+</div></blockquote>
+<p><strong>dataframe</strong></p>
+<blockquote>
+<div><p>A pandas dataframe, possibly obatined from a spreadsheet.</p>
+</div></blockquote>
+<p><strong>sheet_name</strong></p>
+<blockquote>
+<div><p>Name of the spreadsheet’s sheet on which the assembly plan is
+defined. Use “all” to load assemblies from all the sheets.</p>
+</div></blockquote>
+<p><strong>header</strong></p>
+<blockquote>
+<div><p>True or False, indicates whether there is a header in the
+spreadsheet.</p>
+</div></blockquote>
+<p><strong>name</strong></p>
+<blockquote>
+<div><p>Name of the assembly plan (leave to “auto_from_filename” to use the
+file name as assembly plan name)</p>
+</div></blockquote>
+<p><strong>logger</strong></p>
+<blockquote>
+<div><p>Logger of the created assembly plan. Either “bar” for a progress bar
+or None for none, or any Proglog logger.</p>
+</div></blockquote>
+<p><strong>assembly_params</strong></p>
+<blockquote>
+<div><p>Extra keyword parameters which will be fed to each assembly.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.AssemblyPlan.simulate">
+<code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param">sequence_repository</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/AssemblyPlan/AssemblyPlan.html#AssemblyPlan.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyPlan.simulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulate the whole assembly plan, return an AssemblyPlanSimulation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.AssemblyPlan.to_dataframe">
+<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/AssemblyPlan/AssemblyPlan.html#AssemblyPlan.to_dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyPlan.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dataframe describing the assembly plan.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="assembly-plan-simulation">
+<h2>Assembly Plan Simulation<a class="headerlink" href="#assembly-plan-simulation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="dnacauldron.AssemblyPlan.AssemblyPlanSimulation">
+<em class="property">class </em><code class="sig-prename descclassname">dnacauldron.AssemblyPlan.</code><code class="sig-name descname">AssemblyPlanSimulation</code><span class="sig-paren">(</span><em class="sig-param">assembly_plan</em>, <em class="sig-param">assembly_simulations</em>, <em class="sig-param">sequence_repository=None</em>, <em class="sig-param">cancelled=()</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/AssemblyPlan/AssemblyPlanSimulation.html#AssemblyPlanSimulation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyPlan.AssemblyPlanSimulation" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="dnacauldron.AssemblyPlan.AssemblyPlanSimulation.compute_all_construct_data_dicts">
+<code class="sig-name descname">compute_all_construct_data_dicts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/AssemblyPlan/AssemblyPlanSimulation.html#AssemblyPlanSimulation.compute_all_construct_data_dicts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyPlan.AssemblyPlanSimulation.compute_all_construct_data_dicts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the list of data dict for each assembly simulation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.AssemblyPlan.AssemblyPlanSimulation.compute_stats">
+<code class="sig-name descname">compute_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/AssemblyPlan/AssemblyPlanSimulation.html#AssemblyPlanSimulation.compute_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyPlan.AssemblyPlanSimulation.compute_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionnary of stats.</p>
+<p>For instance {“cancelled_assemblies”: 2, “errored_assemblies”: 1,
+“valid_assemblies”: 5}.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.AssemblyPlan.AssemblyPlanSimulation.write_report">
+<code class="sig-name descname">write_report</code><span class="sig-paren">(</span><em class="sig-param">target</em>, <em class="sig-param">folder_name='auto'</em>, <em class="sig-param">assembly_report_writer='default'</em>, <em class="sig-param">logger='bar'</em>, <em class="sig-param">include_original_parts_records=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/AssemblyPlan/AssemblyPlanSimulation.html#AssemblyPlanSimulation.write_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyPlan.AssemblyPlanSimulation.write_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a comprehensive report to a folder or zip file</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>target</strong></p>
+<blockquote>
+<div><p>Either a path to a folder, to a zip file, or <code class="docutils literal notranslate"><span class="pre">&quot;&#64;memory&quot;</span></code> to write
+into a virtual zip file whose raw data is then returned.</p>
+</div></blockquote>
+<p><strong>folder_name</strong></p>
+<blockquote>
+<div><p>Name of the folder created inside the target to host the report (yes,
+it is a folder inside a folder, which can be very practical).</p>
+</div></blockquote>
+<p><strong>assembly_report_writer</strong></p>
+<blockquote>
+<div><p>Either the “default” or any AssemblyReportWriter instance.</p>
+</div></blockquote>
+<p><strong>logger</strong></p>
+<blockquote>
+<div><p>Either “bar” for a progress bar, or None, or any Proglog logger.</p>
+</div></blockquote>
+<p><strong>include_original_parts_records</strong></p>
+<blockquote>
+<div><p>If true, the original provided part records will be included in the
+report (creates larger file sizes, but better for traceability).</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="assembly-classes">
+<h2>Assembly Classes<a class="headerlink" href="#assembly-classes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="dnacauldron.Type2sRestrictionAssembly">
+<em class="property">class </em><code class="sig-prename descclassname">dnacauldron.</code><code class="sig-name descname">Type2sRestrictionAssembly</code><span class="sig-paren">(</span><em class="sig-param">parts</em>, <em class="sig-param">name='type2s_assembly'</em>, <em class="sig-param">enzyme='auto'</em>, <em class="sig-param">connectors_collection=None</em>, <em class="sig-param">expected_constructs=1</em>, <em class="sig-param">expect_no_unused_parts=True</em>, <em class="sig-param">max_constructs=40</em>, <em class="sig-param">randomize_constructs=False</em>, <em class="sig-param">dependencies=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Assembly/builtin_assembly_classes/Type2sRestrictionAssembly.html#Type2sRestrictionAssembly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Type2sRestrictionAssembly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Representation and simulation of type-2s (Golden-Gate) assembly</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parts</strong></p>
+<blockquote>
+<div><p>A list of parts names corresponding to records in a repository. These
+parts will be restricted and ligated together. They can be linear,
+circular, and in any order.</p>
+</div></blockquote>
+<p><strong>enzyme</strong></p>
+<blockquote>
+<div><p>Any type-2s enzyme (“BsmBI”, “BsaI”, “SapI”, etc.), or leave to “auto”
+to autodetect the enzyme.</p>
+</div></blockquote>
+<p><strong>name</strong></p>
+<blockquote>
+<div><p>Name of the assembly as it will appear in reports.</p>
+</div></blockquote>
+<p><strong>max_constructs</strong></p>
+<blockquote>
+<div><p>None or a number of maximum assemblies to compute (avoids complete
+freeze for combinatorial assemblies with extremely many possibilities).</p>
+</div></blockquote>
+<p><strong>expected_constructs</strong></p>
+<blockquote>
+<div><p>Either a number or a string <code class="docutils literal notranslate"><span class="pre">'any_number'</span></code>. If the number of constructs
+doesn’t match this value, the assembly will be considered invalid in
+reports and summaries</p>
+</div></blockquote>
+<p><strong>connectors_collection</strong></p>
+<blockquote>
+<div><p>Name of a collection in the repository from which to get candidates for
+connector autocompletion.</p>
+</div></blockquote>
+<p><strong>expect_no_unused_parts</strong></p>
+<blockquote>
+<div><p>If True and some parts are unused, this will be considered an invalid
+assembly in summaries and reports.</p>
+</div></blockquote>
+<p><strong>dependencies</strong></p>
+<blockquote>
+<div><p>(do not use). Metadata indicating which assemblies depend on this
+assembly, or are depended on by it.</p>
+</div></blockquote>
+</dd>
+</dl>
+<dl class="method">
+<dt id="dnacauldron.Type2sRestrictionAssembly.simulate">
+<code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param">sequence_repository</em>, <em class="sig-param">annotate_parts_homologies=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Assembly/builtin_assembly_classes/Type2sRestrictionAssembly.html#Type2sRestrictionAssembly.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Type2sRestrictionAssembly.simulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulate the assembly, return an AssemblySimulation.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dnacauldron.GibsonAssembly">
+<em class="property">class </em><code class="sig-prename descclassname">dnacauldron.</code><code class="sig-name descname">GibsonAssembly</code><span class="sig-paren">(</span><em class="sig-param">parts</em>, <em class="sig-param">homology_checker='default'</em>, <em class="sig-param">name='homologous_assembly'</em>, <em class="sig-param">connectors_collection=None</em>, <em class="sig-param">expected_constructs=1</em>, <em class="sig-param">expect_no_unused_parts=True</em>, <em class="sig-param">max_constructs=40</em>, <em class="sig-param">dependencies=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Assembly/builtin_assembly_classes/GibsonAssembly.html#GibsonAssembly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.GibsonAssembly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Representation and simulation of Gibson Assembly</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parts</strong></p>
+<blockquote>
+<div><p>A list of parts names corresponding to records in a repository.
+The parts will be considered as assembling together if they
+have end homologies, as checked by the homology_checker.</p>
+</div></blockquote>
+<p><strong>homology_checker</strong></p>
+<blockquote>
+<div><p>An HomologyChecker instance defining which homology sizes and melting
+temperatures are valid.</p>
+</div></blockquote>
+<p><strong>name</strong></p>
+<blockquote>
+<div><p>Name of the assembly as it will appear in reports.</p>
+</div></blockquote>
+<p><strong>max_constructs</strong></p>
+<blockquote>
+<div><p>None or a number of maximum assemblies to compute (avoids complete
+freeze for combinatorial assemblies with extremely many possibilities).</p>
+</div></blockquote>
+<p><strong>expected_constructs</strong></p>
+<blockquote>
+<div><p>Either a number or a string <code class="docutils literal notranslate"><span class="pre">'any_number'</span></code>. If the number of constructs
+doesn’t match this value, the assembly will be considered invalid in
+reports and summaries</p>
+</div></blockquote>
+<p><strong>connectors_collection</strong></p>
+<blockquote>
+<div><p>Name of a collection in the repository from which to get candidates for
+connector autocompletion.</p>
+</div></blockquote>
+<p><strong>expect_no_unused_parts</strong></p>
+<blockquote>
+<div><p>If True and some parts are unused, this will be considered an invalid
+assembly in summaries and reports.</p>
+</div></blockquote>
+<p><strong>dependencies</strong></p>
+<blockquote>
+<div><p>(do not use). Metadata indicating which assemblies depend on this
+assembly, or are depended on by it.</p>
+</div></blockquote>
+</dd>
+</dl>
+<dl class="method">
+<dt id="dnacauldron.GibsonAssembly.simulate">
+<code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param">sequence_repository</em>, <em class="sig-param">annotate_parts_homologies=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Assembly/builtin_assembly_classes/GibsonAssembly.html#GibsonAssembly.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.GibsonAssembly.simulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulate the Gibson Assembly, return an AssemblySimulation.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dnacauldron.BASICAssembly">
+<em class="property">class </em><code class="sig-prename descclassname">dnacauldron.</code><code class="sig-name descname">BASICAssembly</code><span class="sig-paren">(</span><em class="sig-param">parts</em>, <em class="sig-param">name='unnamed_assembly'</em>, <em class="sig-param">max_constructs=40</em>, <em class="sig-param">dependencies=None</em>, <em class="sig-param">expected_constructs=1</em>, <em class="sig-param">connectors_collection=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Assembly/builtin_assembly_classes/BASICAssembly.html#BASICAssembly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.BASICAssembly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Representation and simulation of BASIC Assembly.</p>
+<p>In this class, the order of the parts matters! It should be organized as
+triplets or the form (adapter, part, adapter), as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a1</span>   <span class="n">PART_1</span>   <span class="n">a2</span>   <span class="n">a3</span>   <span class="n">PART_2</span>   <span class="n">a4</span>   <span class="n">a5</span>   <span class="n">PART_3</span>   <span class="o">...</span>
+</pre></div>
+</div>
+<p>Where a1 and a2 are the BASIC adapters for PART_1, etc. The parts (PART_i)
+should be standard biopython records, while the adapters should be
+sticky-ended fragments, obtained for instance from an OligoPairAnnealing
+assembly (see the provided example).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parts</strong></p>
+<blockquote>
+<div><p>List of part names corresponding to part records in a repository.
+See explanations above.</p>
+</div></blockquote>
+<p><strong>name</strong></p>
+<blockquote>
+<div><p>Name of the assembly as it will appear in reports.</p>
+</div></blockquote>
+<p><strong>max_constructs</strong></p>
+<blockquote>
+<div><p>None or a number of maximum assemblies to compute (avoids complete
+freeze for combinatorial assemblies with extremely many possibilities).</p>
+</div></blockquote>
+<p><strong>expected_constructs</strong></p>
+<blockquote>
+<div><p>Either a number or a string <code class="docutils literal notranslate"><span class="pre">'any_number'</span></code>. If the number of constructs
+doesn’t match this value, the assembly will be considered invalid in
+reports and summaries</p>
+</div></blockquote>
+<p><strong>connectors_collection</strong></p>
+<blockquote>
+<div><p>Name of a collection in the repository from which to get candidates for
+connector autocompletion.</p>
+</div></blockquote>
+<p><strong>dependencies</strong></p>
+<blockquote>
+<div><p>(do not use). Metadata indicating which assemblies depend on this
+assembly, or are depended on by it.</p>
+</div></blockquote>
+</dd>
+</dl>
+<dl class="method">
+<dt id="dnacauldron.BASICAssembly.simulate">
+<code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param">sequence_repository</em>, <em class="sig-param">annotate_parts_homologies=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Assembly/builtin_assembly_classes/BASICAssembly.html#BASICAssembly.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.BASICAssembly.simulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulate the BASIC assembly, return an AssemblySimulation.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dnacauldron.BioBrickStandardAssembly">
+<em class="property">class </em><code class="sig-prename descclassname">dnacauldron.</code><code class="sig-name descname">BioBrickStandardAssembly</code><span class="sig-paren">(</span><em class="sig-param">parts</em>, <em class="sig-param">name='unnamed_assembly'</em>, <em class="sig-param">connectors_collection=None</em>, <em class="sig-param">expected_constructs=1</em>, <em class="sig-param">max_constructs=40</em>, <em class="sig-param">dependencies=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Assembly/builtin_assembly_classes/BioBrickStandardAssembly.html#BioBrickStandardAssembly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.BioBrickStandardAssembly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Representation and simulation of the Biobrick 2-part assembly standard.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parts</strong></p>
+<blockquote>
+<div><p>A list of parts names corresponding to records in a repository.
+There must be exactly 2 parts and they must be represented on a
+backbone (i.e. circular constructs), and the first part will be inserted
+in the backbone of the second part, upstream of the second part.</p>
+</div></blockquote>
+<p><strong>name</strong></p>
+<blockquote>
+<div><p>Name of the assembly as it will appear in reports.</p>
+</div></blockquote>
+<p><strong>max_constructs</strong></p>
+<blockquote>
+<div><p>None or a number of maximum assemblies to compute (avoids complete
+freeze for combinatorial assemblies with extremely many possibilities).</p>
+</div></blockquote>
+<p><strong>expected_constructs</strong></p>
+<blockquote>
+<div><p>Either a number or a string <code class="docutils literal notranslate"><span class="pre">'any_number'</span></code>. If the number of constructs
+doesn’t match this value, the assembly will be considered invalid in
+reports and summaries</p>
+</div></blockquote>
+<p><strong>connectors_collection</strong></p>
+<blockquote>
+<div><p>Name of a collection in the repository from which to get candidates for
+connector autocompletion.</p>
+</div></blockquote>
+<p><strong>dependencies</strong></p>
+<blockquote>
+<div><p>(do not use). Metadata indicating which assemblies depend on this
+assembly, or are depended on by it.</p>
+</div></blockquote>
+</dd>
+</dl>
+<dl class="method">
+<dt id="dnacauldron.BioBrickStandardAssembly.simulate">
+<code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param">sequence_repository</em>, <em class="sig-param">annotate_parts_homologies=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Assembly/builtin_assembly_classes/BioBrickStandardAssembly.html#BioBrickStandardAssembly.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.BioBrickStandardAssembly.simulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulate the assembly, return an AssemblySimulation.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dnacauldron.LigaseCyclingReactionAssembly">
+<em class="property">class </em><code class="sig-prename descclassname">dnacauldron.</code><code class="sig-name descname">LigaseCyclingReactionAssembly</code><span class="sig-paren">(</span><em class="sig-param">parts</em>, <em class="sig-param">bridging_oligos=()</em>, <em class="sig-param">oligo_indicator=None</em>, <em class="sig-param">homology_checker='default'</em>, <em class="sig-param">name='homologous_assembly'</em>, <em class="sig-param">connectors_collection=None</em>, <em class="sig-param">expected_constructs=1</em>, <em class="sig-param">expect_no_unused_parts=True</em>, <em class="sig-param">max_constructs=40</em>, <em class="sig-param">dependencies=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Assembly/builtin_assembly_classes/LigaseCyclingReactionAssembly.html#LigaseCyclingReactionAssembly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.LigaseCyclingReactionAssembly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Representation and simulation of Gibson Assembly</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parts</strong></p>
+<blockquote>
+<div><p>A list of parts names corresponding to records in a repository. bridging
+oligo names can also be provided in this part list, however in that case
+<code class="docutils literal notranslate"><span class="pre">bridging_olios</span></code> should be an empty list and an <code class="docutils literal notranslate"><span class="pre">oligo_indicator</span></code>
+string should be provided.</p>
+</div></blockquote>
+<p><strong>homology_checker</strong></p>
+<blockquote>
+<div><p>An HomologyChecker instance defining which homology sizes and melting
+temperatures are valid between one bridging oligo and one part.</p>
+</div></blockquote>
+<p><strong>bridging_oligos</strong></p>
+<blockquote>
+<div><p>A list of the name of bridging oligos if they are not included in the
+part names</p>
+</div></blockquote>
+<p><strong>oligos_indicator</strong></p>
+<blockquote>
+<div><p>String to use to identify bridging oligos when these are provided mixed
+with the other parts. The string should be common to all oligo names
+but should not appear in any part name. For instance “<a href="#id1"><span class="problematic" id="id2">BO_</span></a>”.</p>
+</div></blockquote>
+<p><strong>name</strong></p>
+<blockquote>
+<div><p>Name of the assembly as it will appear in reports.</p>
+</div></blockquote>
+<p><strong>max_constructs</strong></p>
+<blockquote>
+<div><p>None or a number of maximum assemblies to compute (avoids complete
+freeze for combinatorial assemblies with extremely many possibilities).</p>
+</div></blockquote>
+<p><strong>expected_constructs</strong></p>
+<blockquote>
+<div><p>Either a number or a string <code class="docutils literal notranslate"><span class="pre">'any_number'</span></code>. If the number of constructs
+doesn’t match this value, the assembly will be considered invalid in
+reports and summaries</p>
+</div></blockquote>
+<p><strong>expect_no_unused_parts</strong></p>
+<blockquote>
+<div><p>If True and some parts are unused, this will be considered an invalid
+assembly in summaries and reports.</p>
+</div></blockquote>
+<p><strong>dependencies</strong></p>
+<blockquote>
+<div><p>(do not use). Metadata indicating which assemblies depend on this
+assembly, or are depended on by it.</p>
+</div></blockquote>
+</dd>
+</dl>
+<dl class="method">
+<dt id="dnacauldron.LigaseCyclingReactionAssembly.simulate">
+<code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param">sequence_repository</em>, <em class="sig-param">annotate_parts_homologies=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Assembly/builtin_assembly_classes/LigaseCyclingReactionAssembly.html#LigaseCyclingReactionAssembly.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.LigaseCyclingReactionAssembly.simulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulate the Gibson Assembly, return an AssemblySimulation.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="assembly-simulation">
+<h2>Assembly Simulation<a class="headerlink" href="#assembly-simulation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="dnacauldron.Assembly.AssemblySimulation">
+<em class="property">class </em><code class="sig-prename descclassname">dnacauldron.Assembly.</code><code class="sig-name descname">AssemblySimulation</code><span class="sig-paren">(</span><em class="sig-param">assembly</em>, <em class="sig-param">sequence_repository</em>, <em class="sig-param">construct_records=()</em>, <em class="sig-param">mixes=()</em>, <em class="sig-param">warnings=()</em>, <em class="sig-param">errors=()</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Assembly/AssemblySimulation.html#AssemblySimulation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Assembly.AssemblySimulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to represent and report on the simulation of a single assembly.</p>
+<p>Instances are the result of <code class="docutils literal notranslate"><span class="pre">assembly.simulate()</span></code></p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>assembly</strong></p>
+<blockquote>
+<div><p>The Assembly instance from which this is the simulation</p>
+</div></blockquote>
+<p><strong>sequence_repository</strong></p>
+<blockquote>
+<div><p>The SequenceRepository used to get records for the simulation</p>
+</div></blockquote>
+<p><strong>construct_records</strong></p>
+<blockquote>
+<div><p>List of Biopython records (or, sometimes, StickyEndFragment records)
+of the final constructs predicted by the simulation.</p>
+</div></blockquote>
+<p><strong>mixes</strong></p>
+<blockquote>
+<div><p>A list of AssemblyMix instances generated during the simulation (they
+can be plotted at report writing time)</p>
+</div></blockquote>
+<p><strong>warnings</strong></p>
+<blockquote>
+<div><p>List of AssemblyFlaw instances that will be flagged as warnings in
+reports and summaries.</p>
+</div></blockquote>
+<p><strong>errors</strong></p>
+<blockquote>
+<div><p>List of AssemblyFlaw instances that will be flagged as errors in
+reports and summaries.</p>
+</div></blockquote>
+</dd>
+</dl>
+<dl class="method">
+<dt id="dnacauldron.Assembly.AssemblySimulation.compute_all_construct_data_dicts">
+<code class="sig-name descname">compute_all_construct_data_dicts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Assembly/AssemblySimulation.html#AssemblySimulation.compute_all_construct_data_dicts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Assembly.AssemblySimulation.compute_all_construct_data_dicts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of dictionnaries with infos on a each construct.</p>
+<p>fields: construct_id, parts, number_of_parts, construct_size,
+assembly_name, depends_on, used_in, assembly_level.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.Assembly.AssemblySimulation.compute_construct_data_dict">
+<code class="sig-name descname">compute_construct_data_dict</code><span class="sig-paren">(</span><em class="sig-param">construct_record</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Assembly/AssemblySimulation.html#AssemblySimulation.compute_construct_data_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Assembly.AssemblySimulation.compute_construct_data_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionnary with infos on a single construct.</p>
+<p>fields: construct_id, parts, number_of_parts, construct_size,
+assembly_name, depends_on, used_in, assembly_level.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.Assembly.AssemblySimulation.compute_summary_dataframe">
+<code class="sig-name descname">compute_summary_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Assembly/AssemblySimulation.html#AssemblySimulation.compute_summary_dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Assembly.AssemblySimulation.compute_summary_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Pandas dataframe with infos on each construct.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.Assembly.AssemblySimulation.fragment_part">
+<em class="property">static </em><code class="sig-name descname">fragment_part</code><span class="sig-paren">(</span><em class="sig-param">fragment</em>, <em class="sig-param">mark_reverse=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Assembly/AssemblySimulation.html#AssemblySimulation.fragment_part"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Assembly.AssemblySimulation.fragment_part" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the name of the fragment, or optionally <cite>NAME_r</cite> if the
+fragment is the reverse of another fragment.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.Assembly.AssemblySimulation.list_all_parts_used">
+<code class="sig-name descname">list_all_parts_used</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Assembly/AssemblySimulation.html#AssemblySimulation.list_all_parts_used"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Assembly.AssemblySimulation.list_all_parts_used" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all parts involved in at least one of the predicted constructs.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.Assembly.AssemblySimulation.write_report">
+<code class="sig-name descname">write_report</code><span class="sig-paren">(</span><em class="sig-param">target</em>, <em class="sig-param">report_writer='default'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Assembly/AssemblySimulation.html#AssemblySimulation.write_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Assembly.AssemblySimulation.write_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a comprehensive simulation report in a folder or zip file.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>target</strong></p>
+<p><strong>Either a path to a folder, to a zip file, or ``”&#64;memory”`` to write</strong></p>
+<p><strong>into a virtual zip file whose raw data is then returned.</strong></p>
+<p><strong>report_writer</strong></p>
+<blockquote>
+<div><p>Either the “default” or any AssemblyReportWriter instance.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="report-writer">
+<h2>Report Writer<a class="headerlink" href="#report-writer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="dnacauldron.AssemblyReportWriter">
+<em class="property">class </em><code class="sig-prename descclassname">dnacauldron.</code><code class="sig-name descname">AssemblyReportWriter</code><span class="sig-paren">(</span><em class="sig-param">include_fragments_plots='on_error'</em>, <em class="sig-param">include_part_plots='on_error'</em>, <em class="sig-param">include_mix_graphs='on_error'</em>, <em class="sig-param">include_part_records=True</em>, <em class="sig-param">include_assembly_plots=False</em>, <em class="sig-param">show_overhangs_in_graph=True</em>, <em class="sig-param">annotate_parts_homologies=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Assembly/AssemblyReportWriter/AssemblyReportWriter.html#AssemblyReportWriter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyReportWriter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to configure assembly simulation reports writing.</p>
+<p>Responsible to write the final sequence(s) of the assembly in Genbank
+format as well as a .csv report on all assemblies produced and PDF figures
+to allow a quick overview or diagnostic.</p>
+<p>Folder <code class="docutils literal notranslate"><span class="pre">assemblies</span></code> contains the final assemblies, <code class="docutils literal notranslate"><span class="pre">assembly_graph</span></code>
+contains a schematic view of how the parts assemble together, folder
+<code class="docutils literal notranslate"><span class="pre">fragments</span></code> contains the details of all fragments produced by the enzyme
+digestion, and folder <code class="docutils literal notranslate"><span class="pre">provided_parts</span></code> contains the original input
+(genbanks of all parts provided for the assembly mix).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>include_fragments_plots</strong></p>
+<blockquote>
+<div><p>Either True/False/”on_error” to plot schemas of the fragments used in
+the different AssemblyMix throughout the simulation.</p>
+</div></blockquote>
+<p><strong>include_part_plots</strong></p>
+<blockquote>
+<div><p>Either True/False/”on_error” to plot schemas of the parts used, possibly
+with restriction sites relevant to the AssemblyMix.</p>
+</div></blockquote>
+<p><strong>include_mix_graphs</strong></p>
+<blockquote>
+<div><p>Either True/False/”on_error” to plot representations of fragments
+connectivity in the AssemblyMix created during the simulation.</p>
+</div></blockquote>
+<p><strong>include_part_records</strong></p>
+<blockquote>
+<div><p>True/False to include the parts records in the simulation results (makes
+for larger folders and zips, but is better for traceability)</p>
+</div></blockquote>
+<p><strong>include_assembly_plots</strong></p>
+<blockquote>
+<div><p>True/False to include assembly schemas in the reports (makes the
+report generation slower, but makes it easier to check assemblies at a
+glance)</p>
+</div></blockquote>
+<p><strong>show_overhangs_in_graph</strong></p>
+<blockquote>
+<div><p>If true, the AssemblyMix graph representations will display the sequence
+of all fragments overhangs.</p>
+</div></blockquote>
+</dd>
+</dl>
+<dl class="method">
+<dt id="dnacauldron.AssemblyReportWriter.write_report">
+<code class="sig-name descname">write_report</code><span class="sig-paren">(</span><em class="sig-param">assembly_simulation</em>, <em class="sig-param">target</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Assembly/AssemblyReportWriter/AssemblyReportWriter.html#AssemblyReportWriter.write_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyReportWriter.write_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a comprehensive report for an AssemblySimulation instance.</p>
+<p><code class="docutils literal notranslate"><span class="pre">target</span></code> can be either a path to a folder, to a zip file, or
+<code class="docutils literal notranslate"><span class="pre">&quot;&#64;memory&quot;</span></code> to write into a virtual zip file whose raw data is then
+returned.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="homologies">
+<h2>Homologies<a class="headerlink" href="#homologies" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="dnacauldron.HomologyChecker">
+<em class="property">class </em><code class="sig-prename descclassname">dnacauldron.</code><code class="sig-name descname">HomologyChecker</code><span class="sig-paren">(</span><em class="sig-param">min_size=15</em>, <em class="sig-param">max_size=80</em>, <em class="sig-param">min_tm=0</em>, <em class="sig-param">max_tm=None</em>, <em class="sig-param">max_distance=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Fragment/HomologousFragment/HomologyChecker.html#HomologyChecker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.HomologyChecker" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="dnacauldron.HomologyChecker.check_homology">
+<code class="sig-name descname">check_homology</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">other_sequence=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Fragment/HomologousFragment/HomologyChecker.html#HomologyChecker.check_homology"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.HomologyChecker.check_homology" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether there is an acceptable full-sequence homology between
+two sequences.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.HomologyChecker.compute_tm">
+<code class="sig-name descname">compute_tm</code><span class="sig-paren">(</span><em class="sig-param">sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Fragment/HomologousFragment/HomologyChecker.html#HomologyChecker.compute_tm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.HomologyChecker.compute_tm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the melting temp. of a sequence</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.HomologyChecker.find_end_homologies">
+<code class="sig-name descname">find_end_homologies</code><span class="sig-paren">(</span><em class="sig-param">seq1</em>, <em class="sig-param">seq2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Fragment/HomologousFragment/HomologyChecker.html#HomologyChecker.find_end_homologies"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.HomologyChecker.find_end_homologies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds an homology between seq1’s end and seq2’s start.</p>
+<p>Return the size of the homology, or 0 if no homologies found.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.HomologyChecker.parameters_as_string">
+<code class="sig-name descname">parameters_as_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Fragment/HomologousFragment/HomologyChecker.html#HomologyChecker.parameters_as_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.HomologyChecker.parameters_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a string of the parameters for errors and reports.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="../index.html"
+       title="previous chapter">← DNA Cauldron</a>
+  </li>
+  <li class="next">
+    <a href="utils.html"
+       title="next chapter">Useful methods built on top of DNA Cauldron →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2020, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
+</html>

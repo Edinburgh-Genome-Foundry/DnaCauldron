@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>dnacauldron.Assembly.builtin_assembly_classes.LigaseCyclingReactionAssembly</title>
+    
+      <link rel="stylesheet" href="../../../../_static/pygments.css">
+      <link rel="stylesheet" href="../../../../_static/theme.css">
+      <link rel="stylesheet" href="../../../../_static/sphinx_press_theme.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+
+      
+      <script src="../../../../_static/theme-vendors.js"></script>
+      <script src="../../../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../../../index.html" class="home-link">
+    
+      <img class="logo" src="../../../../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../../index.html#more-biology-software">Reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../../ref/user_classes.html" class="reference internal ">Useful classes for scripts</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/utils.html" class="reference internal ">Useful methods built on top of DNA Cauldron</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/biotools.html" class="reference internal ">Biotools module</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/core_classes.html" class="reference internal ">Core classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/spreadsheet_reference.html" class="reference internal ">Spreadsheet Reference</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../../../index.html">Module code</a> &raquo;</li>
+    
+    <li>dnacauldron.Assembly.builtin_assembly_classes.LigaseCyclingReactionAssembly</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <h1>Source code for dnacauldron.Assembly.builtin_assembly_classes.LigaseCyclingReactionAssembly</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">...AssemblyMix.LigaseCyclingReactionMix</span> <span class="k">import</span> <span class="n">LigaseCyclingReactionMix</span>
+<span class="kn">from</span> <span class="nn">...AssemblyMix</span> <span class="k">import</span> <span class="n">AssemblyMixError</span>
+<span class="kn">from</span> <span class="nn">...Fragment.HomologousFragment</span> <span class="k">import</span> <span class="n">HomologyChecker</span>
+<span class="kn">from</span> <span class="nn">..AssemblySimulation</span> <span class="k">import</span> <span class="n">AssemblySimulation</span>
+<span class="kn">from</span> <span class="nn">..AssemblyFlaw</span> <span class="k">import</span> <span class="n">AssemblyFlaw</span>
+<span class="kn">from</span> <span class="nn">..Assembly</span> <span class="k">import</span> <span class="n">Assembly</span>
+
+<div class="viewcode-block" id="LigaseCyclingReactionAssembly"><a class="viewcode-back" href="../../../../ref/user_classes.html#dnacauldron.LigaseCyclingReactionAssembly">[docs]</a><span class="k">class</span> <span class="nc">LigaseCyclingReactionAssembly</span><span class="p">(</span><span class="n">Assembly</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Representation and simulation of Gibson Assembly</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    parts</span>
+<span class="sd">      A list of parts names corresponding to records in a repository. bridging</span>
+<span class="sd">      oligo names can also be provided in this part list, however in that case</span>
+<span class="sd">      ``bridging_olios`` should be an empty list and an ``oligo_indicator``</span>
+<span class="sd">      string should be provided.</span>
+
+<span class="sd">    homology_checker</span>
+<span class="sd">      An HomologyChecker instance defining which homology sizes and melting</span>
+<span class="sd">      temperatures are valid between one bridging oligo and one part.</span>
+<span class="sd">    </span>
+<span class="sd">    bridging_oligos</span>
+<span class="sd">      A list of the name of bridging oligos if they are not included in the</span>
+<span class="sd">      part names</span>
+<span class="sd">    </span>
+<span class="sd">    oligos_indicator</span>
+<span class="sd">      String to use to identify bridging oligos when these are provided mixed</span>
+<span class="sd">      with the other parts. The string should be common to all oligo names</span>
+<span class="sd">      but should not appear in any part name. For instance &quot;BO_&quot;.</span>
+
+<span class="sd">    name</span>
+<span class="sd">      Name of the assembly as it will appear in reports.</span>
+
+<span class="sd">    max_constructs</span>
+<span class="sd">      None or a number of maximum assemblies to compute (avoids complete</span>
+<span class="sd">      freeze for combinatorial assemblies with extremely many possibilities).</span>
+
+<span class="sd">    expected_constructs</span>
+<span class="sd">      Either a number or a string ``&#39;any_number&#39;``. If the number of constructs</span>
+<span class="sd">      doesn&#39;t match this value, the assembly will be considered invalid in</span>
+<span class="sd">      reports and summaries</span>
+<span class="sd">    </span>
+<span class="sd">    expect_no_unused_parts</span>
+<span class="sd">      If True and some parts are unused, this will be considered an invalid</span>
+<span class="sd">      assembly in summaries and reports.</span>
+
+<span class="sd">    dependencies</span>
+<span class="sd">      (do not use). Metadata indicating which assemblies depend on this</span>
+<span class="sd">      assembly, or are depended on by it.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">spreadsheet_import_parameters</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;level&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;expected_constructs&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;expect_no_unused_parts&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;connectors_collection&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;oligo_indicator&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">parts</span><span class="p">,</span>
+        <span class="n">bridging_oligos</span><span class="o">=</span><span class="p">(),</span>
+        <span class="n">oligo_indicator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">homology_checker</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;homologous_assembly&quot;</span><span class="p">,</span>
+        <span class="n">connectors_collection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">expected_constructs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">expect_no_unused_parts</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">max_constructs</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+        <span class="n">dependencies</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">oligo_indicator</span> <span class="o">=</span> <span class="n">oligo_indicator</span>
+        <span class="k">if</span> <span class="n">oligo_indicator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">bridging_oligos</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">parts</span> <span class="k">if</span> <span class="n">oligo_indicator</span> <span class="ow">in</span> <span class="n">name</span>
+            <span class="p">]</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">parts</span> <span class="k">if</span> <span class="n">oligo_indicator</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">name</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parts</span> <span class="o">=</span> <span class="n">parts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bridging_oligos</span> <span class="o">=</span> <span class="n">bridging_oligos</span>
+        <span class="n">Assembly</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
+            <span class="n">max_constructs</span><span class="o">=</span><span class="n">max_constructs</span><span class="p">,</span>
+            <span class="n">dependencies</span><span class="o">=</span><span class="n">dependencies</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connectors_collection</span> <span class="o">=</span> <span class="n">connectors_collection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expected_constructs</span> <span class="o">=</span> <span class="n">expected_constructs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expect_no_unused_parts</span> <span class="o">=</span> <span class="n">expect_no_unused_parts</span>
+        <span class="k">if</span> <span class="n">homology_checker</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
+            <span class="n">homology_checker</span> <span class="o">=</span> <span class="n">HomologyChecker</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">homology_checker</span> <span class="o">=</span> <span class="n">homology_checker</span>
+
+    <span class="k">def</span> <span class="nf">get_extra_construct_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">homology_checker</span><span class="o">.</span><span class="n">parameters_as_string</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">homology_condition</span><span class="o">=</span><span class="n">description</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_detect_unused_parts_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">construct_records</span><span class="p">):</span>
+        <span class="n">used_parts</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">fragment</span><span class="o">.</span><span class="n">original_part</span><span class="o">.</span><span class="n">id</span>
+            <span class="k">for</span> <span class="n">construct_record</span> <span class="ow">in</span> <span class="n">construct_records</span>
+            <span class="k">for</span> <span class="n">fragment</span> <span class="ow">in</span> <span class="n">construct_record</span><span class="o">.</span><span class="n">fragments</span>
+        <span class="p">]</span>
+        <span class="n">unused_parts</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">used_parts</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unused_parts</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">construct_records</span><span class="p">):</span>
+                <span class="n">suggestion</span> <span class="o">=</span> <span class="s2">&quot;Check assembly plan&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">suggestion</span> <span class="o">=</span> <span class="s2">&quot;Check parts design&quot;</span>
+            <span class="k">return</span> <span class="n">AssemblyFlaw</span><span class="p">(</span>
+                <span class="n">assembly</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Some parts are unused&quot;</span><span class="p">,</span>
+                <span class="n">suggestion</span><span class="o">=</span><span class="n">suggestion</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;unused_parts&quot;</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">unused_parts</span><span class="p">)},</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_detect_parts_connections_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assembly_mix</span><span class="p">):</span>
+        <span class="n">warnings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">assembly_mix</span><span class="o">.</span><span class="n">connections_graph</span>
+        <span class="n">fragment_degrees</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">fragment</span><span class="p">:</span> <span class="n">graph</span><span class="o">.</span><span class="n">degree</span><span class="p">(</span><span class="n">fragment</span><span class="p">)</span> <span class="k">for</span> <span class="n">fragment</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span>
+        <span class="p">}</span>
+
+        <span class="c1"># CHECK PARTS WITH A SINGLE OVERHANG</span>
+
+        <span class="n">deadend_parts</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">assembly_mix</span><span class="o">.</span><span class="n">fragments_dict</span><span class="p">[</span><span class="n">fragment</span><span class="p">]</span><span class="o">.</span><span class="n">original_part</span><span class="o">.</span><span class="n">id</span>
+            <span class="k">for</span> <span class="n">fragment</span><span class="p">,</span> <span class="n">degree</span> <span class="ow">in</span> <span class="n">fragment_degrees</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">degree</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="p">]</span>
+        <span class="n">deadend_parts</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">deadend_parts</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">deadend_parts</span><span class="p">):</span>
+            <span class="n">warning</span> <span class="o">=</span> <span class="n">AssemblyFlaw</span><span class="p">(</span>
+                <span class="n">assembly</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Part(s) with single-sided sticky end&quot;</span><span class="p">,</span>
+                <span class="n">suggestion</span><span class="o">=</span><span class="s2">&quot;Check restriction sites or assembly plan&quot;</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;parts&quot;</span><span class="p">:</span> <span class="n">deadend_parts</span><span class="p">},</span>
+            <span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span>
+
+        <span class="c1"># CHECK PARTS WITH MORE THAN 2 SLOT CONNECTIONS (FORK/CROSSROAD)</span>
+
+        <span class="n">fork_parts</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">assembly_mix</span><span class="o">.</span><span class="n">fragments_dict</span><span class="p">[</span><span class="n">fragment</span><span class="p">]</span><span class="o">.</span><span class="n">original_part</span><span class="o">.</span><span class="n">id</span>
+            <span class="k">for</span> <span class="n">fragment</span><span class="p">,</span> <span class="n">degree</span> <span class="ow">in</span> <span class="n">fragment_degrees</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">degree</span> <span class="o">&gt;</span> <span class="mi">2</span>
+        <span class="p">]</span>
+        <span class="n">fork_parts</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">fork_parts</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fork_parts</span><span class="p">):</span>
+            <span class="n">warning</span> <span class="o">=</span> <span class="n">AssemblyFlaw</span><span class="p">(</span>
+                <span class="n">assembly</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Warning: parts at graph forking positions&quot;</span><span class="p">,</span>
+                <span class="n">suggestion</span><span class="o">=</span><span class="s2">&quot;Check restriction sites in part sequences&quot;</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;parts&quot;</span><span class="p">:</span> <span class="n">fork_parts</span><span class="p">},</span>
+            <span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">warnings</span>
+
+<div class="viewcode-block" id="LigaseCyclingReactionAssembly.simulate"><a class="viewcode-back" href="../../../../ref/user_classes.html#dnacauldron.LigaseCyclingReactionAssembly.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence_repository</span><span class="p">,</span> <span class="n">annotate_parts_homologies</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Simulate the Gibson Assembly, return an AssemblySimulation.&quot;&quot;&quot;</span>
+
+        <span class="c1"># CREATE THE MIX</span>
+
+        <span class="n">warnings</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">parts_records</span> <span class="o">=</span> <span class="n">sequence_repository</span><span class="o">.</span><span class="n">get_records</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">)</span>
+        <span class="n">oligos_records</span> <span class="o">=</span> <span class="n">sequence_repository</span><span class="o">.</span><span class="n">get_records</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bridging_oligos</span><span class="p">)</span>
+
+        <span class="n">mix</span> <span class="o">=</span> <span class="n">LigaseCyclingReactionMix</span><span class="p">(</span>
+            <span class="n">parts</span><span class="o">=</span><span class="n">parts_records</span><span class="p">,</span>
+            <span class="n">bridging_oligos</span><span class="o">=</span><span class="n">oligos_records</span><span class="p">,</span>
+            <span class="n">homology_checker</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">homology_checker</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_homology_mix&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># ATTEMPT CONNECTOR AUTOSELECTION IF NECESSARY</span>
+
+        <span class="n">connectors_records</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_connectors_records</span><span class="p">(</span><span class="n">sequence_repository</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">connectors_records</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">connectors</span> <span class="o">=</span> <span class="n">mix</span><span class="o">.</span><span class="n">autoselect_connectors</span><span class="p">(</span><span class="n">connectors_records</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">connectors</span><span class="p">):</span>
+                    <span class="n">connectors_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">connectors</span><span class="p">]</span>
+                    <span class="n">connectors_string</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">connectors_ids</span><span class="p">)</span>
+                    <span class="n">warning</span> <span class="o">=</span> <span class="n">AssemblyFlaw</span><span class="p">(</span>
+                        <span class="n">assembly</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                        <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Added connectors </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">connectors_string</span><span class="p">,</span>
+                        <span class="n">suggestion</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                        <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;selected_connectors&quot;</span><span class="p">:</span> <span class="n">connectors_ids</span><span class="p">},</span>
+                    <span class="p">)</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">AssemblyMixError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                <span class="n">error</span> <span class="o">=</span> <span class="n">AssemblyFlaw</span><span class="p">(</span>
+                    <span class="n">assembly</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                    <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Failed to find suitable connectors&quot;</span><span class="p">,</span>
+                    <span class="n">suggestion</span><span class="o">=</span><span class="s2">&quot;Check assembly plan or parts design&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="n">AssemblySimulation</span><span class="p">(</span>
+                    <span class="n">assembly</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                    <span class="n">construct_records</span><span class="o">=</span><span class="p">[],</span>
+                    <span class="n">errors</span><span class="o">=</span><span class="p">[</span><span class="n">error</span><span class="p">],</span>
+                    <span class="n">sequence_repository</span><span class="o">=</span><span class="n">sequence_repository</span><span class="p">,</span>
+                <span class="p">)</span>
+
+        <span class="c1"># COMPUTE ALL CIRCULAR ASSEMBLIES</span>
+
+        <span class="n">generator</span> <span class="o">=</span> <span class="n">mix</span><span class="o">.</span><span class="n">compute_circular_assemblies</span><span class="p">(</span>
+            <span class="n">annotate_parts_homologies</span><span class="o">=</span><span class="n">annotate_parts_homologies</span>
+        <span class="p">)</span>
+        <span class="n">construct_records</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">asm</span> <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">asm</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_constructs</span><span class="p">),</span> <span class="n">generator</span><span class="p">)],</span>
+            <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">asm</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">asm</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attribute_ids_to_constructs</span><span class="p">(</span><span class="n">construct_records</span><span class="p">)</span>
+
+        <span class="c1"># FIND ALL ERRORS</span>
+
+        <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">construct_records</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_detect_constructs_number_error</span><span class="p">(</span><span class="n">found</span><span class="p">,</span> <span class="n">errors</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_detect_max_constructs_reached</span><span class="p">(</span><span class="n">found</span><span class="p">,</span> <span class="n">warnings</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">expect_no_unused_parts</span><span class="p">:</span>
+            <span class="n">unused_error</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detect_unused_parts_error</span><span class="p">(</span><span class="n">construct_records</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">unused_error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">unused_error</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">errors</span> <span class="o">!=</span> <span class="p">[]:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_detect_parts_connections_errors</span><span class="p">(</span><span class="n">mix</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">AssemblySimulation</span><span class="p">(</span>
+            <span class="n">assembly</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">construct_records</span><span class="o">=</span><span class="n">construct_records</span><span class="p">,</span>
+            <span class="n">mixes</span><span class="o">=</span><span class="p">(</span><span class="n">mix</span><span class="p">,),</span>
+            <span class="n">errors</span><span class="o">=</span><span class="n">errors</span><span class="p">,</span>
+            <span class="n">warnings</span><span class="o">=</span><span class="n">warnings</span><span class="p">,</span>
+            <span class="n">sequence_repository</span><span class="o">=</span><span class="n">sequence_repository</span><span class="p">,</span>
+        <span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2020, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
+</html>

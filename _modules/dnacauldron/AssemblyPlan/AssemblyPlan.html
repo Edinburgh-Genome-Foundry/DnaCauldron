@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>dnacauldron.AssemblyPlan.AssemblyPlan</title>
+    
+      <link rel="stylesheet" href="../../../_static/pygments.css">
+      <link rel="stylesheet" href="../../../_static/theme.css">
+      <link rel="stylesheet" href="../../../_static/sphinx_press_theme.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+      
+      <script src="../../../_static/theme-vendors.js"></script>
+      <script src="../../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../../index.html" class="home-link">
+    
+      <img class="logo" src="../../../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">Reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../ref/user_classes.html" class="reference internal ">Useful classes for scripts</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/utils.html" class="reference internal ">Useful methods built on top of DNA Cauldron</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/biotools.html" class="reference internal ">Biotools module</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/core_classes.html" class="reference internal ">Core classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/spreadsheet_reference.html" class="reference internal ">Spreadsheet Reference</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../../index.html">Module code</a> &raquo;</li>
+    
+    <li>dnacauldron.AssemblyPlan.AssemblyPlan</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <h1>Source code for dnacauldron.AssemblyPlan.AssemblyPlan</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">from</span> <span class="nn">proglog</span> <span class="k">import</span> <span class="n">default_bar_logger</span>
+<span class="kn">from</span> <span class="nn">.AssemblyPlanSimulation</span> <span class="k">import</span> <span class="n">AssemblyPlanSimulation</span>
+<span class="kn">from</span> <span class="nn">..Assembly</span> <span class="k">import</span> <span class="n">ASSEMBLY_CLASS_DICT</span>
+
+
+<div class="viewcode-block" id="AssemblyPlan"><a class="viewcode-back" href="../../../ref/user_classes.html#dnacauldron.AssemblyPlan">[docs]</a><span class="k">class</span> <span class="nc">AssemblyPlan</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assemblies</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;plan&quot;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Class to represent, analyze and simulate assembly plans</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        assemblies</span>
+<span class="sd">          List of Assembly instances.</span>
+<span class="sd">        </span>
+<span class="sd">        name</span>
+<span class="sd">          Assembly plan name as it will appear in reports.</span>
+<span class="sd">        </span>
+<span class="sd">        logger</span>
+<span class="sd">          Either &quot;bar&quot; for a progress bar, or None, or any Proglog logger.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assemblies</span> <span class="o">=</span> <span class="n">assemblies</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raise_an_error_if_duplicate_assembly_names</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assemblies_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assemblies</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_compute_assemblies_levels</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">default_bar_logger</span><span class="p">(</span><span class="n">logger</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="nf">_raise_an_error_if_duplicate_assembly_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">names_indices</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">assembly</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assemblies</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">assembly</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names_indices</span><span class="p">:</span>
+                <span class="n">names_indices</span><span class="p">[</span><span class="n">assembly</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">names_indices</span><span class="p">[</span><span class="n">assembly</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">indices</span> <span class="ow">in</span> <span class="n">names_indices</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+            <span class="n">duplicates</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">]))</span>
+                    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">indices</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">names_indices</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Multiple assemblies named &quot;</span> <span class="o">+</span> <span class="n">duplicates</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_compute_assemblies_levels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">graph_edges</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">assembly</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">assembly</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assemblies</span>
+            <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">assembly</span><span class="o">.</span><span class="n">parts</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">graph_edges</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">nx</span><span class="o">.</span><span class="n">dag</span><span class="o">.</span><span class="n">is_directed_acyclic_graph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">):</span>
+            <span class="n">cycle</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">cycles</span><span class="o">.</span><span class="n">find_cycle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Circular dependency found involving </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">cycle</span><span class="p">)</span>
+        <span class="n">level_0_nodes</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="k">if</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="n">n</span><span class="p">))</span> <span class="o">==</span> <span class="p">[]</span>
+        <span class="p">]</span>
+        <span class="n">nodes_levels</span> <span class="o">=</span> <span class="p">{</span><span class="n">node</span><span class="p">:</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">}</span>
+
+        <span class="k">def</span> <span class="nf">mark_depth</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">depth</span><span class="p">):</span>
+            <span class="n">nodes_levels</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">nodes_levels</span><span class="p">[</span><span class="n">node</span><span class="p">],</span> <span class="n">depth</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+                <span class="n">mark_depth</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_parts</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="p">]</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">level_0_nodes</span><span class="p">:</span>
+            <span class="n">mark_depth</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">assembly</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assemblies</span><span class="p">:</span>
+            <span class="n">assembly</span><span class="o">.</span><span class="n">dependencies</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">level</span><span class="o">=</span><span class="n">nodes_levels</span><span class="p">[</span><span class="n">assembly</span><span class="o">.</span><span class="n">name</span><span class="p">],</span>
+                <span class="n">depends_on</span><span class="o">=</span><span class="p">[</span>
+                    <span class="n">part</span>
+                    <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="n">assembly</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">part</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_parts</span>
+                <span class="p">],</span>
+                <span class="n">used_in</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">assembly</span><span class="o">.</span><span class="n">name</span><span class="p">)),</span>
+            <span class="p">)</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">dependencies</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assemblies</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">levels</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">level</span><span class="p">:</span> <span class="p">[</span>
+                <span class="n">asm</span>
+                <span class="k">for</span> <span class="n">asm</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assemblies</span>
+                <span class="k">if</span> <span class="n">asm</span><span class="o">.</span><span class="n">dependencies</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">level</span>
+            <span class="p">]</span>
+            <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">levels</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="AssemblyPlan.from_spreadsheet"><a class="viewcode-back" href="../../../ref/user_classes.html#dnacauldron.AssemblyPlan.from_spreadsheet">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_spreadsheet</span><span class="p">(</span>
+        <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">dataframe</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">assembly_class</span><span class="o">=</span><span class="s2">&quot;from_spreadsheet&quot;</span><span class="p">,</span>
+        <span class="n">sheet_name</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
+        <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;auto_from_filename&quot;</span><span class="p">,</span>
+        <span class="n">logger</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span>
+        <span class="n">assembly_class_dict</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">assembly_params</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Import an assembly plan from a spreadsheet.</span>
+
+<span class="sd">        You can either read these docs or browse the examples in the repo.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        </span>
+<span class="sd">        path</span>
+<span class="sd">          Path to a spreadsheet file (a dataframe can be used instead)</span>
+<span class="sd">        </span>
+<span class="sd">        dataframe</span>
+<span class="sd">          A pandas dataframe, possibly obatined from a spreadsheet.</span>
+<span class="sd">        </span>
+<span class="sd">        sheet_name</span>
+<span class="sd">          Name of the spreadsheet&#39;s sheet on which the assembly plan is</span>
+<span class="sd">          defined. Use &quot;all&quot; to load assemblies from all the sheets.</span>
+
+<span class="sd">        header</span>
+<span class="sd">          True or False, indicates whether there is a header in the</span>
+<span class="sd">          spreadsheet.</span>
+
+<span class="sd">        name</span>
+<span class="sd">          Name of the assembly plan (leave to &quot;auto_from_filename&quot; to use the</span>
+<span class="sd">          file name as assembly plan name)</span>
+
+<span class="sd">        logger</span>
+<span class="sd">          Logger of the created assembly plan. Either &quot;bar&quot; for a progress bar</span>
+<span class="sd">          or None for none, or any Proglog logger. </span>
+
+<span class="sd">        assembly_params</span>
+<span class="sd">          Extra keyword parameters which will be fed to each assembly.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;auto_from_filename&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;unnamed&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+                <span class="n">name</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">is_csv</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sheet_name</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_csv</span><span class="p">:</span>
+            <span class="n">excel_file</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">ExcelFile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">AssemblyPlan</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span>
+                <span class="n">assemblies</span><span class="o">=</span><span class="p">[</span>
+                    <span class="n">assembly</span>
+                    <span class="k">for</span> <span class="n">_sheet_name</span> <span class="ow">in</span> <span class="n">excel_file</span><span class="o">.</span><span class="n">sheet_names</span>
+                    <span class="k">for</span> <span class="n">assembly</span> <span class="ow">in</span> <span class="n">AssemblyPlan</span><span class="o">.</span><span class="n">from_spreadsheet</span><span class="p">(</span>
+                        <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>
+                        <span class="n">sheet_name</span><span class="o">=</span><span class="n">_sheet_name</span><span class="p">,</span>
+                        <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span>
+                        <span class="n">assembly_class</span><span class="o">=</span><span class="n">assembly_class</span><span class="p">,</span>
+                        <span class="o">**</span><span class="n">assembly_params</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">assemblies</span>
+                <span class="p">],</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">dataframe</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">is_csv</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">dataframe</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)]</span>
+                    <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dataframe</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                    <span class="n">path</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheet_name</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">header</span>
+                <span class="p">)</span>
+        <span class="n">ignore_list</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;nan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;construct name&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;construct&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;assembly&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">assembly_class</span> <span class="o">==</span> <span class="s2">&quot;from_spreadsheet&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">assembly_class_dict</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
+                <span class="n">assembly_class_dict</span> <span class="o">=</span> <span class="n">ASSEMBLY_CLASS_DICT</span>
+
+            <span class="k">def</span> <span class="nf">extract_assembly_class_from_row</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;class:&quot;</span><span class="p">):</span>
+                        <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">row</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Could not find assembly class in row: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">row</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">value</span><span class="p">[</span><span class="mi">6</span><span class="p">:]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">row</span>
+
+            <span class="n">assembly_classes_and_rows</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">extract_assembly_class_from_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignore_list</span>
+            <span class="p">]</span>
+            <span class="n">assemblies</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">assembly_class_dict</span><span class="p">[</span><span class="n">_class</span><span class="p">]</span><span class="o">.</span><span class="n">from_dataframe_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">_class</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">assembly_classes_and_rows</span>
+            <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">assemblies</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">assembly_class</span><span class="o">.</span><span class="n">from_dataframe_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignore_list</span>
+            <span class="p">]</span>
+        <span class="k">return</span> <span class="n">AssemblyPlan</span><span class="p">(</span><span class="n">assemblies</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">to_spreadsheet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">asm</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">+</span> <span class="n">asm</span><span class="o">.</span><span class="n">parts</span><span class="p">)</span> <span class="k">for</span> <span class="n">asm</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assemblies</span><span class="p">]</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;construct,parts&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">lines</span><span class="p">))</span>
+
+<div class="viewcode-block" id="AssemblyPlan.to_dataframe"><a class="viewcode-back" href="../../../ref/user_classes.html#dnacauldron.AssemblyPlan.to_dataframe">[docs]</a>    <span class="k">def</span> <span class="nf">to_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a dataframe describing the assembly plan.&quot;&quot;&quot;</span>
+        <span class="n">sorted_assemblies</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assemblies</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">dependencies</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">],</span> <span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">{</span><span class="s2">&quot;assembly&quot;</span><span class="p">:</span> <span class="n">assembly</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;parts&quot;</span><span class="p">:</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">assembly</span><span class="o">.</span><span class="n">parts</span><span class="p">)}</span>
+                <span class="k">for</span> <span class="n">assembly</span> <span class="ow">in</span> <span class="n">sorted_assemblies</span>
+            <span class="p">],</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;assembly&quot;</span><span class="p">,</span> <span class="s2">&quot;parts&quot;</span><span class="p">],</span>
+            <span class="n">index</span><span class="o">=</span><span class="s2">&quot;assembly&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="AssemblyPlan.simulate"><a class="viewcode-back" href="../../../ref/user_classes.html#dnacauldron.AssemblyPlan.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence_repository</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Simulate the whole assembly plan, return an AssemblyPlanSimulation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">ordered_assemblies</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">assembly</span>
+            <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">assembly</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="n">level</span><span class="p">]</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;Simulating assembly plan </span><span class="si">%s</span><span class="s2">...&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">simulation_results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">cancelled_assemblies</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># cancelled because dependencies failed</span>
+        <span class="k">for</span> <span class="n">assembly</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">iter_bar</span><span class="p">(</span><span class="n">assembly</span><span class="o">=</span><span class="n">ordered_assemblies</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">assembly</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">cancelled_assemblies</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">simulation_result</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">sequence_repository</span><span class="p">)</span>
+            <span class="n">simulation_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">simulation_result</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">simulation_result</span><span class="o">.</span><span class="n">construct_records</span><span class="p">:</span>
+                <span class="n">sequence_repository</span><span class="o">.</span><span class="n">add_record</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="s2">&quot;constructs&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">simulation_result</span><span class="o">.</span><span class="n">errors</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">next_assembly</span> <span class="ow">in</span> <span class="n">assembly</span><span class="o">.</span><span class="n">dependencies</span><span class="p">[</span><span class="s2">&quot;used_in&quot;</span><span class="p">]:</span>
+                    <span class="n">cancelled_assemblies</span><span class="p">[</span><span class="n">next_assembly</span><span class="p">]</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">name</span>
+
+        <span class="k">return</span> <span class="n">AssemblyPlanSimulation</span><span class="p">(</span>
+            <span class="n">assembly_plan</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">assembly_simulations</span><span class="o">=</span><span class="n">simulation_results</span><span class="p">,</span>
+            <span class="n">sequence_repository</span><span class="o">=</span><span class="n">sequence_repository</span><span class="p">,</span>
+            <span class="n">cancelled</span><span class="o">=</span><span class="p">[</span>
+                <span class="n">AssemblySimulationCancellation</span><span class="p">(</span><span class="n">assembly_name</span><span class="p">,</span> <span class="n">dependency</span><span class="p">)</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">assembly_name</span><span class="p">,</span> <span class="n">dependency</span><span class="p">)</span> <span class="ow">in</span> <span class="n">cancelled_assemblies</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">],</span>
+        <span class="p">)</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">AssemblySimulationCancellation</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assembly_name</span><span class="p">,</span> <span class="n">failed_dependency</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assembly_name</span> <span class="o">=</span> <span class="n">assembly_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">failed_dependency</span> <span class="o">=</span> <span class="n">failed_dependency</span>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2020, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
+</html>

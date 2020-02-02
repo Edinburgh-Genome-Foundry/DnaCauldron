@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Examples</title>
+    
+      <link rel="stylesheet" href="_static/pygments.css">
+      <link rel="stylesheet" href="_static/theme.css">
+      <link rel="stylesheet" href="_static/sphinx_press_theme.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+
+      
+      <script src="_static/theme-vendors.js"></script>
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="prev" title="Spreadsheet Reference" href="ref/spreadsheet_reference.html" /> 
+  </head>
+
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="index.html" class="home-link">
+    
+      <img class="logo" src="_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="index.html#more-biology-software"
+         class="nav-link  router-link-active">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="index.html#more-biology-software"
+         class="nav-link  router-link-active">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="index.html#more-biology-software">Reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="ref/user_classes.html" class="reference internal ">Useful classes for scripts</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="ref/utils.html" class="reference internal ">Useful methods built on top of DNA Cauldron</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="ref/biotools.html" class="reference internal ">Biotools module</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="ref/core_classes.html" class="reference internal ">Core classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="ref/spreadsheet_reference.html" class="reference internal ">Spreadsheet Reference</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 current"><a href="#" class="reference internal current">Examples</a>
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#combinatorial-golden-gate-assembly" class="reference internal">Combinatorial Golden Gate Assembly</a></li>
+                
+                  <li class="toctree-l2"><a href="#hierarchical-golden-gate-assembly" class="reference internal">Hierarchical Golden Gate assembly</a></li>
+                
+                  <li class="toctree-l2"><a href="#gibson-assembly-plan" class="reference internal">Gibson Assembly Plan</a></li>
+                
+                  <li class="toctree-l2"><a href="#hierarichical-biobrick-assembly" class="reference internal">Hierarichical BioBrick assembly</a></li>
+                
+                  <li class="toctree-l2"><a href="#connectors-autoselection-with-golden-gate-assembly" class="reference internal">Connectors autoselection with Golden Gate assembly</a></li>
+                
+                  <li class="toctree-l2"><a href="#basic-assembly" class="reference internal">BASIC assembly</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+    <li>Examples</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="ref/spreadsheet_reference.html"
+       title="previous chapter">← Spreadsheet Reference</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <div class="section" id="examples">
+<h1><a class="toc-backref" href="#id1">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<p>Note: all examples here are available in the <code class="docutils literal notranslate"><span class="pre">examples/</span></code> folder of the
+code repository. The snippets given below are only for quick reference.</p>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#examples" id="id1">Examples</a></p>
+<ul>
+<li><p><a class="reference internal" href="#combinatorial-golden-gate-assembly" id="id2">Combinatorial Golden Gate Assembly</a></p></li>
+<li><p><a class="reference internal" href="#hierarchical-golden-gate-assembly" id="id3">Hierarchical Golden Gate assembly</a></p></li>
+<li><p><a class="reference internal" href="#gibson-assembly-plan" id="id4">Gibson Assembly Plan</a></p></li>
+<li><p><a class="reference internal" href="#hierarichical-biobrick-assembly" id="id5">Hierarichical BioBrick assembly</a></p></li>
+<li><p><a class="reference internal" href="#connectors-autoselection-with-golden-gate-assembly" id="id6">Connectors autoselection with Golden Gate assembly</a></p></li>
+<li><p><a class="reference internal" href="#basic-assembly" id="id7">BASIC assembly</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="combinatorial-golden-gate-assembly">
+<h2><a class="toc-backref" href="#id2">Combinatorial Golden Gate Assembly</a><a class="headerlink" href="#combinatorial-golden-gate-assembly" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dnacauldron</span> <span class="k">as</span> <span class="nn">dc</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">repository</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">SequenceRepository</span><span class="p">()</span>
+<span class="n">repository</span><span class="o">.</span><span class="n">import_records</span><span class="p">(</span><span class="n">folder</span><span class="o">=</span><span class="s2">&quot;parts&quot;</span><span class="p">,</span> <span class="n">use_file_names_as_ids</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">parts_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">repository</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="s2">&quot;parts&quot;</span><span class="p">])</span>
+<span class="n">assembly</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">Type2sRestrictionAssembly</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;combinatorial_asm&quot;</span><span class="p">,</span>
+    <span class="n">parts</span><span class="o">=</span><span class="n">parts_list</span><span class="p">,</span>
+    <span class="n">expected_constructs</span><span class="o">=</span><span class="s2">&quot;any_number&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">simulation</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">sequence_repository</span><span class="o">=</span><span class="n">repository</span><span class="p">)</span>
+<span class="n">report_writer</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">AssemblyReportWriter</span><span class="p">(</span>
+    <span class="n">include_mix_graphs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">include_part_plots</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">simulation</span><span class="o">.</span><span class="n">write_report</span><span class="p">(</span>
+    <span class="n">target</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;output&quot;</span><span class="p">,</span> <span class="s2">&quot;combinatorial&quot;</span><span class="p">),</span>
+    <span class="n">report_writer</span><span class="o">=</span><span class="n">report_writer</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done! see output/combinatorial folder for the results.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="hierarchical-golden-gate-assembly">
+<h2><a class="toc-backref" href="#id3">Hierarchical Golden Gate assembly</a><a class="headerlink" href="#hierarchical-golden-gate-assembly" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dnacauldron</span> <span class="k">as</span> <span class="nn">dc</span>
+
+<span class="n">repository</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">SequenceRepository</span><span class="p">()</span>
+<span class="n">repository</span><span class="o">.</span><span class="n">import_records</span><span class="p">(</span><span class="n">folder</span><span class="o">=</span><span class="s2">&quot;parts&quot;</span><span class="p">,</span> <span class="n">use_file_names_as_ids</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">assembly_plan</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">AssemblyPlan</span><span class="o">.</span><span class="n">from_spreadsheet</span><span class="p">(</span>
+    <span class="n">assembly_class</span><span class="o">=</span><span class="n">dc</span><span class="o">.</span><span class="n">Type2sRestrictionAssembly</span><span class="p">,</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;golden_gate_two_levels.csv&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plan_simulation</span> <span class="o">=</span> <span class="n">assembly_plan</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">sequence_repository</span><span class="o">=</span><span class="n">repository</span><span class="p">)</span>
+<span class="n">plan_simulation</span><span class="o">.</span><span class="n">write_report</span><span class="p">(</span><span class="s2">&quot;output&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gibson-assembly-plan">
+<h2><a class="toc-backref" href="#id4">Gibson Assembly Plan</a><a class="headerlink" href="#gibson-assembly-plan" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dnacauldron</span> <span class="k">as</span> <span class="nn">dc</span>
+
+<span class="n">repository</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">SequenceRepository</span><span class="p">()</span>
+<span class="n">repository</span><span class="o">.</span><span class="n">import_records</span><span class="p">(</span><span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gibson_sequences.fa&quot;</span><span class="p">])</span>
+<span class="n">assembly_plan</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">AssemblyPlan</span><span class="o">.</span><span class="n">from_spreadsheet</span><span class="p">(</span>
+    <span class="n">assembly_class</span><span class="o">=</span><span class="n">dc</span><span class="o">.</span><span class="n">GibsonAssembly</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;gibson_assembly.csv&quot;</span>
+<span class="p">)</span>
+<span class="n">plan_simulation</span> <span class="o">=</span> <span class="n">assembly_plan</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">sequence_repository</span><span class="o">=</span><span class="n">repository</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Assembly stats:&quot;</span><span class="p">,</span> <span class="n">plan_simulation</span><span class="o">.</span><span class="n">compute_stats</span><span class="p">())</span>
+
+<span class="n">report_writer</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">AssemblyReportWriter</span><span class="p">(</span>
+    <span class="n">include_mix_graphs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">include_assembly_plots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">show_overhangs_in_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">annotate_parts_homologies</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plan_simulation</span><span class="o">.</span><span class="n">write_report</span><span class="p">(</span>
+    <span class="n">target</span><span class="o">=</span><span class="s2">&quot;output&quot;</span><span class="p">,</span> <span class="n">assembly_report_writer</span><span class="o">=</span><span class="n">report_writer</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="hierarichical-biobrick-assembly">
+<h2><a class="toc-backref" href="#id5">Hierarichical BioBrick assembly</a><a class="headerlink" href="#hierarichical-biobrick-assembly" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dnacauldron</span> <span class="k">as</span> <span class="nn">dc</span>
+
+<span class="n">repository</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">SequenceRepository</span><span class="p">()</span>
+<span class="n">repository</span><span class="o">.</span><span class="n">import_records</span><span class="p">(</span><span class="n">folder</span><span class="o">=</span><span class="s2">&quot;biobrick_parts&quot;</span><span class="p">,</span> <span class="n">use_file_names_as_ids</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">assembly_plan</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">AssemblyPlan</span><span class="o">.</span><span class="n">from_spreadsheet</span><span class="p">(</span>
+    <span class="n">assembly_class</span><span class="o">=</span><span class="n">dc</span><span class="o">.</span><span class="n">BioBrickStandardAssembly</span><span class="p">,</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;hierarchical_biobrick.csv&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plan_simulation</span> <span class="o">=</span> <span class="n">assembly_plan</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">sequence_repository</span><span class="o">=</span><span class="n">repository</span><span class="p">)</span>
+<span class="n">plan_simulation</span><span class="o">.</span><span class="n">write_report</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;output&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done! See the output/ folder for the results.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="connectors-autoselection-with-golden-gate-assembly">
+<h2><a class="toc-backref" href="#id6">Connectors autoselection with Golden Gate assembly</a><a class="headerlink" href="#connectors-autoselection-with-golden-gate-assembly" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dnacauldron</span> <span class="k">as</span> <span class="nn">dc</span>
+
+<span class="n">repository</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">SequenceRepository</span><span class="p">()</span>
+<span class="n">repository</span><span class="o">.</span><span class="n">import_records</span><span class="p">(</span>
+    <span class="n">collection</span><span class="o">=</span><span class="s2">&quot;parts&quot;</span><span class="p">,</span>
+    <span class="n">folder</span><span class="o">=</span><span class="s2">&quot;genetic_parts&quot;</span><span class="p">,</span>
+    <span class="n">use_file_names_as_ids</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">topology</span><span class="o">=</span><span class="s2">&quot;circular&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">repository</span><span class="o">.</span><span class="n">import_records</span><span class="p">(</span>
+    <span class="n">collection</span><span class="o">=</span><span class="s2">&quot;emma_connectors&quot;</span><span class="p">,</span>
+    <span class="n">folder</span><span class="o">=</span><span class="s2">&quot;emma_connectors&quot;</span><span class="p">,</span>
+    <span class="n">use_file_names_as_ids</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">all_parts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">repository</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="s2">&quot;parts&quot;</span><span class="p">])</span>  <span class="c1"># part names, no connectors</span>
+<span class="n">assembly</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">Type2sRestrictionAssembly</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;assembly_with_connectors&quot;</span><span class="p">,</span>
+    <span class="n">parts</span><span class="o">=</span><span class="n">all_parts</span><span class="p">,</span>
+    <span class="n">connectors_collection</span><span class="o">=</span><span class="s2">&quot;emma_connectors&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">report_writer</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">AssemblyReportWriter</span><span class="p">(</span><span class="n">include_mix_graphs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">simulation</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">sequence_repository</span><span class="o">=</span><span class="n">repository</span><span class="p">)</span>
+
+<span class="n">simulation</span><span class="o">.</span><span class="n">write_report</span><span class="p">(</span><span class="s2">&quot;output&quot;</span><span class="p">,</span> <span class="n">report_writer</span><span class="o">=</span><span class="n">report_writer</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Done! see output/ folder for the results.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="basic-assembly">
+<h2><a class="toc-backref" href="#id7">BASIC assembly</a><a class="headerlink" href="#basic-assembly" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dnacauldron</span> <span class="k">as</span> <span class="nn">dc</span>
+
+<span class="n">repo</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">SequenceRepository</span><span class="p">()</span>
+<span class="n">repo</span><span class="o">.</span><span class="n">import_records</span><span class="p">(</span><span class="n">folder</span><span class="o">=</span><span class="s2">&quot;parts_and_oligos&quot;</span><span class="p">)</span>
+<span class="n">plan</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">AssemblyPlan</span><span class="o">.</span><span class="n">from_spreadsheet</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;basic_assembly.csv&quot;</span><span class="p">,</span> <span class="n">assembly_class</span><span class="o">=</span><span class="s2">&quot;from_spreadsheet&quot;</span>
+<span class="p">)</span>
+<span class="n">simulation</span> <span class="o">=</span> <span class="n">plan</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">repo</span><span class="p">)</span>
+<span class="n">simulation</span><span class="o">.</span><span class="n">write_report</span><span class="p">(</span><span class="s2">&quot;output&quot;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Done! see output/ folder for the results.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="ref/spreadsheet_reference.html"
+       title="previous chapter">← Spreadsheet Reference</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2020, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
+</html>

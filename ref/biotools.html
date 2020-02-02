@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Biotools module</title>
+    
+      <link rel="stylesheet" href="../_static/pygments.css">
+      <link rel="stylesheet" href="../_static/theme.css">
+      <link rel="stylesheet" href="../_static/sphinx_press_theme.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+
+      
+      <script src="../_static/theme-vendors.js"></script>
+      <script src="../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="next" title="Core classes" href="core_classes.html" />
+  <link rel="prev" title="Useful methods built on top of DNA Cauldron" href="utils.html" /> 
+  </head>
+
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../index.html" class="home-link">
+    
+      <img class="logo" src="../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link  router-link-active">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link  router-link-active">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#more-biology-software">Reference</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 "><a href="user_classes.html" class="reference internal ">Useful classes for scripts</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="utils.html" class="reference internal ">Useful methods built on top of DNA Cauldron</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 current"><a href="#" class="reference internal current">Biotools module</a>
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#module-dnacauldron.biotools.sequence_io" class="reference internal">Sequence and Record I/O</a></li>
+                
+                  <li class="toctree-l2"><a href="#module-dnacauldron.biotools.record_operations" class="reference internal">BioPython record operations</a></li>
+                
+                  <li class="toctree-l2"><a href="#module-dnacauldron.biotools.autoselect_enzyme" class="reference internal">Enzyme autoselection</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="core_classes.html" class="reference internal ">Core classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="spreadsheet_reference.html" class="reference internal ">Spreadsheet Reference</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+    <li>Biotools module</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="utils.html"
+       title="previous chapter">← Useful methods built on top of DNA Cauldron</a>
+  </li>
+  <li class="next">
+    <a href="core_classes.html"
+       title="next chapter">Core classes →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <div class="section" id="biotools-module">
+<h1>Biotools module<a class="headerlink" href="#biotools-module" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-dnacauldron.biotools.sequence_io">
+<span id="sequence-and-record-i-o"></span><h2>Sequence and Record I/O<a class="headerlink" href="#module-dnacauldron.biotools.sequence_io" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="dnacauldron.biotools.sequence_io.load_record">
+<code class="sig-prename descclassname">dnacauldron.biotools.sequence_io.</code><code class="sig-name descname">load_record</code><span class="sig-paren">(</span><em class="sig-param">filepath</em>, <em class="sig-param">topology='default_to_linear'</em>, <em class="sig-param">id='auto'</em>, <em class="sig-param">upperize=True</em>, <em class="sig-param">max_name_length=20</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/biotools/sequence_io.html#load_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.biotools.sequence_io.load_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Biopython record read from a Fasta/Genbank/Snapgene file.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filepath</strong></p>
+<blockquote>
+<div><p>Path to a Genbank, Fasta, or Snapgene (.dna) file.</p>
+</div></blockquote>
+<p><strong>topology</strong></p>
+<blockquote>
+<div><p>Can be “circular”, “linear”, “default_to_circular” (will default
+to circular if <code class="docutils literal notranslate"><span class="pre">annotations['topology']</span></code> is not already set) or
+“default_to_linear”.</p>
+</div></blockquote>
+<p><strong>id</strong></p>
+<blockquote>
+<div><p>Sets the record.id. If “auto”, the original record.id is used, and if
+none is set the name of the file (without extension) is used instead.</p>
+</div></blockquote>
+<p><strong>upperize</strong></p>
+<blockquote>
+<div><p>If true, the sequence will get upperized (recommended in this library,
+as the mix of upper and lower case can cause problems in Biopython’s
+enzyme sites search)</p>
+</div></blockquote>
+<p><strong>max_name_length</strong></p>
+<blockquote>
+<div><p>The name of the record will be truncated if too long to avoid Biopython
+exceptions being raised.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnacauldron.biotools.sequence_io.load_records_from_file">
+<code class="sig-prename descclassname">dnacauldron.biotools.sequence_io.</code><code class="sig-name descname">load_records_from_file</code><span class="sig-paren">(</span><em class="sig-param">filepath</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/biotools/sequence_io.html#load_records_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.biotools.sequence_io.load_records_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Autodetect file format and load biopython records from it.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnacauldron.biotools.sequence_io.load_records_from_files">
+<code class="sig-prename descclassname">dnacauldron.biotools.sequence_io.</code><code class="sig-name descname">load_records_from_files</code><span class="sig-paren">(</span><em class="sig-param">files=None</em>, <em class="sig-param">folder=None</em>, <em class="sig-param">use_file_names_as_ids=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/biotools/sequence_io.html#load_records_from_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.biotools.sequence_io.load_records_from_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Automatically convert files or a folder’s content to biopython records.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>files</strong></p>
+<blockquote>
+<div><p>A list of path to files. A <code class="docutils literal notranslate"><span class="pre">folder</span></code> can be provided instead</p>
+</div></blockquote>
+<p><strong>folder</strong></p>
+<blockquote>
+<div><p>A path to a folder containing sequence files.</p>
+</div></blockquote>
+<p><strong>use_file_names_as_ids</strong></p>
+<blockquote>
+<div><p>If True, for every file containing a single record, the file name
+(without extension) will be set as the record’s ID.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnacauldron.biotools.sequence_io.string_to_record">
+<code class="sig-prename descclassname">dnacauldron.biotools.sequence_io.</code><code class="sig-name descname">string_to_record</code><span class="sig-paren">(</span><em class="sig-param">string</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/biotools/sequence_io.html#string_to_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.biotools.sequence_io.string_to_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a string of a fasta, genbank… into a simple ATGC string.</p>
+<p>Can also be used to detect a format.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnacauldron.biotools.sequence_io.write_record">
+<code class="sig-prename descclassname">dnacauldron.biotools.sequence_io.</code><code class="sig-name descname">write_record</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">target</em>, <em class="sig-param">fmt='genbank'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/biotools/sequence_io.html#write_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.biotools.sequence_io.write_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a record as genbank, fasta, etc. via Biopython, with fixes</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-dnacauldron.biotools.record_operations">
+<span id="biopython-record-operations"></span><h2>BioPython record operations<a class="headerlink" href="#module-dnacauldron.biotools.record_operations" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="dnacauldron.biotools.record_operations.annotate_record">
+<code class="sig-prename descclassname">dnacauldron.biotools.record_operations.</code><code class="sig-name descname">annotate_record</code><span class="sig-paren">(</span><em class="sig-param">seqrecord</em>, <em class="sig-param">location='full'</em>, <em class="sig-param">feature_type='misc_feature'</em>, <em class="sig-param">margin=0</em>, <em class="sig-param">**qualifiers</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/biotools/record_operations.html#annotate_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.biotools.record_operations.annotate_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a feature to a Biopython SeqRecord.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seqrecord</strong></p>
+<blockquote>
+<div><p>The biopython seqrecord to be annotated.</p>
+</div></blockquote>
+<p><strong>location</strong></p>
+<blockquote>
+<div><p>Either (start, end) or (start, end, strand). (strand defaults to +1)</p>
+</div></blockquote>
+<p><strong>feature_type</strong></p>
+<blockquote>
+<div><p>The type associated with the feature</p>
+</div></blockquote>
+<p><strong>margin</strong></p>
+<blockquote>
+<div><p>Number of extra bases added on each side of the given location.</p>
+</div></blockquote>
+<p><strong>qualifiers</strong></p>
+<blockquote>
+<div><p>Dictionnary that will be the Biopython feature’s <cite>qualifiers</cite> attribute.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnacauldron.biotools.record_operations.complement">
+<code class="sig-prename descclassname">dnacauldron.biotools.record_operations.</code><code class="sig-name descname">complement</code><span class="sig-paren">(</span><em class="sig-param">dna_sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/biotools/record_operations.html#complement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.biotools.record_operations.complement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the complement of the DNA sequence.</p>
+<p>For instance <code class="docutils literal notranslate"><span class="pre">complement(&quot;ATGCCG&quot;)</span></code> returns <code class="docutils literal notranslate"><span class="pre">&quot;TACGGC&quot;</span></code>.</p>
+<p>Uses BioPython for speed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnacauldron.biotools.record_operations.crop_record_with_saddling_features">
+<code class="sig-prename descclassname">dnacauldron.biotools.record_operations.</code><code class="sig-name descname">crop_record_with_saddling_features</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">start</em>, <em class="sig-param">end</em>, <em class="sig-param">filters=()</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/biotools/record_operations.html#crop_record_with_saddling_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.biotools.record_operations.crop_record_with_saddling_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crop the biopython record, but keep features that are only partially in.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>record</strong></p>
+<blockquote>
+<div><p>The Biopython record to crop.</p>
+</div></blockquote>
+<p><strong>start, end</strong></p>
+<blockquote>
+<div><p>Coordinates of the segment to crop</p>
+</div></blockquote>
+<p><strong>filters</strong></p>
+<blockquote>
+<div><p>list of functions (feature=&gt;True/False). Any feature that doesn’t pass
+at least one filter will be filtered out.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnacauldron.biotools.record_operations.reverse_complement">
+<code class="sig-prename descclassname">dnacauldron.biotools.record_operations.</code><code class="sig-name descname">reverse_complement</code><span class="sig-paren">(</span><em class="sig-param">sequence</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/biotools/record_operations.html#reverse_complement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.biotools.record_operations.reverse_complement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the reverse-complement of the DNA sequence.</p>
+<p>For instance <code class="docutils literal notranslate"><span class="pre">complement(&quot;ATGCCG&quot;)</span></code> returns <code class="docutils literal notranslate"><span class="pre">&quot;GCCGTA&quot;</span></code>.</p>
+<p>Uses BioPython for speed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnacauldron.biotools.record_operations.sequence_to_biopython_record">
+<code class="sig-prename descclassname">dnacauldron.biotools.record_operations.</code><code class="sig-name descname">sequence_to_biopython_record</code><span class="sig-paren">(</span><em class="sig-param">sequence</em>, <em class="sig-param">id='&lt;unknown id&gt;'</em>, <em class="sig-param">name='same_as_id'</em>, <em class="sig-param">features=()</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/biotools/record_operations.html#sequence_to_biopython_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.biotools.record_operations.sequence_to_biopython_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a SeqRecord of the sequence, ready to be Genbanked.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnacauldron.biotools.record_operations.set_record_topology">
+<code class="sig-prename descclassname">dnacauldron.biotools.record_operations.</code><code class="sig-name descname">set_record_topology</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">topology</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/biotools/record_operations.html#set_record_topology"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.biotools.record_operations.set_record_topology" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the Biopython record’s topology, possibly passing if already set.</p>
+<p>This actually sets the <code class="docutils literal notranslate"><span class="pre">record.annotations['topology']</span></code>.The <code class="docutils literal notranslate"><span class="pre">topology</span></code>
+parameter can be “circular”, “linear”, “default_to_circular” (will default
+to circular if <code class="docutils literal notranslate"><span class="pre">annotations['topology']</span></code> is not already set) or
+“default_to_linear”.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-dnacauldron.biotools.autoselect_enzyme">
+<span id="enzyme-autoselection"></span><h2>Enzyme autoselection<a class="headerlink" href="#module-dnacauldron.biotools.autoselect_enzyme" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="dnacauldron.biotools.autoselect_enzyme.autoselect_enzyme">
+<code class="sig-prename descclassname">dnacauldron.biotools.autoselect_enzyme.</code><code class="sig-name descname">autoselect_enzyme</code><span class="sig-paren">(</span><em class="sig-param">parts</em>, <em class="sig-param">enzymes=('BsmBI'</em>, <em class="sig-param">'BsaI'</em>, <em class="sig-param">'BbsI'</em>, <em class="sig-param">'AarI'</em>, <em class="sig-param">'SapI')</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/biotools/autoselect_enzyme.html#autoselect_enzyme"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.biotools.autoselect_enzyme.autoselect_enzyme" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the enzyme that the parts were probably meant to be assembled with</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parts</strong></p>
+<blockquote>
+<div><p>A list of SeqRecord files. They should have a “linear” attribute set to
+True or False, otherwise</p>
+</div></blockquote>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The enzyme that has as near as possible as exactly 2 sites in the different</p>
+<p>constructs.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="utils.html"
+       title="previous chapter">← Useful methods built on top of DNA Cauldron</a>
+  </li>
+  <li class="next">
+    <a href="core_classes.html"
+       title="next chapter">Core classes →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2020, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
+</html>

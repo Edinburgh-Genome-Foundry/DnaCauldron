@@ -1,188 +1,212 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>dnacauldron.utils.insert_parts_on_backbones &mdash; DnaCauldron 0.1.0 documentation</title>
-  
-
-  
-  
-  
-  
-
-  
-
-  
-  
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>dnacauldron.utils.insert_parts_on_backbones</title>
     
+      <link rel="stylesheet" href="../../../_static/pygments.css">
+      <link rel="stylesheet" href="../../../_static/theme.css">
+      <link rel="stylesheet" href="../../../_static/sphinx_press_theme.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 
-  
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
 
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="../../../_static/css/main.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="DnaCauldron 0.1.0 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
-</head>
-
-<body class="wy-body-for-nav" role="document">
-
-   
-  <div class="wy-grid-for-nav">
-
+      
+      <script src="../../../_static/theme-vendors.js"></script>
+      <script src="../../../_static/theme.js" defer></script>
     
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
+  <link rel="index" title="Index" href="../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../search.html" /> 
+  </head>
 
-          
-            <a href="../../../index.html" class="icon icon-home"> DnaCauldron
-          
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../../index.html" class="home-link">
+    
+      <img class="logo" src="../../../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
 
-          
-            
-            <img src="../../../_static/html_logo.png" class="logo" />
-          
-          </a>
+  <div class="links">
+    <navlinks class="can-hide">
 
-          
-            
-            
-              <div class="version">
-                0.1.0
-              </div>
-            
-          
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
 
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
 
-          
-        </div>
 
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../index.html">DNA Cauldron Documentation</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../ref.html">DNA Cauldron Reference manual</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Examples</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/single_assembly.html">Simple single assembly</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/full_report.html">Cloning simulation with full report</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/backbone_autoselection.html">Backbone Autoselection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/combinatorial_assembly.html">Combinatorial Assembly</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/connector_selection.html">Connector autoselection</a></li>
-</ul>
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
-            
-          
-        </div>
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
       </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">DnaCauldron</a>
-        
-      </nav>
-
-
-      
-      <div class="wy-nav-content">
-        <div class="rst-content">
+        <sidebar @toggle-sidebar="toggleSidebar">
           
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
-        
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-        
-      <li>dnacauldron.utils.insert_parts_on_backbones</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
+          <navlinks>
             
-        
-      </li>
-    
-  </ul>
 
   
-  <hr/>
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">Reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../ref/user_classes.html" class="reference internal ">Useful classes for scripts</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/utils.html" class="reference internal ">Useful methods built on top of DNA Cauldron</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/biotools.html" class="reference internal ">Biotools module</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/core_classes.html" class="reference internal ">Core classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../ref/spreadsheet_reference.html" class="reference internal ">Spreadsheet Reference</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../../index.html">Module code</a> &raquo;</li>
+    
+    <li>dnacauldron.utils.insert_parts_on_backbones</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
             
   <h1>Source code for dnacauldron.utils.insert_parts_on_backbones</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Useful functions built on top of the DnaCauldron classes to simplify the</span>
+<span></span><span class="sd">&quot;&quot;&quot;Useful functions built on top of the DnaCauldron classes to simplify the`````</span>
 <span class="sd">most common operations.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span>
-<span class="kn">from</span> <span class="nn">..AssemblyMix</span> <span class="k">import</span> <span class="n">RestrictionLigationMix</span><span class="p">,</span> <span class="n">AssemblyError</span>
-<span class="kn">from</span> <span class="nn">..tools</span> <span class="k">import</span> <span class="n">reverse_complement</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">autoselect_enzyme</span>
+<span class="kn">from</span> <span class="nn">..AssemblyMix</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">AssemblyMixError</span><span class="p">,</span>
+    <span class="n">generate_type2s_restriction_mix</span><span class="p">,</span>
+    <span class="n">RestrictionLigationMix</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..biotools</span> <span class="k">import</span> <span class="n">reverse_complement</span><span class="p">,</span> <span class="n">write_record</span><span class="p">,</span> <span class="n">autoselect_enzyme</span>
 <span class="kn">import</span> <span class="nn">flametree</span>
-<span class="kn">from</span> <span class="nn">Bio</span> <span class="k">import</span> <span class="n">SeqIO</span>
 
-<div class="viewcode-block" id="BackboneChoice"><a class="viewcode-back" href="../../../ref.html#dnacauldron.utils.BackboneChoice">[docs]</a><span class="k">class</span> <span class="nc">BackboneChoice</span><span class="p">:</span>
+
+<div class="viewcode-block" id="BackboneChoice"><a class="viewcode-back" href="../../../ref/utils.html#dnacauldron.utils.BackboneChoice">[docs]</a><span class="k">class</span> <span class="nc">BackboneChoice</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Class to represent the result of a backbone autoselection.</span>
 
 <span class="sd">    Parameters</span>
@@ -206,8 +230,14 @@
 <span class="sd">      the auto-selected backbone.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span> <span class="n">already_on_backbone</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">backbone_record</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">final_record</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">record</span><span class="p">,</span>
+        <span class="n">already_on_backbone</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">backbone_record</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">final_record</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">record</span> <span class="o">=</span> <span class="n">record</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">already_on_backbone</span> <span class="o">=</span> <span class="n">already_on_backbone</span>
@@ -219,23 +249,28 @@
         <span class="sd">&quot;&quot;&quot;Write [recordname] (already/inserted on backbone).&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">already_on_backbone</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> (already on backbone)&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">record</span><span class="o">.</span><span class="n">id</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backbone_record</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: no backbone found.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">record</span><span class="o">.</span><span class="n">id</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> inserted on </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                                          <span class="bp">self</span><span class="o">.</span><span class="n">backbone_record</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-<div class="viewcode-block" id="BackboneChoice.to_dict"><a class="viewcode-back" href="../../../ref.html#dnacauldron.utils.BackboneChoice.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> inserted on </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">backbone_record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="p">)</span>
+
+<div class="viewcode-block" id="BackboneChoice.to_dict"><a class="viewcode-back" href="../../../ref/utils.html#dnacauldron.utils.BackboneChoice.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the object as a dict. Used for dataframe/spreadsheet.&quot;&quot;&quot;</span>
         <span class="n">backbone</span><span class="p">,</span> <span class="n">final_record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backbone_record</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_record</span>
-        <span class="n">detected</span> <span class="o">=</span> <span class="n">backbone</span><span class="o">.</span><span class="n">id</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">backbone</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
-        <span class="n">final_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">final_record</span><span class="p">)</span> <span class="k">if</span> <span class="n">final_record</span> <span class="k">else</span>  <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">record</span><span class="p">)</span>
+        <span class="n">detected</span> <span class="o">=</span> <span class="n">backbone</span><span class="o">.</span><span class="n">id</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">backbone</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">final_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">final_record</span><span class="p">)</span> <span class="k">if</span> <span class="n">final_record</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">record</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">original_record</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="n">already_on_backbone</span><span class="o">=</span><span class="s1">&#39;yes&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">already_on_backbone</span> <span class="k">else</span> <span class="s1">&#39;no&#39;</span><span class="p">,</span>
+            <span class="n">already_on_backbone</span><span class="o">=</span><span class="s2">&quot;yes&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">already_on_backbone</span> <span class="k">else</span> <span class="s2">&quot;no&quot;</span><span class="p">,</span>
             <span class="n">detected_backbone</span><span class="o">=</span><span class="n">detected</span><span class="p">,</span>
             <span class="n">final_record_length</span><span class="o">=</span><span class="n">final_length</span><span class="p">,</span>
-            <span class="n">error</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+            <span class="n">error</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="BackboneChoice.list_to_infos_spreadsheet"><a class="viewcode-back" href="../../../ref.html#dnacauldron.utils.BackboneChoice.list_to_infos_spreadsheet">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="BackboneChoice.list_to_infos_spreadsheet"><a class="viewcode-back" href="../../../ref/utils.html#dnacauldron.utils.BackboneChoice.list_to_infos_spreadsheet">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">list_to_infos_spreadsheet</span><span class="p">(</span><span class="n">choices</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a pandas dataframe summarizing a list of BackboneChoices.</span>
 
@@ -243,15 +278,17 @@
 <span class="sd">        &#39;detected_backbone&#39;, &#39;final_record_length&#39;, &#39;error&#39;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span>
-            <span class="p">[</span>
-                <span class="n">choice</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-                <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="n">choices</span>
+            <span class="p">[</span><span class="n">choice</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="n">choices</span><span class="p">],</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+                <span class="s2">&quot;original_record&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;already_on_backbone&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;detected_backbone&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;final_record_length&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">,</span>
             <span class="p">],</span>
-            <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;original_record&#39;</span><span class="p">,</span> <span class="s1">&#39;already_on_backbone&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;detected_backbone&#39;</span><span class="p">,</span> <span class="s1">&#39;final_record_length&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="BackboneChoice.write_final_records"><a class="viewcode-back" href="../../../ref.html#dnacauldron.utils.BackboneChoice.write_final_records">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="BackboneChoice.write_final_records"><a class="viewcode-back" href="../../../ref/utils.html#dnacauldron.utils.BackboneChoice.write_final_records">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">write_final_records</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Write a list of BackboneChoices final records as genbanks.&quot;&quot;&quot;</span>
         <span class="n">target_dir</span> <span class="o">=</span> <span class="n">flametree</span><span class="o">.</span><span class="n">file_tree</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
@@ -259,26 +296,24 @@
             <span class="k">if</span> <span class="n">choice</span><span class="o">.</span><span class="n">already_on_backbone</span><span class="p">:</span>
                 <span class="n">record</span> <span class="o">=</span> <span class="n">choice</span><span class="o">.</span><span class="n">record</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">choice</span><span class="o">.</span><span class="n">final_record</span>
+                <span class="n">record</span> <span class="o">=</span> <span class="n">choice</span><span class="o">.</span><span class="n">final_record</span>
             <span class="k">if</span> <span class="n">record</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">record</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">choice</span><span class="o">.</span><span class="n">record</span><span class="o">.</span><span class="n">name</span>
                 <span class="n">record</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">choice</span><span class="o">.</span><span class="n">record</span><span class="o">.</span><span class="n">id</span>
-                <span class="n">target_file</span> <span class="o">=</span> <span class="n">target_dir</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.gb&#39;</span> <span class="o">%</span> <span class="n">choice</span><span class="o">.</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-                <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">target_file</span><span class="p">,</span> <span class="s1">&#39;genbank&#39;</span><span class="p">)</span></div></div>
+                <span class="n">record</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">choice</span><span class="o">.</span><span class="n">record</span><span class="o">.</span><span class="n">id</span>
+                <span class="n">target_file</span> <span class="o">=</span> <span class="n">target_dir</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.gb&quot;</span> <span class="o">%</span> <span class="n">choice</span><span class="o">.</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="n">write_record</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">target_file</span><span class="p">,</span> <span class="s2">&quot;genbank&quot;</span><span class="p">)</span></div></div>
 
 
-<span class="k">def</span> <span class="nf">_get_insert_from_record</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">enzyme</span><span class="o">=</span><span class="s1">&#39;BsmBI&#39;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_get_insert_from_record</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">enzyme</span><span class="o">=</span><span class="s2">&quot;BsmBI&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return the record of the one digested fragment without enzyme site.&quot;&quot;&quot;</span>
-    <span class="n">mix</span> <span class="o">=</span> <span class="n">RestrictionLigationMix</span><span class="p">([</span><span class="n">record</span><span class="p">],</span> <span class="n">enzyme</span><span class="o">=</span><span class="n">enzyme</span><span class="p">)</span>
-    <span class="n">inserts</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">frag</span> <span class="k">for</span> <span class="n">frag</span> <span class="ow">in</span> <span class="n">mix</span><span class="o">.</span><span class="n">filtered_fragments</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">frag</span><span class="o">.</span><span class="n">is_reverse</span>
-    <span class="p">]</span>
+    <span class="n">mix</span> <span class="o">=</span> <span class="n">generate_type2s_restriction_mix</span><span class="p">(</span><span class="n">parts</span><span class="o">=</span><span class="p">[</span><span class="n">record</span><span class="p">],</span> <span class="n">enzyme</span><span class="o">=</span><span class="n">enzyme</span><span class="p">)</span>
+    <span class="n">inserts</span> <span class="o">=</span> <span class="p">[</span><span class="n">frag</span> <span class="k">for</span> <span class="n">frag</span> <span class="ow">in</span> <span class="n">mix</span><span class="o">.</span><span class="n">filtered_fragments</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">frag</span><span class="o">.</span><span class="n">is_reversed</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inserts</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">inserts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-<span class="k">def</span> <span class="nf">_standardize_overhangs</span><span class="p">(</span><span class="n">overhangs</span><span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">_standardize_overhangs_pair</span><span class="p">(</span><span class="n">overhangs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Standardize a pair of overhangs (o1, o2).</span>
 
 <span class="sd">    Returns either ``(o1, o2)`` or its reverse complement ``(rev_o2, rev_o1)``,</span>
@@ -288,7 +323,8 @@
     <span class="n">ro1</span><span class="p">,</span> <span class="n">ro2</span> <span class="o">=</span> <span class="p">[</span><span class="n">reverse_complement</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="p">(</span><span class="n">o1</span><span class="p">,</span> <span class="n">o2</span><span class="p">)]</span>
     <span class="k">return</span> <span class="nb">min</span><span class="p">((</span><span class="n">o1</span><span class="p">,</span> <span class="n">o2</span><span class="p">),</span> <span class="p">(</span><span class="n">ro2</span><span class="p">,</span> <span class="n">ro1</span><span class="p">))</span>
 
-<span class="k">def</span> <span class="nf">get_overhangs_from_record</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">enzyme</span><span class="o">=</span><span class="s1">&#39;BsmBI&#39;</span><span class="p">,</span> <span class="n">standardize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">get_overhangs_from_record</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">enzyme</span><span class="o">=</span><span class="s2">&quot;BsmBI&quot;</span><span class="p">,</span> <span class="n">standardize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a pair (o1, o2) of overhangs found by record digestion.</span>
 
 <span class="sd">    If ``standardized=True`` the pair returned is either ``(o1, o2)`` or</span>
@@ -297,7 +333,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">insert</span> <span class="o">=</span> <span class="n">_get_insert_from_record</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">enzyme</span><span class="o">=</span><span class="n">enzyme</span><span class="p">)</span>
     <span class="n">overhangs</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">insert</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">left_end</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">insert</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">right_end</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_standardize_overhangs</span><span class="p">(</span><span class="n">overhangs</span><span class="p">)</span> <span class="k">if</span> <span class="n">standardize</span> <span class="k">else</span> <span class="n">overhangs</span>
+    <span class="k">return</span> <span class="n">_standardize_overhangs_pair</span><span class="p">(</span><span class="n">overhangs</span><span class="p">)</span> <span class="k">if</span> <span class="n">standardize</span> <span class="k">else</span> <span class="n">overhangs</span>
+
 
 <span class="k">def</span> <span class="nf">_records_to_overhangs_dict</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">allow_multiple_choices</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return ``{(o1, o2): rec}`` where o1, o2 are standardized overhangs.</span>
@@ -316,8 +353,10 @@
             <span class="k">if</span> <span class="n">allow_multiple_choices</span><span class="p">:</span>
                 <span class="n">result</span><span class="p">[</span><span class="n">overhangs</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Vector </span><span class="si">%s</span><span class="s2"> has same overhangs as </span><span class="si">%s</span><span class="s2">&quot;</span>
-                                 <span class="o">%</span> <span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="n">overhangs</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Vector </span><span class="si">%s</span><span class="s2"> has same overhangs as </span><span class="si">%s</span><span class="s2">&quot;</span>
+                    <span class="o">%</span> <span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="n">overhangs</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">allow_multiple_choices</span><span class="p">:</span>
                 <span class="n">result</span><span class="p">[</span><span class="n">overhangs</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">record</span><span class="p">]</span>
@@ -325,26 +364,30 @@
                 <span class="n">result</span><span class="p">[</span><span class="n">overhangs</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span>
     <span class="k">return</span> <span class="n">result</span>
 
-<div class="viewcode-block" id="record_contains_backbone"><a class="viewcode-back" href="../../../ref.html#dnacauldron.utils.record_contains_backbone">[docs]</a><span class="k">def</span> <span class="nf">record_contains_backbone</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">enzyme</span><span class="o">=</span><span class="s1">&#39;BsmBI&#39;</span><span class="p">,</span>
-                             <span class="n">min_backbone_length</span><span class="o">=</span><span class="mi">500</span><span class="p">):</span>
+
+<div class="viewcode-block" id="record_contains_backbone"><a class="viewcode-back" href="../../../ref/utils.html#dnacauldron.utils.record_contains_backbone">[docs]</a><span class="k">def</span> <span class="nf">record_contains_backbone</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">enzyme</span><span class="o">=</span><span class="s2">&quot;BsmBI&quot;</span><span class="p">,</span> <span class="n">min_backbone_length</span><span class="o">=</span><span class="mi">500</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return True iff it believes the given record contains a backbone.</span>
 
 <span class="sd">    A backbone is detected if, when cutting the circularized record with the</span>
 <span class="sd">    given enzyme, there is one fragment with no site (the insert), and the rest</span>
 <span class="sd">    has a total size above the given ``min_backbone_length``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">mix</span> <span class="o">=</span> <span class="n">RestrictionLigationMix</span><span class="p">([</span><span class="n">record</span><span class="p">],</span> <span class="n">enzyme</span><span class="o">=</span><span class="s1">&#39;BsmBI&#39;</span><span class="p">)</span>
+    <span class="n">mix</span> <span class="o">=</span> <span class="n">generate_type2s_restriction_mix</span><span class="p">(</span><span class="n">parts</span><span class="o">=</span><span class="p">[</span><span class="n">record</span><span class="p">],</span> <span class="n">enzyme</span><span class="o">=</span><span class="s2">&quot;BsmBI&quot;</span><span class="p">)</span>
     <span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">frag</span> <span class="k">for</span> <span class="n">frag</span> <span class="ow">in</span> <span class="n">mix</span><span class="o">.</span><span class="n">filtered_fragments</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">frag</span><span class="o">.</span><span class="n">is_reverse</span>
+        <span class="n">frag</span> <span class="k">for</span> <span class="n">frag</span> <span class="ow">in</span> <span class="n">mix</span><span class="o">.</span><span class="n">filtered_fragments</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">frag</span><span class="o">.</span><span class="n">is_reversed</span>
     <span class="p">]</span>
     <span class="k">if</span> <span class="n">fragments</span> <span class="o">==</span> <span class="p">[]:</span>
-        <span class="k">raise</span> <span class="n">AssemblyError</span><span class="p">(</span><span class="s1">&#39;No site-less fragment found digesting record &#39;</span>
-                            <span class="o">+</span> <span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">AssemblyMixError</span><span class="p">(</span>
+            <span class="s2">&quot;No site-less fragment found digesting record &quot;</span> <span class="o">+</span> <span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">mix</span><span class="o">=</span><span class="n">mix</span><span class="p">,</span>
+        <span class="p">)</span>
     <span class="n">insert</span> <span class="o">=</span> <span class="n">fragments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">insert</span><span class="p">))</span> <span class="o">&gt;</span> <span class="n">min_backbone_length</span></div>
 
-<span class="k">def</span> <span class="nf">swap_donor_vector_part</span><span class="p">(</span><span class="n">donor_vector</span><span class="p">,</span> <span class="n">insert</span><span class="p">,</span> <span class="n">enzyme</span><span class="p">):</span>
+
+<div class="viewcode-block" id="swap_donor_vector_part"><a class="viewcode-back" href="../../../ref/utils.html#dnacauldron.utils.swap_donor_vector_part">[docs]</a><span class="k">def</span> <span class="nf">swap_donor_vector_part</span><span class="p">(</span>
+    <span class="n">donor_vector</span><span class="p">,</span> <span class="n">insert</span><span class="p">,</span> <span class="n">enzyme</span><span class="p">,</span> <span class="n">allow_overhangs_edits</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return the records obtained by cloning inserts into a donor vector.</span>
 
 <span class="sd">    Meant for Type-2S assembly standards only (Golden Gate, etc.)</span>
@@ -369,36 +412,41 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">mix</span> <span class="o">=</span> <span class="n">RestrictionLigationMix</span><span class="p">([</span><span class="n">donor_vector</span><span class="p">],</span> <span class="n">enzyme</span><span class="o">=</span><span class="n">enzyme</span><span class="p">)</span>
+    <span class="n">mix</span> <span class="o">=</span> <span class="n">generate_type2s_restriction_mix</span><span class="p">(</span><span class="n">parts</span><span class="o">=</span><span class="p">[</span><span class="n">donor_vector</span><span class="p">],</span> <span class="n">enzyme</span><span class="o">=</span><span class="n">enzyme</span><span class="p">)</span>
     <span class="n">donor_fragments</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">mix</span><span class="o">.</span><span class="n">fragments</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mix</span><span class="o">.</span><span class="n">enzyme</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;A&#39;</span> <span class="o">+</span> <span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">to_standard_sequence</span><span class="p">()))</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="n">f</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">mix</span><span class="o">.</span><span class="n">fragments</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mix</span><span class="o">.</span><span class="n">enzymes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;A&quot;</span> <span class="o">+</span> <span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">to_standard_sequence</span><span class="p">()))</span> <span class="o">&gt;</span> <span class="mi">0</span>
     <span class="p">]</span>
     <span class="k">for</span> <span class="n">fr</span> <span class="ow">in</span> <span class="n">donor_fragments</span><span class="p">:</span>
-        <span class="n">fr</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fr</span><span class="o">.</span><span class="n">features</span>
-                       <span class="k">if</span> <span class="s1">&#39;source&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span><span class="p">]</span>
-    <span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">donor_fragments</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">mix</span><span class="o">.</span><span class="n">fragments</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">fr</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fr</span><span class="o">.</span><span class="n">features</span> <span class="k">if</span> <span class="s2">&quot;source&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">qualifiers</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">donor_fragments</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">mix</span><span class="o">.</span><span class="n">fragments</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
 
-    <span class="n">mix</span> <span class="o">=</span> <span class="n">RestrictionLigationMix</span><span class="p">([</span><span class="n">insert</span><span class="p">],</span> <span class="n">enzyme</span><span class="o">=</span><span class="n">enzyme</span><span class="p">)</span>
+    <span class="n">mix</span> <span class="o">=</span> <span class="n">generate_type2s_restriction_mix</span><span class="p">(</span><span class="n">parts</span><span class="o">=</span><span class="p">[</span><span class="n">insert</span><span class="p">],</span> <span class="n">enzyme</span><span class="o">=</span><span class="n">enzyme</span><span class="p">)</span>
     <span class="n">insert_fragments</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">mix</span><span class="o">.</span><span class="n">fragments</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mix</span><span class="o">.</span><span class="n">enzyme</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;A&#39;</span> <span class="o">+</span> <span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">to_standard_sequence</span><span class="p">()))</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="n">f</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">mix</span><span class="o">.</span><span class="n">fragments</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mix</span><span class="o">.</span><span class="n">enzymes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;A&quot;</span> <span class="o">+</span> <span class="n">f</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">to_standard_sequence</span><span class="p">()))</span> <span class="o">==</span> <span class="mi">0</span>
     <span class="p">]</span>
-    <span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">insert_fragments</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">insert_fragments</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
     <span class="n">mix</span> <span class="o">=</span> <span class="n">RestrictionLigationMix</span><span class="p">(</span>
         <span class="n">fragments</span><span class="o">=</span><span class="p">[</span><span class="n">insert_fragments</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="n">donor_fragments</span><span class="p">,</span>
-        <span class="n">enzyme</span><span class="o">=</span><span class="n">enzyme</span><span class="p">,</span>
-        <span class="n">fragments_filters</span><span class="o">=</span><span class="p">()</span>
+        <span class="n">enzymes</span><span class="o">=</span><span class="p">[</span><span class="n">enzyme</span><span class="p">],</span>
+        <span class="n">fragment_filters</span><span class="o">=</span><span class="p">(),</span>
     <span class="p">)</span>
     <span class="n">assemblies</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mix</span><span class="o">.</span><span class="n">compute_circular_assemblies</span><span class="p">())</span>
-    <span class="k">assert</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">assemblies</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">assemblies</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">assemblies</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">assemblies</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="insert_parts_on_backbones"><a class="viewcode-back" href="../../../ref.html#dnacauldron.utils.insert_parts_on_backbones">[docs]</a><span class="k">def</span> <span class="nf">insert_parts_on_backbones</span><span class="p">(</span><span class="n">part_records</span><span class="p">,</span> <span class="n">backbone_records</span><span class="p">,</span>
-                              <span class="n">enzyme</span><span class="o">=</span><span class="s1">&#39;autodetect&#39;</span><span class="p">,</span>
-                              <span class="n">min_backbone_length</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
-                              <span class="n">process_parts_with_backbone</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                              <span class="n">default_backbone_choice</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="insert_parts_on_backbones"><a class="viewcode-back" href="../../../ref/utils.html#dnacauldron.utils.insert_parts_on_backbones">[docs]</a><span class="k">def</span> <span class="nf">insert_parts_on_backbones</span><span class="p">(</span>
+    <span class="n">part_records</span><span class="p">,</span>
+    <span class="n">backbone_records</span><span class="p">,</span>
+    <span class="n">enzyme</span><span class="o">=</span><span class="s2">&quot;autodetect&quot;</span><span class="p">,</span>
+    <span class="n">min_backbone_length</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">process_parts_with_backbone</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">default_backbone_choice</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Autodetect the right backbone for each Golden Gate part.</span>
 
 <span class="sd">    This method is meant to process a batch of genbank files, some of</span>
@@ -432,15 +480,18 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="n">enzyme</span> <span class="o">==</span> <span class="s1">&#39;autodetect&#39;</span><span class="p">:</span>
-        <span class="n">enzyme</span> <span class="o">=</span> <span class="n">autoselect_enzyme</span><span class="p">(</span><span class="n">part_records</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;BsmBI&#39;</span><span class="p">,</span> <span class="s1">&#39;BsaI&#39;</span><span class="p">,</span> <span class="s1">&#39;BbsI&#39;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">enzyme</span> <span class="o">==</span> <span class="s2">&quot;autodetect&quot;</span><span class="p">:</span>
+        <span class="n">enzyme</span> <span class="o">=</span> <span class="n">autoselect_enzyme</span><span class="p">(</span>
+            <span class="n">part_records</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;BsmBI&quot;</span><span class="p">,</span> <span class="s2">&quot;BsaI&quot;</span><span class="p">,</span> <span class="s2">&quot;BbsI&quot;</span><span class="p">,</span> <span class="s2">&quot;SapI&quot;</span><span class="p">,</span> <span class="s2">&quot;AarI&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
 
     <span class="n">overhangs_dict</span> <span class="o">=</span> <span class="n">_records_to_overhangs_dict</span><span class="p">(</span><span class="n">backbone_records</span><span class="p">)</span>
     <span class="n">backbone_choices</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">part_records</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">has_backbone</span> <span class="o">=</span> <span class="n">record_contains_backbone</span><span class="p">(</span>
-                <span class="n">record</span><span class="p">,</span> <span class="n">enzyme</span><span class="o">=</span><span class="n">enzyme</span><span class="p">,</span> <span class="n">min_backbone_length</span><span class="o">=</span><span class="n">min_backbone_length</span><span class="p">)</span>
+                <span class="n">record</span><span class="p">,</span> <span class="n">enzyme</span><span class="o">=</span><span class="n">enzyme</span><span class="p">,</span> <span class="n">min_backbone_length</span><span class="o">=</span><span class="n">min_backbone_length</span>
+            <span class="p">)</span>
             <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">process_parts_with_backbone</span><span class="p">)</span> <span class="ow">and</span> <span class="n">has_backbone</span><span class="p">:</span>
                 <span class="n">choice</span> <span class="o">=</span> <span class="n">BackboneChoice</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">already_on_backbone</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -448,12 +499,16 @@
                 <span class="k">if</span> <span class="n">overhangs</span> <span class="ow">in</span> <span class="n">overhangs_dict</span><span class="p">:</span>
                     <span class="n">backbone_record</span> <span class="o">=</span> <span class="n">overhangs_dict</span><span class="p">[</span><span class="n">overhangs</span><span class="p">]</span>
                     <span class="n">final_record</span> <span class="o">=</span> <span class="n">swap_donor_vector_part</span><span class="p">(</span>
-                        <span class="n">donor_vector</span><span class="o">=</span><span class="n">backbone_record</span><span class="p">,</span> <span class="n">insert</span><span class="o">=</span><span class="n">record</span><span class="p">,</span>
-                        <span class="n">enzyme</span><span class="o">=</span><span class="n">enzyme</span><span class="p">)</span>
-                    <span class="n">choice</span> <span class="o">=</span> <span class="n">BackboneChoice</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="n">record</span><span class="p">,</span>
-                                            <span class="n">already_on_backbone</span><span class="o">=</span><span class="n">has_backbone</span><span class="p">,</span>
-                                            <span class="n">backbone_record</span><span class="o">=</span><span class="n">backbone_record</span><span class="p">,</span>
-                                            <span class="n">final_record</span><span class="o">=</span><span class="n">final_record</span><span class="p">)</span>
+                        <span class="n">donor_vector</span><span class="o">=</span><span class="n">backbone_record</span><span class="p">,</span>
+                        <span class="n">insert</span><span class="o">=</span><span class="n">record</span><span class="p">,</span>
+                        <span class="n">enzyme</span><span class="o">=</span><span class="n">enzyme</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="n">choice</span> <span class="o">=</span> <span class="n">BackboneChoice</span><span class="p">(</span>
+                        <span class="n">record</span><span class="o">=</span><span class="n">record</span><span class="p">,</span>
+                        <span class="n">already_on_backbone</span><span class="o">=</span><span class="n">has_backbone</span><span class="p">,</span>
+                        <span class="n">backbone_record</span><span class="o">=</span><span class="n">backbone_record</span><span class="p">,</span>
+                        <span class="n">final_record</span><span class="o">=</span><span class="n">final_record</span><span class="p">,</span>
+                    <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">default_backbone_choice</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="n">choice</span> <span class="o">=</span> <span class="n">default_backbone_choice</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
@@ -461,77 +516,29 @@
                         <span class="n">choice</span> <span class="o">=</span> <span class="n">BackboneChoice</span><span class="p">(</span>
                             <span class="n">record</span><span class="o">=</span><span class="n">record</span><span class="p">,</span>
                             <span class="n">already_on_backbone</span><span class="o">=</span><span class="n">has_backbone</span><span class="p">,</span>
-                            <span class="n">backbone_record</span><span class="o">=</span><span class="s1">&#39;none found&#39;</span><span class="p">,</span>
-                            <span class="n">final_record</span><span class="o">=</span><span class="kc">None</span>
+                            <span class="n">backbone_record</span><span class="o">=</span><span class="s2">&quot;none found&quot;</span><span class="p">,</span>
+                            <span class="n">final_record</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                         <span class="p">)</span>
-        <span class="k">except</span> <span class="n">AssemblyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">except</span> <span class="n">AssemblyMixError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">choice</span> <span class="o">=</span> <span class="n">BackboneChoice</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="n">e</span><span class="p">)</span>
         <span class="n">backbone_choices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">choice</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">backbone_choices</span></div>
 </pre></div>
 
-           </div>
-           <div class="articleComments">
-            
-           </div>
           </div>
-          <footer>
-  
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2017, Edinburgh Genome Foundry.
-
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
-
-        </div>
-      </div>
-
-    </section>
-
-  </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'0.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
-      });
-  </script>
-   
-
-</body>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2020, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
 </html>

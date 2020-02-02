@@ -1,173 +1,195 @@
 
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Index &mdash; DnaCauldron 0.1.0 documentation</title>
-  
-
-  
-  
-  
-  
-
-  
-
-  
-  
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Index</title>
     
+      <link rel="stylesheet" href="_static/pygments.css">
+      <link rel="stylesheet" href="_static/theme.css">
+      <link rel="stylesheet" href="_static/sphinx_press_theme.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
 
-  
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
 
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="_static/css/main.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="#"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="DnaCauldron 0.1.0 documentation" href="index.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
-</head>
-
-<body class="wy-body-for-nav" role="document">
-
-   
-  <div class="wy-grid-for-nav">
-
+      
+      <script src="_static/theme-vendors.js"></script>
+      <script src="_static/theme.js" defer></script>
     
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
+  <link rel="index" title="Index" href="#" />
+  <link rel="search" title="Search" href="search.html" /> 
+  </head>
 
-          
-            <a href="index.html" class="icon icon-home"> DnaCauldron
-          
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="index.html" class="home-link">
+    
+      <img class="logo" src="_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
 
-          
-            
-            <img src="_static/html_logo.png" class="logo" />
-          
-          </a>
+  <div class="links">
+    <navlinks class="can-hide">
 
-          
-            
-            
-              <div class="version">
-                0.1.0
-              </div>
-            
-          
+  
+    <div class="nav-item">
+      <a href="index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
 
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
 
-          
-        </div>
 
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="index.html">DNA Cauldron Documentation</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="ref.html">DNA Cauldron Reference manual</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Examples</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="examples/single_assembly.html">Simple single assembly</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/full_report.html">Cloning simulation with full report</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/backbone_autoselection.html">Backbone Autoselection</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/combinatorial_assembly.html">Combinatorial Assembly</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/connector_selection.html">Connector autoselection</a></li>
-</ul>
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
 
-            
-          
-        </div>
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
       </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">DnaCauldron</a>
-        
-      </nav>
-
-
-      
-      <div class="wy-nav-content">
-        <div class="rst-content">
+        <sidebar @toggle-sidebar="toggleSidebar">
           
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="index.html">Docs</a> &raquo;</li>
-        
-      <li>Index</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
+          <navlinks>
             
-        
-      </li>
-    
-  </ul>
 
   
-  <hr/>
+    <div class="nav-item">
+      <a href="index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="index.html#more-biology-software">Reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="ref/user_classes.html" class="reference internal ">Useful classes for scripts</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="ref/utils.html" class="reference internal ">Useful methods built on top of DNA Cauldron</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="ref/biotools.html" class="reference internal ">Biotools module</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="ref/core_classes.html" class="reference internal ">Core classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="ref/spreadsheet_reference.html" class="reference internal ">Spreadsheet Reference</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+    <li>Index</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
             
 
 <h1 id="index">Index</h1>
@@ -179,9 +201,9 @@
  | <a href="#D"><strong>D</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#L"><strong>L</strong></a>
- | <a href="#N"><strong>N</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
@@ -192,19 +214,37 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.reports.plots.abreviate_string">abreviate_string() (in module dnacauldron.reports.plots)</a>
+      <li><a href="ref/user_classes.html#dnacauldron.SequenceRepository.add_record">add_record() (dnacauldron.SequenceRepository method)</a>
 </li>
-      <li><a href="ref.html#dnacauldron.StickyEndsSeq.StickyEndsSeqRecord.assemble">assemble() (dnacauldron.StickyEndsSeq.StickyEndsSeqRecord static method)</a>
+      <li><a href="ref/user_classes.html#dnacauldron.SequenceRepository.add_records">add_records() (dnacauldron.SequenceRepository method)</a>
 </li>
-      <li><a href="ref.html#dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix">AssemblyMix (class in dnacauldron.AssemblyMix.AssemblyMix)</a>
+      <li><a href="ref/core_classes.html#dnacauldron.Fragment.StickyEndFragment.annotate_connector">annotate_connector() (dnacauldron.Fragment.StickyEndFragment method)</a>
 </li>
+      <li><a href="ref/biotools.html#dnacauldron.biotools.record_operations.annotate_record">annotate_record() (in module dnacauldron.biotools.record_operations)</a>
+</li>
+      <li><a href="ref/core_classes.html#dnacauldron.AssemblyMix.StickyEndAssemblyMix.assemble">assemble() (dnacauldron.AssemblyMix.StickyEndAssemblyMix static method)</a>
+
+      <ul>
+        <li><a href="ref/core_classes.html#dnacauldron.Fragment.HomologousFragment.assemble">(dnacauldron.Fragment.HomologousFragment static method)</a>
+</li>
+        <li><a href="ref/core_classes.html#dnacauldron.Fragment.StickyEndFragment.assemble">(dnacauldron.Fragment.StickyEndFragment static method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.reports.plots.AssemblyTranslator">AssemblyTranslator (class in dnacauldron.reports.plots)</a>
+      <li><a href="ref/core_classes.html#dnacauldron.Fragment.HomologousFragment.assemble_with">assemble_with() (dnacauldron.Fragment.HomologousFragment method)</a>
 </li>
-      <li><a href="ref.html#dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix.autoselect_connectors">autoselect_connectors() (dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix method)</a>
+      <li><a href="ref/core_classes.html#dnacauldron.AssemblyMix.AssemblyMix">AssemblyMix (class in dnacauldron.AssemblyMix)</a>
 </li>
-      <li><a href="ref.html#dnacauldron.utils.autoselect_enzyme">autoselect_enzyme() (in module dnacauldron.utils)</a>
+      <li><a href="ref/user_classes.html#dnacauldron.AssemblyPlan">AssemblyPlan (class in dnacauldron)</a>
+</li>
+      <li><a href="ref/user_classes.html#dnacauldron.AssemblyPlan.AssemblyPlanSimulation">AssemblyPlanSimulation (class in dnacauldron.AssemblyPlan)</a>
+</li>
+      <li><a href="ref/user_classes.html#dnacauldron.AssemblyReportWriter">AssemblyReportWriter (class in dnacauldron)</a>
+</li>
+      <li><a href="ref/user_classes.html#dnacauldron.Assembly.AssemblySimulation">AssemblySimulation (class in dnacauldron.Assembly)</a>
+</li>
+      <li><a href="ref/biotools.html#dnacauldron.biotools.autoselect_enzyme.autoselect_enzyme">autoselect_enzyme() (in module dnacauldron.biotools.autoselect_enzyme)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -212,7 +252,13 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.utils.insert_parts_on_backbones.BackboneChoice">BackboneChoice (class in dnacauldron.utils.insert_parts_on_backbones)</a>
+      <li><a href="ref/utils.html#dnacauldron.utils.BackboneChoice">BackboneChoice (class in dnacauldron.utils)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/user_classes.html#dnacauldron.BASICAssembly">BASICAssembly (class in dnacauldron)</a>
+</li>
+      <li><a href="ref/user_classes.html#dnacauldron.BioBrickStandardAssembly">BioBrickStandardAssembly (class in dnacauldron)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -220,23 +266,39 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.StickyEndsSeq.StickyEndsSeqRecord.circularized">circularized() (dnacauldron.StickyEndsSeq.StickyEndsSeqRecord method)</a>
+      <li><a href="ref/user_classes.html#dnacauldron.HomologyChecker.check_homology">check_homology() (dnacauldron.HomologyChecker method)</a>
 </li>
-      <li><a href="ref.html#dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix.compute_circular_assemblies">compute_circular_assemblies() (dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix method)</a>
+      <li><a href="ref/core_classes.html#dnacauldron.Fragment.HomologousFragment.circularized">circularized() (dnacauldron.Fragment.HomologousFragment method)</a>
+
+      <ul>
+        <li><a href="ref/core_classes.html#dnacauldron.Fragment.StickyEndFragment.circularized">(dnacauldron.Fragment.StickyEndFragment method)</a>
 </li>
-      <li><a href="ref.html#dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix.compute_circular_fragments_sets">compute_circular_fragments_sets() (dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix method)</a>
+      </ul></li>
+      <li><a href="ref/biotools.html#dnacauldron.biotools.record_operations.complement">complement() (in module dnacauldron.biotools.record_operations)</a>
 </li>
-      <li><a href="ref.html#dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix.compute_connections_graph">compute_connections_graph() (dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix method)</a>
+      <li><a href="ref/user_classes.html#dnacauldron.Assembly.AssemblySimulation.compute_all_construct_data_dicts">compute_all_construct_data_dicts() (dnacauldron.Assembly.AssemblySimulation method)</a>
+
+      <ul>
+        <li><a href="ref/user_classes.html#dnacauldron.AssemblyPlan.AssemblyPlanSimulation.compute_all_construct_data_dicts">(dnacauldron.AssemblyPlan.AssemblyPlanSimulation method)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/user_classes.html#dnacauldron.Assembly.AssemblySimulation.compute_construct_data_dict">compute_construct_data_dict() (dnacauldron.Assembly.AssemblySimulation method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix.compute_linear_assemblies">compute_linear_assemblies() (dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix method)</a>
+      <li><a href="ref/core_classes.html#dnacauldron.AssemblyMix.RestrictionLigationMix.compute_digest">compute_digest() (dnacauldron.AssemblyMix.RestrictionLigationMix method)</a>
 </li>
-      <li><a href="ref.html#dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix.compute_random_circular_fragments_sets">compute_random_circular_fragments_sets() (dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix method)</a>
+      <li><a href="ref/core_classes.html#dnacauldron.AssemblyMix.RestrictionLigationMix.compute_fragments">compute_fragments() (dnacauldron.AssemblyMix.RestrictionLigationMix method)</a>
 </li>
-      <li><a href="ref.html#dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix.compute_reverse_fragments">compute_reverse_fragments() (dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix method)</a>
+      <li><a href="ref/user_classes.html#dnacauldron.AssemblyPlan.AssemblyPlanSimulation.compute_stats">compute_stats() (dnacauldron.AssemblyPlan.AssemblyPlanSimulation method)</a>
 </li>
-      <li><a href="ref.html#dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix.compute_slots">compute_slots() (dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix method)</a>
+      <li><a href="ref/user_classes.html#dnacauldron.Assembly.AssemblySimulation.compute_summary_dataframe">compute_summary_dataframe() (dnacauldron.Assembly.AssemblySimulation method)</a>
+</li>
+      <li><a href="ref/user_classes.html#dnacauldron.HomologyChecker.compute_tm">compute_tm() (dnacauldron.HomologyChecker method)</a>
+</li>
+      <li><a href="ref/user_classes.html#dnacauldron.SequenceRepository.contains_record">contains_record() (dnacauldron.SequenceRepository method)</a>
+</li>
+      <li><a href="ref/biotools.html#dnacauldron.biotools.record_operations.crop_record_with_saddling_features">crop_record_with_saddling_features() (in module dnacauldron.biotools.record_operations)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -244,17 +306,15 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#module-dnacauldron.AssemblyMix.AssemblyMix">dnacauldron.AssemblyMix.AssemblyMix (module)</a>
+      <li><a href="ref/biotools.html#module-dnacauldron.biotools.autoselect_enzyme">dnacauldron.biotools.autoselect_enzyme (module)</a>
 </li>
-      <li><a href="ref.html#module-dnacauldron.AssemblyMix.BASICLigationMix">dnacauldron.AssemblyMix.BASICLigationMix (module)</a>
+      <li><a href="ref/biotools.html#module-dnacauldron.biotools.record_operations">dnacauldron.biotools.record_operations (module)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#module-dnacauldron.AssemblyMix.Filter">dnacauldron.AssemblyMix.Filter (module)</a>
+      <li><a href="ref/biotools.html#module-dnacauldron.biotools.sequence_io">dnacauldron.biotools.sequence_io (module)</a>
 </li>
-      <li><a href="ref.html#module-dnacauldron.reports.plots">dnacauldron.reports.plots (module)</a>
-</li>
-      <li><a href="ref.html#module-dnacauldron.reports.reports">dnacauldron.reports.reports (module)</a>
+      <li><a href="ref/utils.html#module-dnacauldron.utils">dnacauldron.utils (module)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -262,13 +322,15 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix.filtered_connections_graph">filtered_connections_graph (dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix attribute)</a>
+      <li><a href="ref/user_classes.html#dnacauldron.HomologyChecker.find_end_homologies">find_end_homologies() (dnacauldron.HomologyChecker method)</a>
+</li>
+      <li><a href="ref/user_classes.html#dnacauldron.Assembly.AssemblySimulation.fragment_part">fragment_part() (dnacauldron.Assembly.AssemblySimulation static method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix.filtered_fragments">filtered_fragments (dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix attribute)</a>
+      <li><a href="ref/core_classes.html#dnacauldron.Fragment.HomologousFragment.from_biopython_record">from_biopython_record() (dnacauldron.Fragment.HomologousFragment static method)</a>
 </li>
-      <li><a href="ref.html#dnacauldron.reports.reports.full_assembly_report">full_assembly_report() (in module dnacauldron.reports.reports)</a>
+      <li><a href="ref/user_classes.html#dnacauldron.AssemblyPlan.from_spreadsheet">from_spreadsheet() (dnacauldron.AssemblyPlan static method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -276,11 +338,29 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.AssemblyMix.Filter.TextSearchFilter.gather_all_feature_text">gather_all_feature_text() (dnacauldron.AssemblyMix.Filter.TextSearchFilter static method)</a>
+      <li><a href="ref/user_classes.html#dnacauldron.SequenceRepository.get_part_names_by_collection">get_part_names_by_collection() (dnacauldron.SequenceRepository method)</a>
+</li>
+      <li><a href="ref/user_classes.html#dnacauldron.SequenceRepository.get_record">get_record() (dnacauldron.SequenceRepository method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.AssemblyMix.Filter.TextSearchFilter.gather_all_texts">gather_all_texts() (dnacauldron.AssemblyMix.Filter.TextSearchFilter method)</a>
+      <li><a href="ref/user_classes.html#dnacauldron.SequenceRepository.get_records">get_records() (dnacauldron.SequenceRepository method)</a>
+</li>
+      <li><a href="ref/user_classes.html#dnacauldron.GibsonAssembly">GibsonAssembly (class in dnacauldron)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/core_classes.html#dnacauldron.AssemblyMix.HomologousAssemblyMix">HomologousAssemblyMix (class in dnacauldron.AssemblyMix)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/core_classes.html#dnacauldron.Fragment.HomologousFragment">HomologousFragment (class in dnacauldron.Fragment)</a>
+</li>
+      <li><a href="ref/user_classes.html#dnacauldron.HomologyChecker">HomologyChecker (class in dnacauldron)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -288,11 +368,13 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix.initialize">initialize() (dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix method)</a>
+      <li><a href="ref/user_classes.html#dnacauldron.SequenceRepository.import_records">import_records() (dnacauldron.SequenceRepository method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.utils.insert_parts_on_backbones">insert_parts_on_backbones() (in module dnacauldron.utils)</a>
+      <li><a href="ref/core_classes.html#dnacauldron.AssemblyMix.AssemblyMix.initialize">initialize() (dnacauldron.AssemblyMix.AssemblyMix method)</a>
+</li>
+      <li><a href="ref/utils.html#dnacauldron.utils.insert_parts_on_backbones">insert_parts_on_backbones() (in module dnacauldron.utils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -300,21 +382,25 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.utils.insert_parts_on_backbones.BackboneChoice.list_to_infos_spreadsheet">list_to_infos_spreadsheet() (dnacauldron.utils.insert_parts_on_backbones.BackboneChoice static method)</a>
+      <li><a href="ref/user_classes.html#dnacauldron.LigaseCyclingReactionAssembly">LigaseCyclingReactionAssembly (class in dnacauldron)</a>
 </li>
-  </ul></td>
-</tr></table>
-
-<h2 id="N">N</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.reports.reports.name_fragment">name_fragment() (in module dnacauldron.reports.reports)</a>
+      <li><a href="ref/core_classes.html#dnacauldron.AssemblyMix.LigaseCyclingReactionMix">LigaseCyclingReactionMix (in module dnacauldron.AssemblyMix)</a>
+</li>
+      <li><a href="ref/user_classes.html#dnacauldron.Assembly.AssemblySimulation.list_all_parts_used">list_all_parts_used() (dnacauldron.Assembly.AssemblySimulation method)</a>
+</li>
+      <li><a href="ref/utils.html#dnacauldron.utils.list_digestion_overhangs">list_digestion_overhangs() (in module dnacauldron.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.AssemblyMix.Filter.NoPatternFilter">NoPatternFilter (class in dnacauldron.AssemblyMix.Filter)</a>
+      <li><a href="ref/utils.html#dnacauldron.utils.list_overhangs_from_record_annotations">list_overhangs_from_record_annotations() (in module dnacauldron.utils)</a>
 </li>
-      <li><a href="ref.html#dnacauldron.AssemblyMix.Filter.NoRestrictionSiteFilter">NoRestrictionSiteFilter (class in dnacauldron.AssemblyMix.Filter)</a>
+      <li><a href="ref/utils.html#dnacauldron.utils.BackboneChoice.list_to_infos_spreadsheet">list_to_infos_spreadsheet() (dnacauldron.utils.BackboneChoice static method)</a>
+</li>
+      <li><a href="ref/biotools.html#dnacauldron.biotools.sequence_io.load_record">load_record() (in module dnacauldron.biotools.sequence_io)</a>
+</li>
+      <li><a href="ref/biotools.html#dnacauldron.biotools.sequence_io.load_records_from_file">load_records_from_file() (in module dnacauldron.biotools.sequence_io)</a>
+</li>
+      <li><a href="ref/biotools.html#dnacauldron.biotools.sequence_io.load_records_from_files">load_records_from_files() (in module dnacauldron.biotools.sequence_io)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -322,11 +408,7 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.reports.plots.plot_cuts">plot_cuts() (in module dnacauldron.reports.plots)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.reports.plots.plot_slots_graph">plot_slots_graph() (in module dnacauldron.reports.plots)</a>
+      <li><a href="ref/user_classes.html#dnacauldron.HomologyChecker.parameters_as_string">parameters_as_string() (dnacauldron.HomologyChecker method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -334,7 +416,13 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.utils.record_contains_backbone">record_contains_backbone() (in module dnacauldron.utils)</a>
+      <li><a href="ref/utils.html#dnacauldron.utils.record_contains_backbone">record_contains_backbone() (in module dnacauldron.utils)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/core_classes.html#dnacauldron.AssemblyMix.RestrictionLigationMix">RestrictionLigationMix (class in dnacauldron.AssemblyMix)</a>
+</li>
+      <li><a href="ref/biotools.html#dnacauldron.biotools.record_operations.reverse_complement">reverse_complement() (in module dnacauldron.biotools.record_operations)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -342,17 +430,37 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.utils.single_assembly">single_assembly() (in module dnacauldron.utils)</a>
+      <li><a href="ref/biotools.html#dnacauldron.biotools.record_operations.sequence_to_biopython_record">sequence_to_biopython_record() (in module dnacauldron.biotools.record_operations)</a>
 </li>
-      <li><a href="ref.html#dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix.slots_graph">slots_graph() (dnacauldron.AssemblyMix.AssemblyMix.AssemblyMix method)</a>
+      <li><a href="ref/user_classes.html#dnacauldron.SequenceRepository">SequenceRepository (class in dnacauldron)</a>
 </li>
+      <li><a href="ref/biotools.html#dnacauldron.biotools.record_operations.set_record_topology">set_record_topology() (in module dnacauldron.biotools.record_operations)</a>
+</li>
+      <li><a href="ref/user_classes.html#dnacauldron.AssemblyPlan.simulate">simulate() (dnacauldron.AssemblyPlan method)</a>
+
+      <ul>
+        <li><a href="ref/user_classes.html#dnacauldron.BASICAssembly.simulate">(dnacauldron.BASICAssembly method)</a>
+</li>
+        <li><a href="ref/user_classes.html#dnacauldron.BioBrickStandardAssembly.simulate">(dnacauldron.BioBrickStandardAssembly method)</a>
+</li>
+        <li><a href="ref/user_classes.html#dnacauldron.GibsonAssembly.simulate">(dnacauldron.GibsonAssembly method)</a>
+</li>
+        <li><a href="ref/user_classes.html#dnacauldron.LigaseCyclingReactionAssembly.simulate">(dnacauldron.LigaseCyclingReactionAssembly method)</a>
+</li>
+        <li><a href="ref/user_classes.html#dnacauldron.Type2sRestrictionAssembly.simulate">(dnacauldron.Type2sRestrictionAssembly method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.StickyEndsSeq.StickyEnd">StickyEnd (class in dnacauldron.StickyEndsSeq)</a>
+      <li><a href="ref/core_classes.html#dnacauldron.AssemblyMix.StickyEndAssemblyMix">StickyEndAssemblyMix (class in dnacauldron.AssemblyMix)</a>
 </li>
-      <li><a href="ref.html#dnacauldron.StickyEndsSeq.StickyEndsSeq">StickyEndsSeq (class in dnacauldron.StickyEndsSeq)</a>
+      <li><a href="ref/core_classes.html#dnacauldron.Fragment.StickyEndFragment">StickyEndFragment (class in dnacauldron.Fragment)</a>
 </li>
-      <li><a href="ref.html#dnacauldron.StickyEndsSeq.StickyEndsSeqRecord">StickyEndsSeqRecord (class in dnacauldron.StickyEndsSeq)</a>
+      <li><a href="ref/biotools.html#dnacauldron.biotools.sequence_io.string_to_record">string_to_record() (in module dnacauldron.biotools.sequence_io)</a>
+</li>
+      <li><a href="ref/utils.html#dnacauldron.utils.substitute_overhangs">substitute_overhangs() (in module dnacauldron.utils)</a>
+</li>
+      <li><a href="ref/utils.html#dnacauldron.utils.swap_donor_vector_part">swap_donor_vector_part() (in module dnacauldron.utils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -360,11 +468,17 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.AssemblyMix.Filter.TextSearchFilter">TextSearchFilter (class in dnacauldron.AssemblyMix.Filter)</a>
+      <li><a href="ref/core_classes.html#dnacauldron.Fragment.StickyEndFragment.text_representation_in_plots">text_representation_in_plots() (dnacauldron.Fragment.StickyEndFragment method)</a>
+</li>
+      <li><a href="ref/user_classes.html#dnacauldron.AssemblyPlan.to_dataframe">to_dataframe() (dnacauldron.AssemblyPlan method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.utils.insert_parts_on_backbones.BackboneChoice.to_dict">to_dict() (dnacauldron.utils.insert_parts_on_backbones.BackboneChoice method)</a>
+      <li><a href="ref/utils.html#dnacauldron.utils.BackboneChoice.to_dict">to_dict() (dnacauldron.utils.BackboneChoice method)</a>
+</li>
+      <li><a href="ref/core_classes.html#dnacauldron.Fragment.StickyEndFragment.to_standard_string">to_standard_string() (dnacauldron.Fragment.StickyEndFragment method)</a>
+</li>
+      <li><a href="ref/user_classes.html#dnacauldron.Type2sRestrictionAssembly">Type2sRestrictionAssembly (class in dnacauldron)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -372,78 +486,50 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.StickyEndsSeq.StickyEndsSeqRecord.will_clip_in_this_order_with">will_clip_in_this_order_with() (dnacauldron.StickyEndsSeq.StickyEndsSeqRecord method)</a>
+      <li><a href="ref/core_classes.html#dnacauldron.AssemblyMix.HomologousAssemblyMix.will_clip_in_this_order">will_clip_in_this_order() (dnacauldron.AssemblyMix.HomologousAssemblyMix method)</a>
+
+      <ul>
+        <li><a href="ref/core_classes.html#dnacauldron.AssemblyMix.StickyEndAssemblyMix.will_clip_in_this_order">(dnacauldron.AssemblyMix.StickyEndAssemblyMix static method)</a>
 </li>
+      </ul></li>
+      <li><a href="ref/core_classes.html#dnacauldron.Fragment.HomologousFragment.will_clip_in_this_order_with">will_clip_in_this_order_with() (dnacauldron.Fragment.HomologousFragment method)</a>
+
+      <ul>
+        <li><a href="ref/core_classes.html#dnacauldron.Fragment.StickyEndFragment.will_clip_in_this_order_with">(dnacauldron.Fragment.StickyEndFragment method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="ref.html#dnacauldron.utils.insert_parts_on_backbones.BackboneChoice.write_final_records">write_final_records() (dnacauldron.utils.insert_parts_on_backbones.BackboneChoice static method)</a>
+      <li><a href="ref/utils.html#dnacauldron.utils.BackboneChoice.write_final_records">write_final_records() (dnacauldron.utils.BackboneChoice static method)</a>
 </li>
+      <li><a href="ref/biotools.html#dnacauldron.biotools.sequence_io.write_record">write_record() (in module dnacauldron.biotools.sequence_io)</a>
+</li>
+      <li><a href="ref/user_classes.html#dnacauldron.Assembly.AssemblySimulation.write_report">write_report() (dnacauldron.Assembly.AssemblySimulation method)</a>
+
+      <ul>
+        <li><a href="ref/user_classes.html#dnacauldron.AssemblyPlan.AssemblyPlanSimulation.write_report">(dnacauldron.AssemblyPlan.AssemblyPlanSimulation method)</a>
+</li>
+        <li><a href="ref/user_classes.html#dnacauldron.AssemblyReportWriter.write_report">(dnacauldron.AssemblyReportWriter method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 
 
-           </div>
-           <div class="articleComments">
-            
-           </div>
           </div>
-          <footer>
-  
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2017, Edinburgh Genome Foundry.
-
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
-
-        </div>
-      </div>
-
-    </section>
-
-  </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'0.1.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
-      });
-  </script>
-   
-
-</body>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2020, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
 </html>

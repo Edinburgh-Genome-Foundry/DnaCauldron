@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Useful methods built on top of DNA Cauldron</title>
+    
+      <link rel="stylesheet" href="../_static/pygments.css">
+      <link rel="stylesheet" href="../_static/theme.css">
+      <link rel="stylesheet" href="../_static/sphinx_press_theme.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+
+      
+      <script src="../_static/theme-vendors.js"></script>
+      <script src="../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="next" title="Biotools module" href="biotools.html" />
+  <link rel="prev" title="Useful classes for scripts" href="user_classes.html" /> 
+  </head>
+
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../index.html" class="home-link">
+    
+      <img class="logo" src="../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link  router-link-active">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link  router-link-active">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#more-biology-software">Reference</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 "><a href="user_classes.html" class="reference internal ">Useful classes for scripts</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 current"><a href="#" class="reference internal current">Useful methods built on top of DNA Cauldron</a>
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#module-dnacauldron.utils" class="reference internal">Useful methods built on top of DNA Cauldron</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="biotools.html" class="reference internal ">Biotools module</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="core_classes.html" class="reference internal ">Core classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="spreadsheet_reference.html" class="reference internal ">Spreadsheet Reference</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+    <li>Useful methods built on top of DNA Cauldron</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="user_classes.html"
+       title="previous chapter">← Useful classes for scripts</a>
+  </li>
+  <li class="next">
+    <a href="biotools.html"
+       title="next chapter">Biotools module →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <div class="section" id="module-dnacauldron.utils">
+<span id="useful-methods-built-on-top-of-dna-cauldron"></span><h1>Useful methods built on top of DNA Cauldron<a class="headerlink" href="#module-dnacauldron.utils" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="dnacauldron.utils.list_overhangs_from_record_annotations">
+<code class="sig-prename descclassname">dnacauldron.utils.</code><code class="sig-name descname">list_overhangs_from_record_annotations</code><span class="sig-paren">(</span><em class="sig-param">rec</em>, <em class="sig-param">with_locations=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/utils/utils.html#list_overhangs_from_record_annotations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.utils.list_overhangs_from_record_annotations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a least of the (probable) overhangs used building the construct</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnacauldron.utils.list_digestion_overhangs">
+<code class="sig-prename descclassname">dnacauldron.utils.</code><code class="sig-name descname">list_digestion_overhangs</code><span class="sig-paren">(</span><em class="sig-param">records</em>, <em class="sig-param">enzyme='auto'</em>, <em class="sig-param">parts_only=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/utils/utils.html#list_digestion_overhangs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.utils.list_digestion_overhangs" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all overhangs created by restriction in the provided records.</p>
+<p>Warning: only overhangs on non-reversed fragments are returned, not
+their reverse-complement.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>records</strong></p>
+<blockquote>
+<div><p>List of records</p>
+</div></blockquote>
+<p><strong>enzyme</strong></p>
+<blockquote>
+<div><p>Either ‘BsmBI’, ‘BsaI’, etc. or just “auto” for automatic selection.</p>
+</div></blockquote>
+<p><strong>parts_only</strong></p>
+<blockquote>
+<div><p>If true, overhangs created by restriction which are not on a part
+(so for instance inside a backbone) will be ignored.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnacauldron.utils.substitute_overhangs">
+<code class="sig-prename descclassname">dnacauldron.utils.</code><code class="sig-name descname">substitute_overhangs</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">substitutions</em>, <em class="sig-param">enzyme='auto'</em>, <em class="sig-param">return_linear_parts=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/utils/utils.html#substitute_overhangs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.utils.substitute_overhangs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace the record’s subsequence that corresponds to overhangs.</p>
+<p>This is practical to change the position of a part in a Type-2S
+assembly standard</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>record</strong></p>
+<blockquote>
+<div><p>A Biopython record whose internal sequence needs to be replaced</p>
+</div></blockquote>
+<p><strong>substitutions</strong></p>
+<blockquote>
+<div><p>A dict {overhang: new_overhang} of which overhangs must be replaced</p>
+</div></blockquote>
+<p><strong>enzyme</strong></p>
+<blockquote>
+<div><p>Either ‘BsmBI’, ‘BsaI’, etc. or just “auto” for automatic selection.</p>
+</div></blockquote>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">new_record</span> <span class="o">=</span> <span class="n">replace_overhangs</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ATGC&#39;</span><span class="p">:</span> <span class="s1">&#39;CTCG&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnacauldron.utils.swap_donor_vector_part">
+<code class="sig-prename descclassname">dnacauldron.utils.</code><code class="sig-name descname">swap_donor_vector_part</code><span class="sig-paren">(</span><em class="sig-param">donor_vector</em>, <em class="sig-param">insert</em>, <em class="sig-param">enzyme</em>, <em class="sig-param">allow_overhangs_edits=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/utils/insert_parts_on_backbones.html#swap_donor_vector_part"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.utils.swap_donor_vector_part" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the records obtained by cloning inserts into a donor vector.</p>
+<p>Meant for Type-2S assembly standards only (Golden Gate, etc.)</p>
+<p>This method is meant to quickly go from a linearized sequence of a part
+to a circular vector (the part in its donor vector) by starting from
+an existing donor vector (with same overhangs) and swapping this vector’s
+part for the insert of interest.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>donor_vector</strong></p>
+<blockquote>
+<div><p>Biopython record of a donor vector. must have an insert producing a
+restriction-free fragment</p>
+</div></blockquote>
+<p><strong>insert</strong></p>
+<blockquote>
+<div><p>Biopython record of a plasmid or a linear DNA sequence containing an
+insert (i.e. a fragment that is cut out)</p>
+</div></blockquote>
+<p><strong>enzyme</strong></p>
+<blockquote>
+<div><p>The name of the enzyme to use e.g. ‘BsmBI’, ‘BsaI’, …</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnacauldron.utils.insert_parts_on_backbones">
+<code class="sig-prename descclassname">dnacauldron.utils.</code><code class="sig-name descname">insert_parts_on_backbones</code><span class="sig-paren">(</span><em class="sig-param">part_records</em>, <em class="sig-param">backbone_records</em>, <em class="sig-param">enzyme='autodetect'</em>, <em class="sig-param">min_backbone_length=500</em>, <em class="sig-param">process_parts_with_backbone=False</em>, <em class="sig-param">default_backbone_choice=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/utils/insert_parts_on_backbones.html#insert_parts_on_backbones"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.utils.insert_parts_on_backbones" title="Permalink to this definition">¶</a></dt>
+<dd><p>Autodetect the right backbone for each Golden Gate part.</p>
+<p>This method is meant to process a batch of genbank files, some of
+which might represent a part on a backbone, and some of which
+represent simply a part (and enzyme-flanked overhangs) which needs
+to be complemented with the right backbone.</p>
+<p>It will return, for each part, whether it has already a backbone, and
+if not, which backbone was selected and what the final sequence is.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>part_records</strong></p>
+<blockquote>
+<div><p>List of genbanks of the parts to put on vectors.</p>
+</div></blockquote>
+<p><strong>backbone_vectors</strong></p>
+<blockquote>
+<div><p>Vectors to insert parts in, typically donor vectors for different
+positions of an assembly standard.</p>
+</div></blockquote>
+<p><strong>enzyme</strong></p>
+<blockquote>
+<div><p>Enzyme to use. Use autodetect for autodetection.</p>
+</div></blockquote>
+<p><strong>min_backbone_length</strong></p>
+<blockquote>
+<div><p>Minimal length of a backbone. Used to determine if a part is
+represented alone or with a backbone.</p>
+</div></blockquote>
+<p><strong>process_parts_with_backbone</strong></p>
+<blockquote>
+<div><p>If true, parts will be inserted in an autoselected backbone even
+when they already have a backbone (it will be replaced).</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="dnacauldron.utils.record_contains_backbone">
+<code class="sig-prename descclassname">dnacauldron.utils.</code><code class="sig-name descname">record_contains_backbone</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">enzyme='BsmBI'</em>, <em class="sig-param">min_backbone_length=500</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/utils/insert_parts_on_backbones.html#record_contains_backbone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.utils.record_contains_backbone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True iff it believes the given record contains a backbone.</p>
+<p>A backbone is detected if, when cutting the circularized record with the
+given enzyme, there is one fragment with no site (the insert), and the rest
+has a total size above the given <code class="docutils literal notranslate"><span class="pre">min_backbone_length</span></code>.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="dnacauldron.utils.BackboneChoice">
+<em class="property">class </em><code class="sig-prename descclassname">dnacauldron.utils.</code><code class="sig-name descname">BackboneChoice</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">already_on_backbone=None</em>, <em class="sig-param">error=None</em>, <em class="sig-param">backbone_record=None</em>, <em class="sig-param">final_record=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/utils/insert_parts_on_backbones.html#BackboneChoice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.utils.BackboneChoice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to represent the result of a backbone autoselection.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>record</strong></p>
+<blockquote>
+<div><p>Record that was analyzed, containing an insert, to be backbonized,
+and potentially an original backbone too.</p>
+</div></blockquote>
+<p><strong>already_on_backbone</strong></p>
+<blockquote>
+<div><p>Was a backbone detected in that record ?</p>
+</div></blockquote>
+<p><strong>error</strong></p>
+<p><strong>backbone_record</strong></p>
+<blockquote>
+<div><p>Record of the backone that was selected for this record among all
+provided choices.</p>
+</div></blockquote>
+<p><strong>final_record</strong></p>
+<blockquote>
+<div><p>Record featuring the original insert in the given <code class="docutils literal notranslate"><span class="pre">record</span></code> cloned into
+the auto-selected backbone.</p>
+</div></blockquote>
+</dd>
+</dl>
+<dl class="method">
+<dt id="dnacauldron.utils.BackboneChoice.list_to_infos_spreadsheet">
+<em class="property">static </em><code class="sig-name descname">list_to_infos_spreadsheet</code><span class="sig-paren">(</span><em class="sig-param">choices</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/utils/insert_parts_on_backbones.html#BackboneChoice.list_to_infos_spreadsheet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.utils.BackboneChoice.list_to_infos_spreadsheet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a pandas dataframe summarizing a list of BackboneChoices.</p>
+<p>The dataframe’s columns are ‘original_record’, ‘already_on_backbone’,
+‘detected_backbone’, ‘final_record_length’, ‘error’.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.utils.BackboneChoice.to_dict">
+<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/utils/insert_parts_on_backbones.html#BackboneChoice.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.utils.BackboneChoice.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the object as a dict. Used for dataframe/spreadsheet.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.utils.BackboneChoice.write_final_records">
+<em class="property">static </em><code class="sig-name descname">write_final_records</code><span class="sig-paren">(</span><em class="sig-param">choices</em>, <em class="sig-param">directory</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/utils/insert_parts_on_backbones.html#BackboneChoice.write_final_records"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.utils.BackboneChoice.write_final_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a list of BackboneChoices final records as genbanks.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="user_classes.html"
+       title="previous chapter">← Useful classes for scripts</a>
+  </li>
+  <li class="next">
+    <a href="biotools.html"
+       title="next chapter">Biotools module →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2020, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
+</html>

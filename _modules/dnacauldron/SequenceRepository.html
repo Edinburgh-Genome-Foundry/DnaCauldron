@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>dnacauldron.SequenceRepository</title>
+    
+      <link rel="stylesheet" href="../../_static/pygments.css">
+      <link rel="stylesheet" href="../../_static/theme.css">
+      <link rel="stylesheet" href="../../_static/sphinx_press_theme.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+
+      
+      <script src="../../_static/theme-vendors.js"></script>
+      <script src="../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../genindex.html" />
+  <link rel="search" title="Search" href="../../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../index.html" class="home-link">
+    
+      <img class="logo" src="../../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../index.html#more-biology-software">Reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../ref/user_classes.html" class="reference internal ">Useful classes for scripts</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../ref/utils.html" class="reference internal ">Useful methods built on top of DNA Cauldron</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../ref/biotools.html" class="reference internal ">Biotools module</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../ref/core_classes.html" class="reference internal ">Core classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../ref/spreadsheet_reference.html" class="reference internal ">Spreadsheet Reference</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../index.html">Module code</a> &raquo;</li>
+    
+    <li>dnacauldron.SequenceRepository</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <h1>Source code for dnacauldron.SequenceRepository</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.biotools</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">load_records_from_files</span><span class="p">,</span>
+    <span class="n">set_record_topology</span><span class="p">,</span>
+    <span class="n">sequence_to_biopython_record</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">NotInRepositoryError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts</span><span class="p">,</span> <span class="n">repository</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parts</span> <span class="o">=</span> <span class="n">parts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">repository</span> <span class="o">=</span> <span class="n">repository</span>
+        <span class="n">parts_list</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">150</span><span class="p">:</span>
+            <span class="n">parts_list</span> <span class="o">=</span> <span class="n">parts_list</span><span class="p">[:</span><span class="mi">150</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="s2">&quot;Part</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s2">&quot;s&quot;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">parts_list</span><span class="p">)</span>
+        <span class="n">repo_name</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot; in &quot;</span> <span class="o">+</span> <span class="n">repository</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="n">repository</span><span class="o">.</span><span class="n">name</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">parts</span> <span class="o">+</span> <span class="s2">&quot; not found&quot;</span> <span class="o">+</span> <span class="n">repo_name</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">RepositoryDuplicateError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts</span><span class="p">,</span> <span class="n">repository</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parts</span> <span class="o">=</span> <span class="n">parts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">repository</span> <span class="o">=</span> <span class="n">repository</span>
+        <span class="n">parts_list</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">150</span><span class="p">:</span>
+            <span class="n">parts_list</span> <span class="o">=</span> <span class="n">parts_list</span><span class="p">[:</span><span class="mi">150</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="s2">&quot;Part ID</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s2">&quot;s&quot;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">parts_list</span><span class="p">)</span>
+        <span class="n">repo_name</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot; in &quot;</span> <span class="o">+</span> <span class="n">repository</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="n">repository</span><span class="o">.</span><span class="n">name</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">parts</span> <span class="o">+</span> <span class="s2">&quot; duplicated in &quot;</span> <span class="o">+</span> <span class="n">repo_name</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+
+
+<div class="viewcode-block" id="SequenceRepository"><a class="viewcode-back" href="../../ref/user_classes.html#dnacauldron.SequenceRepository">[docs]</a><span class="k">class</span> <span class="nc">SequenceRepository</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Sequence repositories store and provide sequence records.</span>
+
+<span class="sd">    The records are organized into collections, for instance &quot;parts&quot; to host</span>
+<span class="sd">    parts, &quot;constructs&quot; for records created during assembly plan simulation,</span>
+<span class="sd">    or any other collection name like &quot;emma_connectors&quot; to store EMMA</span>
+<span class="sd">    connectors.</span>
+
+<span class="sd">    The suggested initialization of a sequence repository is:</span>
+
+<span class="sd">    &gt;&gt;&gt; repository = SequenceRepository()</span>
+<span class="sd">    &gt;&gt;&gt; repository.import_records(files=[&#39;part.fa&#39;, &#39;records.zip&#39;, etc.])</span>
+
+
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    collections</span>
+<span class="sd">      A dict {&#39;collection_name&#39;: {&#39;record_id&#39;: record, ...}, ...} giving for</span>
+<span class="sd">      each collection a dict of Biopython records.</span>
+<span class="sd">    </span>
+<span class="sd">    name</span>
+<span class="sd">      The name of the repository as it may appear in error messages and other</span>
+<span class="sd">      reports.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collections</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;repo&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collections</span> <span class="o">=</span> <span class="n">collections</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+<div class="viewcode-block" id="SequenceRepository.add_record"><a class="viewcode-back" href="../../ref/user_classes.html#dnacauldron.SequenceRepository.add_record">[docs]</a>    <span class="k">def</span> <span class="nf">add_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="s2">&quot;parts&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add one record to a collection, using its record.id as key.</span>
+<span class="sd">        </span>
+<span class="sd">        The collection is created if it doesn&#39;t exist.</span>
+
+<span class="sd">        The record can also be a pair (id, &quot;ATGTGCC...&quot;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+            <span class="n">_id</span><span class="p">,</span> <span class="n">_sequence</span> <span class="o">=</span> <span class="n">record</span>
+            <span class="n">record</span> <span class="o">=</span> <span class="n">sequence_to_biopython_record</span><span class="p">(</span><span class="n">_sequence</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">contains_record</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">RepositoryDuplicateError</span><span class="p">([</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">collection</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">collections</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="n">collection</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="n">collection</span><span class="p">][</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span></div>
+
+<div class="viewcode-block" id="SequenceRepository.add_records"><a class="viewcode-back" href="../../ref/user_classes.html#dnacauldron.SequenceRepository.add_records">[docs]</a>    <span class="k">def</span> <span class="nf">add_records</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">records</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="s2">&quot;parts&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">records</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_record</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="n">collection</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SequenceRepository.contains_record"><a class="viewcode-back" href="../../ref/user_classes.html#dnacauldron.SequenceRepository.contains_record">[docs]</a>    <span class="k">def</span> <span class="nf">contains_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return whether the repo has a record corresponding to the given id</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">collections</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">record_id</span> <span class="ow">in</span> <span class="n">collection</span> <span class="k">for</span> <span class="n">collection</span> <span class="ow">in</span> <span class="n">collections</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SequenceRepository.get_record"><a class="viewcode-back" href="../../ref/user_classes.html#dnacauldron.SequenceRepository.get_record">[docs]</a>    <span class="k">def</span> <span class="nf">get_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the record from the repository from its ID.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">collection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">record_id</span> <span class="ow">in</span> <span class="n">collection</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">collection</span><span class="p">[</span><span class="n">record_id</span><span class="p">]</span>
+        <span class="k">raise</span> <span class="n">NotInRepositoryError</span><span class="p">([</span><span class="n">record_id</span><span class="p">],</span> <span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SequenceRepository.get_records"><a class="viewcode-back" href="../../ref/user_classes.html#dnacauldron.SequenceRepository.get_records">[docs]</a>    <span class="k">def</span> <span class="nf">get_records</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record_ids</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a list of records from a list of record IDs.&quot;&quot;&quot;</span>
+        <span class="n">records</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">not_in_repository</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">record_ids</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">contains_record</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+                <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_record</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">not_in_repository</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">not_in_repository</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">NotInRepositoryError</span><span class="p">(</span><span class="n">not_in_repository</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">records</span></div>
+
+<div class="viewcode-block" id="SequenceRepository.import_records"><a class="viewcode-back" href="../../ref/user_classes.html#dnacauldron.SequenceRepository.import_records">[docs]</a>    <span class="k">def</span> <span class="nf">import_records</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">files</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">folder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">collection</span><span class="o">=</span><span class="s2">&quot;parts&quot;</span><span class="p">,</span>
+        <span class="n">use_file_names_as_ids</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">topology</span><span class="o">=</span><span class="s2">&quot;default_to_linear&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Import records into the repository, from files and zips and folders.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        files</span>
+<span class="sd">          A list of file paths, either Genbank, Fasta, Snapgene (.dna), or zips</span>
+<span class="sd">          containing any of these formats.</span>
+<span class="sd">        </span>
+<span class="sd">        folder</span>
+<span class="sd">          Path to a folder which can be provided instead of ``files``.</span>
+<span class="sd">        </span>
+<span class="sd">        collection</span>
+<span class="sd">          Name of the collection under which to import the new records.</span>
+<span class="sd">        </span>
+<span class="sd">        use_file_names_as_ids</span>
+<span class="sd">          If True, the file name will be used as ID for any record obtained</span>
+<span class="sd">          from a single-record file (fasta files with many records will still</span>
+<span class="sd">          use the internal ID).</span>
+<span class="sd">        </span>
+<span class="sd">        topology</span>
+<span class="sd">          Can be &quot;circular&quot;, &quot;linear&quot;, &quot;default_to_circular&quot; (will default</span>
+<span class="sd">          to circular if ``annotations[&#39;topology&#39;]`` is not already set) or</span>
+<span class="sd">          &quot;default_to_linear&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">folder</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">records</span> <span class="o">=</span> <span class="n">load_records_from_files</span><span class="p">(</span>
+                <span class="n">folder</span><span class="o">=</span><span class="n">folder</span><span class="p">,</span> <span class="n">use_file_names_as_ids</span><span class="o">=</span><span class="n">use_file_names_as_ids</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">files</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">records</span> <span class="o">=</span> <span class="n">load_records_from_files</span><span class="p">(</span>
+                <span class="n">files</span><span class="o">=</span><span class="n">files</span><span class="p">,</span> <span class="n">use_file_names_as_ids</span><span class="o">=</span><span class="n">use_file_names_as_ids</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Provide either ``files`` or ``folder``&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+            <span class="n">set_record_topology</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">topology</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_records</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="n">collection</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SequenceRepository.get_part_names_by_collection"><a class="viewcode-back" href="../../ref/user_classes.html#dnacauldron.SequenceRepository.get_part_names_by_collection">[docs]</a>    <span class="k">def</span> <span class="nf">get_part_names_by_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;dict&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a dictionnary or a string representing the repo&#39;s content.</span>
+<span class="sd">        </span>
+<span class="sd">        Format: &quot;dict&quot; or &quot;string&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">collection_name</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">parts</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="k">for</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">parts</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;dict&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">name</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;- &quot;</span> <span class="o">+</span> <span class="n">part</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">parts</span><span class="p">)])</span>
+                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">parts</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2020, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
+</html>

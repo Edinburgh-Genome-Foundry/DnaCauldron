@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Core classes</title>
+    
+      <link rel="stylesheet" href="../_static/pygments.css">
+      <link rel="stylesheet" href="../_static/theme.css">
+      <link rel="stylesheet" href="../_static/sphinx_press_theme.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+
+      
+      <script src="../_static/theme-vendors.js"></script>
+      <script src="../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="next" title="Spreadsheet Reference" href="spreadsheet_reference.html" />
+  <link rel="prev" title="Biotools module" href="biotools.html" /> 
+  </head>
+
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../index.html" class="home-link">
+    
+      <img class="logo" src="../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link  router-link-active">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link  router-link-active">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#more-biology-software">Reference</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 "><a href="user_classes.html" class="reference internal ">Useful classes for scripts</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="utils.html" class="reference internal ">Useful methods built on top of DNA Cauldron</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="biotools.html" class="reference internal ">Biotools module</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 current"><a href="#" class="reference internal current">Core classes</a>
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#assemblymix" class="reference internal">AssemblyMix</a></li>
+                
+                  <li class="toctree-l2"><a href="#fragment" class="reference internal">Fragment</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="spreadsheet_reference.html" class="reference internal ">Spreadsheet Reference</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+    <li>Core classes</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="biotools.html"
+       title="previous chapter">← Biotools module</a>
+  </li>
+  <li class="next">
+    <a href="spreadsheet_reference.html"
+       title="next chapter">Spreadsheet Reference →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <div class="section" id="core-classes">
+<h1>Core classes<a class="headerlink" href="#core-classes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="assemblymix">
+<h2>AssemblyMix<a class="headerlink" href="#assemblymix" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="dnacauldron.AssemblyMix.AssemblyMix">
+<em class="property">class </em><code class="sig-prename descclassname">dnacauldron.AssemblyMix.</code><code class="sig-name descname">AssemblyMix</code><a class="reference internal" href="../_modules/dnacauldron/AssemblyMix/AssemblyMix.html#AssemblyMix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyMix.AssemblyMix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for assembly mixes.</p>
+<p>The subclasses (Type2sRestrictionMix and Gibson) implement
+their own version of how the original parts are broken into
+fragments, when two fragments will clip together, etc.</p>
+<dl class="method">
+<dt id="dnacauldron.AssemblyMix.AssemblyMix.initialize">
+<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/AssemblyMix/AssemblyMix.html#AssemblyMix.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyMix.AssemblyMix.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Precompute the fragments and connections graph of the mix.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dnacauldron.AssemblyMix.StickyEndAssemblyMix">
+<em class="property">class </em><code class="sig-prename descclassname">dnacauldron.AssemblyMix.</code><code class="sig-name descname">StickyEndAssemblyMix</code><span class="sig-paren">(</span><em class="sig-param">fragments</em>, <em class="sig-param">fragment_filters=()</em>, <em class="sig-param">name='sticky_ends_mix'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/AssemblyMix/StickyEndAssemblyMix/StickyEndAssemblyMix.html#StickyEndAssemblyMix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyMix.StickyEndAssemblyMix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to represent and simulate the assembly of sticky-ended fragments.</p>
+<p>Used notably for BASIC assembly and other places where we are mixing
+sticky-ended fragments, not necessarily from enzyme digestions (see the
+subclass RestrictionLigationMix for this case).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fragments</strong></p>
+<blockquote>
+<div><p>A list of StickyEndFragment instances, which will assemble together based
+of sticky ends perfect homologies.</p>
+</div></blockquote>
+<p><strong>fragment_filters</strong></p>
+<blockquote>
+<div><p>List of functions of the form fragment=&gt;True/False. If a fragment
+generates a “False” by at least one filter, it is taken out of the mix
+(this is used to remove unstable fragments that won’t make it to the
+final assembly, for instance fragments with internal restriction sites).</p>
+</div></blockquote>
+<p><strong>name</strong></p>
+<blockquote>
+<div><p>Name of the mix as it will appear in reports</p>
+</div></blockquote>
+</dd>
+</dl>
+<dl class="method">
+<dt id="dnacauldron.AssemblyMix.StickyEndAssemblyMix.assemble">
+<em class="property">static </em><code class="sig-name descname">assemble</code><span class="sig-paren">(</span><em class="sig-param">fragments</em>, <em class="sig-param">circularize=False</em>, <em class="sig-param">annotate_homologies=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/AssemblyMix/StickyEndAssemblyMix/StickyEndAssemblyMix.html#StickyEndAssemblyMix.assemble"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyMix.StickyEndAssemblyMix.assemble" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assemble sticky-end fragments into a single one (sticky or not).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fragments</strong></p>
+<blockquote>
+<div><p>List of StickyEndFragment fragments</p>
+</div></blockquote>
+<p><strong>circularize</strong></p>
+<blockquote>
+<div><p>If True and if the two ends of the final assembly are compatible,
+circularize the construct, i.e. return a non-sticky record
+representing the circular assembly of the fragments.</p>
+</div></blockquote>
+<p><strong>annotate_homologies</strong></p>
+<blockquote>
+<div><p>If True, all homology regions that where formerly sticky ends will
+be annotated in the final record.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.AssemblyMix.StickyEndAssemblyMix.will_clip_in_this_order">
+<em class="property">static </em><code class="sig-name descname">will_clip_in_this_order</code><span class="sig-paren">(</span><em class="sig-param">fragment1</em>, <em class="sig-param">fragment2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/AssemblyMix/StickyEndAssemblyMix/StickyEndAssemblyMix.html#StickyEndAssemblyMix.will_clip_in_this_order"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyMix.StickyEndAssemblyMix.will_clip_in_this_order" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True iff f1’s right sticky end fits f2’s left.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dnacauldron.AssemblyMix.RestrictionLigationMix">
+<em class="property">class </em><code class="sig-prename descclassname">dnacauldron.AssemblyMix.</code><code class="sig-name descname">RestrictionLigationMix</code><span class="sig-paren">(</span><em class="sig-param">parts=None</em>, <em class="sig-param">enzymes=None</em>, <em class="sig-param">fragments=None</em>, <em class="sig-param">fragment_filters=()</em>, <em class="sig-param">name='restriction_mix'</em>, <em class="sig-param">annotate_fragments_with_parts=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/AssemblyMix/RestrictionLigationMix.html#RestrictionLigationMix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyMix.RestrictionLigationMix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mix to represent and simulate restriction-ligation reactions.</p>
+<p>For reactions using type-2S enzymes (Golden Gate assembly etc.),
+see the helper function generate_type2s_restriction_mix().</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parts</strong></p>
+<blockquote>
+<div><p>List of Biopython records representing circular or blunt-end linear DNA
+fragments which will be restricted into sticky-end fragments and
+assembled toghether via sticky-end homologies.</p>
+</div></blockquote>
+<p><strong>enzymes</strong></p>
+<blockquote>
+<div><p>List of names of the enzyme to be used for the restriction</p>
+</div></blockquote>
+<p><strong>fragments</strong></p>
+<blockquote>
+<div><p>A list of StickyEndFragment instances, which will assemble together based
+of sticky ends perfect homologies.</p>
+</div></blockquote>
+<p><strong>fragment_filters</strong></p>
+<blockquote>
+<div><p>List of functions of the form fragment=&gt;True/False. If a fragment
+generates a “False” by at least one filter, it is taken out of the mix
+(this is used to remove unstable fragments that won’t make it to the
+final assembly, for instance fragments with internal restriction sites).</p>
+</div></blockquote>
+<p><strong>name</strong></p>
+<blockquote>
+<div><p>Name of the mix as it will appear in reports</p>
+</div></blockquote>
+<p><strong>annotate_fragments_with_parts</strong></p>
+<blockquote>
+<div><p>If True, final constructs will have annotations “From xxx” indicating
+which part each sequence segment comes from.</p>
+</div></blockquote>
+</dd>
+</dl>
+<dl class="method">
+<dt id="dnacauldron.AssemblyMix.RestrictionLigationMix.compute_digest">
+<code class="sig-name descname">compute_digest</code><span class="sig-paren">(</span><em class="sig-param">part</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/AssemblyMix/RestrictionLigationMix.html#RestrictionLigationMix.compute_digest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyMix.RestrictionLigationMix.compute_digest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the fragments resulting from the digestion</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.AssemblyMix.RestrictionLigationMix.compute_fragments">
+<code class="sig-name descname">compute_fragments</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/AssemblyMix/RestrictionLigationMix.html#RestrictionLigationMix.compute_fragments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyMix.RestrictionLigationMix.compute_fragments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the (sticky-ended) fragments resulting from the digestion of
+the mix’s parts by the mix’s enzyme.</p>
+<p>Note that all fragments receive an annotation (feature) of type
+“source” that will show in the genbank of final constructs.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dnacauldron.AssemblyMix.HomologousAssemblyMix">
+<em class="property">class </em><code class="sig-prename descclassname">dnacauldron.AssemblyMix.</code><code class="sig-name descname">HomologousAssemblyMix</code><span class="sig-paren">(</span><em class="sig-param">parts</em>, <em class="sig-param">homology_checker</em>, <em class="sig-param">name='homology_mix'</em>, <em class="sig-param">annotate_fragments_with_parts=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/AssemblyMix/HomologousAssemblyMix.html#HomologousAssemblyMix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyMix.HomologousAssemblyMix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mix to represent and simulate long-homology-based reactions.</p>
+<p>Such as Gibson Assembly.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parts</strong></p>
+<blockquote>
+<div><p>List of Biopython records representing blunt-end linear DNA fragments
+which will be assembled toghether via end-homologies.</p>
+</div></blockquote>
+<p><strong>homology_checker</strong></p>
+<blockquote>
+<div><p>An HomologyChecker instance determining which size ranges and melting
+temperatures define an acceptable homology.</p>
+</div></blockquote>
+<p><strong>annotate_fragments_with_parts</strong></p>
+<blockquote>
+<div><p>If True, final constructs will have annotations “From xxx” indicating
+which part each sequence segment comes from.</p>
+</div></blockquote>
+</dd>
+</dl>
+<dl class="method">
+<dt id="dnacauldron.AssemblyMix.HomologousAssemblyMix.will_clip_in_this_order">
+<code class="sig-name descname">will_clip_in_this_order</code><span class="sig-paren">(</span><em class="sig-param">fragment1</em>, <em class="sig-param">fragment2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/AssemblyMix/HomologousAssemblyMix.html#HomologousAssemblyMix.will_clip_in_this_order"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.AssemblyMix.HomologousAssemblyMix.will_clip_in_this_order" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True iff f1’s right sticky end fits f2’s left.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="dnacauldron.AssemblyMix.LigaseCyclingReactionMix">
+<code class="sig-prename descclassname">dnacauldron.AssemblyMix.</code><code class="sig-name descname">LigaseCyclingReactionMix</code><a class="headerlink" href="#dnacauldron.AssemblyMix.LigaseCyclingReactionMix" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#dnacauldron.AssemblyMix.LigaseCyclingReactionMix" title="dnacauldron.AssemblyMix.LigaseCyclingReactionMix"><code class="xref py py-class docutils literal notranslate"><span class="pre">dnacauldron.AssemblyMix.LigaseCyclingReactionMix</span></code></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="fragment">
+<h2>Fragment<a class="headerlink" href="#fragment" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="dnacauldron.Fragment.StickyEndFragment">
+<em class="property">class </em><code class="sig-prename descclassname">dnacauldron.Fragment.</code><code class="sig-name descname">StickyEndFragment</code><span class="sig-paren">(</span><em class="sig-param">seq</em>, <em class="sig-param">id='&lt;unknown id&gt;'</em>, <em class="sig-param">name='&lt;unknown name&gt;'</em>, <em class="sig-param">description='&lt;unknown description&gt;'</em>, <em class="sig-param">dbxrefs=None</em>, <em class="sig-param">features=None</em>, <em class="sig-param">annotations=None</em>, <em class="sig-param">letter_annotations=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Fragment/StickyEndFragment/StickyEndFragment.html#StickyEndFragment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Fragment.StickyEndFragment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Biopython SeqRecord whose sequence has sticky ends.</p>
+<dl class="method">
+<dt id="dnacauldron.Fragment.StickyEndFragment.annotate_connector">
+<code class="sig-name descname">annotate_connector</code><span class="sig-paren">(</span><em class="sig-param">connector</em>, <em class="sig-param">annotation_type='homology'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Fragment/StickyEndFragment/StickyEndFragment.html#StickyEndFragment.annotate_connector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Fragment.StickyEndFragment.annotate_connector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Annotate a connector to indicate it used to be a sticky end.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.Fragment.StickyEndFragment.assemble">
+<em class="property">static </em><code class="sig-name descname">assemble</code><span class="sig-paren">(</span><em class="sig-param">fragments</em>, <em class="sig-param">circularize=False</em>, <em class="sig-param">annotate_homologies=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Fragment/StickyEndFragment/StickyEndFragment.html#StickyEndFragment.assemble"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Fragment.StickyEndFragment.assemble" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the (sticky end) record obtained by assembling the fragments.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fragments</strong></p>
+<blockquote>
+<div><p>List of StickyEndFragments to assemble</p>
+</div></blockquote>
+<p><strong>circularize</strong></p>
+<blockquote>
+<div><p>True to also assemble the end flanks of the final construct (results
+in a Biopython Record), false to not do it (the result is then a
+StickyEndFragment).</p>
+</div></blockquote>
+<p><strong>annotate_homologies</strong></p>
+<blockquote>
+<div><p>If true, homologies will have an annotation in the final, predicted
+construct records.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.Fragment.StickyEndFragment.circularized">
+<code class="sig-name descname">circularized</code><span class="sig-paren">(</span><em class="sig-param">annotate_homology=False</em>, <em class="sig-param">annotation_type='homology'</em>, <em class="sig-param">qualifiers=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Fragment/StickyEndFragment/StickyEndFragment.html#StickyEndFragment.circularized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Fragment.StickyEndFragment.circularized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the biopython record obtained by cirularizing the result.</p>
+<p>Only works if the left and right sticky ends are compatible. The
+return is a simple Biopython record where the sticky end has been
+integrated in the sequence.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.Fragment.StickyEndFragment.text_representation_in_plots">
+<code class="sig-name descname">text_representation_in_plots</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Fragment/StickyEndFragment/StickyEndFragment.html#StickyEndFragment.text_representation_in_plots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Fragment.StickyEndFragment.text_representation_in_plots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a fragment as left//PART_NAME//right (where // is a new line)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.Fragment.StickyEndFragment.to_standard_string">
+<code class="sig-name descname">to_standard_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Fragment/StickyEndFragment/StickyEndFragment.html#StickyEndFragment.to_standard_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Fragment.StickyEndFragment.to_standard_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a string representation of the fragment, used for quick
+comparison of fragments and fragments chains.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.Fragment.StickyEndFragment.will_clip_in_this_order_with">
+<code class="sig-name descname">will_clip_in_this_order_with</code><span class="sig-paren">(</span><em class="sig-param">other</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Fragment/StickyEndFragment/StickyEndFragment.html#StickyEndFragment.will_clip_in_this_order_with"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Fragment.StickyEndFragment.will_clip_in_this_order_with" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True iff this record’s right sticky end is complementary with
+the other record’s left sticky end.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dnacauldron.Fragment.HomologousFragment">
+<em class="property">class </em><code class="sig-prename descclassname">dnacauldron.Fragment.</code><code class="sig-name descname">HomologousFragment</code><span class="sig-paren">(</span><em class="sig-param">seq</em>, <em class="sig-param">id='&lt;unknown id&gt;'</em>, <em class="sig-param">name='&lt;unknown name&gt;'</em>, <em class="sig-param">description='&lt;unknown description&gt;'</em>, <em class="sig-param">dbxrefs=None</em>, <em class="sig-param">features=None</em>, <em class="sig-param">annotations=None</em>, <em class="sig-param">letter_annotations=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Fragment/HomologousFragment/HomologousFragment.html#HomologousFragment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Fragment.HomologousFragment" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="dnacauldron.Fragment.HomologousFragment.assemble">
+<em class="property">static </em><code class="sig-name descname">assemble</code><span class="sig-paren">(</span><em class="sig-param">fragments</em>, <em class="sig-param">homology_checker</em>, <em class="sig-param">circularize=False</em>, <em class="sig-param">annotate_homologies=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Fragment/HomologousFragment/HomologousFragment.html#HomologousFragment.assemble"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Fragment.HomologousFragment.assemble" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the record obtained by assembling the fragments.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fragments</strong></p>
+<blockquote>
+<div><p>List of HomologousFragments to assemble</p>
+</div></blockquote>
+<p><strong>homology_checker</strong></p>
+<blockquote>
+<div><p>An HomologyChecker instance definining the homology conditions.</p>
+</div></blockquote>
+<p><strong>circularize</strong></p>
+<blockquote>
+<div><p>True to also assemble the end flanks of the final construct.</p>
+</div></blockquote>
+<p><strong>annotate_homologies</strong></p>
+<blockquote>
+<div><p>If true, homologies will have an annotation in the final, predicted
+construct records.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.Fragment.HomologousFragment.assemble_with">
+<code class="sig-name descname">assemble_with</code><span class="sig-paren">(</span><em class="sig-param">fragment</em>, <em class="sig-param">homology_checker</em>, <em class="sig-param">annotate_homology=True</em>, <em class="sig-param">annotation_type='homology'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Fragment/HomologousFragment/HomologousFragment.html#HomologousFragment.assemble_with"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Fragment.HomologousFragment.assemble_with" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the fragment resulting from the assembly of this fragment
+with another, in that order.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fragment</strong></p>
+<blockquote>
+<div><p>The other parameter to assemble with</p>
+</div></blockquote>
+<p><strong>homology_checker</strong></p>
+<blockquote>
+<div><p>An HomologyChecker instance definining the homology conditions.</p>
+</div></blockquote>
+<p><strong>annotate_homology</strong></p>
+<blockquote>
+<div><p>If true, homologies will have an annotation in the final, predicted
+construct records.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.Fragment.HomologousFragment.circularized">
+<code class="sig-name descname">circularized</code><span class="sig-paren">(</span><em class="sig-param">homology_checker</em>, <em class="sig-param">annotate_homology=False</em>, <em class="sig-param">annotation_type='homology'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Fragment/HomologousFragment/HomologousFragment.html#HomologousFragment.circularized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Fragment.HomologousFragment.circularized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the biopython record obtained by cirularizing the result.</p>
+<p>Only works if the left and right sticky ends are compatible. The
+return is a simple Biopython record where the sticky end has been
+integrated in the sequence.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.Fragment.HomologousFragment.from_biopython_record">
+<em class="property">static </em><code class="sig-name descname">from_biopython_record</code><span class="sig-paren">(</span><em class="sig-param">biopython_record</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Fragment/HomologousFragment/HomologousFragment.html#HomologousFragment.from_biopython_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Fragment.HomologousFragment.from_biopython_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a biopython record into a HomologousFragment (class change).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dnacauldron.Fragment.HomologousFragment.will_clip_in_this_order_with">
+<code class="sig-name descname">will_clip_in_this_order_with</code><span class="sig-paren">(</span><em class="sig-param">other_fragment</em>, <em class="sig-param">homology_checker</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/Fragment/HomologousFragment/HomologousFragment.html#HomologousFragment.will_clip_in_this_order_with"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.Fragment.HomologousFragment.will_clip_in_this_order_with" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether the fragment will assemble with anoter via homology
+recombination.</p>
+<p>homology_checker should be an HomologyChecker instance definining the
+homology conditions.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="biotools.html"
+       title="previous chapter">← Biotools module</a>
+  </li>
+  <li class="next">
+    <a href="spreadsheet_reference.html"
+       title="next chapter">Spreadsheet Reference →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2020, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
+</html>

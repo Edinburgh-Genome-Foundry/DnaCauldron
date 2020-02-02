@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>dnacauldron.Assembly.AssemblyReportWriter.AssemblyReportWriter</title>
+    
+      <link rel="stylesheet" href="../../../../_static/pygments.css">
+      <link rel="stylesheet" href="../../../../_static/theme.css">
+      <link rel="stylesheet" href="../../../../_static/sphinx_press_theme.css">
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+
+      
+      <script src="../../../../_static/theme-vendors.js"></script>
+      <script src="../../../../_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="../../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head>
+
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="../../../../index.html" class="home-link">
+    
+      <img class="logo" src="../../../../_static/html_logo.png" alt="doit logo"/>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#more-biology-software"
+         class="nav-link ">
+         Reference
+      </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="../../../../index.html#more-biology-software"
+         class="nav-link ">
+         Examples
+      </a>
+    </div>
+  
+
+
+
+  
+    <div class="nav-item">
+      <a href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron"
+        class="nav-link external">
+          Github <outboundlink/>
+      </a>
+    </div>
+  
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="../../../../search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../../index.html#more-biology-software">Reference</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../../ref/user_classes.html" class="reference internal ">Useful classes for scripts</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/utils.html" class="reference internal ">Useful methods built on top of DNA Cauldron</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/biotools.html" class="reference internal ">Biotools module</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/core_classes.html" class="reference internal ">Core classes</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="../../../../ref/spreadsheet_reference.html" class="reference internal ">Spreadsheet Reference</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="../../../../index.html#more-biology-software">Examples</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="../../../../examples.html" class="reference internal ">Examples</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+    
+      <li><a href="../../../index.html">Module code</a> &raquo;</li>
+    
+    <li>dnacauldron.Assembly.AssemblyReportWriter.AssemblyReportWriter</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <h1>Source code for dnacauldron.Assembly.AssemblyReportWriter.AssemblyReportWriter</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span>
+<span class="kn">from</span> <span class="nn">flametree</span> <span class="k">import</span> <span class="n">file_tree</span>
+<span class="kn">from</span> <span class="nn">...biotools</span> <span class="k">import</span> <span class="n">write_record</span>
+<span class="kn">from</span> <span class="nn">...AssemblyMix</span> <span class="k">import</span> <span class="n">AssemblyMixError</span>
+<span class="kn">from</span> <span class="nn">.AssemblyReportPlotsMixin</span> <span class="k">import</span> <span class="n">AssemblyReportPlotsMixin</span>
+
+
+<div class="viewcode-block" id="AssemblyReportWriter"><a class="viewcode-back" href="../../../../ref/user_classes.html#dnacauldron.AssemblyReportWriter">[docs]</a><span class="k">class</span> <span class="nc">AssemblyReportWriter</span><span class="p">(</span><span class="n">AssemblyReportPlotsMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class to configure assembly simulation reports writing.</span>
+
+<span class="sd">    Responsible to write the final sequence(s) of the assembly in Genbank</span>
+<span class="sd">    format as well as a .csv report on all assemblies produced and PDF figures</span>
+<span class="sd">    to allow a quick overview or diagnostic.</span>
+
+<span class="sd">    Folder ``assemblies`` contains the final assemblies, ``assembly_graph``</span>
+<span class="sd">    contains a schematic view of how the parts assemble together, folder</span>
+<span class="sd">    ``fragments`` contains the details of all fragments produced by the enzyme</span>
+<span class="sd">    digestion, and folder ``provided_parts`` contains the original input</span>
+<span class="sd">    (genbanks of all parts provided for the assembly mix).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    include_fragments_plots</span>
+<span class="sd">      Either True/False/&quot;on_error&quot; to plot schemas of the fragments used in</span>
+<span class="sd">      the different AssemblyMix throughout the simulation.</span>
+
+<span class="sd">    include_part_plots</span>
+<span class="sd">      Either True/False/&quot;on_error&quot; to plot schemas of the parts used, possibly</span>
+<span class="sd">      with restriction sites relevant to the AssemblyMix.</span>
+<span class="sd">    include_mix_graphs</span>
+<span class="sd">      Either True/False/&quot;on_error&quot; to plot representations of fragments</span>
+<span class="sd">      connectivity in the AssemblyMix created during the simulation.</span>
+
+<span class="sd">    include_part_records</span>
+<span class="sd">      True/False to include the parts records in the simulation results (makes</span>
+<span class="sd">      for larger folders and zips, but is better for traceability)</span>
+
+<span class="sd">    include_assembly_plots</span>
+<span class="sd">      True/False to include assembly schemas in the reports (makes the</span>
+<span class="sd">      report generation slower, but makes it easier to check assemblies at a</span>
+<span class="sd">      glance)</span>
+<span class="sd">    </span>
+<span class="sd">    show_overhangs_in_graph</span>
+<span class="sd">      If true, the AssemblyMix graph representations will display the sequence</span>
+<span class="sd">      of all fragments overhangs.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">include_fragments_plots</span><span class="o">=</span><span class="s2">&quot;on_error&quot;</span><span class="p">,</span>
+        <span class="n">include_part_plots</span><span class="o">=</span><span class="s2">&quot;on_error&quot;</span><span class="p">,</span>
+        <span class="n">include_mix_graphs</span><span class="o">=</span><span class="s2">&quot;on_error&quot;</span><span class="p">,</span>
+        <span class="n">include_part_records</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">include_assembly_plots</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">show_overhangs_in_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">annotate_parts_homologies</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_fragments_plots</span> <span class="o">=</span> <span class="n">include_fragments_plots</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_part_plots</span> <span class="o">=</span> <span class="n">include_part_plots</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_mix_graphs</span> <span class="o">=</span> <span class="n">include_mix_graphs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_assembly_plots</span> <span class="o">=</span> <span class="n">include_assembly_plots</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_overhangs_in_graph</span> <span class="o">=</span> <span class="n">show_overhangs_in_graph</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_part_records</span> <span class="o">=</span> <span class="n">include_part_records</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">annotate_parts_homologies</span> <span class="o">=</span> <span class="n">annotate_parts_homologies</span>
+
+    <span class="k">def</span> <span class="nf">_write_constructs_spreadsheet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simulation</span><span class="p">,</span> <span class="n">report_root</span><span class="p">):</span>
+        <span class="n">dataframe</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">compute_summary_dataframe</span><span class="p">()</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">report_root</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_summary.csv&quot;</span> <span class="o">%</span> <span class="n">simulation</span><span class="o">.</span><span class="n">assembly</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">dataframe</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_write_records</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assembly_simulation</span><span class="p">,</span> <span class="n">report_root</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">assembly_simulation</span><span class="o">.</span><span class="n">construct_records</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">assemblies_dir</span> <span class="o">=</span> <span class="n">report_root</span><span class="o">.</span><span class="n">_dir</span><span class="p">(</span><span class="s2">&quot;assemblies&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">assemblies_dir</span> <span class="o">=</span> <span class="n">report_root</span>
+
+        <span class="k">for</span> <span class="n">construct_record</span> <span class="ow">in</span> <span class="n">assembly_simulation</span><span class="o">.</span><span class="n">construct_records</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">construct_record</span><span class="p">,</span> <span class="s2">&quot;as_biopython_record&quot;</span><span class="p">):</span>
+                <span class="n">construct_record</span> <span class="o">=</span> <span class="n">construct_record</span><span class="o">.</span><span class="n">as_biopython_record</span><span class="p">()</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">construct_record</span><span class="o">.</span><span class="n">id</span> <span class="o">+</span> <span class="s2">&quot;.gb&quot;</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">assemblies_dir</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="n">write_record</span><span class="p">(</span><span class="n">construct_record</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s2">&quot;genbank&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_write_part_records</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simulation</span><span class="p">,</span> <span class="n">parts_records</span><span class="p">,</span> <span class="n">report_root</span><span class="p">):</span>
+        <span class="n">provided_parts_dir</span> <span class="o">=</span> <span class="n">report_root</span><span class="o">.</span><span class="n">_dir</span><span class="p">(</span><span class="s2">&quot;provided_parts_records&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts_records</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="s2">&quot;as_biopython_record&quot;</span><span class="p">):</span>
+                <span class="n">part</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">as_biopython_record</span><span class="p">()</span>
+            <span class="n">write_record</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">provided_parts_dir</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">id</span> <span class="o">+</span> <span class="s2">&quot;.gb&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_write_records_plots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assembly_simulation</span><span class="p">,</span> <span class="n">report_root</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">assembly_simulation</span><span class="o">.</span><span class="n">construct_records</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">plots_dir</span> <span class="o">=</span> <span class="n">report_root</span><span class="o">.</span><span class="n">_dir</span><span class="p">(</span><span class="s2">&quot;assemblies_plots&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plots_dir</span> <span class="o">=</span> <span class="n">report_root</span>
+        <span class="k">for</span> <span class="n">construct_record</span> <span class="ow">in</span> <span class="n">assembly_simulation</span><span class="o">.</span><span class="n">construct_records</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">construct_record</span><span class="p">,</span> <span class="s2">&quot;as_biopython_record&quot;</span><span class="p">):</span>
+                <span class="n">construct_record</span> <span class="o">=</span> <span class="n">construct_record</span><span class="o">.</span><span class="n">as_biopython_record</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_construct</span><span class="p">(</span><span class="n">construct_record</span><span class="p">,</span> <span class="n">plots_dir</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AssemblyReportWriter.write_report"><a class="viewcode-back" href="../../../../ref/user_classes.html#dnacauldron.AssemblyReportWriter.write_report">[docs]</a>    <span class="k">def</span> <span class="nf">write_report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assembly_simulation</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write a comprehensive report for an AssemblySimulation instance.</span>
+
+<span class="sd">        ``target`` can be either a path to a folder, to a zip file, or</span>
+<span class="sd">        ``&quot;@memory&quot;`` to write into a virtual zip file whose raw data is then</span>
+<span class="sd">        returned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">report_root</span> <span class="o">=</span> <span class="n">file_tree</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">assembly</span> <span class="o">=</span> <span class="n">assembly_simulation</span><span class="o">.</span><span class="n">assembly</span>
+
+        <span class="c1"># The 3 next lines cover the case where connectors were added to</span>
+        <span class="c1"># the assembly, and where no assembly was found.</span>
+        <span class="n">used_parts</span> <span class="o">=</span> <span class="n">assembly_simulation</span><span class="o">.</span><span class="n">list_all_parts_used</span><span class="p">()</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">assembly</span><span class="o">.</span><span class="n">parts</span> <span class="o">+</span> <span class="n">used_parts</span><span class="p">))</span>
+        <span class="n">repository</span> <span class="o">=</span> <span class="n">assembly_simulation</span><span class="o">.</span><span class="n">sequence_repository</span>
+        <span class="n">part_records</span> <span class="o">=</span> <span class="n">repository</span><span class="o">.</span><span class="n">get_records</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_write_records</span><span class="p">(</span><span class="n">assembly_simulation</span><span class="p">,</span> <span class="n">report_root</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_part_records</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write_part_records</span><span class="p">(</span>
+                <span class="n">assembly_simulation</span><span class="p">,</span> <span class="n">part_records</span><span class="p">,</span> <span class="n">report_root</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_assembly_plots</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write_records_plots</span><span class="p">(</span><span class="n">assembly_simulation</span><span class="p">,</span> <span class="n">report_root</span><span class="p">)</span>
+
+        <span class="n">errors_detected</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">assembly_simulation</span><span class="o">.</span><span class="n">errors</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="n">plot_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_plots_options</span><span class="p">(</span><span class="n">errors_detected</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">plot_options</span><span class="p">[</span><span class="s2">&quot;parts_plots&quot;</span><span class="p">]:</span>
+            <span class="n">enzymes</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">enzymes</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">assembly</span><span class="p">,</span> <span class="s2">&quot;enzymes&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_provided_parts</span><span class="p">(</span>
+                <span class="n">report_root</span><span class="o">=</span><span class="n">report_root</span><span class="p">,</span>
+                <span class="n">parts_records</span><span class="o">=</span><span class="n">part_records</span><span class="p">,</span>
+                <span class="n">enzymes</span><span class="o">=</span><span class="n">enzymes</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">plot_options</span><span class="p">[</span><span class="s2">&quot;fragments_plots&quot;</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">mix</span> <span class="ow">in</span> <span class="n">assembly_simulation</span><span class="o">.</span><span class="n">mixes</span><span class="p">:</span>
+                <span class="n">mix</span><span class="o">.</span><span class="n">plot_fragments</span><span class="p">(</span><span class="n">report_root</span><span class="o">=</span><span class="n">report_root</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">plot_options</span><span class="p">[</span><span class="s2">&quot;mix_graphs_plots&quot;</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">mix</span> <span class="ow">in</span> <span class="n">assembly_simulation</span><span class="o">.</span><span class="n">mixes</span><span class="p">:</span>
+                <span class="n">mix</span><span class="o">.</span><span class="n">plot_graphs</span><span class="p">(</span>
+                    <span class="n">report_root</span><span class="o">=</span><span class="n">report_root</span><span class="p">,</span>
+                    <span class="n">assembly</span><span class="o">=</span><span class="n">assembly</span><span class="p">,</span>
+                    <span class="n">with_overhangs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">show_overhangs_in_graph</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">assembly_simulation</span><span class="o">.</span><span class="n">construct_records</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write_constructs_spreadsheet</span><span class="p">(</span>
+                <span class="n">assembly_simulation</span><span class="p">,</span> <span class="n">report_root</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="s2">&quot;@memory&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">report_root</span><span class="o">.</span><span class="n">_close</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2020, Edinburgh Genome Foundry.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
+</html>
