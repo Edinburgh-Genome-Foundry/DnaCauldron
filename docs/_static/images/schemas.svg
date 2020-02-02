@@ -1,0 +1,698 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg83779"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="schemas.svg">
+  <defs
+     id="defs83773" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.979899"
+     inkscape:cx="542.61061"
+     inkscape:cy="755.88666"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1887"
+     inkscape:window-height="2053"
+     inkscape:window-x="1953"
+     inkscape:window-y="372"
+     inkscape:window-maximized="0"
+     inkscape:snap-global="true" />
+  <metadata
+     id="metadata83776">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.34114313px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13352858px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="143.7037"
+       y="45.979603"
+       id="text167102-3"
+       transform="scale(0.81022439,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6"
+         x="143.7037"
+         y="45.979603"
+         style="stroke-width:0.13352858px">AssemblySimulation</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.34114313px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13352858px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="156.77995"
+       y="13.738802"
+       id="text167102-3-7"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5"
+         x="156.77995"
+         y="13.738802"
+         style="stroke-width:0.13352858px">Assembly</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.34114313px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13352858px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="60.39304"
+       y="13.796175"
+       id="text167102-3-7-3"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-5"
+         x="60.39304"
+         y="13.796175"
+         style="stroke-width:0.13352858px">AssemblyPlan</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.34114313px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13352858px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="46.896015"
+       y="45.831676"
+       id="text167102-3-7-3-6"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-5-2"
+         x="46.896015"
+         y="45.831676"
+         style="stroke-width:0.13352858px">AssemblyPlanSimulation</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.57487488px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.21437186px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-12.258004"
+       y="-53.202961"
+       id="text167102-3-7-3-6-9"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-5-2-1"
+         x="-12.258004"
+         y="-53.202961"
+         style="stroke-width:0.21437186px">AssemblyReportWriter</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.59759927px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.06493998px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="125.1319"
+       y="27.240633"
+       id="text167102-3-7-3-6-9-2"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-5-2-1-7"
+         x="125.1319"
+         y="27.240633"
+         style="font-size:4.803936px;text-align:center;text-anchor:middle;stroke-width:0.06493998px">PartsRepository</tspan><tspan
+         sodipodi:role="line"
+         x="125.1319"
+         y="31.358555"
+         style="font-size:4.803936px;text-align:center;text-anchor:middle;stroke-width:0.06493998px"
+         id="tspan167629">(provides sequences)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.34114313px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13352858px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="106.49049"
+       y="62.597664"
+       id="text167102-3-7-3-6-9-2-0"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-5-2-1-7-9"
+         x="106.49049"
+         y="62.597664"
+         style="stroke-width:0.13352858px">ReportWriter</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.34114313px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13352858px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="67.110107"
+       y="74.604279"
+       id="text167102-3-7-3-6-9-2-0-3"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-5-2-1-7-9-6"
+         x="67.110107"
+         y="74.604279"
+         style="stroke-width:0.13352858px">(reports)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.45575237px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13639382px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="39.346447"
+       y="132.33766"
+       id="text167102-3-7-3-6-9-0-1"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-5-2-1-6-8"
+         x="39.346447"
+         y="132.33766"
+         style="stroke-width:0.13639382px">AssemblyMix</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.45575237px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13639382px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="75.337646"
+       y="114.77193"
+       id="text167102-3-7-3-6-9-0-1-7"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-5-2-1-6-8-9"
+         x="75.337646"
+         y="114.77193"
+         style="stroke-width:0.13639382px">StickyEndAssemblyMix</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.45575237px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13639382px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="68.758766"
+       y="148.54121"
+       id="text167102-3-7-3-6-9-0-1-7-2"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-5-2-1-6-8-9-0"
+         x="68.758766"
+         y="148.54121"
+         style="stroke-width:0.13639382px">HomologousAssemblyMix</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.45575237px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13639382px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="166.19142"
+       y="115.9575"
+       id="text167102-3-7-3-6-9-0-1-7-23"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-5-2-1-6-8-9-7"
+         x="166.19142"
+         y="115.9575"
+         style="stroke-width:0.13639382px">RestrictionLigationMix</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.45575237px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13639382px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="161.98245"
+       y="147.3911"
+       id="text167102-3-7-3-6-9-0-1-7-2-8"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-5-2-1-6-8-9-0-9"
+         x="161.98245"
+         y="147.3911"
+         style="stroke-width:0.13639382px">LCRAssemblyMix</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415989;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 63.743604,28.127909 v 14.521224 l -1.275553,-2.209323 1.402115,4.136015 1.175027,-3.787889"
+       id="path167447"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 136.83477,27.128818 v 14.521225 l -1.27555,-2.209323 1.40211,4.136015 1.17503,-3.787889"
+       id="path167447-6"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 120.49324,34.486943 h 12.30469 l -2.20932,-1.275554 4.13602,1.402115 -3.78789,1.175028"
+       id="path167447-1-9"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 63.591577,68.573464 v 14.521224 l -1.275554,-2.209322 1.402115,4.136015 1.175028,-3.787889"
+       id="path167447-3"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.34114313px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13352858px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="160.41942"
+       y="73.113533"
+       id="text167102-3-7-3-6-9-2-0-3-1"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-5-2-1-7-9-6-9"
+         x="160.41942"
+         y="73.113533"
+         style="stroke-width:0.13352858px">(reports)</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 139.19306,66.73355 v 14.521225 l -1.27555,-2.209323 1.40212,4.136015 1.17502,-3.787889"
+       id="path167447-3-4"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 119.38497,75.258564 h 12.30469 l -2.20931,-1.275554 4.13601,1.402116 -3.78789,1.175027"
+       id="path167447-1-9-8"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 56.974013,67.856516 -8.700731,8.700732 0.660274,-2.46418 -1.933159,3.916049 3.509311,-1.847572"
+       id="path167447-1-4"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc"
+       inkscape:transform-center-x="6.237666"
+       inkscape:transform-center-y="-2.833762" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.34114313px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13352858px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="45.074482"
+       y="66.991364"
+       id="text167102-3-7-3-6-9-2-0-5"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-5-2-1-7-9-0"
+         x="45.074482"
+         y="66.991364"
+         style="stroke-width:0.13352858px">Data</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 148.96892,67.188236 8.70073,8.700732 -0.66027,-2.46418 1.93315,3.916049 -3.50931,-1.847572"
+       id="path167447-1-4-3"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc"
+       inkscape:transform-center-x="-6.2376626"
+       inkscape:transform-center-y="-2.833762" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.34114313px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13352858px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="197.50914"
+       y="67.316101"
+       id="text167102-3-7-3-6-9-2-0-5-6"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-5-2-1-7-9-0-1"
+         x="197.50914"
+         y="67.316101"
+         style="stroke-width:0.13352858px">Data</tspan></text>
+    <g
+       id="g167650"
+       transform="translate(-1.3363476,26.726953)"
+       style="opacity:0.333" />
+    <g
+       id="g167682">
+      <g
+         transform="translate(-7.512038,27.528761)"
+         id="g167672"
+         style="opacity:0.33300003">
+        <path
+           sodipodi:nodetypes="cccc"
+           inkscape:connector-curvature="0"
+           id="path167447-1-9-0"
+           d="m 123.68603,-12.009031 -2.20932,-1.275554 4.13602,1.402115 -3.78789,1.175028"
+           style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.40000001;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+        <path
+           inkscape:connector-curvature="0"
+           id="path167646"
+           d="M 122.51153,-11.948289 H 96.126632"
+           style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.40000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1.19999999, 1.19999999;stroke-dashoffset:0;stroke-opacity:1"
+           sodipodi:nodetypes="cc" />
+      </g>
+      <text
+         transform="scale(0.81022438,1.234226)"
+         id="text167102-3-7-6"
+         y="10.66941"
+         x="113.25079"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.34114313px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;opacity:0.33300003;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13352858px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.13352858px"
+           y="10.66941"
+           x="113.25079"
+           id="tspan167100-6-5-3"
+           sodipodi:role="line">is list of...</tspan></text>
+    </g>
+    <g
+       transform="translate(5.9596075,39.86563)"
+       id="g167682-2">
+      <g
+         transform="translate(-4.6772166,27.528761)"
+         id="g167672-0"
+         style="opacity:0.33300003;stroke-width:0.4;stroke-miterlimit:4;stroke-dasharray:none">
+        <g
+           id="g167716"
+           transform="translate(-2.7395127)">
+          <path
+             style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.40000001;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+             d="m 111.92617,-12.009031 -2.20932,-1.275554 4.13602,1.402115 -3.78789,1.175028"
+             id="path167447-1-9-0-6"
+             inkscape:connector-curvature="0"
+             sodipodi:nodetypes="cccc" />
+          <path
+             sodipodi:nodetypes="cc"
+             style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.40000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:1.19999999, 1.19999999;stroke-dashoffset:0;stroke-opacity:1"
+             d="M 110.15032,-11.948289 H 93.322606"
+             id="path167646-1"
+             inkscape:connector-curvature="0" />
+        </g>
+      </g>
+      <text
+         transform="scale(0.81022438,1.234226)"
+         id="text167102-3-7-6-5"
+         y="10.561135"
+         x="107.46389"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.34114313px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;opacity:0.33300003;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13352858px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.13352858px"
+           y="10.561135"
+           x="107.46389"
+           id="tspan167100-6-5-3-5"
+           sodipodi:role="line">is list of...</tspan></text>
+    </g>
+    <g
+       transform="translate(-60.694496,19.68678)"
+       id="g167682-5">
+      <text
+         transform="scale(0.81022438,1.234226)"
+         id="text167102-3-7-6-4"
+         y="13.267989"
+         x="129.41447"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.34114313px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;opacity:0.33300003;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13352858px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.13352858px"
+           y="13.267989"
+           x="129.41447"
+           id="tspan167100-6-5-3-3"
+           sodipodi:role="line">simulate</tspan></text>
+      <text
+         transform="scale(0.81022438,1.234226)"
+         id="text167102-3-7-6-4-0"
+         y="13.681235"
+         x="246.21269"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.34114313px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;opacity:0.33300003;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13352858px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.13352858px"
+           y="13.681235"
+           x="246.21269"
+           id="tspan167100-6-5-3-3-7"
+           sodipodi:role="line">simulate</tspan></text>
+    </g>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 59.559842,155.47791 8.700731,-8.70073 -0.660274,2.46418 1.933159,-3.91605 -3.509311,1.84757"
+       id="path167447-1-4-8"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc"
+       inkscape:transform-center-x="-6.2376664"
+       inkscape:transform-center-y="2.8337609" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 58.357128,166.04082 8.700731,8.70073 -0.660273,-2.46418 1.933159,3.91605 -3.509311,-1.84757"
+       id="path167447-1-4-8-6"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc"
+       inkscape:transform-center-x="-6.2376664"
+       inkscape:transform-center-y="-2.8337598" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m -70.720001,118.745 14.62363,-7.21371 -1.35843,2.15935 3.00326,-3.17064 -3.89838,0.729"
+       id="path167447-1-4-8-8"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc"
+       inkscape:transform-center-x="-5.1228314"
+       inkscape:transform-center-y="4.5492059" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m -71.882511,121.32337 16.30436,0.23684 -2.19272,1.30388 4.11763,-1.45521 -3.8027,-1.1262"
+       id="path167447-1-4-8-8-4"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc"
+       inkscape:transform-center-x="-2.4892664"
+       inkscape:transform-center-y="6.5902259" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.45575237px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13639382px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="86.224121"
+       y="100.39605"
+       id="text167102-3-7-3-6-9-0-1-7-2-6-7-5"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-5-2-1-6-8-9-0-93-4-2"
+         x="86.224121"
+         y="100.39605"
+         style="stroke-width:0.13639382px">StickyendFragments</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 91.424823,125.52172 v 6.76205 l -1.275554,-2.20932 1.402115,4.13601 1.175028,-3.78789"
+       id="path167447-3-9"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
+    <g
+       id="g168004"
+       style="opacity:0.28000004"
+       transform="translate(4.543582,-20.045215)">
+      <text
+         transform="scale(0.81022438,1.234226)"
+         id="text167102-3-7-3-6-9-0-1-7-2-6"
+         y="183.15506"
+         x="80.926018"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.45575237px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13639382px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.13639382px"
+           y="183.15506"
+           x="80.926018"
+           id="tspan167100-6-5-5-2-1-6-8-9-0-93"
+           sodipodi:role="line">HomologyChecker</tspan></text>
+      <text
+         transform="scale(0.81022438,1.234226)"
+         id="text167102-3-7-3-6-9-0-1-7-2-6-7"
+         y="178.49303"
+         x="75.887787"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.45575237px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13639382px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.13639382px"
+           y="178.49303"
+           x="75.887787"
+           id="tspan167100-6-5-5-2-1-6-8-9-0-93-4"
+           sodipodi:role="line">HomologousFragments</tspan></text>
+      <path
+         sodipodi:nodetypes="ccccc"
+         inkscape:connector-curvature="0"
+         id="path167447-3-9-2"
+         d="m 83.708232,214.30992 v -5.96025 l -1.275555,2.20932 1.402116,-4.13601 1.175028,3.78789"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.51912975px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:0.27843137;stroke:none;stroke-width:0.11297824px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="207.40135"
+       y="39.756485"
+       id="text167102-3-7-3-6-9-0-1-7-2-6-7-5-6"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-5-2-1-6-8-9-0-93-4-2-8"
+         x="207.40135"
+         y="39.756485"
+         style="fill:#000000;fill-opacity:0.27843137;stroke-width:0.11297824px">SeqRecords</tspan><tspan
+         id="tspan168043"
+         sodipodi:role="line"
+         x="207.40135"
+         y="45.405396"
+         style="fill:#000000;fill-opacity:0.27843137;stroke-width:0.11297824px">AssemblyMixes</tspan><tspan
+         sodipodi:role="line"
+         x="207.40135"
+         y="51.05431"
+         style="fill:#000000;fill-opacity:0.27843137;stroke-width:0.11297824px"
+         id="tspan83834">AssemblyFlaws</tspan></text>
+    <path
+       style="opacity:1;fill:none;fill-opacity:0.27843137;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.27843137"
+       d="m 165.66329,48.708251 -4.76417,2.48866 0.18887,-1.31163 -1.79416,2.38457 2.734,-0.59285"
+       id="path167447-3-9-9"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="opacity:0.28000004;fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 166.1885,59.87048 -5.02605,-1.90515 1.10548,-0.73073 -2.97411,0.24459 2.26021,1.64853"
+       id="path167447-3-9-9-4"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.34114313px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13352858px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="56.007961"
+       y="219.62419"
+       id="text167102-3-7-2"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-6"
+         x="56.007961"
+         y="219.62419"
+         style="stroke-width:0.13352858px">Assembly</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.34114313px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13352858px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="104.74245"
+       y="203.18083"
+       id="text167102-3-7-2-9"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-6-5"
+         x="104.74245"
+         y="203.18083"
+         style="stroke-width:0.13352858px">BioBrickStandardAssembly</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.34114313px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13352858px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="103.74754"
+       y="219.58113"
+       id="text167102-3-7-2-9-0"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-6-5-4"
+         x="103.74754"
+         y="219.58113"
+         style="stroke-width:0.13352858px">Type2sRestrictionAssembly</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.34114313px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13352858px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="104.64983"
+       y="211.8219"
+       id="text167102-3-7-2-9-0-8"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-6-5-4-7"
+         x="104.64983"
+         y="211.8219"
+         style="stroke-width:0.13352858px">BASICAssembly</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.34114313px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13352858px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="104.07742"
+       y="227.59341"
+       id="text167102-3-7-2-9-1"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-6-5-7"
+         x="104.07742"
+         y="227.59341"
+         style="stroke-width:0.13352858px">LCRAssembly</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.34114313px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.13352858px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="104.78357"
+       y="235.64221"
+       id="text167102-3-7-2-9-1-2"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-6-5-7-7"
+         x="104.78357"
+         y="235.64221"
+         style="stroke-width:0.13352858px">GibsonAssembly</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 115.16355,140.50735 16.3053,0.15927 -2.1604,-1.35675 4.08106,1.5548 -3.82892,1.03348"
+       id="path167447-1-4-8-8-3-4-2"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc"
+       inkscape:transform-center-x="-2.6435814"
+       inkscape:transform-center-y="-6.4026089" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.48064232px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:0.27843137;stroke:none;stroke-width:0.11201606px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="94.932961"
+       y="120.19382"
+       id="text167102-3-7-3-6-9-0-1-7-2-6-7-5-3"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-5-2-1-6-8-9-0-93-4-2-6"
+         x="94.932961"
+         y="120.19382"
+         style="fill:#000000;fill-opacity:0.27843137;stroke-width:0.11201606px">used in BASIC Assembly</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.48064232px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:0.27843137;stroke:none;stroke-width:0.11201606px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="180.86604"
+       y="121.41551"
+       id="text167102-3-7-3-6-9-0-1-7-2-6-7-5-3-7"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-5-2-1-6-8-9-0-93-4-2-6-5"
+         x="180.86604"
+         y="121.41551"
+         style="fill:#000000;fill-opacity:0.27843137;stroke-width:0.11201606px">used in BioBrick, Type2S</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 111.65191,180.67523 16.3053,0.15927 -2.1604,-1.35675 4.08106,1.5548 -3.82892,1.03348"
+       id="path167447-1-4-8-8-3-4-2-3"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc"
+       inkscape:transform-center-x="-2.6435814"
+       inkscape:transform-center-y="-6.4026089" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.48064232px;line-height:125%;font-family:'Walter Turncoat';-inkscape-font-specification:'Walter Turncoat';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:0.27843137;stroke:none;stroke-width:0.11201606px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="94.328812"
+       y="142.54645"
+       id="text167102-3-7-3-6-9-0-1-7-2-6-7-5-3-5"
+       transform="scale(0.81022438,1.234226)"><tspan
+         sodipodi:role="line"
+         id="tspan167100-6-5-5-2-1-6-8-9-0-93-4-2-6-6"
+         x="94.328812"
+         y="142.54645"
+         style="fill:#000000;fill-opacity:0.27843137;stroke-width:0.11201606px">used in Gibson Assembly</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 70.183806,260.98255 8.700731,-8.70073 -0.660274,2.46418 1.933159,-3.91605 -3.509311,1.84757"
+       id="path167447-1-4-8-2"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc"
+       inkscape:transform-center-x="-6.2376664"
+       inkscape:transform-center-y="2.8337609" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 69.515631,277.42538 8.700731,8.70073 -0.660273,-2.46417 1.933159,3.91604 -3.509311,-1.84757"
+       id="path167447-1-4-8-6-9"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc"
+       inkscape:transform-center-x="-6.2376664"
+       inkscape:transform-center-y="-2.8337598" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 67.932126,272.85251 11.646887,3.96931 -2.502687,0.49467 4.367207,0.007 -3.206341,-2.33413"
+       id="path167447-1-4-8-2-1"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc"
+       inkscape:transform-center-x="-0.2090399"
+       inkscape:transform-center-y="6.8479609" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 68.882991,266.96482 11.646887,-3.96931 -2.502687,-0.49467 4.367207,-0.007 -3.206341,2.33413"
+       id="path167447-1-4-8-2-1-2"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc"
+       inkscape:transform-center-x="-0.2090399"
+       inkscape:transform-center-y="-6.8479591" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot83821"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:'Walter Turncoat';font-style:normal;font-weight:normal;font-size:40px;line-height:125%;letter-spacing:0px;word-spacing:0px;-inkscape-font-specification:'Walter Turncoat';font-stretch:normal;font-variant:normal"><flowRegion
+         id="flowRegion83823"><rect
+           id="rect83825"
+           width="163.39218"
+           height="56.568542"
+           x="592.45447"
+           y="204.29102" /></flowRegion><flowPara
+         id="flowPara83827"></flowPara></flowRoot>    <path
+       style="opacity:0.28000004;fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.41415992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 166.58977,54.490123 -5.37487,-0.03896 0.78248,-1.069477 -2.70356,1.263306 2.69235,0.759917"
+       id="path167447-3-9-9-4-7"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
+  </g>
+</svg>
