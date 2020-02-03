@@ -47,15 +47,15 @@ Usage tutorial
 Providing part sequences
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-To simulate an assembly, you need first to provide parts sequences. In DNA Cauldron, these
-are managed via a ``SequenceRepository``:
+To simulate an assembly, you need first to provide part sequences. In DNA Cauldron, sequences
+are managed by a ``SequenceRepository``, created as follows:
 
 .. code:: python
 
     import dnacauldron as dc
     
     # Create a repository from BioPython records
-    repository = dc.SequenceRepository(parts={"part_A": record_1, "part_B":...})
+    repository = dc.SequenceRepository(parts={"part_A": record_A, "part_B":...})
     
     # Or use "import_sequences" to import files from folders, zip files, etc.
     repository = dc.SequenceRepository()
@@ -63,8 +63,9 @@ are managed via a ``SequenceRepository``:
 
 **Important:** ensure the parts topology (as set in Biopython records at
 ``record.annotations['topology']``) is accurate. This can be done at import
-time by setting ``topology='linear'``, ``topology='circular'``, or
-``topology='auto'`` to use the topology specified by each Genbank file.  
+time by setting ``topology='linear'``, ``topology='circular'``, or for instance
+``topology='default_to_linear'`` to use the topology specified by each Genbank and
+default to linear if none is specified.
 
 Parts assembly
 ~~~~~~~~~~~~~~
