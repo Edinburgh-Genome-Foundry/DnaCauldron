@@ -8,9 +8,13 @@ from .AssemblyMix import (
     generate_type2s_restriction_mix,
     HomologousAssemblyMix,
     # BASICLigationMix,
-    AssemblyMixError
+    AssemblyMixError,
 )
-from .SequenceRepository import SequenceRepository
+from .SequenceRepository import (
+    SequenceRepository,
+    RepositoryDuplicateError,
+    NotInRepositoryError,
+)
 
 
 from .Assembly import (
@@ -22,7 +26,7 @@ from .Assembly import (
     OligoPairAnnealing,
     AssemblyReportWriter,
     AssemblyPlotTranslator,
-    Assembly
+    Assembly,
 )
 
 from .AssemblyPlan import AssemblyPlan

@@ -74,7 +74,7 @@ class SequenceRepository:
             _id, _sequence = record
             record = sequence_to_biopython_record(_sequence, id=_id)
         if self.contains_record(record.id):
-            raise RepositoryDuplicateError([record.id])
+            raise RepositoryDuplicateError([record.id], repository=self)
         if collection not in self.collections:
             self.collections[collection] = {}
         self.collections[collection][record.id] = record
@@ -110,7 +110,7 @@ class SequenceRepository:
             else:
                 not_in_repository.append(name)
         if len(not_in_repository):
-            raise NotInRepositoryError(not_in_repository, self)
+            raise NotInRepositoryError(not_in_repository, repository=self)
         return records
 
     def import_records(
