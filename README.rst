@@ -17,11 +17,11 @@ DNA Cauldron
 ============
 
 DNA Cauldron (full documentation `here <https://edinburgh-genome-foundry.github.io/DnaCauldron/>`_)
-provides is a generic cloning simulation framework to predict
-final construct sequences and detect assembly flaws. The idea is that, if
-your assemblies plan with Cauldron, it should work at the bench. It is
-especially useful for people and machines tasked with assembling DNA with
-minimal knowledge of the project's specifics.
+is a generic cloning simulation framework to predict
+final construct sequences and detect assembly flaws. It aims in particular at
+automating the simulation and verification of large (and possibly multi-step)
+DNA assembly batches, with the idea that, if your assembly plan works with
+Cauldron, you'll get the same results at the bench.
 
 - Great support for Golden Gate assembly (incl. MoClo, EMMA, Phytobrick, etc.), the simulation is as simple as
   `dropping sequence files in a web app <http://cuba.genomefoundry.org/simulate_gg_assemblies>`_.
