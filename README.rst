@@ -162,8 +162,8 @@ Alternatively, you can unzip the sources in a folder and type
 How it works
 ------------
 
-Dna Cauldron predicts circular constructs by explores circular paths in parts
-homology graphs , an idea also used in first described in
+Dna Cauldron predicts circular constructs by finding circular paths in parts
+homology graphs, an idea first described in
 `Pereira et al. Bioinf. 2015 <http://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0544-x>`_ .
 and used in the Python library `PyDNA <https://github.com/BjornFJohansson/pydna>`_.
 
