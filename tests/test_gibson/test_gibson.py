@@ -38,3 +38,15 @@ def test_single_gibson():
     assert len(simulation.construct_records) == 1
     simulated_record = simulation.construct_records[0]
     assert sequences_are_circularly_equal([simulated_record, expected_record])
+
+def test_single_gibson_using_tm_homology_check():
+    repository = dc.SequenceRepository()
+    repository.import_records(files=[sequences_fasta])
+    parts = ["Frag_%d" % i for i in [1, 2, 3, 4, 5]]
+    expected_record = repository.get_record("expected_sequence")
+    homolochecker = dc.HomologyChecker(min_tm=50, max_tm=90)
+    assembly = dc.GibsonAssembly(parts=parts, homology_checker=homolochecker)
+    simulation = assembly.simulate(sequence_repository=repository)
+    assert len(simulation.construct_records) == 1
+    simulated_record = simulation.construct_records[0]
+    assert sequences_are_circularly_equal([simulated_record, expected_record])
