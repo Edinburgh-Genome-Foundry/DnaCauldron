@@ -16,12 +16,10 @@
 DNA Cauldron
 ============
 
-Have you ever had a large DNA assembly batch fail at the bench, and then you
-spent spent hours checking your part sequence files for design flaws?
-
-DNA Cauldron provides a generic cloning simulation framework to predict
-constructs sequences and detect assembly flaws. The idea is that, if
-your assemblies work with Cauldron, they should work at the bench. It is
+DNA Cauldron (full documentation `here <https://edinburgh-genome-foundry.github.io/DnaCauldron/>`_)
+provides is a generic cloning simulation framework to predict
+final construct sequences and detect assembly flaws. The idea is that, if
+your assemblies plan with Cauldron, it should work at the bench. It is
 especially useful for people and machines tasked with assembling DNA with
 minimal knowledge of the project's specifics.
 
