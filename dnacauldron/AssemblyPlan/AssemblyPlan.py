@@ -155,6 +155,8 @@ class AssemblyPlan:
                         sheet_name=_sheet_name,
                         header=header,
                         assembly_class=assembly_class,
+                        is_csv=False,
+                        name=name,
                         **assembly_params
                     ).assemblies
                 ],

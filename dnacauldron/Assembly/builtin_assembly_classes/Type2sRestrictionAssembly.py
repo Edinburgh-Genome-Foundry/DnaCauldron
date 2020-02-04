@@ -161,7 +161,7 @@ class Type2sRestrictionAssembly(Assembly):
 
         records = sequence_repository.get_records(self.parts)
         mix = generate_type2s_restriction_mix(
-            records, enzyme=self.enzyme, name=self.name + "_type2s_mix"
+            records, enzyme=self.enzyme, name="type2s_mix"
         )
         if self.enzyme == "auto":
             self.enzyme = str(mix.enzymes[0])  # it has been autoselected!
