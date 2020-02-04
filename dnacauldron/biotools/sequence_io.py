@@ -12,14 +12,14 @@ from .record_operations import (
 )
 
 
-def string_to_record(string):
+def string_to_records(string):
     """Convert a string of a fasta, genbank... into a simple ATGC string.
 
     Can also be used to detect a format.
     """
     matches = re.match("([ATGC][ATGC]*)", string)
     if (matches is not None) and (matches.groups()[0] == string):
-        return sequence_to_biopython_record(string), "ATGC"
+        return [sequence_to_biopython_record(string)], "ATGC"
 
     for fmt in ("fasta", "genbank"):
         try:
@@ -31,7 +31,7 @@ def string_to_record(string):
             pass
     try:
         record = snapgene_file_to_seqrecord(filecontent=StringIO(string))
-        return record
+        return [record]
     except Exception:
         pass
     raise ValueError("Invalid sequence format")
@@ -106,7 +106,9 @@ def _load_records_from_zip_file(zip_file):
         ext = f._extension.lower()
         if ext in ["gb", "gbk", "fa", "dna"]:
             try:
-                new_records, fmt = string_to_record(f.read())
+                new_records, fmt = string_to_records(f.read())
+                if not isinstance(new_records, list):
+                    new_records = [new_records]
             except Exception:
                 content_stream = BytesIO(f.read("rb"))
                 try:
@@ -147,7 +149,7 @@ def load_records_from_file(filepath):
     with open(filepath, "rb") as f:
         content = f.read()
     try:
-        records, fmt = string_to_record(content.decode("utf-8"))
+        records, fmt = string_to_records(content.decode("utf-8"))
     except Exception:
         try:
             record = snapgene_file_to_seqrecord(fileobject=BytesIO(content))
