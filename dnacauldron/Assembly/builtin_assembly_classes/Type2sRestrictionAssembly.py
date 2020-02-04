@@ -174,7 +174,7 @@ class Type2sRestrictionAssembly(Assembly):
                 connectors = mix.autoselect_connectors(connectors_records)
                 if len(connectors):
                     connectors_ids = [c.id for c in connectors]
-                    connectors_string = ", ".join(connectors_ids)
+                    connectors_string = " & ".join(connectors_ids)
                     warning = AssemblyFlaw(
                         assembly=self,
                         message="Added connectors %s" % connectors_string,
