@@ -21,7 +21,7 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
     Parameters
     ----------
 
-    include_fragments_plots
+    include_fragment_plots
       Either True/False/"on_error" to plot schemas of the fragments used in
       the different AssemblyMix throughout the simulation.
 
@@ -58,7 +58,7 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
 
     def __init__(
         self,
-        include_fragments_plots="on_error",
+        include_fragment_plots="on_error",
         include_part_plots="on_error",
         include_mix_graphs="on_error",
         include_part_records=True,
@@ -68,7 +68,7 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
         include_errors_spreadsheet=True,
         include_warnings_spreadsheet=True,
     ):
-        self.include_fragments_plots = include_fragments_plots
+        self.include_fragment_plots = include_fragment_plots
         self.include_part_plots = include_part_plots
         self.include_mix_graphs = include_mix_graphs
         self.include_assembly_plots = include_assembly_plots
@@ -169,7 +169,7 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
                 parts_records=part_records,
                 enzymes=enzymes,
             )
-        if plot_options["fragments_plots"]:
+        if plot_options["fragment_plots"]:
             for mix in assembly_simulation.mixes:
                 mix.plot_fragments(report_root=report_root)
         if plot_options["mix_graphs_plots"]:

@@ -33,7 +33,7 @@ def test_type2s_hierarchical_flawed():
     assert stats["cancelled_assemblies"] == 1
 
     report_writer = dc.AssemblyReportWriter(
-        include_fragments_plots=True,
+        include_fragment_plots=True,
         include_part_plots=True,
         include_mix_graphs=True,
         include_assembly_plots=True,

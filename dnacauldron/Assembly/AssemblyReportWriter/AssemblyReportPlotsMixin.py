@@ -15,7 +15,7 @@ class AssemblyReportPlotsMixin:
             return errors_detected if condition == "on_error" else condition
 
         return {
-            "fragments_plots": evaluate(self.include_fragments_plots),
+            "fragment_plots": evaluate(self.include_fragment_plots),
             "mix_graphs_plots": evaluate(self.include_mix_graphs),
             "parts_plots": evaluate(self.include_part_plots),
         }
