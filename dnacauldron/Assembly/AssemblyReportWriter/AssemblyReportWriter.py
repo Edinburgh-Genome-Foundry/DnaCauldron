@@ -44,6 +44,14 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
     show_overhangs_in_graph
       If true, the AssemblyMix graph representations will display the sequence
       of all fragments overhangs.
+    
+    include_errors_spreadsheet
+      If true and there are errors, an errors spreadsheet will be added to the
+      report
+    
+    include_warnings_spreadsheet
+      If true and there are warnings, a warnings spreadsheet will be added to
+      the report
 
 
     """
@@ -56,7 +64,9 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
         include_part_records=True,
         include_assembly_plots=False,
         show_overhangs_in_graph=True,
-        annotate_parts_homologies=True
+        annotate_parts_homologies=True,
+        include_errors_spreadsheet=True,
+        include_warnings_spreadsheet=True,
     ):
         self.include_fragments_plots = include_fragments_plots
         self.include_part_plots = include_part_plots
@@ -65,6 +75,8 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
         self.show_overhangs_in_graph = show_overhangs_in_graph
         self.include_part_records = include_part_records
         self.annotate_parts_homologies = annotate_parts_homologies
+        self.include_errors_spreadsheet = include_errors_spreadsheet
+        self.include_warnings_spreadsheet = include_warnings_spreadsheet
 
     def _write_constructs_spreadsheet(self, simulation, report_root):
         dataframe = simulation.compute_summary_dataframe()
@@ -101,6 +113,26 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
             if hasattr(construct_record, "as_biopython_record"):
                 construct_record = construct_record.as_biopython_record()
             self.plot_construct(construct_record, plots_dir)
+
+    def _write_errors_spreadsheet(
+        self, simulation, report_root, error_type="error"
+    ):
+        errors = (
+            simulation.errors if error_type == "error" else simulation.warnings
+        )
+        if len(errors) > 0:
+            columns = ";".join(
+                ["assembly_name", "message", "suggestion", "data"]
+            )
+            all_error_rows = [
+                ";".join(
+                    [err.assembly.name, err.message, err.data_as_string(),]
+                )
+                for err in errors
+            ]
+            filename = "%s.csv" % error_type
+            errors_spreadsheet = report_root._file(filename)
+            errors_spreadsheet.write("\n".join([columns] + all_error_rows))
 
     def write_report(self, assembly_simulation, target):
         """Write a comprehensive report for an AssemblySimulation instance.
@@ -151,6 +183,15 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
             self._write_constructs_spreadsheet(
                 assembly_simulation, report_root
             )
+        if self.include_errors_spreadsheet:
+            self._write_errors_spreadsheet(
+                assembly_simulation, report_root, error_type="error"
+            )
+        if self.include_warnings_spreadsheet:
+            self._write_errors_spreadsheet(
+                assembly_simulation, report_root, error_type="warnings"
+            )
+        
 
         if target == "@memory":
             return report_root._close()
