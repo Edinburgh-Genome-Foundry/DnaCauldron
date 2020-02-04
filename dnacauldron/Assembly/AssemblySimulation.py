@@ -34,6 +34,7 @@ class AssemblySimulation:
       reports and summaries.
 
     """
+
     def __init__(
         self,
         assembly,
@@ -55,14 +56,14 @@ class AssemblySimulation:
         """Return the name of the fragment, or optionally `NAME_r` if the
         fragment is the reverse of another fragment."""
         if hasattr(fragment, "original_part"):
-            name = fragment.original_part.id 
+            name = fragment.original_part.id
         else:
             name = fragment.id
         return name + ("_r" if (fragment.is_reversed and mark_reverse) else "")
 
     def list_all_parts_used(self):
         """List all parts involved in at least one of the predicted constructs.
-        """ 
+        """
         parts = [
             self.fragment_part(fragment)
             for construct_record in self.construct_records
@@ -82,9 +83,9 @@ class AssemblySimulation:
             number_of_parts=len(construct_record.fragments),
             construct_size=len(construct_record),
             assembly_name=self.assembly.name,
-            depends_on=self.assembly.dependencies['depends_on'],
-            used_in=self.assembly.dependencies['used_in'],
-            assembly_level=self.assembly.dependencies['level'],
+            depends_on=self.assembly.dependencies["depends_on"],
+            used_in=self.assembly.dependencies["used_in"],
+            assembly_level=self.assembly.dependencies["level"],
             **self.assembly.get_extra_construct_data()
         )
 
@@ -132,8 +133,16 @@ class AssemblySimulation:
         
         report_writer
           Either the "default" or any AssemblyReportWriter instance.
-        """ 
+        
+        Returns
+        -------
+
+        zip_data
+          binary zip data (if target="@memory") else None.
+        """
         if report_writer == "default":
             report_writer = AssemblyReportWriter()
-        report_writer.write_report(assembly_simulation=self, target=target)
+        return report_writer.write_report(
+            assembly_simulation=self, target=target
+        )
 

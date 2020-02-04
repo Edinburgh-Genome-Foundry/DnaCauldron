@@ -99,6 +99,7 @@ class AssemblyPlan:
         name="auto_from_filename",
         logger="bar",
         assembly_class_dict="default",
+        is_csv = "auto_from_filename",
         **assembly_params
     ):
         """Import an assembly plan from a spreadsheet.
@@ -139,7 +140,8 @@ class AssemblyPlan:
             else:
                 filename = os.path.basename(path)
                 name, _ = os.path.splitext(filename)
-        is_csv = path.lower().endswith(".csv")
+        if is_csv == "auto_from_filename":
+            is_csv = path.lower().endswith(".csv")
         if sheet_name == "all" and not is_csv:
             excel_file = pandas.ExcelFile(path)
             return AssemblyPlan(
