@@ -1,0 +1,69 @@
+LOCUS       part_I                  2396 bp    ds-DNA  circular UNK 29-OCT-2019
+DEFINITION  .
+ACCESSION   part_I
+VERSION     part_I
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     terminator      1991..2034
+                     /label="feature"
+                     /ApEinfo_fwdcolor="#c6c9d1"
+     terminator      10..67
+                     /label="another feature"
+                     /ApEinfo_fwdcolor="#c6c9d1"
+     rep_origin      complement(262..850)
+                     /label="yet another feature"
+                     /ApEinfo_fwdcolor="#ffef86"
+     misc_feature    2054..2388
+                     /label="feature"
+                     /ApEinfo_fwdcolor="#f8d3a9"
+     CDS             complement(1148..1807)
+                     /label="another feature"
+                     /ApEinfo_fwdcolor="#b7e6d7"
+     terminator      1033..1127
+                     /label="yet another feature"
+                     /ApEinfo_fwdcolor="#c6c9d1"
+ORIGIN
+        1 accctgcagt ccgcatccaa gcttgctggg gcctctatcc gggacctgct tccgtacccc
+       61 gtccgcctat caggctaacg actctgcctg ccattcaggc tcaccggcaa gttggagtga
+      121 cctcttcatc gatacaaata gcgcatacgc cagacatacc gcccacgcac tcgaccataa
+      181 aattccccgt cacggcgcgc acctccacac tccgtggcct aaggaacgtg gcagccggct
+      241 gggccacttt ttagactacc atcggctcat ttttagaagg ccaccggctg tccgtcaatc
+      301 gtacccgttt aggcctcctt aacacagttc cgaatagtta cctcaagatg cggatacagg
+      361 atggctcccc caggggtcta gttcagtctt ttgtcgcctg cgcttgaacc tttatgcagc
+      421 gatccacaaa cggaacaccg agatttgtat ttgggagggc aggctttgga ggaacggtgt
+      481 atgtactttt gcttggtacc ctaggtaccc cacgatctaa tcggtcttcc tgacaggtga
+      541 cagaggaggc cgtaactgcg accacaggct aactgcggcc ttaacttatg gtcgcgaact
+      601 gcataagggc gtcgccgccc gttgtcagtg cgaattctgt tagtcgtcgt gtacaccttc
+      661 cggtctaaca tctcgtagtt actagaagag cggatgggtc ctgtaaagag agcaggttcc
+      721 cgtcttctct cactttaccg gtactggtgt gaccgggtgt gagtgatact gtgattccgc
+      781 tactattgct atgcctgccg tcgtagctag atacgatccc agaacatttt gggctgattt
+      841 caagtctctc cgggattccg taacgacggt tctcgaactg aatagctttg agatatcgca
+      901 atattccttg gttgactctt gtccccggga cacaagtcgt gtgcaatatg tatacgtcag
+      961 tatgctcgag actcctaagg ccgcatatct atgctatcac tattgcctat gcagtaactg
+     1021 gctaagcttg tggggtactt gcacatgact catgtcaagg tcggaggatt cccagacagt
+     1081 tggcatcatc agtgcgttca aggcggggag cgaccagcca gatattgatc gacgaggtgc
+     1141 cacgaagtgt tccaaggtta tttttagtat gttacatcca tcagcgggtc taggccatac
+     1201 cggtctatat tatggtgagt cgtataggct gtaatgccgg ctgcacaatc tacggccgat
+     1261 tgcacataaa atggtcaact aacgacaagc tctgattctc aacttggata aaccttatca
+     1321 caaaaggtcc gacacggttc agccgaggta aatcaaagtg attatgactc caggagcgac
+     1381 acaaagttgc actgtctact gttggtcatc accgtactgc aaacgggtaa agatacttag
+     1441 ctttgttagc tattgcagaa cctaattgct ttcctgccct aaggcgatcc ggatcctcta
+     1501 tttatcaagt taattatcag agcttagctc aagtcaaagg tcttagtcag gtatggttta
+     1561 gtcggcttat ctcgctccga taaacccctc gcgcctcgga ttcattcacg cgtttatatg
+     1621 gtgaggggcg acccgtaggc tagtcgcact cctcggcaat taatcctaca gaaacctaga
+     1681 catgggagtt gcgatcctcg agatacggcc tgagagggtc ggcaaagtgg gtgcttcatt
+     1741 ctcttcggcg gagttcgcag gctctagaat gcctggtttt catctcgaca taaattacga
+     1801 tgttatctcg tgcattatta ccccttttct gcaggtttta agtcgagtct agtcttacta
+     1861 acgctgttct tcccgagaag gtgtccaggt tagatctcgg catattttca ctggcgcgct
+     1921 atccgacagg aagacagcac ccgttaagcg ccccagtcac atcaagatca gtcctatgtt
+     1981 gactcttgct ggaggtcttc tcgaatccag ctaatgttgg attacccgcc cctctggaat
+     2041 tcggtctctg cttttattat ccggcatgca tgcggcgttg catcgcttca tcgtcatcga
+     2101 catatcgtta gcgggactta tcagggtccc atcacggctg tgacagctgt tcataagtgt
+     2161 aatagcagtc accccaccaa atgcaagact gttcccaaac taagtgctag ggaggttggc
+     2221 tacctatcgg cgtggcagtt gaccgggttt ttcttagtac ctgccttcca atctccgata
+     2281 aaagcaagat gacttcctgc ttgcgctaaa gtctgaattc gctaaggggg cagattcatt
+     2341 accagagact gccaaagtca accgccgaac gatactggaa tatatggagg tatgag
+//

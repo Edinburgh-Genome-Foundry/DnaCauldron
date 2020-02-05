@@ -38,8 +38,10 @@ class AssemblyPlan:
         if any(len(indices) > 1 for indices in names_indices.values()):
             duplicates = ", ".join(
                 [
-                    "%s (%s)" % (name, "-".join([str(i) for i in indices]))
+                    "%s (lines %s)"
+                    % (name, "-".join([str(i) for i in indices]))
                     for name, indices in sorted(names_indices.items())
+                    if len(indices) > 1
                 ]
             )
             raise ValueError("Multiple assemblies named " + duplicates)

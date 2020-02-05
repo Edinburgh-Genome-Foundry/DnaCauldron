@@ -186,7 +186,7 @@ class Type2sRestrictionAssembly(Assembly):
                 error = AssemblyFlaw(
                     assembly=self,
                     message="Failed to find suitable connectors",
-                    suggestion="Check assembly plan or parts design",
+                    suggestion="Check assembly plan/parts/connectors design",
                 )
                 return AssemblySimulation(
                     assembly=self,

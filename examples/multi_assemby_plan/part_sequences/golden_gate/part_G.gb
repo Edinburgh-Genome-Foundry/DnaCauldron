@@ -1,0 +1,36 @@
+LOCUS       part_G                  1119 bp    ds-DNA  linear   UNK 25-OCT-2019
+DEFINITION  .
+ACCESSION   part_G
+VERSION     part_G
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     GoldenGate      1..13
+                     /label="feature"
+                     /ApEinfo_fwdcolor="#faac61"
+     GoldenGate      1107..1119
+                     /label="another feature"
+                     /ApEinfo_fwdcolor="#faac61"
+ORIGIN
+        1 tggctaggtc tccggaggaa cttctatggg acgaaagatg cgcagctcga caaatctcaa
+       61 attggaaacc gtctaaggtc tttgagccca cgctaggcca ccgaatagtt gcgagctcgt
+      121 gggcaattgc tggctagcgg tttgtatcgt atacgtaaca agagattgcg ccggattcat
+      181 tcgtgtgggg tgctttcaca tcggaatact caagagtggg ggtttgcgct ttaatatgac
+      241 ggcctcatgc accccaaaaa taagagcgcc aatttcatcg accacattcc ggacaattct
+      301 gacttccctg tcggatcgac cctcgctcac aactcctaga actccaagac ggtaggacgt
+      361 cagccgaaaa ggaggagtga cgacgggccc tcctagctga agcaatgggg ggcgtcgacc
+      421 ctagcctggt gtgggacttc ggagggtcgg gcgtgtggcc attcctgcac gaggggccct
+      481 tgcagtatcg aactttgacg agaaagtggg gggcgaccta taaacatagc ggagttcaat
+      541 actcctgcaa gtgcatgatg acgttcagcg ttggcacatc gaacgcgtcg ctacacttgc
+      601 tcaccggaag gcaaaataga ccggcagctg gcccgcacgg acgtctagac tcctacgctg
+      661 tcaaatgcac gatgactatt agcatgcgga attcgaggcg gccggtacat cgagacacgc
+      721 tggtcttaat acctgtgtta tgtcaaaaca agtgtctcgg cggctttgta ctacgctgtg
+      781 aatgcgcatg atgttgcgag aagctgaacg ttggtagcag tctacaacag aaccgacgag
+      841 ctacggacgg gttacagcag gatcccctct taaggcatta ttcgacgact ccaggttcta
+      901 accgatcagt aattgcctcg gatggtcgta cgtgttaacc gagacagcaa ggcaccacat
+      961 agacaactgc atagggcgcc tacaggtcca caatcagggt ggcccaagat cctcaaagac
+     1021 ttgttgcagt ctctgcttat tccgtttaac acgttgtgtg agctctagct tactacctca
+     1081 tcggtgtcgg gagtgattta ggaatgtgag acctagcca
+//

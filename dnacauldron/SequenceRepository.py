@@ -3,22 +3,32 @@ from .biotools import (
     set_record_topology,
     sequence_to_biopython_record,
 )
+from fuzzywuzzy import process
 
 
 class NotInRepositoryError(Exception):
     def __init__(self, parts, repository):
         self.parts = parts
         self.repository = repository
-        parts_list = ", ".join(parts)
-        if len(parts_list) > 150:
-            parts_list = parts_list[:150] + "..."
-        parts = "Part%s %s" % ("s" if len(parts) > 1 else "", parts_list)
-        repo_name = (" in " + repository.name) if repository.name else ""
-        message = parts + " not found" + repo_name
+
+        # CREATE THE MESSAGE AND INITIALIZE THE EXCEPTION:
+
+        suggestions = [
+            self.create_part_suggestion_string(part_name)
+            for part_name in parts
+        ]
+        suggestions = ", ".join(suggestions)
+        message = "Parts not found in %s: %s" % (repository.name, suggestions)
         super().__init__(message)
+    
+    def create_part_suggestion_string(self, part_name):
+        suggestions = self.repository.suggest_part_names(part_name)
+        if len(suggestions) == 0:
+            return part_name
+        return "%s (did you mean %s ?)" % (part_name, " or ".join(suggestions))
+
 
 class RepositoryDuplicateError(Exception):
-
     def __init__(self, parts, repository):
         self.parts = parts
         self.repository = repository
@@ -29,7 +39,6 @@ class RepositoryDuplicateError(Exception):
         repo_name = (" in " + repository.name) if repository.name else ""
         message = parts + " duplicated in " + repo_name
         super().__init__(message)
-
 
 
 class SequenceRepository:
@@ -177,3 +186,21 @@ class SequenceRepository:
                 "\n".join([name] + ["- " + part for part in sorted(parts)])
                 for name, parts in result.items()
             )
+
+    def get_all_part_names(self):
+        """Return the list of all part names"""
+        parts = [
+            part
+            for collection in self.collections.values()
+            for part in collection
+        ]
+        return sorted(parts)
+    
+    def suggest_part_names(self, query, cutoff=90, limit=3):
+        """Suggest part names in the repo close to the given query."""
+        search = process.extract(query, self.get_all_part_names())
+        return [
+            name
+            for (name, score) in sorted(search, key=lambda e: -e[1])
+            if score >= cutoff
+        ][:limit]

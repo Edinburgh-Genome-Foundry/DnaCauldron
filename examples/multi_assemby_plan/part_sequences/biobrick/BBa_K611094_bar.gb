@@ -1,0 +1,74 @@
+LOCUS       BBa_K611094_br          2180 bp    DNA     circular UNK 01-JAN-1980
+DEFINITION  .
+ACCESSION   BBa_K611094_br     
+VERSION     BBa_K611094_br     
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     misc_feature    1..21
+                     /label="suffix"
+     misc_feature    22..93
+                     /label="E. coli his operon terminator"
+     stem_loop       30..64
+                     /label="terminator stem loop"
+     primer_bind     157..176
+                     /label="VR"
+     CDS             261..875
+                     /label="rep(pMB1) (rev)"
+     misc_feature    276
+                     /label="ORI"
+     CDS             1035..1895
+                     /label="ampR (rev)"
+     primer_bind     2018..2037
+                     /label="VF2"
+     misc_feature    2094..2097
+                     /label="end of terminator"
+     stem_loop       2107..2126
+                     /label="terminator stem loop"
+     misc_feature    2136..2157
+                     /label="prefix"
+     misc_feature    2156..2180
+                     /label="Barcode"
+     misc_feature    2156..2180
+                     /label="BBa_K611094_br"
+ORIGIN
+        1 tactagtagc ggccgctgca gtccggcaaa aaagggcaag gtgtcaccac cctgcccttt
+       61 ttctttaaaa ccgaaaagat tacttcgcgt tatgcaggct tcctcgctca ctgactcgct
+      121 gcgctcggtc gttcggctgc ggcgagcggt atcagctcac tcaaaggcgg taatacggtt
+      181 atccacagaa tcaggggata acgcaggaaa gaacatgtga gcaaaaggcc agcaaaaggc
+      241 caggaaccgt aaaaaggccg cgttgctggc gtttttccac aggctccgcc cccctgacga
+      301 gcatcacaaa aatcgacgct caagtcagag gtggcgaaac ccgacaggac tataaagata
+      361 ccaggcgttt ccccctggaa gctccctcgt gcgctctcct gttccgaccc tgccgcttac
+      421 cggatacctg tccgcctttc tcccttcggg aagcgtggcg ctttctcata gctcacgctg
+      481 taggtatctc agttcggtgt aggtcgttcg ctccaagctg ggctgtgtgc acgaaccccc
+      541 cgttcagccc gaccgctgcg ccttatccgg taactatcgt cttgagtcca acccggtaag
+      601 acacgactta tcgccactgg cagcagccac tggtaacagg attagcagag cgaggtatgt
+      661 aggcggtgct acagagttct tgaagtggtg gcctaactac ggctacacta gaagaacagt
+      721 atttggtatc tgcgctctgc tgaagccagt taccttcgga aaaagagttg gtagctcttg
+      781 atccggcaaa caaaccaccg ctggtagcgg tggttttttt gtttgcaagc agcagattac
+      841 gcgcagaaaa aaaggatctc aagaagatcc tttgatcttt tctacggggt ctgacgctca
+      901 gtggaacgaa aactcacgtt aagggatttt ggtcatgaga ttatcaaaaa ggatcttcac
+      961 ctagatcctt ttaaattaaa aatgaagttt taaatcaatc taaagtatat atgagtaaac
+     1021 ttggtctgac agttaccaat gcttaatcag tgaggcacct atctcagcga tctgtctatt
+     1081 tcgttcatcc atagttgcct gactccccgt cgtgtagata actacgatac gggagggctt
+     1141 accatctggc cccagtgctg caatgatacc gcgagaccca cgctcaccgg ctccagattt
+     1201 atcagcaata aaccagccag ccggaagggc cgagcgcaga agtggtcctg caactttatc
+     1261 cgcctccatc cagtctatta attgttgccg ggaagctaga gtaagtagtt cgccagttaa
+     1321 tagtttgcgc aacgttgttg ccattgctac aggcatcgtg gtgtcacgct cgtcgtttgg
+     1381 tatggcttca ttcagctccg gttcccaacg atcaaggcga gttacatgat cccccatgtt
+     1441 gtgcaaaaaa gcggttagct ccttcggtcc tccgatcgtt gtcagaagta agttggccgc
+     1501 agtgttatca ctcatggtta tggcagcact gcataattct cttactgtca tgccatccgt
+     1561 aagatgcttt tctgtgactg gtgagtactc aaccaagtca ttctgagaat agtgtatgcg
+     1621 gcgaccgagt tgctcttgcc cggcgtcaat acgggataat accgcgccac atagcagaac
+     1681 tttaaaagtg ctcatcattg gaaaacgttc ttcggggcga aaactctcaa ggatcttacc
+     1741 gctgttgaga tccagttcga tataacccac tcgtgcaccc aactgatctt cagcatcttt
+     1801 tactttcacc agcgtttctg ggtgagcaaa aacaggaagg caaaatgccg caaaaaaggg
+     1861 aataagggcg acacggaaat gttgaatact catactcttc ctttttcaat attattgaag
+     1921 catttatcag ggttattgtc tcatgagcgg atacatattt gaatgtattt agaaaaataa
+     1981 acaaataggg gttccgcgca catttccccg aaaagtgcca cctgacgtct aagaaaccat
+     2041 tattatcatg acattaacct ataaaaatag gcgtatcacg aggcagaatt tcagataaaa
+     2101 aaaatcctta gctttcgcta aggatgattt ctggaattcg cggccgcttc tagagcgctg
+     2161 atagtgctag tgtagatcgc
+//

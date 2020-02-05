@@ -1,0 +1,68 @@
+#!/usr/bin/env python
+
+"""
+DnaChisel Command Line Interface
+
+Usage:
+  dnacauldron <assembly_plan> <sequences> <target> [--connectors=path]
+
+Examples:
+
+>>> dnacauldron assembly_plan.xlsx my_parts_folder my_report.zip
+>>> dnacauldron assembly_plan.csv my_parts.zip my_report_folder
+>>> dnacauldron plan.csv parts.zip plan.zip --connectors=connectors_path
+
+Parameters:
+
+  <assembly_plan> path to a spreadsheet, Excel or CSV. see docs for the API.
+  <sequences> path to a zip or folder containing all part sequences
+  <target> path to a folder to (over)write the report to.
+  [--connectors=path] optional path to a folder/zip file with connector sequences.
+  The folder/zip should have subfolders, one per collection.
+
+
+Note: this CLI will be developed on a per-request basis, so don't hesitate to
+ask for more handles and options on Github
+(https://github.com/Edinburgh-Genome-Foundry/DnaCauldron/issues)
+
+
+"""
+
+import os
+from docopt import docopt
+import proglog
+import dnacauldron as dc
+
+
+if __name__ == "__main__":
+
+    params = docopt(__doc__)
+    connectors_path = params["--connectors"]
+    assembly_plan_path = params["<assembly_plan>"]
+    sequences_path = params["<sequences>"]
+    target_path = params["<target>"]
+
+    logger = proglog.default_bar_logger("bar")
+
+    logger(message="Importing the sequences...")
+    repository = dc.SequenceRepository()
+    repository.import_records(folder=sequences_path)
+    for subfolder_name in os.listdir(connectors_path):
+        sub_path = os.path.join(connectors_path, subfolder_name)
+        repository.import_records(folder=sub_path, collection=subfolder_name)
+
+    logger(message="Simulating the assembly plan...")
+    assembly_plan = dc.AssemblyPlan.from_spreadsheet(
+        assembly_plan_path, logger=logger
+    )
+    simulation = assembly_plan.simulate(sequence_repository=repository)
+
+    logger(message="Simulation finished. Here are the stats:")
+    stats = simulation.compute_stats()
+    for key, value in sorted(stats.items())[::-1]:
+        print((key + ":").ljust(21), value)
+
+    logger(message="Now generating the report...")
+    simulation.write_report(target_path, logger=logger)
+
+    logger(message="All done! See %s for the report" % target_path)

@@ -1,0 +1,38 @@
+LOCUS       part_E                   347 bp    ds-DNA  linear   UNK 20-OCT-2019
+DEFINITION  .
+ACCESSION   part_E
+VERSION     part_E
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+     3'UTR           21..330
+                     /label="feature"
+                     /ApEinfo_fwdcolor="#c6c9d1"
+     misc_feature    1..13
+                     /label="another feature"
+                     /ApEinfo_fwdcolor="#faac61"
+     misc_feature    18..20
+                     /label="yet another feature"
+                     /ApEinfo_fwdcolor="#b1ff67"
+     misc_feature    14..17
+                     /label="feature"
+                     /ApEinfo_fwdcolor="#b4abac"
+     misc_feature    331..334
+                     /label="another feature"
+                     /ApEinfo_fwdcolor="#f8d3a9"
+     misc_feature    14..17
+                     /label="yet another feature"
+                     /ApEinfo_fwdcolor="#f8d3a9"
+     misc_feature    335..347
+                     /label="feature"
+                     /ApEinfo_fwdcolor="#faac61"
+ORIGIN
+        1 tggctaggtc tccgctttga tcagcacgcg tctcagagtt tcagggggac ccaaattact
+       61 ggtcctcaat tgggacgcga ccgcatctcc ccacgaaagc ttatggggat tgcccactgc
+      121 ccagcttcaa atctgaaggt tcggcttatt gacagggtct aacacgcagc tcaactgctc
+      181 gaggttagag gcgtaatgac gggccccgat agccttctac gattacgtcc agcaggaacc
+      241 ccacagcttt tccctacgtc taacaccgtg aaagcaaaac tgtctgccct tttacatggt
+      301 ctttaaggaa tctctgcact tatgttatta ggtatgagac ctagcca
+//

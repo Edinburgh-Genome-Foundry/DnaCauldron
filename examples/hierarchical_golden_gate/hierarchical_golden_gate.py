@@ -7,4 +7,7 @@ assembly_plan = dc.AssemblyPlan.from_spreadsheet(
     path="golden_gate_two_levels.csv",
 )
 plan_simulation = assembly_plan.simulate(sequence_repository=repository)
-plan_simulation.write_report("output")
+report_writer = dc.AssemblyReportWriter(
+    include_mix_graphs=True, include_assembly_plots=True
+)
+plan_simulation.write_report("output", assembly_report_writer=report_writer)

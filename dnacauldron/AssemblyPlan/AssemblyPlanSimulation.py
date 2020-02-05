@@ -174,7 +174,10 @@ class AssemblyPlanSimulation:
 
         def parts_sort_key(name):
             assemblies = enumerate(self.assembly_plan.assemblies)
-            return [i for i, asm in assemblies if name in asm.parts][0]
+            indices = [i for i, asm in assemblies if name in asm.parts]
+            if indices == []:
+                return 1000000
+            return indices[0]
 
         all_parts = (
             self.list_all_original_parts_used() + self.assembly_plan.all_parts
@@ -209,7 +212,7 @@ class AssemblyPlanSimulation:
             for simulation in self.assembly_simulations
             for error in (
                 simulation.errors
-                if error_type == "errors"
+                if error_type == "error"
                 else simulation.warnings
             )
         ]
@@ -228,12 +231,12 @@ class AssemblyPlanSimulation:
                 )
                 for err in all_errors
             ]
-            filename = "assembly_%s.csv" % error_type
+            filename = "%s_%ss.csv" % (self.assembly_plan.name, error_type)
             errors_spreadsheet = report_root._file(filename)
             errors_spreadsheet.write("\n".join([columns] + all_error_rows))
 
     def _write_assembly_reports(self, report_root, report_writer, logger):
-        all_records_folder = report_root._dir("all_records")
+        all_records_folder = report_root._dir("all_construct_records")
         logger(message="Generating assemblies reports...")
         for simulation in logger.iter_bar(assembly=self.assembly_simulations):
             # TODO: skip cancelled assemblies!
