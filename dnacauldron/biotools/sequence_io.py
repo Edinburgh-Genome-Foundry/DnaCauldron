@@ -92,7 +92,8 @@ def load_record(
 
     return record
 
-def _load_records_from_zip_file(zip_file):
+
+def _load_records_from_zip_file(zip_file, use_file_names_as_ids=False):
     """Return all fasta/genbank/snapgene in a zip as biopython records.
     
     Each record gets a ``source_file`` attribute from the zip's file name
@@ -137,6 +138,10 @@ def _load_records_from_zip_file(zip_file):
                 record.id = name
                 record.id = name
                 record.file_name = f._name_no_extension
+                if use_file_names_as_ids and single_record:
+                    basename = os.path.basename(record.source_file)
+                    basename_no_extension = os.path.splitext(basename)[0]
+                    record.id = basename_no_extension
             for record in new_records:
                 record.source_file = f._path
             records += new_records
@@ -193,7 +198,9 @@ def load_records_from_files(
     for filepath in files:
         filename = os.path.basename(filepath)
         if filename.lower().endswith("zip"):
-            records += _load_records_from_zip_file(filepath)
+            records += _load_records_from_zip_file(
+                filepath, use_file_names_as_ids=use_file_names_as_ids
+            )
             continue
         recs, fmt = load_records_from_file(filepath)
         single_record = len(recs) == 1
