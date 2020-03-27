@@ -21,7 +21,7 @@ setup(
         "Biopython",
         "numpy",
         "matplotlib",
-        "fuzzywuzzy",
+        "rapidfuzz",
         "pandas",
         "scipy",
         "networkx",
@@ -31,7 +31,6 @@ setup(
         "proglog",
         "xlwt",
         "openpyxl",
-        "python-Levenshtein",
         "xlrd",
     ],
 )

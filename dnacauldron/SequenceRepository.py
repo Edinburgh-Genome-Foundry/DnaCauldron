@@ -3,7 +3,7 @@ from .biotools import (
     set_record_topology,
     sequence_to_biopython_record,
 )
-from fuzzywuzzy import process
+from rapidfuzz import process
 
 
 class NotInRepositoryError(Exception):
