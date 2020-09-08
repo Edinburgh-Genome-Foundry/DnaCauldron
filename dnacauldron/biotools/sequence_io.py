@@ -5,7 +5,15 @@ from copy import deepcopy
 import flametree
 from snapgene_reader import snapgene_file_to_seqrecord
 from Bio import SeqIO
-from Bio.Alphabet import DNAAlphabet
+
+try:
+    # Biopython <1.78
+    from Bio.Alphabet import DNAAlphabet
+
+    has_dna_alphabet = True
+except ImportError:
+    # Biopython >=1.78
+    has_dna_alphabet = False
 from .record_operations import (
     set_record_topology,
     sequence_to_biopython_record,
@@ -210,7 +218,11 @@ def load_records_from_files(files=None, folder=None, use_file_names_as_ids=False
                 "<unknown name>",
                 "Exported",
             ]
-            record.seq.alphabet = DNAAlphabet()
+
+            if has_dna_alphabet:  # Biopython <1.78
+                record.seq.alphabet = DNAAlphabet()
+            record.annotations["molecule_type"] = "DNA"
+
             # Sorry for this parts, it took a lot of "whatever works".
             # keep your part names under 20c and pointless, and everything
             # will be good
@@ -231,8 +243,12 @@ def write_record(record, target, fmt="genbank"):
     """Write a record as genbank, fasta, etc. via Biopython, with fixes."""
     record = deepcopy(record)
     record.id = record.id[:20]
-    if str(record.seq.alphabet.__class__.__name__) != "DNAAlphabet":
-        record.seq.alphabet = DNAAlphabet()
+
+    if has_dna_alphabet:  # Biopython <1.78
+        if str(record.seq.alphabet.__class__.__name__) != "DNAAlphabet":
+            record.seq.alphabet = DNAAlphabet()
+    record.annotations["molecule_type"] = "DNA"
+
     if hasattr(target, "open"):
         target = target.open("w")
     SeqIO.write(record, target, fmt)

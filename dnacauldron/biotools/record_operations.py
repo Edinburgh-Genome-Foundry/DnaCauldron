@@ -1,5 +1,13 @@
 from copy import copy
-from Bio.Alphabet import DNAAlphabet
+
+try:
+    # Biopython <1.78
+    from Bio.Alphabet import DNAAlphabet
+
+    has_dna_alphabet = True
+except ImportError:
+    # Biopython >=1.78
+    has_dna_alphabet = False
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.SeqFeature import SeqFeature, FeatureLocation
@@ -61,12 +69,25 @@ def sequence_to_biopython_record(
     sequence, id="<unknown id>", name="same_as_id", features=()
 ):
     """Return a SeqRecord of the sequence, ready to be Genbanked."""
-    return SeqRecord(
-        Seq(sequence, alphabet=DNAAlphabet()),
-        id=id,
-        name=id if name == "same_as_id" else name,
-        features=list(features),
-    )
+
+    if has_dna_alphabet:
+        seqrecord = SeqRecord(
+            Seq(sequence, alphabet=DNAAlphabet()),
+            id=id,
+            name=id if name == "same_as_id" else name,
+            features=list(features),
+        )
+    else:
+        seqrecord = SeqRecord(
+            Seq(sequence),
+            id=id,
+            name=id if name == "same_as_id" else name,
+            features=list(features),
+        )
+
+    seqrecord.annotations["molecule_type"] = "DNA"
+
+    return seqrecord
 
 
 def annotate_record(

@@ -1,6 +1,14 @@
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
-from Bio.Alphabet import DNAAlphabet
+
+try:
+    # Biopython <1.78
+    from Bio.Alphabet import DNAAlphabet
+
+    has_dna_alphabet = True
+except ImportError:
+    # Biopython >=1.78
+    has_dna_alphabet = False
 
 from ...biotools import (
     set_record_topology,
@@ -83,7 +91,11 @@ class StickyEndFragment(Fragment):
             )
         if circularize:
             result = result.circularized(annotate_homology=annotate_homologies)
-        result.seq.alphabet = DNAAlphabet()
+
+        if has_dna_alphabet:  # Biopython <1.78
+            result.seq.alphabet = DNAAlphabet()
+        result.annotations["molecule_type"] = "DNA"
+
         return result
 
     def assemble_with(self, other, annotate_homology=False, annotation_type="homology"):
@@ -99,7 +111,11 @@ class StickyEndFragment(Fragment):
         new_record = SeqRecord.__add__(selfc, connector).__add__(other)
         new_record.seq = self.seq + other.seq
         new_record.__class__ = StickyEndFragment
-        new_record.seq.alphabet = DNAAlphabet()
+
+        if has_dna_alphabet:  # Biopython <1.78
+            new_record.seq.alphabet = DNAAlphabet()
+        new_record.annotations["molecule_type"] = "DNA"
+
         return new_record
 
     @staticmethod

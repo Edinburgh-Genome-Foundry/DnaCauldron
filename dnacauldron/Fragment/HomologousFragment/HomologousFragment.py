@@ -1,7 +1,16 @@
 from copy import deepcopy
 from Bio.SeqRecord import SeqRecord
 from ..Fragment import Fragment
-from Bio.Alphabet import DNAAlphabet
+
+try:
+    # Biopython <1.78
+    from Bio.Alphabet import DNAAlphabet
+
+    has_dna_alphabet = True
+except ImportError:
+    # Biopython >=1.78
+    has_dna_alphabet = False
+
 from ...biotools import set_record_topology, crop_record_with_saddling_features
 
 
@@ -159,5 +168,9 @@ class HomologousFragment(Fragment):
                 annotate_homology=annotate_homologies,
                 homology_checker=homology_checker,
             )
-        result.seq.alphabet = DNAAlphabet()
+
+        if has_dna_alphabet:  # Biopython <1.78
+            result.seq.alphabet = DNAAlphabet()
+        result.annotations["molecule_type"] = "DNA"
+
         return result

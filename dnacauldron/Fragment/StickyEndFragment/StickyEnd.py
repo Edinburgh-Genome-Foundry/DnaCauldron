@@ -1,4 +1,13 @@
 from Bio.Seq import Seq
+
+try:
+    # Biopython <1.78
+    from Bio.Alphabet import DNAAlphabet
+
+    has_dna_alphabet = True
+except ImportError:
+    # Biopython >=1.78
+    has_dna_alphabet = False
 from ...biotools import sequence_to_biopython_record, annotate_record
 
 
@@ -25,11 +34,15 @@ class StickyEnd(Seq):
         self.strand = strand
 
     def reverse_complement(self):
-        return StickyEnd(
-            str(Seq.reverse_complement(self)),
-            strand=-self.strand,
-            alphabet=self.alphabet,
-        )
+
+        if has_dna_alphabet:  # Biopython <1.78
+            return StickyEnd(
+                str(Seq.reverse_complement(self)),
+                strand=-self.strand,
+                alphabet=self.alphabet,
+            )
+        else:
+            return StickyEnd(str(Seq.reverse_complement(self)), strand=-self.strand,)
 
     def __repr__(self):
         return "%s(%s)" % (Seq.__str__(self), {1: "+", -1: "-"}[self.strand])
