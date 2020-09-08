@@ -19,7 +19,7 @@ class Fragment(SeqRecord):
 
     def plot(self, ax=None):
         """Plot the fragment and its features on a Matplotlib ax.
-        
+
         This creates a new ax if no ax is provided. The ax is returned at the
         end.
         """
@@ -37,9 +37,9 @@ class Fragment(SeqRecord):
 
     def to_standard_string(self):
         """Return a standard string to represent and identify the fragment.
-        
+
         This method is used to standardize and recognize similar FragmentChain
-        instances. 
+        instances.
         """
 
         return str(self.seq)
@@ -53,13 +53,11 @@ class Fragment(SeqRecord):
             "ApEinfo_fwdcolor": color,
         }
         return SeqFeature(
-            FeatureLocation(start, end),
-            type=annotation_type,
-            qualifiers=qualifiers,
+            FeatureLocation(start, end), type=annotation_type, qualifiers=qualifiers,
         )
-    
+
     def text_representation_in_plots(self):
         return r"$\bf{%s}$" % self.original_part.id
-    
-    def as_bioptyhon_record(self):
+
+    def as_biopython_record(self):
         return self
