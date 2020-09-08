@@ -45,7 +45,7 @@ def load_record(
     max_name_length=20,
 ):
     """Return a Biopython record read from a Fasta/Genbank/Snapgene file.
-    
+
     Parameters
     ----------
 
@@ -56,16 +56,16 @@ def load_record(
       Can be "circular", "linear", "default_to_circular" (will default
       to circular if ``annotations['topology']`` is not already set) or
       "default_to_linear".
-    
+
     id
       Sets the record.id. If "auto", the original record.id is used, and if
       none is set the name of the file (without extension) is used instead.
-    
+
     upperize
       If true, the sequence will get upperized (recommended in this library,
       as the mix of upper and lower case can cause problems in Biopython's
-      enzyme sites search)
-    
+      enzyme site search).
+
     max_name_length
       The name of the record will be truncated if too long to avoid Biopython
       exceptions being raised.
@@ -95,7 +95,7 @@ def load_record(
 
 def _load_records_from_zip_file(zip_file, use_file_names_as_ids=False):
     """Return all fasta/genbank/snapgene in a zip as biopython records.
-    
+
     Each record gets a ``source_file`` attribute from the zip's file name
     without the .zip extension.
 
@@ -113,14 +113,10 @@ def _load_records_from_zip_file(zip_file, use_file_names_as_ids=False):
             except Exception:
                 content_stream = BytesIO(f.read("rb"))
                 try:
-                    record = snapgene_file_to_seqrecord(
-                        fileobject=content_stream
-                    )
+                    record = snapgene_file_to_seqrecord(fileobject=content_stream)
                     new_records, _ = [record], "snapgene"
                 except Exception:
-                    raise ValueError(
-                        "Format not recognized for file " + f._path
-                    )
+                    raise ValueError("Format not recognized for file " + f._path)
 
             single_record = len(new_records) == 1
             for i, record in enumerate(new_records):
@@ -168,24 +164,21 @@ def load_records_from_file(filepath):
     return records, fmt
 
 
-def load_records_from_files(
-    files=None, folder=None, use_file_names_as_ids=False
-):
+def load_records_from_files(files=None, folder=None, use_file_names_as_ids=False):
     """Automatically convert files or a folder's content to biopython records.
 
     Parameters
     ----------
 
     files
-      A list of path to files. A ``folder`` can be provided instead
-    
+      A list of path to files. A ``folder`` can be provided instead.
+
     folder
       A path to a folder containing sequence files.
-    
+
     use_file_names_as_ids
       If True, for every file containing a single record, the file name
-      (without extension) will be set as the record's ID. 
-      
+      (without extension) will be set as the record's ID.
     """
     if files is not None:
         for file in files:
@@ -235,7 +228,7 @@ def load_records_from_files(
 
 
 def write_record(record, target, fmt="genbank"):
-    """Write a record as genbank, fasta, etc. via Biopython, with fixes"""
+    """Write a record as genbank, fasta, etc. via Biopython, with fixes."""
     record = deepcopy(record)
     record.id = record.id[:20]
     if str(record.seq.alphabet.__class__.__name__) != "DNAAlphabet":
