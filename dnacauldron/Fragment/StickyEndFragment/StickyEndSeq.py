@@ -8,7 +8,6 @@ try:
 except ImportError:
     # Biopython >=1.78
     has_dna_alphabet = False
-from ...biotools import set_record_topology
 from .StickyEnd import StickyEnd
 
 
@@ -61,15 +60,6 @@ class StickyEndSeq(Seq):
         return (self.right_end is not None) and self.right_end.will_clip_directly_with(
             other.left_end
         )
-
-    def circularized(self):
-        if not self.will_clip_in_this_order_with(self):
-            raise ValueError(
-                "Only constructs with two compatible sticky ends" " can be circularized"
-            )
-        result = Seq(str(self.left_end)) + self
-        set_record_topology(result, "circular")
-        return result
 
     def __repr__(self):
         content = Seq.__str__(self)
