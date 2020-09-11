@@ -1,9 +1,17 @@
-
 from copy import copy
-from Bio.Alphabet import DNAAlphabet
+
+try:
+    # Biopython <1.78
+    from Bio.Alphabet import DNAAlphabet
+
+    has_dna_alphabet = True
+except ImportError:
+    # Biopython >=1.78
+    has_dna_alphabet = False
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.SeqFeature import SeqFeature, FeatureLocation
+
 
 def complement(dna_sequence):
     """Return the complement of the DNA sequence.
@@ -13,6 +21,7 @@ def complement(dna_sequence):
     Uses BioPython for speed.
     """
     return str(Seq(dna_sequence).complement())
+
 
 def set_record_topology(record, topology):
     """Set the Biopython record's topology, possibly passing if already set.
@@ -29,9 +38,7 @@ def set_record_topology(record, topology):
         "default_to_linear",
     ]
     if topology not in valid_topologies:
-        raise ValueError(
-            "topology should be one of %s." % ", ".join(valid_topologies)
-        )
+        raise ValueError("topology should be one of %s." % ", ".join(valid_topologies))
     annotations = record.annotations
     default_prefix = "default_to_"
     if topology.startswith(default_prefix):
@@ -62,20 +69,29 @@ def sequence_to_biopython_record(
     sequence, id="<unknown id>", name="same_as_id", features=()
 ):
     """Return a SeqRecord of the sequence, ready to be Genbanked."""
-    return SeqRecord(
-        Seq(sequence, alphabet=DNAAlphabet()),
-        id=id,
-        name=id if name == "same_as_id" else name,
-        features=list(features),
-    )
+
+    if has_dna_alphabet:
+        seqrecord = SeqRecord(
+            Seq(sequence, alphabet=DNAAlphabet()),
+            id=id,
+            name=id if name == "same_as_id" else name,
+            features=list(features),
+        )
+    else:
+        seqrecord = SeqRecord(
+            Seq(sequence),
+            id=id,
+            name=id if name == "same_as_id" else name,
+            features=list(features),
+        )
+
+    seqrecord.annotations["molecule_type"] = "DNA"
+
+    return seqrecord
 
 
 def annotate_record(
-    seqrecord,
-    location="full",
-    feature_type="misc_feature",
-    margin=0,
-    **qualifiers
+    seqrecord, location="full", feature_type="misc_feature", margin=0, **qualifiers
 ):
     """Add a feature to a Biopython SeqRecord.
 
@@ -83,19 +99,19 @@ def annotate_record(
     ----------
 
     seqrecord
-      The biopython seqrecord to be annotated.
+      The Biopython seqrecord to be annotated.
 
     location
       Either (start, end) or (start, end, strand). (strand defaults to +1)
 
     feature_type
-      The type associated with the feature
+      The type associated with the feature.
 
     margin
       Number of extra bases added on each side of the given location.
 
     qualifiers
-      Dictionnary that will be the Biopython feature's `qualifiers` attribute.
+      Dictionary that will be the Biopython feature's `qualifiers` attribute.
     """
     if location == "full":
         location = (margin, len(seqrecord) - margin)
@@ -111,7 +127,7 @@ def annotate_record(
 
 
 def crop_record_with_saddling_features(record, start, end, filters=()):
-    """Crop the biopython record, but keep features that are only partially in.
+    """Crop the Biopython record, but keep features that are only partially in.
 
     Parameters
     ----------
@@ -119,11 +135,11 @@ def crop_record_with_saddling_features(record, start, end, filters=()):
       The Biopython record to crop.
 
     start, end
-      Coordinates of the segment to crop
+      Coordinates of the segment to crop.
 
     filters
       list of functions (feature=>True/False). Any feature that doesn't pass
-      at least one filter will be filtered out. 
+      at least one filter will be filtered out.
     """
     cropped = record[start:end]
 

@@ -1,5 +1,15 @@
 from Bio.Seq import Seq
+
+try:
+    # Biopython <1.78
+    from Bio.Alphabet import DNAAlphabet
+
+    has_dna_alphabet = True
+except ImportError:
+    # Biopython >=1.78
+    has_dna_alphabet = False
 from ...biotools import sequence_to_biopython_record, annotate_record
+
 
 class StickyEnd(Seq):
     """A class to represent the sticky end of a sequence.
@@ -10,10 +20,10 @@ class StickyEnd(Seq):
     ----------
 
     data
-      A DNA sequence in ATGC format
+      A DNA sequence in ATGC format.
 
     strand
-      The strand (+1 or -1) on which the protusion is
+      The strand (+1 or -1) on which the protusion is.
 
     **k
       Optional keyword arguments for the sequence, such as ``alphabet`` etc.
@@ -24,11 +34,15 @@ class StickyEnd(Seq):
         self.strand = strand
 
     def reverse_complement(self):
-        return StickyEnd(
-            str(Seq.reverse_complement(self)),
-            strand=-self.strand,
-            alphabet=self.alphabet,
-        )
+
+        if has_dna_alphabet:  # Biopython <1.78
+            return StickyEnd(
+                str(Seq.reverse_complement(self)),
+                strand=-self.strand,
+                alphabet=self.alphabet,
+            )
+        else:
+            return StickyEnd(str(Seq.reverse_complement(self)), strand=-self.strand,)
 
     def __repr__(self):
         return "%s(%s)" % (Seq.__str__(self), {1: "+", -1: "-"}[self.strand])
@@ -40,10 +54,9 @@ class StickyEnd(Seq):
             and (self.strand == -other.strand)
             and (str(self) == str(other))
         )
-    
+
     def as_biopython_record(self):
         record = sequence_to_biopython_record(str(self))
         sign = "+" if self.strand == 1 else "-"
         annotate_record(record, label="(%s) strand" % sign)
         return record
-

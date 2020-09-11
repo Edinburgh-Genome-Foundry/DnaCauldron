@@ -1,14 +1,23 @@
 from copy import deepcopy
 from Bio.SeqRecord import SeqRecord
 from ..Fragment import Fragment
-from Bio.Alphabet import DNAAlphabet
+
+try:
+    # Biopython <1.78
+    from Bio.Alphabet import DNAAlphabet
+
+    has_dna_alphabet = True
+except ImportError:
+    # Biopython >=1.78
+    has_dna_alphabet = False
+
 from ...biotools import set_record_topology, crop_record_with_saddling_features
 
 
 class HomologousFragment(Fragment):
     @staticmethod
     def from_biopython_record(biopython_record):
-        """Convert a biopython record into a HomologousFragment (class change).
+        """Convert a Biopython record into a HomologousFragment (class change).
         """
         new_record = deepcopy(biopython_record)
         new_record.original_part = biopython_record
@@ -16,12 +25,9 @@ class HomologousFragment(Fragment):
         return new_record
 
     def circularized(
-        self,
-        homology_checker,
-        annotate_homology=False,
-        annotation_type="homology",
+        self, homology_checker, annotate_homology=False, annotation_type="homology",
     ):
-        """Return the biopython record obtained by cirularizing the result.
+        """Return the Biopython record obtained by cirularizing the result.
 
         Only works if the left and right sticky ends are compatible. The
         return is a simple Biopython record where the sticky end has been
@@ -33,8 +39,10 @@ class HomologousFragment(Fragment):
             annotate_homology=True,
             annotation_type="homology",
         )
+
         def only_parts_indicators(feature):
             return feature.qualifiers.get("indicates_part", False)
+
         result = crop_record_with_saddling_features(
             record=double_self,
             start=len(self),
@@ -64,13 +72,11 @@ class HomologousFragment(Fragment):
     def will_clip_in_this_order_with(self, other_fragment, homology_checker):
         """Return whether the fragment will assemble with anoter via homology
         recombination.
-        
+
         homology_checker should be an HomologyChecker instance definining the
         homology conditions.
         """
-        homology_size = homology_checker.find_end_homologies(
-            self, other_fragment
-        )
+        homology_size = homology_checker.find_end_homologies(self, other_fragment)
         return homology_size > 0
 
     def assemble_with(
@@ -82,16 +88,16 @@ class HomologousFragment(Fragment):
     ):
         """Return the fragment resulting from the assembly of this fragment
         with another, in that order.
-        
+
         Parameters
         ----------
-        
+
         fragment
-          The other parameter to assemble with
-        
+          The other parameter to assemble with.
+
         homology_checker
           An HomologyChecker instance definining the homology conditions.
-        
+
         annotate_homology
           If true, homologies will have an annotation in the final, predicted
           construct records.
@@ -130,10 +136,7 @@ class HomologousFragment(Fragment):
 
     @staticmethod
     def assemble(
-        fragments,
-        homology_checker,
-        circularize=False,
-        annotate_homologies=False,
+        fragments, homology_checker, circularize=False, annotate_homologies=False,
     ):
         """Return the record obtained by assembling the fragments.
 
@@ -141,19 +144,17 @@ class HomologousFragment(Fragment):
         ----------
 
         fragments
-          List of HomologousFragments to assemble
+          List of HomologousFragments to assemble.
 
         homology_checker
           An HomologyChecker instance definining the homology conditions.
-          
+
         circularize
           True to also assemble the end flanks of the final construct.
 
         annotate_homologies
            If true, homologies will have an annotation in the final, predicted
            construct records.
-
-
         """
         result = fragments[0]
         for fragment in fragments[1:]:
@@ -167,5 +168,9 @@ class HomologousFragment(Fragment):
                 annotate_homology=annotate_homologies,
                 homology_checker=homology_checker,
             )
-        result.seq.alphabet = DNAAlphabet()
+
+        if has_dna_alphabet:  # Biopython <1.78
+            result.seq.alphabet = DNAAlphabet()
+        result.annotations["molecule_type"] = "DNA"
+
         return result

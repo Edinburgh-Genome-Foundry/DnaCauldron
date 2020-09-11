@@ -1,5 +1,13 @@
 from Bio.Seq import Seq
-from ...biotools import set_record_topology
+
+try:
+    # Biopython <1.78
+    from Bio.Alphabet import DNAAlphabet
+
+    has_dna_alphabet = True
+except ImportError:
+    # Biopython >=1.78
+    has_dna_alphabet = False
 from .StickyEnd import StickyEnd
 
 
@@ -21,47 +29,45 @@ class StickyEndSeq(Seq):
 
         left-right versions are interchanged and reverse complemented.
         """
-        return StickyEndSeq(
-            str(Seq.reverse_complement(self)),
-            left_end=None
-            if self.right_end is None
-            else self.right_end.reverse_complement(),
-            right_end=None
-            if self.left_end is None
-            else self.left_end.reverse_complement(),
-            alphabet=self.alphabet,
-        )
+
+        if has_dna_alphabet:  # Biopython <1.78
+            sticky_end_seq = StickyEndSeq(
+                str(Seq.reverse_complement(self)),
+                left_end=None
+                if self.right_end is None
+                else self.right_end.reverse_complement(),
+                right_end=None
+                if self.left_end is None
+                else self.left_end.reverse_complement(),
+                alphabet=self.alphabet,
+            )
+        else:
+            sticky_end_seq = StickyEndSeq(
+                str(Seq.reverse_complement(self)),
+                left_end=None
+                if self.right_end is None
+                else self.right_end.reverse_complement(),
+                right_end=None
+                if self.left_end is None
+                else self.left_end.reverse_complement(),
+            )
+
+        return sticky_end_seq
 
     def will_clip_in_this_order_with(self, other):
         """Return whether this sequence will clip in this order with another.
         """
-        return (
-            self.right_end is not None
-        ) and self.right_end.will_clip_directly_with(other.left_end)
-
-    def circularized(self):
-        if not self.will_clip_in_this_order_with(self):
-            raise ValueError(
-                "Only constructs with two compatible sticky ends"
-                " can be circularized"
-            )
-        result = Seq(str(self.left_end)) + self
-        set_record_topology(result, "circular")
-        return result
+        return (self.right_end is not None) and self.right_end.will_clip_directly_with(
+            other.left_end
+        )
 
     def __repr__(self):
         content = Seq.__str__(self)
         if len(content) > 15:
             content = (
-                content[:5].lower()
-                + ("(%d)" % len(content))
-                + content[-5:].lower()
+                content[:5].lower() + ("(%d)" % len(content)) + content[-5:].lower()
             )
-        return "(%s-%s-%s)" % (
-            repr(self.left_end),
-            content,
-            repr(self.right_end),
-        )
+        return "(%s-%s-%s)" % (repr(self.left_end), content, repr(self.right_end),)
 
     def __add__(self, other):
         assert self.will_clip_in_this_order_with(other)
@@ -134,12 +140,9 @@ class StickyEndSeq(Seq):
                 sticky_fragments = [StickyEndSeq(fragments[0])]
             for f in fragments[1:]:
                 overhang_bit, new_fragment_seq = f[:overhang], f[overhang:]
-                sticky_fragments[-1].right_end = StickyEnd(
-                    overhang_bit, right_end_sign
-                )
+                sticky_fragments[-1].right_end = StickyEnd(overhang_bit, right_end_sign)
                 new_fragment = StickyEndSeq(
-                    new_fragment_seq,
-                    left_end=StickyEnd(overhang_bit, -right_end_sign),
+                    new_fragment_seq, left_end=StickyEnd(overhang_bit, -right_end_sign),
                 )
                 sticky_fragments.append(new_fragment)
             if not linear:
@@ -163,26 +166,16 @@ class StickyEndSeq(Seq):
                 sticky_fragments[0].left_end = first_left_end
                 sticky_fragments = [
                     StickyEndSeq(
-                        new_fragment_seq,
-                        left_end=left_end,
-                        right_end=last_right_end,
+                        new_fragment_seq, left_end=left_end, right_end=last_right_end,
                     )
                 ]
             else:
-                sticky_fragments.append(
-                    StickyEndSeq(fragments[-1], left_end=left_end)
-                )
-        if (
-            hasattr(sequence, "left_end")
-            and sticky_fragments[0].left_end is None
-        ):
+                sticky_fragments.append(StickyEndSeq(fragments[-1], left_end=left_end))
+        if hasattr(sequence, "left_end") and sticky_fragments[0].left_end is None:
             sticky_fragments[0].left_end = sequence.left_end
-        if (
-            hasattr(sequence, "right_end")
-            and sticky_fragments[-1].right_end is None
-        ):
+        if hasattr(sequence, "right_end") and sticky_fragments[-1].right_end is None:
             sticky_fragments[-1].right_end = sequence.right_end
         return sticky_fragments
-    
+
     def ends_tuple(self):
         return (str(self.left_end), str(self.right_end))

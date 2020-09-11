@@ -1,12 +1,20 @@
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
-from Bio.Alphabet import DNAAlphabet
+
+try:
+    # Biopython <1.78
+    from Bio.Alphabet import DNAAlphabet
+
+    has_dna_alphabet = True
+except ImportError:
+    # Biopython >=1.78
+    has_dna_alphabet = False
 
 from ...biotools import (
     set_record_topology,
     crop_record_with_saddling_features,
     sequence_to_biopython_record,
-    annotate_record
+    annotate_record,
 )
 from ..Fragment import Fragment
 from .StickyEnd import StickyEnd
@@ -17,7 +25,7 @@ class StickyEndFragment(Fragment):
     """Biopython SeqRecord whose sequence has sticky ends."""
 
     def will_clip_in_this_order_with(self, other):
-        """Return True iff this record's right sticky end is complementary with
+        """Return True if this record's right sticky end is complementary with
         the other record's left sticky end."""
         right_end = self.seq.right_end
         return (right_end is not None) and right_end.will_clip_directly_with(
@@ -25,12 +33,9 @@ class StickyEndFragment(Fragment):
         )
 
     def circularized(
-        self,
-        annotate_homology=False,
-        annotation_type="homology",
-        qualifiers=None,
+        self, annotate_homology=False, annotation_type="homology", qualifiers=None,
     ):
-        """Return the biopython record obtained by cirularizing the result.
+        """Return the Biopython record obtained by cirularizing the result.
 
         Only works if the left and right sticky ends are compatible. The
         return is a simple Biopython record where the sticky end has been
@@ -38,8 +43,7 @@ class StickyEndFragment(Fragment):
         """
         if not self.will_clip_in_this_order_with(self):
             raise ValueError(
-                "Only constructs with two compatible sticky ends"
-                " can be circularized"
+                "Only constructs with two compatible sticky ends" " can be circularized"
             )
         connector = SeqRecord(Seq(str(self.seq.left_end)))
         if annotate_homology:
@@ -57,10 +61,7 @@ class StickyEndFragment(Fragment):
         else:
             label = str(connector.seq)
         feature = self.create_homology_annotation(
-            start=0,
-            end=len(connector),
-            annotation_type=annotation_type,
-            label=label,
+            start=0, end=len(connector), annotation_type=annotation_type, label=label,
         )
         connector.features = [feature]
 
@@ -72,8 +73,8 @@ class StickyEndFragment(Fragment):
         ----------
 
         fragments
-          List of StickyEndFragments to assemble
-          
+          List of StickyEndFragments to assemble.
+
         circularize
           True to also assemble the end flanks of the final construct (results
           in a Biopython Record), false to not do it (the result is then a
@@ -82,8 +83,6 @@ class StickyEndFragment(Fragment):
         annotate_homologies
            If true, homologies will have an annotation in the final, predicted
            construct records.
-
-
         """
         result = fragments[0]
         for fragment in fragments[1:]:
@@ -92,12 +91,14 @@ class StickyEndFragment(Fragment):
             )
         if circularize:
             result = result.circularized(annotate_homology=annotate_homologies)
-        result.seq.alphabet = DNAAlphabet()
+
+        if has_dna_alphabet:  # Biopython <1.78
+            result.seq.alphabet = DNAAlphabet()
+        result.annotations["molecule_type"] = "DNA"
+
         return result
 
-    def assemble_with(
-        self, other, annotate_homology=False, annotation_type="homology"
-    ):
+    def assemble_with(self, other, annotate_homology=False, annotation_type="homology"):
         connector_str = str(self.seq.right_end)
         connector = SeqRecord(Seq(connector_str))
         if annotate_homology:
@@ -110,7 +111,11 @@ class StickyEndFragment(Fragment):
         new_record = SeqRecord.__add__(selfc, connector).__add__(other)
         new_record.seq = self.seq + other.seq
         new_record.__class__ = StickyEndFragment
-        new_record.seq.alphabet = DNAAlphabet()
+
+        if has_dna_alphabet:  # Biopython <1.78
+            new_record.seq.alphabet = DNAAlphabet()
+        new_record.annotations["molecule_type"] = "DNA"
+
         return new_record
 
     @staticmethod
@@ -118,17 +123,13 @@ class StickyEndFragment(Fragment):
         if linear == "auto":
             linear = record.annotations.get("topology", "linear") == "linear"
         if isinstance(enzyme, (list, tuple)):
-            n_cuts = sum(
-                [len(e.search(record.seq, linear=linear)) for e in enzyme]
-            )
+            n_cuts = sum([len(e.search(record.seq, linear=linear)) for e in enzyme])
         else:
             n_cuts = len(enzyme.search(record.seq, linear=linear))
         if n_cuts == 0:
             return [record]
         if not linear:
-            record.features = [
-                f for f in record.features if f.location is not None
-            ]
+            record.features = [f for f in record.features if f.location is not None]
             record_fragments = StickyEndFragment.list_from_record_digestion(
                 record + record, enzyme=enzyme, linear=True
             )

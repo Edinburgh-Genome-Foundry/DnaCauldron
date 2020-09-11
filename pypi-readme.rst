@@ -3,17 +3,12 @@ DNA Cauldron
 
 DNA Cauldron provides a generic cloning simulation framework to predict
 constructs sequences and detect assembly flaws.
-It can simulate Golden-Gate support, with extra features like enzyme or
+It can simulate Golden-Gate, with extra features like enzyme or
 connector parts autoselection, and other methods like Gibson Assembly,
 LCR Assembly, BASIC assembly, BioBrick assembly.
 It supports single and combinatorial assemblies, hierarchical assemblies, and
 produces nice reports for traceability and troubleshooting.
 
-
-.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaCauldron/master/docs/_static/images/report_elements.png
-   :alt: [logo]
-   :align: center
-   :width: 800px
 
 Infos
 -----
@@ -28,11 +23,11 @@ Infos
 
 `<https://edinburgh-genome-foundry.github.io/DnaCauldron/>`_
 
-**Github Page**
+**Github Page:**
 
 `<https://github.com/Edinburgh-Genome-Foundry/DnaCauldron>`_
 
-**Live demo**
+**Live demo:**
 
 `<http://cuba.genomefoundry.org/simulate_gg_assemblies>`_
 
