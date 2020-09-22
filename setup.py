@@ -13,7 +13,7 @@ setup(
     url="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron",
     description="Cloning simulation for DNA assembly (Golden Gate, Gibson...)",
     long_description=open("pypi-readme.rst").read(),
-    license="see LICENSE.txt",
+    license="MIT",
     keywords="DNA assembly cloning simulator synthetic biology",
     scripts=["scripts/dnacauldron"],
     packages=find_packages(exclude="docs"),
