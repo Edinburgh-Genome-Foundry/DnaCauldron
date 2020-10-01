@@ -46,6 +46,9 @@ from .biotools import (
     write_record,
     autoselect_enzyme,
 )
+
+from .reports import write_pdf_domestication_report
+
 from .utils import (
     swap_donor_vector_part,
     insert_parts_on_backbones,

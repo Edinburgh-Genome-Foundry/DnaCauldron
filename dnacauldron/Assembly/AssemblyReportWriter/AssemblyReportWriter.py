@@ -53,6 +53,9 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
     include_warnings_spreadsheet
       If true and there are warnings, a warnings spreadsheet will be added to
       the report.
+
+    include_pdf_report
+      If true, a PDF report file is also generated.
     """
 
     def __init__(
@@ -66,6 +69,7 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
         annotate_parts_homologies=True,
         include_errors_spreadsheet=True,
         include_warnings_spreadsheet=True,
+        include_pdf_report=False,
     ):
         self.include_fragment_plots = include_fragment_plots
         self.include_part_plots = include_part_plots
@@ -76,6 +80,7 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
         self.annotate_parts_homologies = annotate_parts_homologies
         self.include_errors_spreadsheet = include_errors_spreadsheet
         self.include_warnings_spreadsheet = include_warnings_spreadsheet
+        self.include_pdf_report = include_pdf_report
 
     def _write_constructs_spreadsheet(self, simulation, report_root):
         dataframe = simulation.compute_summary_dataframe()

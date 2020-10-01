@@ -7,6 +7,14 @@ from ..Assembly.AssemblyReportWriter import AssemblyReportWriter
 from .plot_leveled_graph import plot_leveled_graph
 import matplotlib.pyplot as plt
 
+try:
+    import pdf_reports
+
+    PDF_REPORTS_AVAILABLE = True
+except ImportError:
+    PDF_REPORTS_AVAILABLE = False
+from ..reports import write_pdf_domestication_report
+
 
 class AssemblyPlanSimulation:
     def __init__(
@@ -136,6 +144,16 @@ class AssemblyPlanSimulation:
             self._write_all_required_parts_records(report_root)
         if not self.has_single_level:
             self._plot_assembly_graph(report_root)
+
+        if assembly_report_writer.include_pdf_report:
+            if not PDF_REPORTS_AVAILABLE:
+                raise ImportError(
+                    "Could not load PDF Reports. Install with `pip install pdf_reports`"
+                    "to generate a PDF report."
+                )
+            print("PDF record will be included.")
+            write_pdf_domestication_report(report_root._file("Report.pdf"))
+
         if target == "@memory":
             return report_root._close()
 
