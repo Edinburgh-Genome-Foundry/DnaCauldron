@@ -1,21 +1,9 @@
 from datetime import datetime
 import os
-import hashlib
-from copy import deepcopy
 
-from Bio import SeqIO
-import matplotlib.pyplot as plt
-import pandas
-import jinja2
-import weasyprint
-
-import flametree
 from pdf_reports import (
     write_report,
     pug_to_html,
-    dataframe_to_html,
-    style_table_rows,
-    add_css_class,
 )
 
 from .version import __version__
