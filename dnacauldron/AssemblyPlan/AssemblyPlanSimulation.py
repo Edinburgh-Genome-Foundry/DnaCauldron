@@ -13,7 +13,7 @@ try:
     PDF_REPORTS_AVAILABLE = True
 except ImportError:
     PDF_REPORTS_AVAILABLE = False
-from ..reports import write_pdf_domestication_report
+from ..reports import write_simulation_pdf_report
 
 
 class AssemblyPlanSimulation:
@@ -149,10 +149,14 @@ class AssemblyPlanSimulation:
             if not PDF_REPORTS_AVAILABLE:
                 raise ImportError(
                     "Could not load PDF Reports. Install with `pip install pdf_reports`"
-                    "to generate a PDF report."
+                    " to generate a PDF report."
                 )
             print("PDF record will be included.")
-            write_pdf_domestication_report(report_root._file("Report.pdf"))
+
+            simulation_info = self._calculate_simulation_info()
+            write_simulation_pdf_report(
+                report_root._file("Report.pdf"), simulation_info
+            )
 
         if target == "@memory":
             return report_root._close()
@@ -299,3 +303,22 @@ class AssemblyPlanSimulation:
             f = report_root._file(file_name)
             lines = [",".join([c] + parts) for c, parts in construct_parts]
             f.write("\n".join(["construct, parts"] + lines))
+
+    def _calculate_simulation_info(self):
+        stats_dict = self.compute_stats()
+        stats_dict_series = {
+            "Outcome": pandas.Series(
+                ["Valid assemblies", "Cancelled assemblies", "Errored assemblies"]
+            ),
+            "Number": pandas.Series(
+                [
+                    stats_dict["valid_assemblies"],
+                    stats_dict["errored_assemblies"],
+                    stats_dict["errored_assemblies"],
+                ]
+            ),
+        }
+
+        stats_df = pandas.DataFrame(stats_dict_series)
+
+        return stats_df

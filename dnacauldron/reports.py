@@ -2,8 +2,9 @@ from datetime import datetime
 import os
 
 from pdf_reports import (
-    write_report,
+    dataframe_to_html,
     pug_to_html,
+    write_report,
 )
 
 from .version import __version__
@@ -27,6 +28,9 @@ def dnacauldron_pug_to_html(template, **context):
     return pug_to_html(template, **context)
 
 
-def write_pdf_domestication_report(target):
-    html = dnacauldron_pug_to_html(DOMESTICATION_REPORT_TEMPLATE,)
+def write_simulation_pdf_report(target, simulation_info):
+    summary_table = dataframe_to_html(simulation_info, extra_classes=("definition",))
+    html = dnacauldron_pug_to_html(
+        DOMESTICATION_REPORT_TEMPLATE, summary_table=summary_table
+    )
     write_report(html, target, extra_stylesheets=(STYLESHEET,))

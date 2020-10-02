@@ -47,7 +47,7 @@ from .biotools import (
     autoselect_enzyme,
 )
 
-from .reports import write_pdf_domestication_report
+from .reports import write_simulation_pdf_report
 
 from .utils import (
     swap_donor_vector_part,
