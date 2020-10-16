@@ -3,6 +3,8 @@ import os
 
 from pdf_reports import (
     dataframe_to_html,
+    style_table_rows,
+    add_css_class,
     pug_to_html,
     write_report,
 )
@@ -30,6 +32,21 @@ def dnacauldron_pug_to_html(template, **context):
 
 def write_simulation_pdf_report(target, simulation_info):
     summary_table = dataframe_to_html(simulation_info, extra_classes=("definition",))
+
+    def tr_modifier(tr):
+        tds = list(tr.find_all("td"))
+        if len(tds) == 0:
+            return
+        outcome, number = tds
+        if outcome.text == "Valid":
+            if number.text == "0":
+                add_css_class(tr, "negative")
+            else:
+                add_css_class(tr, "positive")
+        elif number.text != "0":
+            add_css_class(tr, "negative")
+
+    summary_table = style_table_rows(summary_table, tr_modifier)
     html = dnacauldron_pug_to_html(
         DOMESTICATION_REPORT_TEMPLATE, summary_table=summary_table
     )

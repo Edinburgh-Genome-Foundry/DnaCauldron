@@ -151,7 +151,6 @@ class AssemblyPlanSimulation:
                     "Could not load PDF Reports. Install with `pip install pdf_reports`"
                     " to generate a PDF report."
                 )
-            print("PDF record will be included.")
 
             simulation_info = self._calculate_simulation_info()
             write_simulation_pdf_report(
@@ -307,13 +306,11 @@ class AssemblyPlanSimulation:
     def _calculate_simulation_info(self):
         stats_dict = self.compute_stats()
         stats_dict_series = {
-            "Outcome": pandas.Series(
-                ["Valid assemblies", "Cancelled assemblies", "Errored assemblies"]
-            ),
-            "Number": pandas.Series(
+            "Outcome": pandas.Series(["Valid", "Cancelled", "Errored"]),
+            "Number of assemblies": pandas.Series(
                 [
                     stats_dict["valid_assemblies"],
-                    stats_dict["errored_assemblies"],
+                    stats_dict["cancelled_assemblies"],
                     stats_dict["errored_assemblies"],
                 ]
             ),
