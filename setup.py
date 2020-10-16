@@ -34,4 +34,5 @@ setup(
         "python-Levenshtein",
         "xlrd",
     ],
+    extras_require={"reports": ["pdf_reports"]},
 )
