@@ -152,7 +152,7 @@ You can install DnaCauldron through PIP:
 
     sudo pip install dnacauldron
 
-The full installation using `dnacauldron[reports]` is required for report generation.
+The full installation using ``dnacauldron[reports]`` is required for report generation.
 Alternatively, you can unzip the sources in a folder and type:
 
 .. code:: shell
