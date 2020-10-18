@@ -1,0 +1,29 @@
+.logos {
+  margin: 0 auto;
+}
+
+h1.appendix {
+  page-break-before: always;
+}
+
+h1 {
+  text-align: center;
+}
+
+.ribbon {
+  margin-left: -2.3em !important;
+}
+
+.description {
+  margin-top: 1em;
+}
+
+table {
+  font-size: 0.6em !important;
+}
+
+table img {
+  width: 1.5em;
+  /* height: 1em; */
+  margin-right: 1em
+}

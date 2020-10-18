@@ -1,13 +1,19 @@
 from flametree import file_tree
 import proglog
 import pandas
-from ..tools import (
-    format_data_dicts_records_for_spreadsheet
-)
+from ..tools import format_data_dicts_records_for_spreadsheet
 from ..biotools import write_record
 from ..Assembly.AssemblyReportWriter import AssemblyReportWriter
 from .plot_leveled_graph import plot_leveled_graph
 import matplotlib.pyplot as plt
+
+try:
+    import pdf_reports
+
+    PDF_REPORTS_AVAILABLE = True
+except ImportError:
+    PDF_REPORTS_AVAILABLE = False
+from ..reports import write_simulation_pdf_report
 
 
 class AssemblyPlanSimulation:
@@ -73,7 +79,7 @@ class AssemblyPlanSimulation:
         return pandas.DataFrame(data, columns=columns)
 
     def compute_stats(self):
-        """Return a dictionnary of stats.
+        """Return a dictionary of stats.
 
         For instance {"cancelled_assemblies": 2, "errored_assemblies": 1,
         "valid_assemblies": 5}.
@@ -94,7 +100,7 @@ class AssemblyPlanSimulation:
         logger="bar",
         include_original_parts_records=True,
     ):
-        """Write a comprehensive report to a folder or zip file
+        """Write a comprehensive report to a folder or zip file.
 
         Parameters
         ----------
@@ -102,33 +108,29 @@ class AssemblyPlanSimulation:
         target
           Either a path to a folder, to a zip file, or ``"@memory"`` to write
           into a virtual zip file whose raw data is then returned.
-        
+
         folder_name
           Name of the folder created inside the target to host the report (yes,
           it is a folder inside a folder, which can be very practical).
-        
+
         assembly_report_writer
           Either the "default" or any AssemblyReportWriter instance.
-        
+
         logger
           Either "bar" for a progress bar, or None, or any Proglog logger.
 
         include_original_parts_records
           If true, the original provided part records will be included in the
-          report (creates larger file sizes, but better for traceability). 
-        """ 
+          report (creates larger file sizes, but better for traceability).
+        """
         if assembly_report_writer == "default":
             # We'll write all records into one folder for the whole plan
-            assembly_report_writer = AssemblyReportWriter(
-                include_part_records=False
-            )
+            assembly_report_writer = AssemblyReportWriter(include_part_records=False)
         logger = proglog.default_bar_logger(logger)
         if folder_name == "auto":
             folder_name = self.assembly_plan.name + "_simulation"
         report_root = file_tree(target)._dir(folder_name, replace=True)
-        self._write_assembly_reports(
-            report_root, assembly_report_writer, logger=logger
-        )
+        self._write_assembly_reports(report_root, assembly_report_writer, logger=logger)
         self._write_errors_spreadsheet(report_root, error_type="error")
         self._write_errors_spreadsheet(report_root, error_type="warning")
 
@@ -142,6 +144,19 @@ class AssemblyPlanSimulation:
             self._write_all_required_parts_records(report_root)
         if not self.has_single_level:
             self._plot_assembly_graph(report_root)
+
+        if assembly_report_writer.include_pdf_report:
+            if not PDF_REPORTS_AVAILABLE:
+                raise ImportError(
+                    "Could not load PDF Reports. Install with `pip install pdf_reports`"
+                    " to generate a PDF report."
+                )
+
+            simulation_info = self._calculate_simulation_info()
+            write_simulation_pdf_report(
+                report_root._file("Report.pdf"), simulation_info
+            )
+
         if target == "@memory":
             return report_root._close()
 
@@ -164,8 +179,7 @@ class AssemblyPlanSimulation:
         filename = self._get_file_name("cancelled_assemblies.csv")
         columns = ",".join(["cancelled_assembly", "failed_parent_assembly"])
         cancelled = [
-            ",".join([c.assembly_name, c.failed_dependency])
-            for c in self.cancelled
+            ",".join([c.assembly_name, c.failed_dependency]) for c in self.cancelled
         ]
         report_root._file(filename).write("\n".join([columns] + cancelled))
 
@@ -179,9 +193,7 @@ class AssemblyPlanSimulation:
                 return 1000000
             return indices[0]
 
-        all_parts = (
-            self.list_all_original_parts_used() + self.assembly_plan.all_parts
-        )
+        all_parts = self.list_all_original_parts_used() + self.assembly_plan.all_parts
         all_parts = sorted(set(all_parts), key=parts_sort_key)
 
         def sort_key(name):
@@ -199,9 +211,7 @@ class AssemblyPlanSimulation:
             text = node.replace("_", " ")
             ax.text(x, y, text, bbox={"facecolor": "white"})
 
-        _, ax = plot_leveled_graph(
-            levels=levels, edges=edges, draw_node=draw_node
-        )
+        _, ax = plot_leveled_graph(levels=levels, edges=edges, draw_node=draw_node)
         target = report_root._file("assembly_plan_graph.pdf")
         ax.figure.savefig(target.open("wb"), format="pdf")
         plt.close(ax.figure)
@@ -211,9 +221,7 @@ class AssemblyPlanSimulation:
             error
             for simulation in self.assembly_simulations
             for error in (
-                simulation.errors
-                if error_type == "error"
-                else simulation.warnings
+                simulation.errors if error_type == "error" else simulation.warnings
             )
         ]
         if len(all_errors) > 0:
@@ -260,8 +268,7 @@ class AssemblyPlanSimulation:
             for part in simulation.list_all_parts_used()
         ]
         assemblies = [
-            simulation.assembly.name
-            for simulation in self.assembly_simulations
+            simulation.assembly.name for simulation in self.assembly_simulations
         ]
         parts_that_arent_assembled = set(all_parts).difference(set(assemblies))
         return sorted(parts_that_arent_assembled)
@@ -295,3 +302,20 @@ class AssemblyPlanSimulation:
             f = report_root._file(file_name)
             lines = [",".join([c] + parts) for c, parts in construct_parts]
             f.write("\n".join(["construct, parts"] + lines))
+
+    def _calculate_simulation_info(self):
+        stats_dict = self.compute_stats()
+        stats_dict_series = {
+            "Outcome": pandas.Series(["Valid", "Cancelled", "Errored"]),
+            "Number of assemblies": pandas.Series(
+                [
+                    stats_dict["valid_assemblies"],
+                    stats_dict["cancelled_assemblies"],
+                    stats_dict["errored_assemblies"],
+                ]
+            ),
+        }
+
+        stats_df = pandas.DataFrame(stats_dict_series)
+
+        return stats_df

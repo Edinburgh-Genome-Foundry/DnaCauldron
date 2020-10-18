@@ -142,21 +142,23 @@ The simulation and reporting on an assembly plan is very similar to that of a si
    # Write a detailed report on each assembly and on the plan as a whole
    plan_simulation.write_report("my_assembly_simulation.zip")
 
+
 Installation
 -------------
 
-You can install DnaCauldron through PIP
-
+You can install DnaCauldron through PIP:
 
 .. code:: shell
 
     sudo pip install dnacauldron
 
-Alternatively, you can unzip the sources in a folder and type
+The full installation using `dnacauldron[reports]` is required for report generation.
+Alternatively, you can unzip the sources in a folder and type:
 
 .. code:: shell
 
     sudo python setup.py install
+
 
 How it works
 ------------

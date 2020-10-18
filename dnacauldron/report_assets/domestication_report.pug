@@ -1,0 +1,34 @@
+#sidebar: p {{sidebar_text}}
+
+.logos
+  img(src="file:///{{ dc_logo_url }}")
+  img(src="file:///{{ egf_logo_url }}")
+
+hr
+h1 DNA assembly simulation report
+hr
+
+p.
+  The 'all_construct_records' folder contains the final assemblies and 'part_records'
+  (if generated) contains the original input Genbank files of all parts provided for
+  the assembly. There is one folder for each assembly, which contains:
+ul
+  li The Genbank file of the assembly (.gb)
+  li A CSV file about the assembly
+  li PDF files with schematic views of how the parts assemble together (if generated)
+  li Genbank files of the parts, in the 'provided_parts_records' folder
+
+p.
+  In addition, various summary text and csv files are provided about the simulation.
+
+
+h2  Summary table
+
+{{ summary_table }}
+
+//- h2 Domesticators
+
+//- each domesticator in domesticators
+//-   .ui.segment.raised
+//-     .ui.title.ribbon.label.teal {{domesticator.name}}
+//-     .description {{ domesticator.html_details() }}

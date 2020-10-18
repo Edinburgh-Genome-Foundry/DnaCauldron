@@ -3,7 +3,7 @@ python:
   - "3.6"
 # command to install dependencies
 install:
-  - pip install coveralls geneblocks pytest-cov==2.6 pytest==3.2.3
+  - pip install coveralls geneblocks pdf_reports pytest-cov==2.6 pytest==3.2.3
   - pip install -e .
   - sudo apt-get install ncbi-blast+
 # command to run tests
