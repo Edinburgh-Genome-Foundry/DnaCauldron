@@ -17,6 +17,7 @@ setup(
     keywords="DNA assembly cloning simulator synthetic biology",
     scripts=["scripts/dnacauldron"],
     packages=find_packages(exclude="docs"),
+    include_package_data=True,
     install_requires=[
         "Biopython",
         "numpy",
