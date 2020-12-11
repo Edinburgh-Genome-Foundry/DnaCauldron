@@ -41,6 +41,7 @@ Cauldron, you'll get the same results at the bench.
     <br /><br />
     </p>
 
+
 Usage tutorial
 --------------
 
@@ -66,6 +67,7 @@ are managed by a ``SequenceRepository``, created as follows:
 time by setting ``topology='linear'``, ``topology='circular'``, or for instance
 ``topology='default_to_linear'`` to use the topology specified by each Genbank and
 default to linear if none is specified.
+
 
 Parts assembly
 ~~~~~~~~~~~~~~
@@ -108,6 +110,7 @@ Now you can explore the results of the simulation:
 DNA Cauldron aims at generating reports as useful as possible to help you
 pinpoint any problem when you don't get the expected number of assemblies.
 
+
 Assembly Plans
 ~~~~~~~~~~~~~~
 
@@ -144,15 +147,15 @@ The simulation and reporting on an assembly plan is very similar to that of a si
 
 
 Installation
--------------
+------------
 
-You can install DnaCauldron through PIP:
+You can install DNA Cauldron through PIP:
 
 .. code:: shell
 
     sudo pip install dnacauldron
 
-The full installation using `dnacauldron[reports]` is required for report generation.
+The full installation using ``dnacauldron[reports]`` is required for report generation.
 Alternatively, you can unzip the sources in a folder and type:
 
 .. code:: shell
@@ -163,19 +166,20 @@ Alternatively, you can unzip the sources in a folder and type:
 How it works
 ------------
 
-Dna Cauldron predicts circular constructs by finding circular paths in parts
+DNA Cauldron predicts circular constructs by finding circular paths in part
 homology graphs, an idea first described in
-`Pereira et al. Bioinf. 2015 <http://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0544-x>`_ .
+`Pereira et al. (2015) <http://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0544-x>`_,
 and used in the Python library `PyDNA <https://github.com/BjornFJohansson/pydna>`_.
 
 
 Contribute!
 -----------
 
-Dna Cauldron is an open-source software originally written at the `Edinburgh Genome Foundry
+DNA Cauldron is an open-source software originally written at the `Edinburgh Genome Foundry
 <http://www.genomefoundry.io>`_ by `Zulko <https://github.com/Zulko>`_
-and `released on Github <https://github.com/Edinburgh-Genome-Foundry/DnaCauldron>`_ under the MIT licence (Copyright Edinburgh Genome Foundry).
-Everyone is welcome to contribute !
+and `released on Github <https://github.com/Edinburgh-Genome-Foundry/DnaCauldron>`_ under the MIT licence (Copyright 2020 Edinburgh Genome Foundry).
+Everyone is welcome to contribute!
+
 
 More biology software
 ----------------------

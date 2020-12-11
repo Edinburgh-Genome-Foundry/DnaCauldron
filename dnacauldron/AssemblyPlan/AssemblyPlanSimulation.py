@@ -301,7 +301,7 @@ class AssemblyPlanSimulation:
                 file_name = self._get_file_name(file_name)
             f = report_root._file(file_name)
             lines = [",".join([c] + parts) for c, parts in construct_parts]
-            f.write("\n".join(["construct, parts"] + lines))
+            f.write("\n".join(["construct,parts"] + lines))
 
     def _calculate_simulation_info(self):
         stats_dict = self.compute_stats()

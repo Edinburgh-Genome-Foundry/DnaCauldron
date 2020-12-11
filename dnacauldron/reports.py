@@ -13,7 +13,7 @@ from .version import __version__
 
 THIS_PATH = os.path.dirname(os.path.realpath(__file__))
 ASSETS_PATH = os.path.join(THIS_PATH, "report_assets")
-DOMESTICATION_REPORT_TEMPLATE = os.path.join(ASSETS_PATH, "domestication_report.pug")
+DOMESTICATION_REPORT_TEMPLATE = os.path.join(ASSETS_PATH, "simulation_report.pug")
 STYLESHEET = os.path.join(ASSETS_PATH, "report_style.css")
 
 
