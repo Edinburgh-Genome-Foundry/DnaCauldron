@@ -107,15 +107,19 @@ class AssemblyPlan:
         """Import an assembly plan from a spreadsheet.
 
         You can either read these docs or browse the examples in the repo.
+        Note that this function autoselects the enzyme, based on the sites in
+        each part. To explicitly set enzymes, set ``assembly.enzyme`` for each
+        assembly in ``AssemblyPlan.assemblies``.
+
 
         Parameters
-        -----------
+        ----------
         
         path
-          Path to a spreadsheet file (a dataframe can be used instead)
+          Path to a spreadsheet file (a dataframe can be used instead).
         
         dataframe
-          A pandas dataframe, possibly obatined from a spreadsheet.
+          A pandas dataframe, possibly obtained from a spreadsheet.
         
         sheet_name
           Name of the spreadsheet's sheet on which the assembly plan is
@@ -127,7 +131,7 @@ class AssemblyPlan:
 
         name
           Name of the assembly plan (leave to "auto_from_filename" to use the
-          file name as assembly plan name)
+          file name as assembly plan name).
 
         logger
           Logger of the created assembly plan. Either "bar" for a progress bar
