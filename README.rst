@@ -56,13 +56,13 @@ are managed by a ``SequenceRepository``, created as follows:
     import dnacauldron as dc
     
     # Create a repository from BioPython records
-    repository = dc.SequenceRepository(parts={"part_A": record_A, "part_B":...})
+    repository = dc.SequenceRepository(collections={"parts": {"part_A": record_A, "part_B": record_B}})
     
     # Or use "import_sequences" to import files from folders, zip files, etc.
     repository = dc.SequenceRepository()
     repository.import_sequences(folder="my_sequences/", use_file_names_as_ids=True)
 
-**Important:** ensure the parts topology (as set in Biopython records at
+**Important:** ensure that the part's topology (as set in Biopython records at
 ``record.annotations['topology']``) is accurate. This can be done at import
 time by setting ``topology='linear'``, ``topology='circular'``, or for instance
 ``topology='default_to_linear'`` to use the topology specified by each Genbank and
@@ -85,7 +85,7 @@ Note that we could have provided the enzyme in ``Type2sRestrictionAssembly`` wit
 ``enzyme='BsmBI'``, but it will be auto-selected by Cauldron.
 
 If you want to simulate other restriction-based assembly reactions such as IGEM Biobricks
-or Gibson Assembly instead of Type2s restriction, use the corresponding built-in Assembly subclass:
+or Gibson Assembly instead of Type2S restriction, use the corresponding built-in Assembly subclass:
 
 .. code:: python
 
