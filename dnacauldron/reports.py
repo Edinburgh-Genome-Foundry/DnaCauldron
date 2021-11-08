@@ -1,13 +1,20 @@
 from datetime import datetime
 import os
 
-from pdf_reports import (
-    dataframe_to_html,
-    style_table_rows,
-    add_css_class,
-    pug_to_html,
-    write_report,
-)
+try:
+    import pdf_reports
+
+    PDF_REPORTS_AVAILABLE = True
+except ImportError:
+    PDF_REPORTS_AVAILABLE = False
+else:
+    from pdf_reports import (
+        dataframe_to_html,
+        style_table_rows,
+        add_css_class,
+        pug_to_html,
+        write_report,
+    )
 
 from .version import __version__
 
@@ -18,6 +25,8 @@ STYLESHEET = os.path.join(ASSETS_PATH, "report_style.css")
 
 
 def dnacauldron_pug_to_html(template, **context):
+    if not PDF_REPORTS_AVAILABLE:
+        raise ImportError("Could not load PDF Reports")
     now = datetime.now().strftime("%Y-%m-%d")
     defaults = {
         "sidebar_text": "Generated on %s by DNA Cauldron version %s"
@@ -31,6 +40,8 @@ def dnacauldron_pug_to_html(template, **context):
 
 
 def write_simulation_pdf_report(target, simulation_info):
+    if not PDF_REPORTS_AVAILABLE:
+        raise ImportError("Could not load PDF Reports")
     summary_table = dataframe_to_html(simulation_info, extra_classes=("definition",))
 
     def tr_modifier(tr):
