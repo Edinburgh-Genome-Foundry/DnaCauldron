@@ -228,8 +228,6 @@ def load_records_from_files(files=None, folder=None, use_file_names_as_ids=False
             # will be good
             if str(record.id).strip() in UNKNOWN_IDS:
                 record.id = name
-            if str(record.id).strip() in UNKNOWN_IDS:
-                record.id = name
             record.file_name = name_no_extension
             if use_file_names_as_ids and single_record:
                 basename = os.path.basename(record.source_file)
