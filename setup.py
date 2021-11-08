@@ -4,11 +4,13 @@ ez_setup.use_setuptools()
 
 from setuptools import setup, find_packages
 
-exec(open("dnacauldron/version.py").read())  # loads __version__
+version = {}
+with open("dnacauldron/version.py") as fp:
+    exec(fp.read(), version)
 
 setup(
     name="dnacauldron",
-    version=__version__,
+    version=version["__version__"],
     author="Zulko",
     url="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron",
     description="Cloning simulation for DNA assembly (Golden Gate, Gibson...)",

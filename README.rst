@@ -5,9 +5,9 @@
     <br /><br />
     </p>
 
-.. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaCauldron.svg?branch=master
-  :target: https://travis-ci.org/Edinburgh-Genome-Foundry/DnaCauldron
-  :alt: Travis CI build status
+.. image:: https://app.travis-ci.com/Edinburgh-Genome-Foundry/DnaCauldron.svg?branch=master
+    :target: https://app.travis-ci.com/Edinburgh-Genome-Foundry/DnaCauldron
+    :alt: Travis CI build status
 
 .. image:: https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/DnaCauldron/badge.svg?branch=master
   :target: https://coveralls.io/github/Edinburgh-Genome-Foundry/DnaCauldron?branch=master
@@ -153,14 +153,14 @@ You can install DNA Cauldron through PIP:
 
 .. code:: shell
 
-    sudo pip install dnacauldron
+    pip install dnacauldron
 
 The full installation using ``dnacauldron[reports]`` is required for report generation.
 Alternatively, you can unzip the sources in a folder and type:
 
 .. code:: shell
 
-    sudo python setup.py install
+    python setup.py install
 
 
 How it works
@@ -172,17 +172,17 @@ homology graphs, an idea first described in
 and used in the Python library `PyDNA <https://github.com/BjornFJohansson/pydna>`_.
 
 
-Contribute!
------------
+License = MIT
+-------------
 
 DNA Cauldron is an open-source software originally written at the `Edinburgh Genome Foundry
 <http://www.genomefoundry.io>`_ by `Zulko <https://github.com/Zulko>`_
-and `released on Github <https://github.com/Edinburgh-Genome-Foundry/DnaCauldron>`_ under the MIT licence (Copyright 2020 Edinburgh Genome Foundry).
+and `released on Github <https://github.com/Edinburgh-Genome-Foundry/DnaCauldron>`_ under the MIT license (Copyright 2020 Edinburgh Genome Foundry).
 Everyone is welcome to contribute!
 
 
 More biology software
-----------------------
+---------------------
 
 .. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Edinburgh-Genome-Foundry.github.io/master/static/imgs/logos/egf-codon-horizontal.png
   :target: https://edinburgh-genome-foundry.github.io/
