@@ -21,7 +21,7 @@ setup(
     packages=find_packages(exclude="docs"),
     include_package_data=True,
     install_requires=[
-        "Biopython",
+        "Biopython<=1.78",
         "numpy",
         "matplotlib",
         "fuzzywuzzy",
