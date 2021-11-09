@@ -1,3 +1,5 @@
+import Bio.Restriction
+
 from ...Filter import NoRestrictionSiteFilter
 from ...AssemblyMix import (
     RestrictionLigationMix,
@@ -10,7 +12,7 @@ from ..AssemblyFlaw import AssemblyFlaw
 
 
 class Type2sRestrictionAssembly(Assembly):
-    """Representation and simulation of type-2s (Golden-Gate) assembly
+    """Representation and simulation of type-2s (Golden-Gate) assembly.
 
     Parameters
     ----------
@@ -19,7 +21,7 @@ class Type2sRestrictionAssembly(Assembly):
       A list of parts names corresponding to records in a repository. These
       parts will be restricted and ligated together. They can be linear,
       circular, and in any order.
-    
+
     enzyme
       Any type-2s enzyme ("BsmBI", "BsaI", "SapI", etc.), or leave to "auto"
       to autodetect the enzyme.
@@ -34,12 +36,12 @@ class Type2sRestrictionAssembly(Assembly):
     expected_constructs
       Either a number or a string ``'any_number'``. If the number of constructs
       doesn't match this value, the assembly will be considered invalid in
-      reports and summaries
+      reports and summaries.
 
     connectors_collection
       Name of a collection in the repository from which to get candidates for
       connector autocompletion.
-    
+
     expect_no_unused_parts
       If True and some parts are unused, this will be considered an invalid
       assembly in summaries and reports.
@@ -55,7 +57,7 @@ class Type2sRestrictionAssembly(Assembly):
         "expected_constructs",
         "expect_no_unused_parts",
         "connectors_collection",
-        "randomize_constructs"
+        "randomize_constructs",
     )
 
     def __init__(
@@ -108,13 +110,10 @@ class Type2sRestrictionAssembly(Assembly):
     def _detect_parts_connections_errors(self, assembly_mix):
         warnings = []
         slots_graph = assembly_mix.slots_graph(with_overhangs=False)
-        slots_degrees = {
-            slot: slots_graph.degree(slot) for slot in slots_graph.nodes()
-        }
+        slots_degrees = {slot: slots_graph.degree(slot) for slot in slots_graph.nodes()}
         slots_parts = assembly_mix.compute_slots()
 
         # CHECK PARTS WITH A SINGLE OVERHANG
-
         deadend_parts = [
             part
             for slot, degree in slots_degrees.items()
@@ -131,7 +130,6 @@ class Type2sRestrictionAssembly(Assembly):
             warnings.append(warning)
 
         # CHECK PARTS WITH MORE THAN 2 SLOT CONNECTIONS (FORK/CROSSROAD)
-
         fork_parts = [
             part
             for slot, degree in slots_degrees.items()
@@ -148,6 +146,26 @@ class Type2sRestrictionAssembly(Assembly):
             warnings.append(warning)
         return warnings
 
+    def _detect_new_enzyme_sites(self, construct_records, flaws_list):
+        """Detect new enzyme sites created at joining regions."""
+        restriction_batch = Bio.Restriction.RestrictionBatch([self.enzyme])
+        has_site = False
+        for construct in construct_records:
+            analysis = Bio.Restriction.Analysis(
+                restriction_batch, sequence=construct.seq, linear=False,
+            )
+            analysis_results = analysis.full(linear=False)
+            for enzyme, sites in analysis_results.items():
+                if len(sites) != 0:
+                    has_site = True
+        if has_site:
+            flaw = AssemblyFlaw(
+                assembly=self,
+                message="Assembly creates a new enzyme site",
+                suggestion="Ensure that joining parts cannot make up an enzyme site",
+            )
+            flaws_list.append(flaw)
+
     @property
     def enzymes(self):
         return [self.enzyme]
@@ -156,7 +174,6 @@ class Type2sRestrictionAssembly(Assembly):
         """Simulate the assembly, return an AssemblySimulation."""
 
         # CREATE THE MIX
-
         warnings = []
 
         records = sequence_repository.get_records(self.parts)
@@ -167,7 +184,6 @@ class Type2sRestrictionAssembly(Assembly):
             self.enzyme = str(mix.enzymes[0])  # it has been autoselected!
 
         # ATTEMPT CONNECTOR AUTOSELECTION IF NECESSARY
-
         connectors_records = self._get_connectors_records(sequence_repository)
         if len(connectors_records) != 0:
             try:
@@ -198,7 +214,7 @@ class Type2sRestrictionAssembly(Assembly):
         # COMPUTE ALL CIRCULAR ASSEMBLIES
         generator = mix.compute_circular_assemblies(
             annotate_parts_homologies=annotate_parts_homologies,
-            randomize=self.randomize_constructs
+            randomize=self.randomize_constructs,
         )
         construct_records = sorted(
             [asm for (i, asm) in zip(range(self.max_constructs), generator)],
@@ -207,7 +223,6 @@ class Type2sRestrictionAssembly(Assembly):
         self.attribute_ids_to_constructs(construct_records)
 
         # FIND ALL ERRORS
-
         errors = []
         found = len(construct_records)
         self._detect_constructs_number_error(found, errors)
@@ -218,6 +233,7 @@ class Type2sRestrictionAssembly(Assembly):
                 errors.append(unused_error)
         if errors != []:
             warnings.extend(self._detect_parts_connections_errors(mix))
+        self._detect_new_enzyme_sites(construct_records, errors)
 
         return AssemblySimulation(
             assembly=self,
