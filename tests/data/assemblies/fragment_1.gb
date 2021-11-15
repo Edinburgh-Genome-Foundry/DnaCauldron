@@ -1,0 +1,13 @@
+LOCUS       fragment_1                62 bp    DNA     linear   UNK 01-JAN-1980
+DEFINITION  .
+ACCESSION   fragment_1
+VERSION     fragment_1
+KEYWORDS    .
+SOURCE      
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+ORIGIN
+        1 cgtctcacta actaagcagc ccggctttcg ccctattgag tctaccgcgg cgtcttgaga
+       61 cg
+//

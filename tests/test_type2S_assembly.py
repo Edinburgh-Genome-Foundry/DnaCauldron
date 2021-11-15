@@ -22,7 +22,7 @@ repo.import_records(folder=RECORDS_FOLDER, use_file_names_as_ids=True)
 #     )
 #     simulation = assembly.simulate(sequence_repository=repo)
 #     assert len(simulation.construct_records) == 1
-#     # We expect two errors: 
+#     # We expect two errors:
 #     assert len(simulation.errors) == 2
 
 #     assembly = dc.Type2sRestrictionAssembly(
@@ -48,3 +48,14 @@ def test_single_assembly_with_wrong_enzyme(tmpdir):
 #     )
 #     simulation = assembly.simulate(sequence_repository=repo)
 #     assert len(simulation.construct_records) == 4
+
+
+def test_assembling_into_new_enzyme_site():
+    assembly = dc.Type2sRestrictionAssembly(
+        parts=["fragment_1", "fragment_2"], enzyme="BsmBI"
+    )
+    simulation = assembly.simulate(sequence_repository=repo)
+    assert len(simulation.construct_records) == 1
+    assert len(simulation.errors) == 1
+    assert simulation.errors[0].message == "Assembly creates a new enzyme site"
+
