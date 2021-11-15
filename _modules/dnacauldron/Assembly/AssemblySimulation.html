@@ -12,10 +12,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
 
       
       <script src="../../../_static/theme-vendors.js"></script>
@@ -193,24 +193,25 @@
           <div class="content" role="main">
             
   <h1>Source code for dnacauldron.Assembly.AssemblySimulation</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">.AssemblyReportWriter</span> <span class="k">import</span> <span class="n">AssemblyReportWriter</span>
-<span class="kn">from</span> <span class="nn">..tools</span> <span class="k">import</span> <span class="n">format_data_dicts_records_for_spreadsheet</span>
+<span></span><span class="kn">from</span> <span class="nn">.AssemblyReportWriter</span> <span class="kn">import</span> <span class="n">AssemblyReportWriter</span>
+<span class="kn">from</span> <span class="nn">..tools</span> <span class="kn">import</span> <span class="n">format_data_dicts_records_for_spreadsheet</span>
 <span class="kn">import</span> <span class="nn">pandas</span>
 
 
 <div class="viewcode-block" id="AssemblySimulation"><a class="viewcode-back" href="../../../ref/user_classes.html#dnacauldron.Assembly.AssemblySimulation">[docs]</a><span class="k">class</span> <span class="nc">AssemblySimulation</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Class to represent and report on the simulation of a single assembly.</span>
-<span class="sd">    </span>
-<span class="sd">    Instances are the result of ``assembly.simulate()``</span>
+
+<span class="sd">    Instances are the result of ``assembly.simulate()``.</span>
+
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 
 <span class="sd">    assembly</span>
-<span class="sd">      The Assembly instance from which this is the simulation</span>
+<span class="sd">      The Assembly instance from which this is the simulation.</span>
 
 <span class="sd">    sequence_repository</span>
-<span class="sd">      The SequenceRepository used to get records for the simulation</span>
+<span class="sd">      The SequenceRepository used to get records for the simulation.</span>
 
 <span class="sd">    construct_records</span>
 <span class="sd">      List of Biopython records (or, sometimes, StickyEndFragment records)</span>
@@ -218,7 +219,7 @@
 
 <span class="sd">    mixes</span>
 <span class="sd">      A list of AssemblyMix instances generated during the simulation (they</span>
-<span class="sd">      can be plotted at report writing time)</span>
+<span class="sd">      can be plotted at report writing time).</span>
 
 <span class="sd">    warnings</span>
 <span class="sd">      List of AssemblyFlaw instances that will be flagged as warnings in</span>
@@ -227,9 +228,9 @@
 <span class="sd">    errors</span>
 <span class="sd">      List of AssemblyFlaw instances that will be flagged as errors in</span>
 <span class="sd">      reports and summaries.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">assembly</span><span class="p">,</span>
         <span class="n">sequence_repository</span><span class="p">,</span>
@@ -250,14 +251,13 @@
         <span class="sd">&quot;&quot;&quot;Return the name of the fragment, or optionally `NAME_r` if the</span>
 <span class="sd">        fragment is the reverse of another fragment.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">fragment</span><span class="p">,</span> <span class="s2">&quot;original_part&quot;</span><span class="p">):</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">fragment</span><span class="o">.</span><span class="n">original_part</span><span class="o">.</span><span class="n">id</span> 
+            <span class="n">name</span> <span class="o">=</span> <span class="n">fragment</span><span class="o">.</span><span class="n">original_part</span><span class="o">.</span><span class="n">id</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">fragment</span><span class="o">.</span><span class="n">id</span>
         <span class="k">return</span> <span class="n">name</span> <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;_r&quot;</span> <span class="k">if</span> <span class="p">(</span><span class="n">fragment</span><span class="o">.</span><span class="n">is_reversed</span> <span class="ow">and</span> <span class="n">mark_reverse</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AssemblySimulation.list_all_parts_used"><a class="viewcode-back" href="../../../ref/user_classes.html#dnacauldron.Assembly.AssemblySimulation.list_all_parts_used">[docs]</a>    <span class="k">def</span> <span class="nf">list_all_parts_used</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;List all parts involved in at least one of the predicted constructs.</span>
-<span class="sd">        &quot;&quot;&quot;</span> 
+        <span class="sd">&quot;&quot;&quot;List all parts involved in at least one of the predicted constructs.&quot;&quot;&quot;</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fragment_part</span><span class="p">(</span><span class="n">fragment</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">construct_record</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">construct_records</span>
@@ -266,8 +266,8 @@
         <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">parts</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="AssemblySimulation.compute_construct_data_dict"><a class="viewcode-back" href="../../../ref/user_classes.html#dnacauldron.Assembly.AssemblySimulation.compute_construct_data_dict">[docs]</a>    <span class="k">def</span> <span class="nf">compute_construct_data_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">construct_record</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a dictionnary with infos on a single construct.</span>
-<span class="sd">        </span>
+        <span class="sd">&quot;&quot;&quot;Return a dictionary with infos on a single construct.</span>
+
 <span class="sd">        fields: construct_id, parts, number_of_parts, construct_size,</span>
 <span class="sd">        assembly_name, depends_on, used_in, assembly_level.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -277,16 +277,16 @@
             <span class="n">number_of_parts</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">construct_record</span><span class="o">.</span><span class="n">fragments</span><span class="p">),</span>
             <span class="n">construct_size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">construct_record</span><span class="p">),</span>
             <span class="n">assembly_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">assembly</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="n">depends_on</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">assembly</span><span class="o">.</span><span class="n">dependencies</span><span class="p">[</span><span class="s1">&#39;depends_on&#39;</span><span class="p">],</span>
-            <span class="n">used_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">assembly</span><span class="o">.</span><span class="n">dependencies</span><span class="p">[</span><span class="s1">&#39;used_in&#39;</span><span class="p">],</span>
-            <span class="n">assembly_level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">assembly</span><span class="o">.</span><span class="n">dependencies</span><span class="p">[</span><span class="s1">&#39;level&#39;</span><span class="p">],</span>
+            <span class="n">depends_on</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">assembly</span><span class="o">.</span><span class="n">dependencies</span><span class="p">[</span><span class="s2">&quot;depends_on&quot;</span><span class="p">],</span>
+            <span class="n">used_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">assembly</span><span class="o">.</span><span class="n">dependencies</span><span class="p">[</span><span class="s2">&quot;used_in&quot;</span><span class="p">],</span>
+            <span class="n">assembly_level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">assembly</span><span class="o">.</span><span class="n">dependencies</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">],</span>
             <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">assembly</span><span class="o">.</span><span class="n">get_extra_construct_data</span><span class="p">()</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="AssemblySimulation.compute_all_construct_data_dicts"><a class="viewcode-back" href="../../../ref/user_classes.html#dnacauldron.Assembly.AssemblySimulation.compute_all_construct_data_dicts">[docs]</a>    <span class="k">def</span> <span class="nf">compute_all_construct_data_dicts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a list of dictionnaries with infos on a each construct.</span>
-<span class="sd">        </span>
-<span class="sd">        fields: construct_id, parts, number_of_parts, construct_size,</span>
+
+<span class="sd">        Fields: construct_id, parts, number_of_parts, construct_size,</span>
 <span class="sd">        assembly_name, depends_on, used_in, assembly_level.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span>
@@ -316,22 +316,27 @@
         <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AssemblySimulation.write_report"><a class="viewcode-back" href="../../../ref/user_classes.html#dnacauldron.Assembly.AssemblySimulation.write_report">[docs]</a>    <span class="k">def</span> <span class="nf">write_report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">report_writer</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Write a comprehensive simulation report in a folder or zip file.</span>
+        <span class="sd">&quot;&quot;&quot;Write a comprehensive simulation report in a folder or a zip file.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 
 <span class="sd">        target</span>
-<span class="sd">        Either a path to a folder, to a zip file, or ``&quot;@memory&quot;`` to write</span>
-<span class="sd">        into a virtual zip file whose raw data is then returned.</span>
-<span class="sd">        </span>
+<span class="sd">          Either a path to a folder, to a zip file, or ``&quot;@memory&quot;`` to write</span>
+<span class="sd">          into a virtual zip file whose raw data is then returned.</span>
+
 <span class="sd">        report_writer</span>
 <span class="sd">          Either the &quot;default&quot; or any AssemblyReportWriter instance.</span>
-<span class="sd">        &quot;&quot;&quot;</span> 
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        zip_data</span>
+<span class="sd">          binary zip data (if target=&quot;@memory&quot;) else None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">report_writer</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
             <span class="n">report_writer</span> <span class="o">=</span> <span class="n">AssemblyReportWriter</span><span class="p">()</span>
-        <span class="n">report_writer</span><span class="o">.</span><span class="n">write_report</span><span class="p">(</span><span class="n">assembly_simulation</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span></div></div>
-
+        <span class="k">return</span> <span class="n">report_writer</span><span class="o">.</span><span class="n">write_report</span><span class="p">(</span><span class="n">assembly_simulation</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>
@@ -340,7 +345,7 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2020, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

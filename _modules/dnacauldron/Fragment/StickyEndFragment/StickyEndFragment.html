@@ -12,10 +12,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
 
       
       <script src="../../../../_static/theme-vendors.js"></script>
@@ -193,26 +193,34 @@
           <div class="content" role="main">
             
   <h1>Source code for dnacauldron.Fragment.StickyEndFragment.StickyEndFragment</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="k">import</span> <span class="n">Seq</span>
-<span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="k">import</span> <span class="n">SeqRecord</span>
-<span class="kn">from</span> <span class="nn">Bio.Alphabet</span> <span class="k">import</span> <span class="n">DNAAlphabet</span>
+<span></span><span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="kn">import</span> <span class="n">Seq</span>
+<span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="kn">import</span> <span class="n">SeqRecord</span>
 
-<span class="kn">from</span> <span class="nn">...biotools</span> <span class="k">import</span> <span class="p">(</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Biopython &lt;1.78</span>
+    <span class="kn">from</span> <span class="nn">Bio.Alphabet</span> <span class="kn">import</span> <span class="n">DNAAlphabet</span>
+
+    <span class="n">has_dna_alphabet</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># Biopython &gt;=1.78</span>
+    <span class="n">has_dna_alphabet</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="kn">from</span> <span class="nn">...biotools</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">set_record_topology</span><span class="p">,</span>
     <span class="n">crop_record_with_saddling_features</span><span class="p">,</span>
     <span class="n">sequence_to_biopython_record</span><span class="p">,</span>
-    <span class="n">annotate_record</span>
+    <span class="n">annotate_record</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">..Fragment</span> <span class="k">import</span> <span class="n">Fragment</span>
-<span class="kn">from</span> <span class="nn">.StickyEnd</span> <span class="k">import</span> <span class="n">StickyEnd</span>
-<span class="kn">from</span> <span class="nn">.StickyEndSeq</span> <span class="k">import</span> <span class="n">StickyEndSeq</span>
+<span class="kn">from</span> <span class="nn">..Fragment</span> <span class="kn">import</span> <span class="n">Fragment</span>
+<span class="kn">from</span> <span class="nn">.StickyEnd</span> <span class="kn">import</span> <span class="n">StickyEnd</span>
+<span class="kn">from</span> <span class="nn">.StickyEndSeq</span> <span class="kn">import</span> <span class="n">StickyEndSeq</span>
 
 
 <div class="viewcode-block" id="StickyEndFragment"><a class="viewcode-back" href="../../../../ref/core_classes.html#dnacauldron.Fragment.StickyEndFragment">[docs]</a><span class="k">class</span> <span class="nc">StickyEndFragment</span><span class="p">(</span><span class="n">Fragment</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Biopython SeqRecord whose sequence has sticky ends.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="StickyEndFragment.will_clip_in_this_order_with"><a class="viewcode-back" href="../../../../ref/core_classes.html#dnacauldron.Fragment.StickyEndFragment.will_clip_in_this_order_with">[docs]</a>    <span class="k">def</span> <span class="nf">will_clip_in_this_order_with</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return True iff this record&#39;s right sticky end is complementary with</span>
+        <span class="sd">&quot;&quot;&quot;Return True if this record&#39;s right sticky end is complementary with</span>
 <span class="sd">        the other record&#39;s left sticky end.&quot;&quot;&quot;</span>
         <span class="n">right_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">right_end</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">right_end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="n">right_end</span><span class="o">.</span><span class="n">will_clip_directly_with</span><span class="p">(</span>
@@ -220,12 +228,9 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="StickyEndFragment.circularized"><a class="viewcode-back" href="../../../../ref/core_classes.html#dnacauldron.Fragment.StickyEndFragment.circularized">[docs]</a>    <span class="k">def</span> <span class="nf">circularized</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">annotate_homology</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">annotation_type</span><span class="o">=</span><span class="s2">&quot;homology&quot;</span><span class="p">,</span>
-        <span class="n">qualifiers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">annotate_homology</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">annotation_type</span><span class="o">=</span><span class="s2">&quot;homology&quot;</span><span class="p">,</span> <span class="n">qualifiers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the biopython record obtained by cirularizing the result.</span>
+        <span class="sd">&quot;&quot;&quot;Return the Biopython record obtained by cirularizing the result.</span>
 
 <span class="sd">        Only works if the left and right sticky ends are compatible. The</span>
 <span class="sd">        return is a simple Biopython record where the sticky end has been</span>
@@ -233,8 +238,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">will_clip_in_this_order_with</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Only constructs with two compatible sticky ends&quot;</span>
-                <span class="s2">&quot; can be circularized&quot;</span>
+                <span class="s2">&quot;Only constructs with two compatible sticky ends&quot;</span> <span class="s2">&quot; can be circularized&quot;</span>
             <span class="p">)</span>
         <span class="n">connector</span> <span class="o">=</span> <span class="n">SeqRecord</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">left_end</span><span class="p">)))</span>
         <span class="k">if</span> <span class="n">annotate_homology</span><span class="p">:</span>
@@ -252,10 +256,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">label</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">connector</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_homology_annotation</span><span class="p">(</span>
-            <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">end</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">connector</span><span class="p">),</span>
-            <span class="n">annotation_type</span><span class="o">=</span><span class="n">annotation_type</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
+            <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">connector</span><span class="p">),</span> <span class="n">annotation_type</span><span class="o">=</span><span class="n">annotation_type</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">connector</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="n">feature</span><span class="p">]</span></div>
 
@@ -267,8 +268,8 @@
 <span class="sd">        ----------</span>
 
 <span class="sd">        fragments</span>
-<span class="sd">          List of StickyEndFragments to assemble</span>
-<span class="sd">          </span>
+<span class="sd">          List of StickyEndFragments to assemble.</span>
+
 <span class="sd">        circularize</span>
 <span class="sd">          True to also assemble the end flanks of the final construct (results</span>
 <span class="sd">          in a Biopython Record), false to not do it (the result is then a</span>
@@ -277,8 +278,6 @@
 <span class="sd">        annotate_homologies</span>
 <span class="sd">           If true, homologies will have an annotation in the final, predicted</span>
 <span class="sd">           construct records.</span>
-
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">fragments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">fragment</span> <span class="ow">in</span> <span class="n">fragments</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
@@ -287,12 +286,14 @@
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">circularize</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">circularized</span><span class="p">(</span><span class="n">annotate_homology</span><span class="o">=</span><span class="n">annotate_homologies</span><span class="p">)</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">alphabet</span> <span class="o">=</span> <span class="n">DNAAlphabet</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">has_dna_alphabet</span><span class="p">:</span>  <span class="c1"># Biopython &lt;1.78</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">alphabet</span> <span class="o">=</span> <span class="n">DNAAlphabet</span><span class="p">()</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;molecule_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;DNA&quot;</span>
+
         <span class="k">return</span> <span class="n">result</span></div>
 
-    <span class="k">def</span> <span class="nf">assemble_with</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">annotate_homology</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">annotation_type</span><span class="o">=</span><span class="s2">&quot;homology&quot;</span>
-    <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">assemble_with</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">annotate_homology</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">annotation_type</span><span class="o">=</span><span class="s2">&quot;homology&quot;</span><span class="p">):</span>
         <span class="n">connector_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">right_end</span><span class="p">)</span>
         <span class="n">connector</span> <span class="o">=</span> <span class="n">SeqRecord</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="n">connector_str</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">annotate_homology</span><span class="p">:</span>
@@ -305,7 +306,11 @@
         <span class="n">new_record</span> <span class="o">=</span> <span class="n">SeqRecord</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="n">selfc</span><span class="p">,</span> <span class="n">connector</span><span class="p">)</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="n">new_record</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">seq</span>
         <span class="n">new_record</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">=</span> <span class="n">StickyEndFragment</span>
-        <span class="n">new_record</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">alphabet</span> <span class="o">=</span> <span class="n">DNAAlphabet</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">has_dna_alphabet</span><span class="p">:</span>  <span class="c1"># Biopython &lt;1.78</span>
+            <span class="n">new_record</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">alphabet</span> <span class="o">=</span> <span class="n">DNAAlphabet</span><span class="p">()</span>
+        <span class="n">new_record</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;molecule_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;DNA&quot;</span>
+
         <span class="k">return</span> <span class="n">new_record</span>
 
     <span class="nd">@staticmethod</span>
@@ -313,17 +318,13 @@
         <span class="k">if</span> <span class="n">linear</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
             <span class="n">linear</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;topology&quot;</span><span class="p">,</span> <span class="s2">&quot;linear&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">enzyme</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
-            <span class="n">n_cuts</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
-                <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="n">linear</span><span class="p">))</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">enzyme</span><span class="p">]</span>
-            <span class="p">)</span>
+            <span class="n">n_cuts</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="n">linear</span><span class="p">))</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">enzyme</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">n_cuts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">enzyme</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="n">linear</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">n_cuts</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">record</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">linear</span><span class="p">:</span>
-            <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-            <span class="p">]</span>
+            <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">record</span><span class="o">.</span><span class="n">features</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
             <span class="n">record_fragments</span> <span class="o">=</span> <span class="n">StickyEndFragment</span><span class="o">.</span><span class="n">list_from_record_digestion</span><span class="p">(</span>
                 <span class="n">record</span> <span class="o">+</span> <span class="n">record</span><span class="p">,</span> <span class="n">enzyme</span><span class="o">=</span><span class="n">enzyme</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="kc">True</span>
             <span class="p">)</span>
@@ -384,7 +385,7 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2020, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

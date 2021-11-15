@@ -12,10 +12,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
 
       
       <script src="../_static/theme-vendors.js"></script>
@@ -218,34 +218,26 @@
 <dt id="dnacauldron.biotools.sequence_io.load_record">
 <code class="sig-prename descclassname">dnacauldron.biotools.sequence_io.</code><code class="sig-name descname">load_record</code><span class="sig-paren">(</span><em class="sig-param">filepath</em>, <em class="sig-param">topology='default_to_linear'</em>, <em class="sig-param">id='auto'</em>, <em class="sig-param">upperize=True</em>, <em class="sig-param">max_name_length=20</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/biotools/sequence_io.html#load_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.biotools.sequence_io.load_record" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Biopython record read from a Fasta/Genbank/Snapgene file.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filepath</strong></p>
-<blockquote>
-<div><p>Path to a Genbank, Fasta, or Snapgene (.dna) file.</p>
-</div></blockquote>
-<p><strong>topology</strong></p>
-<blockquote>
-<div><p>Can be “circular”, “linear”, “default_to_circular” (will default
+<dd class="field-odd"><dl class="simple">
+<dt><strong>filepath</strong></dt><dd><p>Path to a Genbank, Fasta, or Snapgene (.dna) file.</p>
+</dd>
+<dt><strong>topology</strong></dt><dd><p>Can be “circular”, “linear”, “default_to_circular” (will default
 to circular if <code class="docutils literal notranslate"><span class="pre">annotations['topology']</span></code> is not already set) or
 “default_to_linear”.</p>
-</div></blockquote>
-<p><strong>id</strong></p>
-<blockquote>
-<div><p>Sets the record.id. If “auto”, the original record.id is used, and if
+</dd>
+<dt><strong>id</strong></dt><dd><p>Sets the record.id. If “auto”, the original record.id is used, and if
 none is set the name of the file (without extension) is used instead.</p>
-</div></blockquote>
-<p><strong>upperize</strong></p>
-<blockquote>
-<div><p>If true, the sequence will get upperized (recommended in this library,
+</dd>
+<dt><strong>upperize</strong></dt><dd><p>If true, the sequence will get upperized (recommended in this library,
 as the mix of upper and lower case can cause problems in Biopython’s
-enzyme sites search)</p>
-</div></blockquote>
-<p><strong>max_name_length</strong></p>
-<blockquote>
-<div><p>The name of the record will be truncated if too long to avoid Biopython
+enzyme site search).</p>
+</dd>
+<dt><strong>max_name_length</strong></dt><dd><p>The name of the record will be truncated if too long to avoid Biopython
 exceptions being raised.</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -260,28 +252,24 @@ exceptions being raised.</p>
 <dt id="dnacauldron.biotools.sequence_io.load_records_from_files">
 <code class="sig-prename descclassname">dnacauldron.biotools.sequence_io.</code><code class="sig-name descname">load_records_from_files</code><span class="sig-paren">(</span><em class="sig-param">files=None</em>, <em class="sig-param">folder=None</em>, <em class="sig-param">use_file_names_as_ids=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/biotools/sequence_io.html#load_records_from_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.biotools.sequence_io.load_records_from_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Automatically convert files or a folder’s content to biopython records.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>files</strong></p>
-<blockquote>
-<div><p>A list of path to files. A <code class="docutils literal notranslate"><span class="pre">folder</span></code> can be provided instead</p>
-</div></blockquote>
-<p><strong>folder</strong></p>
-<blockquote>
-<div><p>A path to a folder containing sequence files.</p>
-</div></blockquote>
-<p><strong>use_file_names_as_ids</strong></p>
-<blockquote>
-<div><p>If True, for every file containing a single record, the file name
+<dd class="field-odd"><dl class="simple">
+<dt><strong>files</strong></dt><dd><p>A list of path to files. A <code class="docutils literal notranslate"><span class="pre">folder</span></code> can be provided instead.</p>
+</dd>
+<dt><strong>folder</strong></dt><dd><p>A path to a folder containing sequence files.</p>
+</dd>
+<dt><strong>use_file_names_as_ids</strong></dt><dd><p>If True, for every file containing a single record, the file name
 (without extension) will be set as the record’s ID.</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="function">
-<dt id="dnacauldron.biotools.sequence_io.string_to_record">
-<code class="sig-prename descclassname">dnacauldron.biotools.sequence_io.</code><code class="sig-name descname">string_to_record</code><span class="sig-paren">(</span><em class="sig-param">string</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/biotools/sequence_io.html#string_to_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.biotools.sequence_io.string_to_record" title="Permalink to this definition">¶</a></dt>
+<dt id="dnacauldron.biotools.sequence_io.string_to_records">
+<code class="sig-prename descclassname">dnacauldron.biotools.sequence_io.</code><code class="sig-name descname">string_to_records</code><span class="sig-paren">(</span><em class="sig-param">string</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/biotools/sequence_io.html#string_to_records"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.biotools.sequence_io.string_to_records" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a string of a fasta, genbank… into a simple ATGC string.</p>
 <p>Can also be used to detect a format.</p>
 </dd></dl>
@@ -289,7 +277,7 @@ exceptions being raised.</p>
 <dl class="function">
 <dt id="dnacauldron.biotools.sequence_io.write_record">
 <code class="sig-prename descclassname">dnacauldron.biotools.sequence_io.</code><code class="sig-name descname">write_record</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">target</em>, <em class="sig-param">fmt='genbank'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/biotools/sequence_io.html#write_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.biotools.sequence_io.write_record" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write a record as genbank, fasta, etc. via Biopython, with fixes</p>
+<dd><p>Write a record as genbank, fasta, etc. via Biopython, with fixes.</p>
 </dd></dl>
 
 </div>
@@ -299,28 +287,20 @@ exceptions being raised.</p>
 <dt id="dnacauldron.biotools.record_operations.annotate_record">
 <code class="sig-prename descclassname">dnacauldron.biotools.record_operations.</code><code class="sig-name descname">annotate_record</code><span class="sig-paren">(</span><em class="sig-param">seqrecord</em>, <em class="sig-param">location='full'</em>, <em class="sig-param">feature_type='misc_feature'</em>, <em class="sig-param">margin=0</em>, <em class="sig-param">**qualifiers</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/biotools/record_operations.html#annotate_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.biotools.record_operations.annotate_record" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a feature to a Biopython SeqRecord.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>seqrecord</strong></p>
-<blockquote>
-<div><p>The biopython seqrecord to be annotated.</p>
-</div></blockquote>
-<p><strong>location</strong></p>
-<blockquote>
-<div><p>Either (start, end) or (start, end, strand). (strand defaults to +1)</p>
-</div></blockquote>
-<p><strong>feature_type</strong></p>
-<blockquote>
-<div><p>The type associated with the feature</p>
-</div></blockquote>
-<p><strong>margin</strong></p>
-<blockquote>
-<div><p>Number of extra bases added on each side of the given location.</p>
-</div></blockquote>
-<p><strong>qualifiers</strong></p>
-<blockquote>
-<div><p>Dictionnary that will be the Biopython feature’s <cite>qualifiers</cite> attribute.</p>
-</div></blockquote>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>seqrecord</strong></dt><dd><p>The Biopython seqrecord to be annotated.</p>
+</dd>
+<dt><strong>location</strong></dt><dd><p>Either (start, end) or (start, end, strand). (strand defaults to +1)</p>
+</dd>
+<dt><strong>feature_type</strong></dt><dd><p>The type associated with the feature.</p>
+</dd>
+<dt><strong>margin</strong></dt><dd><p>Number of extra bases added on each side of the given location.</p>
+</dd>
+<dt><strong>qualifiers</strong></dt><dd><p>Dictionary that will be the Biopython feature’s <cite>qualifiers</cite> attribute.</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -336,22 +316,18 @@ exceptions being raised.</p>
 <dl class="function">
 <dt id="dnacauldron.biotools.record_operations.crop_record_with_saddling_features">
 <code class="sig-prename descclassname">dnacauldron.biotools.record_operations.</code><code class="sig-name descname">crop_record_with_saddling_features</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">start</em>, <em class="sig-param">end</em>, <em class="sig-param">filters=()</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/biotools/record_operations.html#crop_record_with_saddling_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.biotools.record_operations.crop_record_with_saddling_features" title="Permalink to this definition">¶</a></dt>
-<dd><p>Crop the biopython record, but keep features that are only partially in.</p>
-<dl class="field-list">
+<dd><p>Crop the Biopython record, but keep features that are only partially in.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>record</strong></p>
-<blockquote>
-<div><p>The Biopython record to crop.</p>
-</div></blockquote>
-<p><strong>start, end</strong></p>
-<blockquote>
-<div><p>Coordinates of the segment to crop</p>
-</div></blockquote>
-<p><strong>filters</strong></p>
-<blockquote>
-<div><p>list of functions (feature=&gt;True/False). Any feature that doesn’t pass
+<dd class="field-odd"><dl class="simple">
+<dt><strong>record</strong></dt><dd><p>The Biopython record to crop.</p>
+</dd>
+<dt><strong>start, end</strong></dt><dd><p>Coordinates of the segment to crop.</p>
+</dd>
+<dt><strong>filters</strong></dt><dd><p>list of functions (feature=&gt;True/False). Any feature that doesn’t pass
 at least one filter will be filtered out.</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -387,17 +363,19 @@ to circular if <code class="docutils literal notranslate"><span class="pre">anno
 <dt id="dnacauldron.biotools.autoselect_enzyme.autoselect_enzyme">
 <code class="sig-prename descclassname">dnacauldron.biotools.autoselect_enzyme.</code><code class="sig-name descname">autoselect_enzyme</code><span class="sig-paren">(</span><em class="sig-param">parts</em>, <em class="sig-param">enzymes=('BsmBI'</em>, <em class="sig-param">'BsaI'</em>, <em class="sig-param">'BbsI'</em>, <em class="sig-param">'AarI'</em>, <em class="sig-param">'SapI')</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/biotools/autoselect_enzyme.html#autoselect_enzyme"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.biotools.autoselect_enzyme.autoselect_enzyme" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finds the enzyme that the parts were probably meant to be assembled with</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>parts</strong></p>
-<blockquote>
-<div><p>A list of SeqRecord files. They should have a “linear” attribute set to
+<dd class="field-odd"><dl class="simple">
+<dt><strong>parts</strong></dt><dd><p>A list of SeqRecord files. They should have a “linear” attribute set to
 True or False, otherwise</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The enzyme that has as near as possible as exactly 2 sites in the different</p>
-<p>constructs.</p>
+<dd class="field-even"><dl class="simple">
+<dt>The enzyme that has as near as possible as exactly 2 sites in the different</dt><dd></dd>
+<dt>constructs.</dt><dd></dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -420,7 +398,7 @@ True or False, otherwise</p>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2020, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

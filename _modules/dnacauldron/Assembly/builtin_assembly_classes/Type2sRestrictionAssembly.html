@@ -12,10 +12,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
 
       
       <script src="../../../../_static/theme-vendors.js"></script>
@@ -193,19 +193,21 @@
           <div class="content" role="main">
             
   <h1>Source code for dnacauldron.Assembly.builtin_assembly_classes.Type2sRestrictionAssembly</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">...Filter</span> <span class="k">import</span> <span class="n">NoRestrictionSiteFilter</span>
-<span class="kn">from</span> <span class="nn">...AssemblyMix</span> <span class="k">import</span> <span class="p">(</span>
+<span></span><span class="kn">import</span> <span class="nn">Bio.Restriction</span>
+
+<span class="kn">from</span> <span class="nn">...Filter</span> <span class="kn">import</span> <span class="n">NoRestrictionSiteFilter</span>
+<span class="kn">from</span> <span class="nn">...AssemblyMix</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">RestrictionLigationMix</span><span class="p">,</span>
     <span class="n">AssemblyMixError</span><span class="p">,</span>
     <span class="n">generate_type2s_restriction_mix</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">..Assembly</span> <span class="k">import</span> <span class="n">Assembly</span>
-<span class="kn">from</span> <span class="nn">..AssemblySimulation</span> <span class="k">import</span> <span class="n">AssemblySimulation</span>
-<span class="kn">from</span> <span class="nn">..AssemblyFlaw</span> <span class="k">import</span> <span class="n">AssemblyFlaw</span>
+<span class="kn">from</span> <span class="nn">..Assembly</span> <span class="kn">import</span> <span class="n">Assembly</span>
+<span class="kn">from</span> <span class="nn">..AssemblySimulation</span> <span class="kn">import</span> <span class="n">AssemblySimulation</span>
+<span class="kn">from</span> <span class="nn">..AssemblyFlaw</span> <span class="kn">import</span> <span class="n">AssemblyFlaw</span>
 
 
 <div class="viewcode-block" id="Type2sRestrictionAssembly"><a class="viewcode-back" href="../../../../ref/user_classes.html#dnacauldron.Type2sRestrictionAssembly">[docs]</a><span class="k">class</span> <span class="nc">Type2sRestrictionAssembly</span><span class="p">(</span><span class="n">Assembly</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Representation and simulation of type-2s (Golden-Gate) assembly</span>
+    <span class="sd">&quot;&quot;&quot;Representation and simulation of type-2s (Golden-Gate) assembly.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -214,7 +216,7 @@
 <span class="sd">      A list of parts names corresponding to records in a repository. These</span>
 <span class="sd">      parts will be restricted and ligated together. They can be linear,</span>
 <span class="sd">      circular, and in any order.</span>
-<span class="sd">    </span>
+
 <span class="sd">    enzyme</span>
 <span class="sd">      Any type-2s enzyme (&quot;BsmBI&quot;, &quot;BsaI&quot;, &quot;SapI&quot;, etc.), or leave to &quot;auto&quot;</span>
 <span class="sd">      to autodetect the enzyme.</span>
@@ -229,12 +231,12 @@
 <span class="sd">    expected_constructs</span>
 <span class="sd">      Either a number or a string ``&#39;any_number&#39;``. If the number of constructs</span>
 <span class="sd">      doesn&#39;t match this value, the assembly will be considered invalid in</span>
-<span class="sd">      reports and summaries</span>
+<span class="sd">      reports and summaries.</span>
 
 <span class="sd">    connectors_collection</span>
 <span class="sd">      Name of a collection in the repository from which to get candidates for</span>
 <span class="sd">      connector autocompletion.</span>
-<span class="sd">    </span>
+
 <span class="sd">    expect_no_unused_parts</span>
 <span class="sd">      If True and some parts are unused, this will be considered an invalid</span>
 <span class="sd">      assembly in summaries and reports.</span>
@@ -250,10 +252,10 @@
         <span class="s2">&quot;expected_constructs&quot;</span><span class="p">,</span>
         <span class="s2">&quot;expect_no_unused_parts&quot;</span><span class="p">,</span>
         <span class="s2">&quot;connectors_collection&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;randomize_constructs&quot;</span>
+        <span class="s2">&quot;randomize_constructs&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">parts</span><span class="p">,</span>
         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;type2s_assembly&quot;</span><span class="p">,</span>
@@ -303,13 +305,10 @@
     <span class="k">def</span> <span class="nf">_detect_parts_connections_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assembly_mix</span><span class="p">):</span>
         <span class="n">warnings</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">slots_graph</span> <span class="o">=</span> <span class="n">assembly_mix</span><span class="o">.</span><span class="n">slots_graph</span><span class="p">(</span><span class="n">with_overhangs</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">slots_degrees</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">slot</span><span class="p">:</span> <span class="n">slots_graph</span><span class="o">.</span><span class="n">degree</span><span class="p">(</span><span class="n">slot</span><span class="p">)</span> <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="n">slots_graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span>
-        <span class="p">}</span>
+        <span class="n">slots_degrees</span> <span class="o">=</span> <span class="p">{</span><span class="n">slot</span><span class="p">:</span> <span class="n">slots_graph</span><span class="o">.</span><span class="n">degree</span><span class="p">(</span><span class="n">slot</span><span class="p">)</span> <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="n">slots_graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()}</span>
         <span class="n">slots_parts</span> <span class="o">=</span> <span class="n">assembly_mix</span><span class="o">.</span><span class="n">compute_slots</span><span class="p">()</span>
 
         <span class="c1"># CHECK PARTS WITH A SINGLE OVERHANG</span>
-
         <span class="n">deadend_parts</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">part</span>
             <span class="k">for</span> <span class="n">slot</span><span class="p">,</span> <span class="n">degree</span> <span class="ow">in</span> <span class="n">slots_degrees</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
@@ -326,7 +325,6 @@
             <span class="n">warnings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span>
 
         <span class="c1"># CHECK PARTS WITH MORE THAN 2 SLOT CONNECTIONS (FORK/CROSSROAD)</span>
-
         <span class="n">fork_parts</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">part</span>
             <span class="k">for</span> <span class="n">slot</span><span class="p">,</span> <span class="n">degree</span> <span class="ow">in</span> <span class="n">slots_degrees</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
@@ -343,6 +341,26 @@
             <span class="n">warnings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">warnings</span>
 
+    <span class="k">def</span> <span class="nf">_detect_new_enzyme_sites</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">construct_records</span><span class="p">,</span> <span class="n">flaws_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Detect new enzyme sites created at joining regions.&quot;&quot;&quot;</span>
+        <span class="n">restriction_batch</span> <span class="o">=</span> <span class="n">Bio</span><span class="o">.</span><span class="n">Restriction</span><span class="o">.</span><span class="n">RestrictionBatch</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span><span class="p">])</span>
+        <span class="n">has_site</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">construct</span> <span class="ow">in</span> <span class="n">construct_records</span><span class="p">:</span>
+            <span class="n">analysis</span> <span class="o">=</span> <span class="n">Bio</span><span class="o">.</span><span class="n">Restriction</span><span class="o">.</span><span class="n">Analysis</span><span class="p">(</span>
+                <span class="n">restriction_batch</span><span class="p">,</span> <span class="n">sequence</span><span class="o">=</span><span class="n">construct</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">analysis_results</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">linear</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">enzyme</span><span class="p">,</span> <span class="n">sites</span> <span class="ow">in</span> <span class="n">analysis_results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sites</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">has_site</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">has_site</span><span class="p">:</span>
+            <span class="n">flaw</span> <span class="o">=</span> <span class="n">AssemblyFlaw</span><span class="p">(</span>
+                <span class="n">assembly</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Assembly creates a new enzyme site&quot;</span><span class="p">,</span>
+                <span class="n">suggestion</span><span class="o">=</span><span class="s2">&quot;Ensure that joining parts cannot make up an enzyme site&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">flaws_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">flaw</span><span class="p">)</span>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">enzymes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span><span class="p">]</span>
@@ -351,25 +369,23 @@
         <span class="sd">&quot;&quot;&quot;Simulate the assembly, return an AssemblySimulation.&quot;&quot;&quot;</span>
 
         <span class="c1"># CREATE THE MIX</span>
-
         <span class="n">warnings</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="n">records</span> <span class="o">=</span> <span class="n">sequence_repository</span><span class="o">.</span><span class="n">get_records</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parts</span><span class="p">)</span>
         <span class="n">mix</span> <span class="o">=</span> <span class="n">generate_type2s_restriction_mix</span><span class="p">(</span>
-            <span class="n">records</span><span class="p">,</span> <span class="n">enzyme</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_type2s_mix&quot;</span>
+            <span class="n">records</span><span class="p">,</span> <span class="n">enzyme</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;type2s_mix&quot;</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">enzyme</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">mix</span><span class="o">.</span><span class="n">enzymes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># it has been autoselected!</span>
 
         <span class="c1"># ATTEMPT CONNECTOR AUTOSELECTION IF NECESSARY</span>
-
         <span class="n">connectors_records</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_connectors_records</span><span class="p">(</span><span class="n">sequence_repository</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">connectors_records</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">connectors</span> <span class="o">=</span> <span class="n">mix</span><span class="o">.</span><span class="n">autoselect_connectors</span><span class="p">(</span><span class="n">connectors_records</span><span class="p">)</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">connectors</span><span class="p">):</span>
                     <span class="n">connectors_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">connectors</span><span class="p">]</span>
-                    <span class="n">connectors_string</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">connectors_ids</span><span class="p">)</span>
+                    <span class="n">connectors_string</span> <span class="o">=</span> <span class="s2">&quot; &amp; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">connectors_ids</span><span class="p">)</span>
                     <span class="n">warning</span> <span class="o">=</span> <span class="n">AssemblyFlaw</span><span class="p">(</span>
                         <span class="n">assembly</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                         <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Added connectors </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">connectors_string</span><span class="p">,</span>
@@ -381,7 +397,7 @@
                 <span class="n">error</span> <span class="o">=</span> <span class="n">AssemblyFlaw</span><span class="p">(</span>
                     <span class="n">assembly</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                     <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Failed to find suitable connectors&quot;</span><span class="p">,</span>
-                    <span class="n">suggestion</span><span class="o">=</span><span class="s2">&quot;Check assembly plan or parts design&quot;</span><span class="p">,</span>
+                    <span class="n">suggestion</span><span class="o">=</span><span class="s2">&quot;Check assembly plan/parts/connectors design&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="k">return</span> <span class="n">AssemblySimulation</span><span class="p">(</span>
                     <span class="n">assembly</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
@@ -393,7 +409,7 @@
         <span class="c1"># COMPUTE ALL CIRCULAR ASSEMBLIES</span>
         <span class="n">generator</span> <span class="o">=</span> <span class="n">mix</span><span class="o">.</span><span class="n">compute_circular_assemblies</span><span class="p">(</span>
             <span class="n">annotate_parts_homologies</span><span class="o">=</span><span class="n">annotate_parts_homologies</span><span class="p">,</span>
-            <span class="n">randomize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">randomize_constructs</span>
+            <span class="n">randomize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">randomize_constructs</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">construct_records</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
             <span class="p">[</span><span class="n">asm</span> <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">asm</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_constructs</span><span class="p">),</span> <span class="n">generator</span><span class="p">)],</span>
@@ -402,7 +418,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">attribute_ids_to_constructs</span><span class="p">(</span><span class="n">construct_records</span><span class="p">)</span>
 
         <span class="c1"># FIND ALL ERRORS</span>
-
         <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">found</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">construct_records</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_detect_constructs_number_error</span><span class="p">(</span><span class="n">found</span><span class="p">,</span> <span class="n">errors</span><span class="p">)</span>
@@ -413,6 +428,7 @@
                 <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">unused_error</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">errors</span> <span class="o">!=</span> <span class="p">[]:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_detect_parts_connections_errors</span><span class="p">(</span><span class="n">mix</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_detect_new_enzyme_sites</span><span class="p">(</span><span class="n">construct_records</span><span class="p">,</span> <span class="n">errors</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">AssemblySimulation</span><span class="p">(</span>
             <span class="n">assembly</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
@@ -430,7 +446,7 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2020, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

@@ -12,10 +12,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
 
       
       <script src="../../../../_static/theme-vendors.js"></script>
@@ -194,16 +194,16 @@
             
   <h1>Source code for dnacauldron.Assembly.AssemblyReportWriter.AssemblyReportWriter</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">pandas</span>
-<span class="kn">from</span> <span class="nn">flametree</span> <span class="k">import</span> <span class="n">file_tree</span>
-<span class="kn">from</span> <span class="nn">...biotools</span> <span class="k">import</span> <span class="n">write_record</span>
-<span class="kn">from</span> <span class="nn">...AssemblyMix</span> <span class="k">import</span> <span class="n">AssemblyMixError</span>
-<span class="kn">from</span> <span class="nn">.AssemblyReportPlotsMixin</span> <span class="k">import</span> <span class="n">AssemblyReportPlotsMixin</span>
+<span class="kn">from</span> <span class="nn">flametree</span> <span class="kn">import</span> <span class="n">file_tree</span>
+<span class="kn">from</span> <span class="nn">...biotools</span> <span class="kn">import</span> <span class="n">write_record</span>
+<span class="kn">from</span> <span class="nn">...AssemblyMix</span> <span class="kn">import</span> <span class="n">AssemblyMixError</span>
+<span class="kn">from</span> <span class="nn">.AssemblyReportPlotsMixin</span> <span class="kn">import</span> <span class="n">AssemblyReportPlotsMixin</span>
 
 
 <div class="viewcode-block" id="AssemblyReportWriter"><a class="viewcode-back" href="../../../../ref/user_classes.html#dnacauldron.AssemblyReportWriter">[docs]</a><span class="k">class</span> <span class="nc">AssemblyReportWriter</span><span class="p">(</span><span class="n">AssemblyReportPlotsMixin</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Class to configure assembly simulation reports writing.</span>
+    <span class="sd">&quot;&quot;&quot;Class to configure assembly simulation report writing.</span>
 
-<span class="sd">    Responsible to write the final sequence(s) of the assembly in Genbank</span>
+<span class="sd">    Responsible for writing the final sequence(s) of the assembly in Genbank</span>
 <span class="sd">    format as well as a .csv report on all assemblies produced and PDF figures</span>
 <span class="sd">    to allow a quick overview or diagnostic.</span>
 
@@ -216,50 +216,66 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 
-<span class="sd">    include_fragments_plots</span>
+<span class="sd">    include_fragment_plots</span>
 <span class="sd">      Either True/False/&quot;on_error&quot; to plot schemas of the fragments used in</span>
 <span class="sd">      the different AssemblyMix throughout the simulation.</span>
 
 <span class="sd">    include_part_plots</span>
 <span class="sd">      Either True/False/&quot;on_error&quot; to plot schemas of the parts used, possibly</span>
 <span class="sd">      with restriction sites relevant to the AssemblyMix.</span>
+
 <span class="sd">    include_mix_graphs</span>
-<span class="sd">      Either True/False/&quot;on_error&quot; to plot representations of fragments</span>
+<span class="sd">      Either True/False/&quot;on_error&quot; to plot representations of fragment</span>
 <span class="sd">      connectivity in the AssemblyMix created during the simulation.</span>
 
 <span class="sd">    include_part_records</span>
 <span class="sd">      True/False to include the parts records in the simulation results (makes</span>
-<span class="sd">      for larger folders and zips, but is better for traceability)</span>
+<span class="sd">      for larger folders and zips, but is better for traceability).</span>
 
 <span class="sd">    include_assembly_plots</span>
 <span class="sd">      True/False to include assembly schemas in the reports (makes the</span>
 <span class="sd">      report generation slower, but makes it easier to check assemblies at a</span>
-<span class="sd">      glance)</span>
-<span class="sd">    </span>
+<span class="sd">      glance).</span>
+
 <span class="sd">    show_overhangs_in_graph</span>
 <span class="sd">      If true, the AssemblyMix graph representations will display the sequence</span>
-<span class="sd">      of all fragments overhangs.</span>
+<span class="sd">      of all fragment overhangs.</span>
 
+<span class="sd">    include_errors_spreadsheet</span>
+<span class="sd">      If true and there are errors, an errors spreadsheet will be added to the</span>
+<span class="sd">      report.</span>
 
+<span class="sd">    include_warnings_spreadsheet</span>
+<span class="sd">      If true and there are warnings, a warnings spreadsheet will be added to</span>
+<span class="sd">      the report.</span>
+
+<span class="sd">    include_pdf_report</span>
+<span class="sd">      If true, a PDF report file is also generated.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">include_fragments_plots</span><span class="o">=</span><span class="s2">&quot;on_error&quot;</span><span class="p">,</span>
+        <span class="n">include_fragment_plots</span><span class="o">=</span><span class="s2">&quot;on_error&quot;</span><span class="p">,</span>
         <span class="n">include_part_plots</span><span class="o">=</span><span class="s2">&quot;on_error&quot;</span><span class="p">,</span>
         <span class="n">include_mix_graphs</span><span class="o">=</span><span class="s2">&quot;on_error&quot;</span><span class="p">,</span>
         <span class="n">include_part_records</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">include_assembly_plots</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">show_overhangs_in_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">annotate_parts_homologies</span><span class="o">=</span><span class="kc">True</span>
+        <span class="n">annotate_parts_homologies</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">include_errors_spreadsheet</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">include_warnings_spreadsheet</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">include_pdf_report</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">include_fragments_plots</span> <span class="o">=</span> <span class="n">include_fragments_plots</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_fragment_plots</span> <span class="o">=</span> <span class="n">include_fragment_plots</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">include_part_plots</span> <span class="o">=</span> <span class="n">include_part_plots</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">include_mix_graphs</span> <span class="o">=</span> <span class="n">include_mix_graphs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">include_assembly_plots</span> <span class="o">=</span> <span class="n">include_assembly_plots</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">show_overhangs_in_graph</span> <span class="o">=</span> <span class="n">show_overhangs_in_graph</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">include_part_records</span> <span class="o">=</span> <span class="n">include_part_records</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">annotate_parts_homologies</span> <span class="o">=</span> <span class="n">annotate_parts_homologies</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_errors_spreadsheet</span> <span class="o">=</span> <span class="n">include_errors_spreadsheet</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_warnings_spreadsheet</span> <span class="o">=</span> <span class="n">include_warnings_spreadsheet</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_pdf_report</span> <span class="o">=</span> <span class="n">include_pdf_report</span>
 
     <span class="k">def</span> <span class="nf">_write_constructs_spreadsheet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simulation</span><span class="p">,</span> <span class="n">report_root</span><span class="p">):</span>
         <span class="n">dataframe</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">compute_summary_dataframe</span><span class="p">()</span>
@@ -297,6 +313,18 @@
                 <span class="n">construct_record</span> <span class="o">=</span> <span class="n">construct_record</span><span class="o">.</span><span class="n">as_biopython_record</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">plot_construct</span><span class="p">(</span><span class="n">construct_record</span><span class="p">,</span> <span class="n">plots_dir</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">_write_errors_spreadsheet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">simulation</span><span class="p">,</span> <span class="n">report_root</span><span class="p">,</span> <span class="n">error_type</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="p">):</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">errors</span> <span class="k">if</span> <span class="n">error_type</span> <span class="o">==</span> <span class="s2">&quot;error&quot;</span> <span class="k">else</span> <span class="n">simulation</span><span class="o">.</span><span class="n">warnings</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">columns</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;assembly_name&quot;</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="s2">&quot;suggestion&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">])</span>
+            <span class="n">all_error_rows</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">err</span><span class="o">.</span><span class="n">assembly</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">data_as_string</span><span class="p">(),])</span>
+                <span class="k">for</span> <span class="n">err</span> <span class="ow">in</span> <span class="n">errors</span>
+            <span class="p">]</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.csv&quot;</span> <span class="o">%</span> <span class="n">error_type</span>
+            <span class="n">errors_spreadsheet</span> <span class="o">=</span> <span class="n">report_root</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="n">errors_spreadsheet</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">columns</span><span class="p">]</span> <span class="o">+</span> <span class="n">all_error_rows</span><span class="p">))</span>
+
 <div class="viewcode-block" id="AssemblyReportWriter.write_report"><a class="viewcode-back" href="../../../../ref/user_classes.html#dnacauldron.AssemblyReportWriter.write_report">[docs]</a>    <span class="k">def</span> <span class="nf">write_report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assembly_simulation</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Write a comprehensive report for an AssemblySimulation instance.</span>
 
@@ -316,9 +344,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_write_records</span><span class="p">(</span><span class="n">assembly_simulation</span><span class="p">,</span> <span class="n">report_root</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_part_records</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_write_part_records</span><span class="p">(</span>
-                <span class="n">assembly_simulation</span><span class="p">,</span> <span class="n">part_records</span><span class="p">,</span> <span class="n">report_root</span>
-            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write_part_records</span><span class="p">(</span><span class="n">assembly_simulation</span><span class="p">,</span> <span class="n">part_records</span><span class="p">,</span> <span class="n">report_root</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_assembly_plots</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_write_records_plots</span><span class="p">(</span><span class="n">assembly_simulation</span><span class="p">,</span> <span class="n">report_root</span><span class="p">)</span>
 
@@ -328,11 +354,9 @@
         <span class="k">if</span> <span class="n">plot_options</span><span class="p">[</span><span class="s2">&quot;parts_plots&quot;</span><span class="p">]:</span>
             <span class="n">enzymes</span> <span class="o">=</span> <span class="n">assembly</span><span class="o">.</span><span class="n">enzymes</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">assembly</span><span class="p">,</span> <span class="s2">&quot;enzymes&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="p">[]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">plot_provided_parts</span><span class="p">(</span>
-                <span class="n">report_root</span><span class="o">=</span><span class="n">report_root</span><span class="p">,</span>
-                <span class="n">parts_records</span><span class="o">=</span><span class="n">part_records</span><span class="p">,</span>
-                <span class="n">enzymes</span><span class="o">=</span><span class="n">enzymes</span><span class="p">,</span>
+                <span class="n">report_root</span><span class="o">=</span><span class="n">report_root</span><span class="p">,</span> <span class="n">parts_records</span><span class="o">=</span><span class="n">part_records</span><span class="p">,</span> <span class="n">enzymes</span><span class="o">=</span><span class="n">enzymes</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="k">if</span> <span class="n">plot_options</span><span class="p">[</span><span class="s2">&quot;fragments_plots&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">plot_options</span><span class="p">[</span><span class="s2">&quot;fragment_plots&quot;</span><span class="p">]:</span>
             <span class="k">for</span> <span class="n">mix</span> <span class="ow">in</span> <span class="n">assembly_simulation</span><span class="o">.</span><span class="n">mixes</span><span class="p">:</span>
                 <span class="n">mix</span><span class="o">.</span><span class="n">plot_fragments</span><span class="p">(</span><span class="n">report_root</span><span class="o">=</span><span class="n">report_root</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">plot_options</span><span class="p">[</span><span class="s2">&quot;mix_graphs_plots&quot;</span><span class="p">]:</span>
@@ -343,8 +367,14 @@
                     <span class="n">with_overhangs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">show_overhangs_in_graph</span><span class="p">,</span>
                 <span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">assembly_simulation</span><span class="o">.</span><span class="n">construct_records</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_write_constructs_spreadsheet</span><span class="p">(</span>
-                <span class="n">assembly_simulation</span><span class="p">,</span> <span class="n">report_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write_constructs_spreadsheet</span><span class="p">(</span><span class="n">assembly_simulation</span><span class="p">,</span> <span class="n">report_root</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_errors_spreadsheet</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write_errors_spreadsheet</span><span class="p">(</span>
+                <span class="n">assembly_simulation</span><span class="p">,</span> <span class="n">report_root</span><span class="p">,</span> <span class="n">error_type</span><span class="o">=</span><span class="s2">&quot;error&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_warnings_spreadsheet</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write_errors_spreadsheet</span><span class="p">(</span>
+                <span class="n">assembly_simulation</span><span class="p">,</span> <span class="n">report_root</span><span class="p">,</span> <span class="n">error_type</span><span class="o">=</span><span class="s2">&quot;warnings&quot;</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="s2">&quot;@memory&quot;</span><span class="p">:</span>
@@ -357,7 +387,7 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2020, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

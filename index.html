@@ -12,10 +12,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
 
       
       <script src="_static/theme-vendors.js"></script>
@@ -198,17 +198,16 @@
   <p align="center">
 <img alt="DNA Cauldron Logo" title="DNA Cauldron Logo" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/DnaCauldron/master/docs/_static/images/title.png" width="500">
 <br /><br />
-</p><a class="reference external image-reference" href="https://travis-ci.org/Edinburgh-Genome-Foundry/DnaCauldron"><img alt="Travis CI build status" src="https://travis-ci.org/Edinburgh-Genome-Foundry/DnaCauldron.svg?branch=master" /></a>
+</p><a class="reference external image-reference" href="https://app.travis-ci.com/Edinburgh-Genome-Foundry/DnaCauldron"><img alt="Travis CI build status" src="https://app.travis-ci.com/Edinburgh-Genome-Foundry/DnaCauldron.svg?branch=master" /></a>
 <a class="reference external image-reference" href="https://coveralls.io/github/Edinburgh-Genome-Foundry/DnaCauldron?branch=master"><img alt="https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/DnaCauldron/badge.svg?branch=master" src="https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/DnaCauldron/badge.svg?branch=master" /></a>
 <div class="section" id="dna-cauldron">
 <h1>DNA Cauldron<a class="headerlink" href="#dna-cauldron" title="Permalink to this headline">¶</a></h1>
-<p>Have you ever had a large DNA assembly batch fail at the bench, and then you
-spent spent hours checking your part sequence files for design flaws?</p>
-<p>DNA Cauldron provides a generic cloning simulation framework to predict
-constructs sequences and detect assembly flaws. The idea is that, if
-your assemblies work with Cauldron, they should work at the bench. It is
-especially useful for people and machines tasked with assembling DNA with
-minimal knowledge of the project’s specifics.</p>
+<p>DNA Cauldron (full documentation <a class="reference external" href="https://edinburgh-genome-foundry.github.io/DnaCauldron/">here</a>)
+is a generic cloning simulation framework to predict
+final construct sequences and detect assembly flaws. It aims in particular at
+automating the simulation and verification of large (and possibly multi-step)
+DNA assembly batches, with the idea that, if your assembly plan works with
+Cauldron, you’ll get the same results at the bench.</p>
 <ul class="simple">
 <li><p>Great support for Golden Gate assembly (incl. MoClo, EMMA, Phytobrick, etc.), the simulation is as simple as
 <a class="reference external" href="http://cuba.genomefoundry.org/simulate_gg_assemblies">dropping sequence files in a web app</a>.</p></li>
@@ -228,22 +227,23 @@ sense, linear or circular, single or combinatorial assembly… Cauldron will get
 <h2>Usage tutorial<a class="headerlink" href="#usage-tutorial" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="providing-part-sequences">
 <h3>Providing part sequences<a class="headerlink" href="#providing-part-sequences" title="Permalink to this headline">¶</a></h3>
-<p>To simulate an assembly, you need first to provide parts sequences. In DNA Cauldron, these
-are managed via a <code class="docutils literal notranslate"><span class="pre">SequenceRepository</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dnacauldron</span> <span class="kn">as</span> <span class="nn">dc</span>
+<p>To simulate an assembly, you need first to provide part sequences. In DNA Cauldron, sequences
+are managed by a <code class="docutils literal notranslate"><span class="pre">SequenceRepository</span></code>, created as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dnacauldron</span> <span class="k">as</span> <span class="nn">dc</span>
 
 <span class="c1"># Create a repository from BioPython records</span>
-<span class="n">repository</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">SequenceRepository</span><span class="p">(</span><span class="n">parts</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;part_A&quot;</span><span class="p">:</span> <span class="n">record_1</span><span class="p">,</span> <span class="s2">&quot;part_B&quot;</span><span class="p">:</span><span class="o">...</span><span class="p">})</span>
+<span class="n">repository</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">SequenceRepository</span><span class="p">(</span><span class="n">collections</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;parts&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;part_A&quot;</span><span class="p">:</span> <span class="n">record_A</span><span class="p">,</span> <span class="s2">&quot;part_B&quot;</span><span class="p">:</span> <span class="n">record_B</span><span class="p">}})</span>
 
 <span class="c1"># Or use &quot;import_sequences&quot; to import files from folders, zip files, etc.</span>
 <span class="n">repository</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">SequenceRepository</span><span class="p">()</span>
-<span class="n">repository</span><span class="o">.</span><span class="n">import_sequences</span><span class="p">(</span><span class="n">folder</span><span class="o">=</span><span class="s2">&quot;my_sequences/&quot;</span><span class="p">,</span> <span class="n">use_file_names_as_ids</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">repository</span><span class="o">.</span><span class="n">import_sequences</span><span class="p">(</span><span class="n">folder</span><span class="o">=</span><span class="s2">&quot;my_sequences/&quot;</span><span class="p">,</span> <span class="n">use_file_names_as_ids</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>Important:</strong> ensure the parts topology (as set in Biopython records at
+<p><strong>Important:</strong> ensure that the part’s topology (as set in Biopython records at
 <code class="docutils literal notranslate"><span class="pre">record.annotations['topology']</span></code>) is accurate. This can be done at import
-time by setting <code class="docutils literal notranslate"><span class="pre">topology='linear'</span></code>, <code class="docutils literal notranslate"><span class="pre">topology='circular'</span></code>, or
-<code class="docutils literal notranslate"><span class="pre">topology='auto'</span></code> to use the topology specified by each Genbank file.</p>
+time by setting <code class="docutils literal notranslate"><span class="pre">topology='linear'</span></code>, <code class="docutils literal notranslate"><span class="pre">topology='circular'</span></code>, or for instance
+<code class="docutils literal notranslate"><span class="pre">topology='default_to_linear'</span></code> to use the topology specified by each Genbank and
+default to linear if none is specified.</p>
 </div>
 <div class="section" id="parts-assembly">
 <h3>Parts assembly<a class="headerlink" href="#parts-assembly" title="Permalink to this headline">¶</a></h3>
@@ -257,7 +257,7 @@ which will work for all Golden-Gate-style assemblies:</p>
 <p>Note that we could have provided the enzyme in <code class="docutils literal notranslate"><span class="pre">Type2sRestrictionAssembly</span></code> with
 <code class="docutils literal notranslate"><span class="pre">enzyme='BsmBI'</span></code>, but it will be auto-selected by Cauldron.</p>
 <p>If you want to simulate other restriction-based assembly reactions such as IGEM Biobricks
-or Gibson Assembly instead of Type2s restriction, use the corresponding built-in Assembly subclass:</p>
+or Gibson Assembly instead of Type2S restriction, use the corresponding built-in Assembly subclass:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">assembly</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">BioBrickStandardAssembly</span><span class="p">(</span><span class="n">parts</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;part_A&#39;</span><span class="p">,</span> <span class="s1">&#39;part_B&#39;</span><span class="p">])</span>
 <span class="n">assembly</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">GibsonAssembly</span><span class="p">(</span><span class="n">parts</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;part_A&#39;</span><span class="p">,</span> <span class="s1">&#39;part_B&#39;</span><span class="p">])</span>
 </pre></div>
@@ -265,7 +265,7 @@ or Gibson Assembly instead of Type2s restriction, use the corresponding built-in
 <p>Now you can explore the results of the simulation:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print the ID and length of the generated construct(s)</span>
 <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">simulation</span><span class="o">.</span><span class="n">construct_records</span><span class="p">:</span>
-    <span class="k">print</span> <span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">))</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">))</span>
 
 <span class="c1"># Get a list of dictionnaries with data on each construct</span>
 <span class="n">constructs_data</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">compute_all_construct_data_dicts</span><span class="p">()</span>
@@ -308,27 +308,28 @@ between assemblies and sort the order in which they should be simulated.</p>
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>You can install DnaCauldron through PIP</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>sudo pip install dnacauldron
+<p>You can install DNA Cauldron through PIP:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install dnacauldron
 </pre></div>
 </div>
-<p>Alternatively, you can unzip the sources in a folder and type</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>sudo python setup.py install
+<p>The full installation using <code class="docutils literal notranslate"><span class="pre">dnacauldron[reports]</span></code> is required for report generation.
+Alternatively, you can unzip the sources in a folder and type:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python setup.py install
 </pre></div>
 </div>
 </div>
 <div class="section" id="how-it-works">
 <h2>How it works<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h2>
-<p>Dna Cauldron predicts circular constructs by explores circular paths in parts
-homology graphs , an idea also used in first described in
-<a class="reference external" href="http://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0544-x">Pereira et al. Bioinf. 2015</a> .
+<p>DNA Cauldron predicts circular constructs by finding circular paths in part
+homology graphs, an idea first described in
+<a class="reference external" href="http://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-015-0544-x">Pereira et al. (2015)</a>,
 and used in the Python library <a class="reference external" href="https://github.com/BjornFJohansson/pydna">PyDNA</a>.</p>
 </div>
-<div class="section" id="contribute">
-<h2>Contribute!<a class="headerlink" href="#contribute" title="Permalink to this headline">¶</a></h2>
-<p>Dna Cauldron is an open-source software originally written at the <a class="reference external" href="http://www.genomefoundry.io">Edinburgh Genome Foundry</a> by <a class="reference external" href="https://github.com/Zulko">Zulko</a>
-and <a class="reference external" href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron">released on Github</a> under the MIT licence (Copyright Edinburgh Genome Foundry).
-Everyone is welcome to contribute !</p>
+<div class="section" id="license-mit">
+<h2>License = MIT<a class="headerlink" href="#license-mit" title="Permalink to this headline">¶</a></h2>
+<p>DNA Cauldron is an open-source software originally written at the <a class="reference external" href="http://www.genomefoundry.io">Edinburgh Genome Foundry</a> by <a class="reference external" href="https://github.com/Zulko">Zulko</a>
+and <a class="reference external" href="https://github.com/Edinburgh-Genome-Foundry/DnaCauldron">released on Github</a> under the MIT license (Copyright 2020 Edinburgh Genome Foundry).
+Everyone is welcome to contribute!</p>
 </div>
 <div class="section" id="more-biology-software">
 <h2>More biology software<a class="headerlink" href="#more-biology-software" title="Permalink to this headline">¶</a></h2>
@@ -360,7 +361,7 @@ allowtransparency="true" frameborder="0" scrolling="0" width="152px" height="30p
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2020, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

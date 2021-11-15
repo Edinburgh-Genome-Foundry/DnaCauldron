@@ -12,10 +12,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
 
       
       <script src="../../../_static/theme-vendors.js"></script>
@@ -193,20 +193,26 @@
           <div class="content" role="main">
             
   <h1>Source code for dnacauldron.AssemblyPlan.AssemblyPlanSimulation</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">flametree</span> <span class="k">import</span> <span class="n">file_tree</span>
+<span></span><span class="kn">from</span> <span class="nn">flametree</span> <span class="kn">import</span> <span class="n">file_tree</span>
 <span class="kn">import</span> <span class="nn">proglog</span>
 <span class="kn">import</span> <span class="nn">pandas</span>
-<span class="kn">from</span> <span class="nn">..tools</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">format_data_dicts_records_for_spreadsheet</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">..biotools</span> <span class="k">import</span> <span class="n">write_record</span>
-<span class="kn">from</span> <span class="nn">..Assembly.AssemblyReportWriter</span> <span class="k">import</span> <span class="n">AssemblyReportWriter</span>
-<span class="kn">from</span> <span class="nn">.plot_leveled_graph</span> <span class="k">import</span> <span class="n">plot_leveled_graph</span>
+<span class="kn">from</span> <span class="nn">..tools</span> <span class="kn">import</span> <span class="n">format_data_dicts_records_for_spreadsheet</span>
+<span class="kn">from</span> <span class="nn">..biotools</span> <span class="kn">import</span> <span class="n">write_record</span>
+<span class="kn">from</span> <span class="nn">..Assembly.AssemblyReportWriter</span> <span class="kn">import</span> <span class="n">AssemblyReportWriter</span>
+<span class="kn">from</span> <span class="nn">.plot_leveled_graph</span> <span class="kn">import</span> <span class="n">plot_leveled_graph</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pdf_reports</span>
+
+    <span class="n">PDF_REPORTS_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">PDF_REPORTS_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="kn">from</span> <span class="nn">..reports</span> <span class="kn">import</span> <span class="n">write_simulation_pdf_report</span>
 
 
 <div class="viewcode-block" id="AssemblyPlanSimulation"><a class="viewcode-back" href="../../../ref/user_classes.html#dnacauldron.AssemblyPlan.AssemblyPlanSimulation">[docs]</a><span class="k">class</span> <span class="nc">AssemblyPlanSimulation</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">assembly_plan</span><span class="p">,</span>
         <span class="n">assembly_simulations</span><span class="p">,</span>
@@ -268,7 +274,7 @@
         <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
 
 <div class="viewcode-block" id="AssemblyPlanSimulation.compute_stats"><a class="viewcode-back" href="../../../ref/user_classes.html#dnacauldron.AssemblyPlan.AssemblyPlanSimulation.compute_stats">[docs]</a>    <span class="k">def</span> <span class="nf">compute_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a dictionnary of stats.</span>
+        <span class="sd">&quot;&quot;&quot;Return a dictionary of stats.</span>
 
 <span class="sd">        For instance {&quot;cancelled_assemblies&quot;: 2, &quot;errored_assemblies&quot;: 1,</span>
 <span class="sd">        &quot;valid_assemblies&quot;: 5}.</span>
@@ -289,7 +295,7 @@
         <span class="n">logger</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span>
         <span class="n">include_original_parts_records</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Write a comprehensive report to a folder or zip file</span>
+        <span class="sd">&quot;&quot;&quot;Write a comprehensive report to a folder or zip file.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -297,33 +303,29 @@
 <span class="sd">        target</span>
 <span class="sd">          Either a path to a folder, to a zip file, or ``&quot;@memory&quot;`` to write</span>
 <span class="sd">          into a virtual zip file whose raw data is then returned.</span>
-<span class="sd">        </span>
+
 <span class="sd">        folder_name</span>
 <span class="sd">          Name of the folder created inside the target to host the report (yes,</span>
 <span class="sd">          it is a folder inside a folder, which can be very practical).</span>
-<span class="sd">        </span>
+
 <span class="sd">        assembly_report_writer</span>
 <span class="sd">          Either the &quot;default&quot; or any AssemblyReportWriter instance.</span>
-<span class="sd">        </span>
+
 <span class="sd">        logger</span>
 <span class="sd">          Either &quot;bar&quot; for a progress bar, or None, or any Proglog logger.</span>
 
 <span class="sd">        include_original_parts_records</span>
 <span class="sd">          If true, the original provided part records will be included in the</span>
-<span class="sd">          report (creates larger file sizes, but better for traceability). </span>
-<span class="sd">        &quot;&quot;&quot;</span> 
+<span class="sd">          report (creates larger file sizes, but better for traceability).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">assembly_report_writer</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
             <span class="c1"># We&#39;ll write all records into one folder for the whole plan</span>
-            <span class="n">assembly_report_writer</span> <span class="o">=</span> <span class="n">AssemblyReportWriter</span><span class="p">(</span>
-                <span class="n">include_part_records</span><span class="o">=</span><span class="kc">False</span>
-            <span class="p">)</span>
+            <span class="n">assembly_report_writer</span> <span class="o">=</span> <span class="n">AssemblyReportWriter</span><span class="p">(</span><span class="n">include_part_records</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="n">proglog</span><span class="o">.</span><span class="n">default_bar_logger</span><span class="p">(</span><span class="n">logger</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">folder_name</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
             <span class="n">folder_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembly_plan</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_simulation&quot;</span>
         <span class="n">report_root</span> <span class="o">=</span> <span class="n">file_tree</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="o">.</span><span class="n">_dir</span><span class="p">(</span><span class="n">folder_name</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_write_assembly_reports</span><span class="p">(</span>
-            <span class="n">report_root</span><span class="p">,</span> <span class="n">assembly_report_writer</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span>
-        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_write_assembly_reports</span><span class="p">(</span><span class="n">report_root</span><span class="p">,</span> <span class="n">assembly_report_writer</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write_errors_spreadsheet</span><span class="p">(</span><span class="n">report_root</span><span class="p">,</span> <span class="n">error_type</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write_errors_spreadsheet</span><span class="p">(</span><span class="n">report_root</span><span class="p">,</span> <span class="n">error_type</span><span class="o">=</span><span class="s2">&quot;warning&quot;</span><span class="p">)</span>
 
@@ -337,6 +339,19 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_write_all_required_parts_records</span><span class="p">(</span><span class="n">report_root</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_single_level</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_plot_assembly_graph</span><span class="p">(</span><span class="n">report_root</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">assembly_report_writer</span><span class="o">.</span><span class="n">include_pdf_report</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">PDF_REPORTS_AVAILABLE</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+                    <span class="s2">&quot;Could not load PDF Reports. Install with `pip install pdf_reports`&quot;</span>
+                    <span class="s2">&quot; to generate a PDF report.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">simulation_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_simulation_info</span><span class="p">()</span>
+            <span class="n">write_simulation_pdf_report</span><span class="p">(</span>
+                <span class="n">report_root</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="s2">&quot;Report.pdf&quot;</span><span class="p">),</span> <span class="n">simulation_info</span>
+            <span class="p">)</span>
+
         <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="s2">&quot;@memory&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">report_root</span><span class="o">.</span><span class="n">_close</span><span class="p">()</span></div>
 
@@ -359,8 +374,7 @@
         <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_file_name</span><span class="p">(</span><span class="s2">&quot;cancelled_assemblies.csv&quot;</span><span class="p">)</span>
         <span class="n">columns</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;cancelled_assembly&quot;</span><span class="p">,</span> <span class="s2">&quot;failed_parent_assembly&quot;</span><span class="p">])</span>
         <span class="n">cancelled</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">assembly_name</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">failed_dependency</span><span class="p">])</span>
-            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cancelled</span>
+            <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">assembly_name</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">failed_dependency</span><span class="p">])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cancelled</span>
         <span class="p">]</span>
         <span class="n">report_root</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">columns</span><span class="p">]</span> <span class="o">+</span> <span class="n">cancelled</span><span class="p">))</span>
 
@@ -369,11 +383,12 @@
 
         <span class="k">def</span> <span class="nf">parts_sort_key</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
             <span class="n">assemblies</span> <span class="o">=</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assembly_plan</span><span class="o">.</span><span class="n">assemblies</span><span class="p">)</span>
-            <span class="k">return</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">asm</span> <span class="ow">in</span> <span class="n">assemblies</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">asm</span><span class="o">.</span><span class="n">parts</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">asm</span> <span class="ow">in</span> <span class="n">assemblies</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">asm</span><span class="o">.</span><span class="n">parts</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">indices</span> <span class="o">==</span> <span class="p">[]:</span>
+                <span class="k">return</span> <span class="mi">1000000</span>
+            <span class="k">return</span> <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-        <span class="n">all_parts</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">list_all_original_parts_used</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembly_plan</span><span class="o">.</span><span class="n">all_parts</span>
-        <span class="p">)</span>
+        <span class="n">all_parts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_all_original_parts_used</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembly_plan</span><span class="o">.</span><span class="n">all_parts</span>
         <span class="n">all_parts</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">all_parts</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">parts_sort_key</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">sort_key</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
@@ -391,9 +406,7 @@
             <span class="n">text</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;facecolor&quot;</span><span class="p">:</span> <span class="s2">&quot;white&quot;</span><span class="p">})</span>
 
-        <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_leveled_graph</span><span class="p">(</span>
-            <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">,</span> <span class="n">edges</span><span class="o">=</span><span class="n">edges</span><span class="p">,</span> <span class="n">draw_node</span><span class="o">=</span><span class="n">draw_node</span>
-        <span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_leveled_graph</span><span class="p">(</span><span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">,</span> <span class="n">edges</span><span class="o">=</span><span class="n">edges</span><span class="p">,</span> <span class="n">draw_node</span><span class="o">=</span><span class="n">draw_node</span><span class="p">)</span>
         <span class="n">target</span> <span class="o">=</span> <span class="n">report_root</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="s2">&quot;assembly_plan_graph.pdf&quot;</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;wb&quot;</span><span class="p">),</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pdf&quot;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="p">)</span>
@@ -403,9 +416,7 @@
             <span class="n">error</span>
             <span class="k">for</span> <span class="n">simulation</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembly_simulations</span>
             <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="p">(</span>
-                <span class="n">simulation</span><span class="o">.</span><span class="n">errors</span>
-                <span class="k">if</span> <span class="n">error_type</span> <span class="o">==</span> <span class="s2">&quot;errors&quot;</span>
-                <span class="k">else</span> <span class="n">simulation</span><span class="o">.</span><span class="n">warnings</span>
+                <span class="n">simulation</span><span class="o">.</span><span class="n">errors</span> <span class="k">if</span> <span class="n">error_type</span> <span class="o">==</span> <span class="s2">&quot;error&quot;</span> <span class="k">else</span> <span class="n">simulation</span><span class="o">.</span><span class="n">warnings</span>
             <span class="p">)</span>
         <span class="p">]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_errors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -423,12 +434,12 @@
                 <span class="p">)</span>
                 <span class="k">for</span> <span class="n">err</span> <span class="ow">in</span> <span class="n">all_errors</span>
             <span class="p">]</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;assembly_</span><span class="si">%s</span><span class="s2">.csv&quot;</span> <span class="o">%</span> <span class="n">error_type</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%s</span><span class="s2">s.csv&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assembly_plan</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">error_type</span><span class="p">)</span>
             <span class="n">errors_spreadsheet</span> <span class="o">=</span> <span class="n">report_root</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
             <span class="n">errors_spreadsheet</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">columns</span><span class="p">]</span> <span class="o">+</span> <span class="n">all_error_rows</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">_write_assembly_reports</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">report_root</span><span class="p">,</span> <span class="n">report_writer</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
-        <span class="n">all_records_folder</span> <span class="o">=</span> <span class="n">report_root</span><span class="o">.</span><span class="n">_dir</span><span class="p">(</span><span class="s2">&quot;all_records&quot;</span><span class="p">)</span>
+        <span class="n">all_records_folder</span> <span class="o">=</span> <span class="n">report_root</span><span class="o">.</span><span class="n">_dir</span><span class="p">(</span><span class="s2">&quot;all_construct_records&quot;</span><span class="p">)</span>
         <span class="n">logger</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;Generating assemblies reports...&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">simulation</span> <span class="ow">in</span> <span class="n">logger</span><span class="o">.</span><span class="n">iter_bar</span><span class="p">(</span><span class="n">assembly</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">assembly_simulations</span><span class="p">):</span>
             <span class="c1"># TODO: skip cancelled assemblies!</span>
@@ -452,8 +463,7 @@
             <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">simulation</span><span class="o">.</span><span class="n">list_all_parts_used</span><span class="p">()</span>
         <span class="p">]</span>
         <span class="n">assemblies</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">simulation</span><span class="o">.</span><span class="n">assembly</span><span class="o">.</span><span class="n">name</span>
-            <span class="k">for</span> <span class="n">simulation</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembly_simulations</span>
+            <span class="n">simulation</span><span class="o">.</span><span class="n">assembly</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">simulation</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assembly_simulations</span>
         <span class="p">]</span>
         <span class="n">parts_that_arent_assembled</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">all_parts</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">assemblies</span><span class="p">))</span>
         <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">parts_that_arent_assembled</span><span class="p">)</span>
@@ -486,7 +496,24 @@
                 <span class="n">file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_file_name</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
             <span class="n">f</span> <span class="o">=</span> <span class="n">report_root</span><span class="o">.</span><span class="n">_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
             <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">c</span><span class="p">]</span> <span class="o">+</span> <span class="n">parts</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">parts</span> <span class="ow">in</span> <span class="n">construct_parts</span><span class="p">]</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;construct, parts&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">lines</span><span class="p">))</span></div>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;construct,parts&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">lines</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_calculate_simulation_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">stats_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_stats</span><span class="p">()</span>
+        <span class="n">stats_dict_series</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Outcome&quot;</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s2">&quot;Valid&quot;</span><span class="p">,</span> <span class="s2">&quot;Cancelled&quot;</span><span class="p">,</span> <span class="s2">&quot;Errored&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;Number of assemblies&quot;</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">stats_dict</span><span class="p">[</span><span class="s2">&quot;valid_assemblies&quot;</span><span class="p">],</span>
+                    <span class="n">stats_dict</span><span class="p">[</span><span class="s2">&quot;cancelled_assemblies&quot;</span><span class="p">],</span>
+                    <span class="n">stats_dict</span><span class="p">[</span><span class="s2">&quot;errored_assemblies&quot;</span><span class="p">],</span>
+                <span class="p">]</span>
+            <span class="p">),</span>
+        <span class="p">}</span>
+
+        <span class="n">stats_df</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">stats_dict_series</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">stats_df</span></div>
 </pre></div>
 
           </div>
@@ -495,7 +522,7 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2020, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

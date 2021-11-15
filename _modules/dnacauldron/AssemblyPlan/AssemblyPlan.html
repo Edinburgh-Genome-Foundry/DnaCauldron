@@ -12,10 +12,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
 
       
       <script src="../../../_static/theme-vendors.js"></script>
@@ -196,13 +196,13 @@
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pandas</span>
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
-<span class="kn">from</span> <span class="nn">proglog</span> <span class="k">import</span> <span class="n">default_bar_logger</span>
-<span class="kn">from</span> <span class="nn">.AssemblyPlanSimulation</span> <span class="k">import</span> <span class="n">AssemblyPlanSimulation</span>
-<span class="kn">from</span> <span class="nn">..Assembly</span> <span class="k">import</span> <span class="n">ASSEMBLY_CLASS_DICT</span>
+<span class="kn">from</span> <span class="nn">proglog</span> <span class="kn">import</span> <span class="n">default_bar_logger</span>
+<span class="kn">from</span> <span class="nn">.AssemblyPlanSimulation</span> <span class="kn">import</span> <span class="n">AssemblyPlanSimulation</span>
+<span class="kn">from</span> <span class="nn">..Assembly</span> <span class="kn">import</span> <span class="n">ASSEMBLY_CLASS_DICT</span>
 
 
 <div class="viewcode-block" id="AssemblyPlan"><a class="viewcode-back" href="../../../ref/user_classes.html#dnacauldron.AssemblyPlan">[docs]</a><span class="k">class</span> <span class="nc">AssemblyPlan</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assemblies</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;plan&quot;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assemblies</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;plan&quot;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Class to represent, analyze and simulate assembly plans</span>
 <span class="sd">        </span>
 <span class="sd">        Parameters</span>
@@ -233,8 +233,10 @@
         <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">indices</span> <span class="ow">in</span> <span class="n">names_indices</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
             <span class="n">duplicates</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="p">[</span>
-                    <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">]))</span>
+                    <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> (lines </span><span class="si">%s</span><span class="s2">)&quot;</span>
+                    <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">]))</span>
                     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">indices</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">names_indices</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
                 <span class="p">]</span>
             <span class="p">)</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Multiple assemblies named &quot;</span> <span class="o">+</span> <span class="n">duplicates</span><span class="p">)</span>
@@ -294,20 +296,25 @@
         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;auto_from_filename&quot;</span><span class="p">,</span>
         <span class="n">logger</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span>
         <span class="n">assembly_class_dict</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+        <span class="n">is_csv</span><span class="o">=</span><span class="s2">&quot;auto_from_filename&quot;</span><span class="p">,</span>
         <span class="o">**</span><span class="n">assembly_params</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Import an assembly plan from a spreadsheet.</span>
 
 <span class="sd">        You can either read these docs or browse the examples in the repo.</span>
+<span class="sd">        Note that this function autoselects the enzyme, based on the sites in</span>
+<span class="sd">        each part. To explicitly set enzymes, set ``assembly.enzyme`` for each</span>
+<span class="sd">        assembly in ``AssemblyPlan.assemblies``.</span>
+
 
 <span class="sd">        Parameters</span>
-<span class="sd">        -----------</span>
+<span class="sd">        ----------</span>
 <span class="sd">        </span>
 <span class="sd">        path</span>
-<span class="sd">          Path to a spreadsheet file (a dataframe can be used instead)</span>
+<span class="sd">          Path to a spreadsheet file (a dataframe can be used instead).</span>
 <span class="sd">        </span>
 <span class="sd">        dataframe</span>
-<span class="sd">          A pandas dataframe, possibly obatined from a spreadsheet.</span>
+<span class="sd">          A pandas dataframe, possibly obtained from a spreadsheet.</span>
 <span class="sd">        </span>
 <span class="sd">        sheet_name</span>
 <span class="sd">          Name of the spreadsheet&#39;s sheet on which the assembly plan is</span>
@@ -319,7 +326,7 @@
 
 <span class="sd">        name</span>
 <span class="sd">          Name of the assembly plan (leave to &quot;auto_from_filename&quot; to use the</span>
-<span class="sd">          file name as assembly plan name)</span>
+<span class="sd">          file name as assembly plan name).</span>
 
 <span class="sd">        logger</span>
 <span class="sd">          Logger of the created assembly plan. Either &quot;bar&quot; for a progress bar</span>
@@ -334,7 +341,8 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
                 <span class="n">name</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-        <span class="n">is_csv</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_csv</span> <span class="o">==</span> <span class="s2">&quot;auto_from_filename&quot;</span><span class="p">:</span>
+            <span class="n">is_csv</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">sheet_name</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_csv</span><span class="p">:</span>
             <span class="n">excel_file</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">ExcelFile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">AssemblyPlan</span><span class="p">(</span>
@@ -348,6 +356,8 @@
                         <span class="n">sheet_name</span><span class="o">=</span><span class="n">_sheet_name</span><span class="p">,</span>
                         <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span>
                         <span class="n">assembly_class</span><span class="o">=</span><span class="n">assembly_class</span><span class="p">,</span>
+                        <span class="n">is_csv</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                         <span class="o">**</span><span class="n">assembly_params</span>
                     <span class="p">)</span><span class="o">.</span><span class="n">assemblies</span>
                 <span class="p">],</span>
@@ -355,10 +365,11 @@
 
         <span class="k">if</span> <span class="n">dataframe</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">is_csv</span><span class="p">:</span>
-                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                    <span class="n">dataframe</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-                        <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)]</span>
-                    <span class="p">)</span>
+                <span class="n">dataframe</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">)</span>
+                <span class="c1"># with open(path, &quot;r&quot;) as f:</span>
+                <span class="c1">#     dataframe = pandas.DataFrame(</span>
+                <span class="c1">#         [line.split(&quot;,&quot;) for line in f.read().split(&quot;\n&quot;)]</span>
+                <span class="c1">#     )</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">dataframe</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
                     <span class="n">path</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheet_name</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">header</span>
@@ -458,7 +469,7 @@
 
 
 <span class="k">class</span> <span class="nc">AssemblySimulationCancellation</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assembly_name</span><span class="p">,</span> <span class="n">failed_dependency</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">assembly_name</span><span class="p">,</span> <span class="n">failed_dependency</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assembly_name</span> <span class="o">=</span> <span class="n">assembly_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">failed_dependency</span> <span class="o">=</span> <span class="n">failed_dependency</span>
 </pre></div>
@@ -469,7 +480,7 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2020, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

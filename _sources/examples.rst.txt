@@ -23,7 +23,7 @@ Gibson Assembly Plan
 
 .. literalinclude:: ../examples/gibson_assembly/gibson_assembly.py
 
-Hierarichical BioBrick assembly
+Hierarchical BioBrick assembly
 ++++++++++++++++++++++++++++++++++++++++++
 
 .. literalinclude:: ../examples/hierarchical_biobrick/hierarchical_biobrick.py

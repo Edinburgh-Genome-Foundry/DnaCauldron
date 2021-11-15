@@ -12,10 +12,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
 
       
       <script src="../../_static/theme-vendors.js"></script>
@@ -193,28 +193,38 @@
           <div class="content" role="main">
             
   <h1>Source code for dnacauldron.SequenceRepository</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">.biotools</span> <span class="k">import</span> <span class="p">(</span>
+<span></span><span class="kn">from</span> <span class="nn">.biotools</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">load_records_from_files</span><span class="p">,</span>
     <span class="n">set_record_topology</span><span class="p">,</span>
     <span class="n">sequence_to_biopython_record</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">fuzzywuzzy</span> <span class="kn">import</span> <span class="n">process</span>
 
 
 <span class="k">class</span> <span class="nc">NotInRepositoryError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts</span><span class="p">,</span> <span class="n">repository</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts</span><span class="p">,</span> <span class="n">repository</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parts</span> <span class="o">=</span> <span class="n">parts</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">repository</span> <span class="o">=</span> <span class="n">repository</span>
-        <span class="n">parts_list</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">150</span><span class="p">:</span>
-            <span class="n">parts_list</span> <span class="o">=</span> <span class="n">parts_list</span><span class="p">[:</span><span class="mi">150</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="s2">&quot;Part</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s2">&quot;s&quot;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">parts_list</span><span class="p">)</span>
-        <span class="n">repo_name</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot; in &quot;</span> <span class="o">+</span> <span class="n">repository</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="n">repository</span><span class="o">.</span><span class="n">name</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="n">parts</span> <span class="o">+</span> <span class="s2">&quot; not found&quot;</span> <span class="o">+</span> <span class="n">repo_name</span>
+
+        <span class="c1"># CREATE THE MESSAGE AND INITIALIZE THE EXCEPTION:</span>
+
+        <span class="n">suggestions</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_part_suggestion_string</span><span class="p">(</span><span class="n">part_name</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">part_name</span> <span class="ow">in</span> <span class="n">parts</span>
+        <span class="p">]</span>
+        <span class="n">suggestions</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">suggestions</span><span class="p">)</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Parts not found in </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">repository</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">suggestions</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">create_part_suggestion_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_name</span><span class="p">):</span>
+        <span class="n">suggestions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">repository</span><span class="o">.</span><span class="n">suggest_part_names</span><span class="p">(</span><span class="n">part_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">suggestions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">part_name</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> (did you mean </span><span class="si">%s</span><span class="s2"> ?)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">part_name</span><span class="p">,</span> <span class="s2">&quot; or &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">suggestions</span><span class="p">))</span>
+
 
 <span class="k">class</span> <span class="nc">RepositoryDuplicateError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts</span><span class="p">,</span> <span class="n">repository</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts</span><span class="p">,</span> <span class="n">repository</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parts</span> <span class="o">=</span> <span class="n">parts</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">repository</span> <span class="o">=</span> <span class="n">repository</span>
         <span class="n">parts_list</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
@@ -224,7 +234,6 @@
         <span class="n">repo_name</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot; in &quot;</span> <span class="o">+</span> <span class="n">repository</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="n">repository</span><span class="o">.</span><span class="n">name</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="n">message</span> <span class="o">=</span> <span class="n">parts</span> <span class="o">+</span> <span class="s2">&quot; duplicated in &quot;</span> <span class="o">+</span> <span class="n">repo_name</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-
 
 
 <div class="viewcode-block" id="SequenceRepository"><a class="viewcode-back" href="../../ref/user_classes.html#dnacauldron.SequenceRepository">[docs]</a><span class="k">class</span> <span class="nc">SequenceRepository</span><span class="p">:</span>
@@ -254,7 +263,7 @@
 <span class="sd">      reports.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collections</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;repo&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collections</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;repo&quot;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">collections</span> <span class="o">=</span> <span class="n">collections</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
@@ -269,7 +278,7 @@
             <span class="n">_id</span><span class="p">,</span> <span class="n">_sequence</span> <span class="o">=</span> <span class="n">record</span>
             <span class="n">record</span> <span class="o">=</span> <span class="n">sequence_to_biopython_record</span><span class="p">(</span><span class="n">_sequence</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">_id</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">contains_record</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">RepositoryDuplicateError</span><span class="p">([</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+            <span class="k">raise</span> <span class="n">RepositoryDuplicateError</span><span class="p">([</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">],</span> <span class="n">repository</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">collection</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">collections</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="n">collection</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="n">collection</span><span class="p">][</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span></div>
@@ -305,7 +314,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">not_in_repository</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">not_in_repository</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">NotInRepositoryError</span><span class="p">(</span><span class="n">not_in_repository</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">NotInRepositoryError</span><span class="p">(</span><span class="n">not_in_repository</span><span class="p">,</span> <span class="n">repository</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">records</span></div>
 
 <div class="viewcode-block" id="SequenceRepository.import_records"><a class="viewcode-back" href="../../ref/user_classes.html#dnacauldron.SequenceRepository.import_records">[docs]</a>    <span class="k">def</span> <span class="nf">import_records</span><span class="p">(</span>
@@ -371,7 +380,25 @@
             <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">name</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;- &quot;</span> <span class="o">+</span> <span class="n">part</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">parts</span><span class="p">)])</span>
                 <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">parts</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-            <span class="p">)</span></div></div>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="SequenceRepository.get_all_part_names"><a class="viewcode-back" href="../../ref/user_classes.html#dnacauldron.SequenceRepository.get_all_part_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_all_part_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the list of all part names&quot;&quot;&quot;</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">part</span>
+            <span class="k">for</span> <span class="n">collection</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">collection</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="SequenceRepository.suggest_part_names"><a class="viewcode-back" href="../../ref/user_classes.html#dnacauldron.SequenceRepository.suggest_part_names">[docs]</a>    <span class="k">def</span> <span class="nf">suggest_part_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Suggest part names in the repo close to the given query.&quot;&quot;&quot;</span>
+        <span class="n">search</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_part_names</span><span class="p">())</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">name</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">search</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="o">-</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;=</span> <span class="n">cutoff</span>
+        <span class="p">][:</span><span class="n">limit</span><span class="p">]</span></div></div>
 </pre></div>
 
           </div>
@@ -380,7 +407,7 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2020, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

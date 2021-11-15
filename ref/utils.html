@@ -12,10 +12,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
 
       
       <script src="../_static/theme-vendors.js"></script>
@@ -220,21 +220,17 @@
 <dd><p>List all overhangs created by restriction in the provided records.</p>
 <p>Warning: only overhangs on non-reversed fragments are returned, not
 their reverse-complement.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>records</strong></p>
-<blockquote>
-<div><p>List of records</p>
-</div></blockquote>
-<p><strong>enzyme</strong></p>
-<blockquote>
-<div><p>Either ‘BsmBI’, ‘BsaI’, etc. or just “auto” for automatic selection.</p>
-</div></blockquote>
-<p><strong>parts_only</strong></p>
-<blockquote>
-<div><p>If true, overhangs created by restriction which are not on a part
+<dd class="field-odd"><dl class="simple">
+<dt><strong>records</strong></dt><dd><p>List of records</p>
+</dd>
+<dt><strong>enzyme</strong></dt><dd><p>Either ‘BsmBI’, ‘BsaI’, etc. or just “auto” for automatic selection.</p>
+</dd>
+<dt><strong>parts_only</strong></dt><dd><p>If true, overhangs created by restriction which are not on a part
 (so for instance inside a backbone) will be ignored.</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -245,24 +241,20 @@ their reverse-complement.</p>
 <dd><p>Replace the record’s subsequence that corresponds to overhangs.</p>
 <p>This is practical to change the position of a part in a Type-2S
 assembly standard</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>record</strong></p>
-<blockquote>
-<div><p>A Biopython record whose internal sequence needs to be replaced</p>
-</div></blockquote>
-<p><strong>substitutions</strong></p>
-<blockquote>
-<div><p>A dict {overhang: new_overhang} of which overhangs must be replaced</p>
-</div></blockquote>
-<p><strong>enzyme</strong></p>
-<blockquote>
-<div><p>Either ‘BsmBI’, ‘BsaI’, etc. or just “auto” for automatic selection.</p>
-</div></blockquote>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>record</strong></dt><dd><p>A Biopython record whose internal sequence needs to be replaced</p>
+</dd>
+<dt><strong>substitutions</strong></dt><dd><p>A dict {overhang: new_overhang} of which overhangs must be replaced</p>
+</dd>
+<dt><strong>enzyme</strong></dt><dd><p>Either ‘BsmBI’, ‘BsaI’, etc. or just “auto” for automatic selection.</p>
+</dd>
+</dl>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">new_record</span> <span class="o">=</span> <span class="n">replace_overhangs</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ATGC&#39;</span><span class="p">:</span> <span class="s1">&#39;CTCG&#39;</span><span class="p">})</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">new_record</span> <span class="o">=</span> <span class="n">replace_overhangs</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ATGC&#39;</span><span class="p">:</span> <span class="s1">&#39;CTCG&#39;</span><span class="p">})</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -276,22 +268,18 @@ assembly standard</p>
 to a circular vector (the part in its donor vector) by starting from
 an existing donor vector (with same overhangs) and swapping this vector’s
 part for the insert of interest.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>donor_vector</strong></p>
-<blockquote>
-<div><p>Biopython record of a donor vector. must have an insert producing a
+<dd class="field-odd"><dl class="simple">
+<dt><strong>donor_vector</strong></dt><dd><p>Biopython record of a donor vector. must have an insert producing a
 restriction-free fragment</p>
-</div></blockquote>
-<p><strong>insert</strong></p>
-<blockquote>
-<div><p>Biopython record of a plasmid or a linear DNA sequence containing an
+</dd>
+<dt><strong>insert</strong></dt><dd><p>Biopython record of a plasmid or a linear DNA sequence containing an
 insert (i.e. a fragment that is cut out)</p>
-</div></blockquote>
-<p><strong>enzyme</strong></p>
-<blockquote>
-<div><p>The name of the enzyme to use e.g. ‘BsmBI’, ‘BsaI’, …</p>
-</div></blockquote>
+</dd>
+<dt><strong>enzyme</strong></dt><dd><p>The name of the enzyme to use e.g. ‘BsmBI’, ‘BsaI’, …</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -306,31 +294,23 @@ represent simply a part (and enzyme-flanked overhangs) which needs
 to be complemented with the right backbone.</p>
 <p>It will return, for each part, whether it has already a backbone, and
 if not, which backbone was selected and what the final sequence is.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>part_records</strong></p>
-<blockquote>
-<div><p>List of genbanks of the parts to put on vectors.</p>
-</div></blockquote>
-<p><strong>backbone_vectors</strong></p>
-<blockquote>
-<div><p>Vectors to insert parts in, typically donor vectors for different
+<dd class="field-odd"><dl class="simple">
+<dt><strong>part_records</strong></dt><dd><p>List of genbanks of the parts to put on vectors.</p>
+</dd>
+<dt><strong>backbone_vectors</strong></dt><dd><p>Vectors to insert parts in, typically donor vectors for different
 positions of an assembly standard.</p>
-</div></blockquote>
-<p><strong>enzyme</strong></p>
-<blockquote>
-<div><p>Enzyme to use. Use autodetect for autodetection.</p>
-</div></blockquote>
-<p><strong>min_backbone_length</strong></p>
-<blockquote>
-<div><p>Minimal length of a backbone. Used to determine if a part is
+</dd>
+<dt><strong>enzyme</strong></dt><dd><p>Enzyme to use. Use autodetect for autodetection.</p>
+</dd>
+<dt><strong>min_backbone_length</strong></dt><dd><p>Minimal length of a backbone. Used to determine if a part is
 represented alone or with a backbone.</p>
-</div></blockquote>
-<p><strong>process_parts_with_backbone</strong></p>
-<blockquote>
-<div><p>If true, parts will be inserted in an autoselected backbone even
+</dd>
+<dt><strong>process_parts_with_backbone</strong></dt><dd><p>If true, parts will be inserted in an autoselected backbone even
 when they already have a backbone (it will be replaced).</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -348,28 +328,22 @@ has a total size above the given <code class="docutils literal notranslate"><spa
 <dt id="dnacauldron.utils.BackboneChoice">
 <em class="property">class </em><code class="sig-prename descclassname">dnacauldron.utils.</code><code class="sig-name descname">BackboneChoice</code><span class="sig-paren">(</span><em class="sig-param">record</em>, <em class="sig-param">already_on_backbone=None</em>, <em class="sig-param">error=None</em>, <em class="sig-param">backbone_record=None</em>, <em class="sig-param">final_record=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/utils/insert_parts_on_backbones.html#BackboneChoice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.utils.BackboneChoice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class to represent the result of a backbone autoselection.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>record</strong></p>
-<blockquote>
-<div><p>Record that was analyzed, containing an insert, to be backbonized,
+<dd class="field-odd"><dl class="simple">
+<dt><strong>record</strong></dt><dd><p>Record that was analyzed, containing an insert, to be backbonized,
 and potentially an original backbone too.</p>
-</div></blockquote>
-<p><strong>already_on_backbone</strong></p>
-<blockquote>
-<div><p>Was a backbone detected in that record ?</p>
-</div></blockquote>
-<p><strong>error</strong></p>
-<p><strong>backbone_record</strong></p>
-<blockquote>
-<div><p>Record of the backone that was selected for this record among all
+</dd>
+<dt><strong>already_on_backbone</strong></dt><dd><p>Was a backbone detected in that record ?</p>
+</dd>
+<dt><strong>error</strong></dt><dd></dd>
+<dt><strong>backbone_record</strong></dt><dd><p>Record of the backone that was selected for this record among all
 provided choices.</p>
-</div></blockquote>
-<p><strong>final_record</strong></p>
-<blockquote>
-<div><p>Record featuring the original insert in the given <code class="docutils literal notranslate"><span class="pre">record</span></code> cloned into
+</dd>
+<dt><strong>final_record</strong></dt><dd><p>Record featuring the original insert in the given <code class="docutils literal notranslate"><span class="pre">record</span></code> cloned into
 the auto-selected backbone.</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd>
 </dl>
 <dl class="method">
@@ -382,7 +356,7 @@ the auto-selected backbone.</p>
 
 <dl class="method">
 <dt id="dnacauldron.utils.BackboneChoice.to_dict">
-<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/utils/insert_parts_on_backbones.html#BackboneChoice.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.utils.BackboneChoice.to_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dnacauldron/utils/insert_parts_on_backbones.html#BackboneChoice.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dnacauldron.utils.BackboneChoice.to_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the object as a dict. Used for dataframe/spreadsheet.</p>
 </dd></dl>
 
@@ -411,7 +385,7 @@ the auto-selected backbone.</p>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2020, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

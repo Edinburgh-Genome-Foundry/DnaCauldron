@@ -12,10 +12,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
 
       
       <script src="../../../../_static/theme-vendors.js"></script>
@@ -193,10 +193,10 @@
           <div class="content" role="main">
             
   <h1>Source code for dnacauldron.AssemblyMix.StickyEndAssemblyMix.StickyEndAssemblyMix</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">...Fragment.StickyEndFragment</span> <span class="k">import</span> <span class="n">StickyEndFragment</span>
-<span class="kn">from</span> <span class="nn">..AssemblyMix</span> <span class="k">import</span> <span class="n">AssemblyMix</span>
-<span class="kn">from</span> <span class="nn">.SlotsMixin</span> <span class="k">import</span> <span class="n">SlotsMixin</span>
-<span class="kn">from</span> <span class="nn">.PlotsMixin</span> <span class="k">import</span> <span class="n">PlotsMixin</span>
+<span></span><span class="kn">from</span> <span class="nn">...Fragment.StickyEndFragment</span> <span class="kn">import</span> <span class="n">StickyEndFragment</span>
+<span class="kn">from</span> <span class="nn">..AssemblyMix</span> <span class="kn">import</span> <span class="n">AssemblyMix</span>
+<span class="kn">from</span> <span class="nn">.SlotsMixin</span> <span class="kn">import</span> <span class="n">SlotsMixin</span>
+<span class="kn">from</span> <span class="nn">.PlotsMixin</span> <span class="kn">import</span> <span class="n">PlotsMixin</span>
 
 <div class="viewcode-block" id="StickyEndAssemblyMix"><a class="viewcode-back" href="../../../../ref/core_classes.html#dnacauldron.AssemblyMix.StickyEndAssemblyMix">[docs]</a><span class="k">class</span> <span class="nc">StickyEndAssemblyMix</span><span class="p">(</span><span class="n">AssemblyMix</span><span class="p">,</span> <span class="n">SlotsMixin</span><span class="p">,</span> <span class="n">PlotsMixin</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class to represent and simulate the assembly of sticky-ended fragments.</span>
@@ -224,7 +224,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fragments</span><span class="p">,</span> <span class="n">fragment_filters</span><span class="o">=</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;sticky_ends_mix&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fragments</span><span class="p">,</span> <span class="n">fragment_filters</span><span class="o">=</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;sticky_ends_mix&#39;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fragments</span> <span class="o">=</span> <span class="n">fragments</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fragment_filters</span> <span class="o">=</span> <span class="n">fragment_filters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
@@ -267,7 +267,7 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2020, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

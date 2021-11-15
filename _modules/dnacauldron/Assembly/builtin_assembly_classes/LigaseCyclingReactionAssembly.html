@@ -12,10 +12,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
 
       
       <script src="../../../../_static/theme-vendors.js"></script>
@@ -193,12 +193,12 @@
           <div class="content" role="main">
             
   <h1>Source code for dnacauldron.Assembly.builtin_assembly_classes.LigaseCyclingReactionAssembly</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">...AssemblyMix.LigaseCyclingReactionMix</span> <span class="k">import</span> <span class="n">LigaseCyclingReactionMix</span>
-<span class="kn">from</span> <span class="nn">...AssemblyMix</span> <span class="k">import</span> <span class="n">AssemblyMixError</span>
-<span class="kn">from</span> <span class="nn">...Fragment.HomologousFragment</span> <span class="k">import</span> <span class="n">HomologyChecker</span>
-<span class="kn">from</span> <span class="nn">..AssemblySimulation</span> <span class="k">import</span> <span class="n">AssemblySimulation</span>
-<span class="kn">from</span> <span class="nn">..AssemblyFlaw</span> <span class="k">import</span> <span class="n">AssemblyFlaw</span>
-<span class="kn">from</span> <span class="nn">..Assembly</span> <span class="k">import</span> <span class="n">Assembly</span>
+<span></span><span class="kn">from</span> <span class="nn">...AssemblyMix.LigaseCyclingReactionMix</span> <span class="kn">import</span> <span class="n">LigaseCyclingReactionMix</span>
+<span class="kn">from</span> <span class="nn">...AssemblyMix</span> <span class="kn">import</span> <span class="n">AssemblyMixError</span>
+<span class="kn">from</span> <span class="nn">...Fragment.HomologousFragment</span> <span class="kn">import</span> <span class="n">HomologyChecker</span>
+<span class="kn">from</span> <span class="nn">..AssemblySimulation</span> <span class="kn">import</span> <span class="n">AssemblySimulation</span>
+<span class="kn">from</span> <span class="nn">..AssemblyFlaw</span> <span class="kn">import</span> <span class="n">AssemblyFlaw</span>
+<span class="kn">from</span> <span class="nn">..Assembly</span> <span class="kn">import</span> <span class="n">Assembly</span>
 
 <div class="viewcode-block" id="LigaseCyclingReactionAssembly"><a class="viewcode-back" href="../../../../ref/user_classes.html#dnacauldron.LigaseCyclingReactionAssembly">[docs]</a><span class="k">class</span> <span class="nc">LigaseCyclingReactionAssembly</span><span class="p">(</span><span class="n">Assembly</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Representation and simulation of Gibson Assembly</span>
@@ -254,7 +254,7 @@
         <span class="s2">&quot;oligo_indicator&quot;</span>
     <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">parts</span><span class="p">,</span>
         <span class="n">bridging_oligos</span><span class="o">=</span><span class="p">(),</span>
@@ -379,7 +379,7 @@
                 <span class="n">connectors</span> <span class="o">=</span> <span class="n">mix</span><span class="o">.</span><span class="n">autoselect_connectors</span><span class="p">(</span><span class="n">connectors_records</span><span class="p">)</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">connectors</span><span class="p">):</span>
                     <span class="n">connectors_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">connectors</span><span class="p">]</span>
-                    <span class="n">connectors_string</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">connectors_ids</span><span class="p">)</span>
+                    <span class="n">connectors_string</span> <span class="o">=</span> <span class="s2">&quot; &amp; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">connectors_ids</span><span class="p">)</span>
                     <span class="n">warning</span> <span class="o">=</span> <span class="n">AssemblyFlaw</span><span class="p">(</span>
                         <span class="n">assembly</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                         <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Added connectors </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">connectors_string</span><span class="p">,</span>
@@ -440,7 +440,7 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2020, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>

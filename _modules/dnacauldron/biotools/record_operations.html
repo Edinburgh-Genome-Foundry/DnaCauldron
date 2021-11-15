@@ -12,10 +12,10 @@
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
 
       <!-- sphinx script_files -->
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
 
       
       <script src="../../../_static/theme-vendors.js"></script>
@@ -193,12 +193,20 @@
           <div class="content" role="main">
             
   <h1>Source code for dnacauldron.biotools.record_operations</h1><div class="highlight"><pre>
-<span></span>
-<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">copy</span>
-<span class="kn">from</span> <span class="nn">Bio.Alphabet</span> <span class="k">import</span> <span class="n">DNAAlphabet</span>
-<span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="k">import</span> <span class="n">Seq</span>
-<span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="k">import</span> <span class="n">SeqRecord</span>
-<span class="kn">from</span> <span class="nn">Bio.SeqFeature</span> <span class="k">import</span> <span class="n">SeqFeature</span><span class="p">,</span> <span class="n">FeatureLocation</span>
+<span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Biopython &lt;1.78</span>
+    <span class="kn">from</span> <span class="nn">Bio.Alphabet</span> <span class="kn">import</span> <span class="n">DNAAlphabet</span>
+
+    <span class="n">has_dna_alphabet</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># Biopython &gt;=1.78</span>
+    <span class="n">has_dna_alphabet</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="kn">import</span> <span class="n">Seq</span>
+<span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="kn">import</span> <span class="n">SeqRecord</span>
+<span class="kn">from</span> <span class="nn">Bio.SeqFeature</span> <span class="kn">import</span> <span class="n">SeqFeature</span><span class="p">,</span> <span class="n">FeatureLocation</span>
+
 
 <div class="viewcode-block" id="complement"><a class="viewcode-back" href="../../../ref/biotools.html#dnacauldron.biotools.record_operations.complement">[docs]</a><span class="k">def</span> <span class="nf">complement</span><span class="p">(</span><span class="n">dna_sequence</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return the complement of the DNA sequence.</span>
@@ -208,6 +216,7 @@
 <span class="sd">    Uses BioPython for speed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="n">dna_sequence</span><span class="p">)</span><span class="o">.</span><span class="n">complement</span><span class="p">())</span></div>
+
 
 <div class="viewcode-block" id="set_record_topology"><a class="viewcode-back" href="../../../ref/biotools.html#dnacauldron.biotools.record_operations.set_record_topology">[docs]</a><span class="k">def</span> <span class="nf">set_record_topology</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">topology</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Set the Biopython record&#39;s topology, possibly passing if already set.</span>
@@ -224,9 +233,7 @@
         <span class="s2">&quot;default_to_linear&quot;</span><span class="p">,</span>
     <span class="p">]</span>
     <span class="k">if</span> <span class="n">topology</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_topologies</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;topology should be one of </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">valid_topologies</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;topology should be one of </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">valid_topologies</span><span class="p">))</span>
     <span class="n">annotations</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">annotations</span>
     <span class="n">default_prefix</span> <span class="o">=</span> <span class="s2">&quot;default_to_&quot;</span>
     <span class="k">if</span> <span class="n">topology</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">default_prefix</span><span class="p">):</span>
@@ -257,20 +264,29 @@
     <span class="n">sequence</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;&lt;unknown id&gt;&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;same_as_id&quot;</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="p">()</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a SeqRecord of the sequence, ready to be Genbanked.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">SeqRecord</span><span class="p">(</span>
-        <span class="n">Seq</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">alphabet</span><span class="o">=</span><span class="n">DNAAlphabet</span><span class="p">()),</span>
-        <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="nb">id</span> <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;same_as_id&quot;</span> <span class="k">else</span> <span class="n">name</span><span class="p">,</span>
-        <span class="n">features</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">features</span><span class="p">),</span>
-    <span class="p">)</span></div>
+
+    <span class="k">if</span> <span class="n">has_dna_alphabet</span><span class="p">:</span>
+        <span class="n">seqrecord</span> <span class="o">=</span> <span class="n">SeqRecord</span><span class="p">(</span>
+            <span class="n">Seq</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">alphabet</span><span class="o">=</span><span class="n">DNAAlphabet</span><span class="p">()),</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="nb">id</span> <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;same_as_id&quot;</span> <span class="k">else</span> <span class="n">name</span><span class="p">,</span>
+            <span class="n">features</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">features</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">seqrecord</span> <span class="o">=</span> <span class="n">SeqRecord</span><span class="p">(</span>
+            <span class="n">Seq</span><span class="p">(</span><span class="n">sequence</span><span class="p">),</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="nb">id</span> <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;same_as_id&quot;</span> <span class="k">else</span> <span class="n">name</span><span class="p">,</span>
+            <span class="n">features</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">features</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="n">seqrecord</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s2">&quot;molecule_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;DNA&quot;</span>
+
+    <span class="k">return</span> <span class="n">seqrecord</span></div>
 
 
 <div class="viewcode-block" id="annotate_record"><a class="viewcode-back" href="../../../ref/biotools.html#dnacauldron.biotools.record_operations.annotate_record">[docs]</a><span class="k">def</span> <span class="nf">annotate_record</span><span class="p">(</span>
-    <span class="n">seqrecord</span><span class="p">,</span>
-    <span class="n">location</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">,</span>
-    <span class="n">feature_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">,</span>
-    <span class="n">margin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">qualifiers</span>
+    <span class="n">seqrecord</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">,</span> <span class="n">feature_type</span><span class="o">=</span><span class="s2">&quot;misc_feature&quot;</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">qualifiers</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Add a feature to a Biopython SeqRecord.</span>
 
@@ -278,19 +294,19 @@
 <span class="sd">    ----------</span>
 
 <span class="sd">    seqrecord</span>
-<span class="sd">      The biopython seqrecord to be annotated.</span>
+<span class="sd">      The Biopython seqrecord to be annotated.</span>
 
 <span class="sd">    location</span>
 <span class="sd">      Either (start, end) or (start, end, strand). (strand defaults to +1)</span>
 
 <span class="sd">    feature_type</span>
-<span class="sd">      The type associated with the feature</span>
+<span class="sd">      The type associated with the feature.</span>
 
 <span class="sd">    margin</span>
 <span class="sd">      Number of extra bases added on each side of the given location.</span>
 
 <span class="sd">    qualifiers</span>
-<span class="sd">      Dictionnary that will be the Biopython feature&#39;s `qualifiers` attribute.</span>
+<span class="sd">      Dictionary that will be the Biopython feature&#39;s `qualifiers` attribute.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;full&quot;</span><span class="p">:</span>
         <span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="n">margin</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">seqrecord</span><span class="p">)</span> <span class="o">-</span> <span class="n">margin</span><span class="p">)</span>
@@ -306,7 +322,7 @@
 
 
 <div class="viewcode-block" id="crop_record_with_saddling_features"><a class="viewcode-back" href="../../../ref/biotools.html#dnacauldron.biotools.record_operations.crop_record_with_saddling_features">[docs]</a><span class="k">def</span> <span class="nf">crop_record_with_saddling_features</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="p">()):</span>
-    <span class="sd">&quot;&quot;&quot;Crop the biopython record, but keep features that are only partially in.</span>
+    <span class="sd">&quot;&quot;&quot;Crop the Biopython record, but keep features that are only partially in.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -314,11 +330,11 @@
 <span class="sd">      The Biopython record to crop.</span>
 
 <span class="sd">    start, end</span>
-<span class="sd">      Coordinates of the segment to crop</span>
+<span class="sd">      Coordinates of the segment to crop.</span>
 
 <span class="sd">    filters</span>
 <span class="sd">      list of functions (feature=&gt;True/False). Any feature that doesn&#39;t pass</span>
-<span class="sd">      at least one filter will be filtered out. </span>
+<span class="sd">      at least one filter will be filtered out.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cropped</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
 
@@ -348,7 +364,7 @@
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2020, Edinburgh Genome Foundry.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
 </div>
             </div>
           </div>
