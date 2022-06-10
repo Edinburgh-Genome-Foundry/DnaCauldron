@@ -46,6 +46,7 @@ class RestrictionLigationMix(StickyEndAssemblyMix):
       which part each sequence segment comes from.
 
     """
+
     def __init__(
         self,
         parts=None,
@@ -88,6 +89,7 @@ class RestrictionLigationMix(StickyEndAssemblyMix):
                 fragment.original_part = part
                 self.annotate_fragment_with_part(fragment)
                 self.fragments.append(fragment)
+
 
 def generate_type2s_restriction_mix(parts, enzyme="auto", name="type2s_mix"):
     """Return a Type-2S compatible RestrictionLigationMix.
