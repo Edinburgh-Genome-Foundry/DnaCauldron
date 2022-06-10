@@ -87,6 +87,26 @@ class StickyEndSeq(Seq):
             right = str(self.right_end) if self.right_end else ""
             return left + middle + right
 
+    def slice_seq(self, start=None, end=None):
+        """Slice the StickyEndSeq and return another instance.
+
+        This function replaces the original sticky[start:end] approach.
+        
+        Parameters
+        ----------
+
+        start
+            Start index (zero-based). Default None slices from start.
+        
+        end
+            End index. Default None slices to the end.
+        """
+        # See Github issue #16 for details.
+        std_seq = self.to_standard_sequence(discard_sticky_ends=True)
+        sliced_seq = std_seq[start:end]  # biopython's slice works properly
+        sliced_sticky = StickyEndSeq(str(sliced_seq), left_end=None, right_end=None)
+        return sliced_sticky
+
     @staticmethod
     def list_from_sequence_digestion(sequence, enzyme, linear=True):
         """Compute the StickyEndSeqs resulting from a sequence digestion.
@@ -96,6 +116,18 @@ class StickyEndSeq(Seq):
         the sequence is circular, or the sequence is already sticky-ended.
 
         That was painful to write but hopefully the tests ensure it works well.
+
+        Parameters
+        ----------
+
+        sequence
+            Biopython Seq instance.
+
+        enzyme
+            Biopython Restriction enzyme instance or list of enzymes.
+
+        linear
+            True if the sequence is linear.
         """
         if isinstance(enzyme, (list, tuple)):
             if len(enzyme) == 1:
@@ -128,8 +160,22 @@ class StickyEndSeq(Seq):
 
         if right_end_sign == -1:
             if not linear:
-                overhang_bit = fragments[0][:overhang]
-                new_fragment_seq = fragments[0][overhang:]
+                # We check if StickyEndSeq instance was passed in the recursive loop
+                # StickyEndSeq is a Seq class, so we use hasttr instead:
+                if hasattr(fragments[0], "left_end"):  # Seq doesn't have this attr
+                    overhang_bit = fragments[0].slice_seq(end=overhang)
+                    new_fragment_seq = fragments[0].slice_seq(start=overhang)
+                    print("Ran 2")
+                    print(overhang_bit)
+                    print(new_fragment_seq)
+
+                else:  # Seq class
+                    overhang_bit = fragments[0][:overhang]
+                    new_fragment_seq = fragments[0][overhang:]
+                    print("Ran 1")
+                    print(overhang_bit)
+                    print(new_fragment_seq)
+
                 last_right_end = StickyEnd(overhang_bit, right_end_sign)
                 first_left_end = StickyEnd(overhang_bit, -right_end_sign)
                 sticky_fragments = [
@@ -139,7 +185,22 @@ class StickyEndSeq(Seq):
             else:
                 sticky_fragments = [StickyEndSeq(fragments[0])]
             for f in fragments[1:]:
-                overhang_bit, new_fragment_seq = f[:overhang], f[overhang:]
+                if hasattr(f, "left_end"):
+                    overhang_bit, new_fragment_seq = (
+                        f.slice_seq(end=overhang),
+                        f.slice_seq(start=overhang),
+                    )
+                    print("Ran 4")
+                    print(overhang_bit)
+                    print(new_fragment_seq)
+                else:  # Seq class
+                    overhang_bit, new_fragment_seq = f[:overhang], f[overhang:]
+                    print("Ran 3")
+                    print(type(f))
+                    print(f)
+                    print(type(overhang_bit))
+                    print(overhang_bit)
+                    print(new_fragment_seq)
                 sticky_fragments[-1].right_end = StickyEnd(overhang_bit, right_end_sign)
                 new_fragment = StickyEndSeq(
                     new_fragment_seq, left_end=StickyEnd(overhang_bit, -right_end_sign),
@@ -150,7 +211,20 @@ class StickyEndSeq(Seq):
         else:
             left_end = None
             for f in fragments[:-1]:
-                new_fragment_seq, overhang_bit = f[:-overhang], f[-overhang:]
+                if hasattr(f, "left_end"):
+                    overhang_bit, new_fragment_seq = (
+                        f.slice_seq(end=-overhang),
+                        f.slice_seq(start=-overhang),
+                    )
+                    print("Ran 6")
+                    print(overhang_bit)
+                    print(new_fragment_seq)
+                else:  # Seq class
+                    new_fragment_seq, overhang_bit = f[:-overhang], f[-overhang:]
+                    print("Ran 5")
+                    print(overhang_bit)
+                    print(new_fragment_seq)
+
                 right_end = StickyEnd(overhang_bit, right_end_sign)
                 new_fragment = StickyEndSeq(
                     new_fragment_seq, left_end=left_end, right_end=right_end
@@ -158,8 +232,20 @@ class StickyEndSeq(Seq):
                 sticky_fragments.append(new_fragment)
                 left_end = StickyEnd(overhang_bit, -right_end_sign)
             if not linear:
-                new_fragment_seq = fragments[-1][:-overhang]
-                overhang_bit = fragments[-1][-overhang:]
+                if hasattr(fragments[-1], "left_end"):
+                    overhang_bit, new_fragment_seq = (
+                        fragments[-1].slice_seq(end=-overhang),
+                        fragments[-1].slice_seq(start=-overhang),
+                    )
+                    print("Ran 8")
+                    print(overhang_bit)
+                    print(new_fragment_seq)
+                else:  # StickyEndSeq instance passed (see above)
+                    new_fragment_seq = fragments[-1][:-overhang]
+                    overhang_bit = fragments[-1][-overhang:]
+                    print("Ran 7")
+                    print(overhang_bit)
+                    print(new_fragment_seq)
 
                 first_left_end = StickyEnd(overhang_bit, -right_end_sign)
                 last_right_end = StickyEnd(overhang_bit, right_end_sign)
