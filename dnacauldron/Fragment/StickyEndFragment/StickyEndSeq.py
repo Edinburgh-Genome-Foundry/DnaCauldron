@@ -165,17 +165,9 @@ class StickyEndSeq(Seq):
                 if hasattr(fragments[0], "left_end"):  # Seq doesn't have this attr
                     overhang_bit = fragments[0].slice_seq(end=overhang)
                     new_fragment_seq = fragments[0].slice_seq(start=overhang)
-                    print("Ran 2")
-                    print(overhang_bit)
-                    print(new_fragment_seq)
-
                 else:  # Seq class
                     overhang_bit = fragments[0][:overhang]
                     new_fragment_seq = fragments[0][overhang:]
-                    print("Ran 1")
-                    print(overhang_bit)
-                    print(new_fragment_seq)
-
                 last_right_end = StickyEnd(overhang_bit, right_end_sign)
                 first_left_end = StickyEnd(overhang_bit, -right_end_sign)
                 sticky_fragments = [
@@ -190,17 +182,8 @@ class StickyEndSeq(Seq):
                         f.slice_seq(end=overhang),
                         f.slice_seq(start=overhang),
                     )
-                    print("Ran 4")
-                    print(overhang_bit)
-                    print(new_fragment_seq)
                 else:  # Seq class
                     overhang_bit, new_fragment_seq = f[:overhang], f[overhang:]
-                    print("Ran 3")
-                    print(type(f))
-                    print(f)
-                    print(type(overhang_bit))
-                    print(overhang_bit)
-                    print(new_fragment_seq)
                 sticky_fragments[-1].right_end = StickyEnd(overhang_bit, right_end_sign)
                 new_fragment = StickyEndSeq(
                     new_fragment_seq, left_end=StickyEnd(overhang_bit, -right_end_sign),
@@ -216,15 +199,8 @@ class StickyEndSeq(Seq):
                         f.slice_seq(end=-overhang),
                         f.slice_seq(start=-overhang),
                     )
-                    print("Ran 6")
-                    print(overhang_bit)
-                    print(new_fragment_seq)
                 else:  # Seq class
                     new_fragment_seq, overhang_bit = f[:-overhang], f[-overhang:]
-                    print("Ran 5")
-                    print(overhang_bit)
-                    print(new_fragment_seq)
-
                 right_end = StickyEnd(overhang_bit, right_end_sign)
                 new_fragment = StickyEndSeq(
                     new_fragment_seq, left_end=left_end, right_end=right_end
@@ -237,16 +213,9 @@ class StickyEndSeq(Seq):
                         fragments[-1].slice_seq(end=-overhang),
                         fragments[-1].slice_seq(start=-overhang),
                     )
-                    print("Ran 8")
-                    print(overhang_bit)
-                    print(new_fragment_seq)
                 else:  # StickyEndSeq instance passed (see above)
                     new_fragment_seq = fragments[-1][:-overhang]
                     overhang_bit = fragments[-1][-overhang:]
-                    print("Ran 7")
-                    print(overhang_bit)
-                    print(new_fragment_seq)
-
                 first_left_end = StickyEnd(overhang_bit, -right_end_sign)
                 last_right_end = StickyEnd(overhang_bit, right_end_sign)
                 sticky_fragments[0].left_end = first_left_end
