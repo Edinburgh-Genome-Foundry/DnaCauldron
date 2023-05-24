@@ -24,7 +24,7 @@ class StickyEndSeq(Seq):
         self.left_end = left_end
         self.right_end = right_end
 
-    def reverse_complement(self):
+    def reverse_complement(self, inplace=False):
         """The reverse is a StickyEndSeq with reversed ends
 
         left-right versions are interchanged and reverse complemented.
@@ -43,7 +43,7 @@ class StickyEndSeq(Seq):
             )
         else:
             sticky_end_seq = StickyEndSeq(
-                str(Seq.reverse_complement(self)),
+                str(Seq(self).reverse_complement()),
                 left_end=None
                 if self.right_end is None
                 else self.right_end.reverse_complement(),

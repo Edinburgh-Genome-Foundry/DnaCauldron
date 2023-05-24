@@ -52,7 +52,7 @@ class BASICAssembly(Assembly):
       assembly, or are depended on by it.
 
     """
-    def simulate_adapters_assembly(self, records):
+    def simulate_adapters_assembly(self, records, sequence_repository):
         original_part = records[1]
         mix = RestrictionLigationMix(
             records,
@@ -69,8 +69,9 @@ class BASICAssembly(Assembly):
             error = AssemblyFlaw(
                 message="Two many fragments have a long overhang",
                 data={"parts": [r.id for r in records]},
+                assembly=self
             )
-            return AssemblySimulation(errors=[error], mixes=(mix,))
+            return mix, error
         graph = mix.connections_graph
         constructs = []
         for start, end in itertools.product(adapter_fragments, repeat=2):
@@ -118,7 +119,7 @@ class BASICAssembly(Assembly):
         errors, warnings = [], []
         part_triplets = [parts[i : i + 3] for i in range(0, L, 3)]
         for triplet in part_triplets:
-            simulation = self.simulate_adapters_assembly(triplet)
+            simulation = self.simulate_adapters_assembly(triplet, sequence_repository)
             if isinstance(simulation, StickyEndFragment):
                 adapted_part_records.append(simulation)
             else:

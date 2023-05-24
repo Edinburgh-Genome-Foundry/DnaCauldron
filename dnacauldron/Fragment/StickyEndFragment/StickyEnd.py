@@ -29,7 +29,7 @@ class StickyEnd(Seq):
       Optional keyword arguments for the sequence, such as ``alphabet`` etc.
     """
 
-    def __init__(self, data, strand, **k):
+    def __init__(self, data, strand=None, **k):
         Seq.__init__(self, str(data).upper(), **k)
         self.strand = strand
 
@@ -42,7 +42,7 @@ class StickyEnd(Seq):
                 alphabet=self.alphabet,
             )
         else:
-            return StickyEnd(str(Seq.reverse_complement(self)), strand=-self.strand,)
+            return StickyEnd(str(Seq(self).reverse_complement()), strand=-self.strand,)
 
     def __repr__(self):
         return "%s(%s)" % (Seq.__str__(self), {1: "+", -1: "-"}[self.strand])

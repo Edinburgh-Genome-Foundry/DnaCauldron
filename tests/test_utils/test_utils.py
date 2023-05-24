@@ -21,7 +21,7 @@ def test_insert_parts_on_backbones(tmpdir):
     assert resultA.backbone_record.id == "partA2"
     assert resultB.backbone_record.id == "partB2"
     dataframe = dc.BackboneChoice.list_to_infos_spreadsheet(choices)
-    dataframe.to_excel(os.path.join(str(tmpdir), "summary.xls"), index=False)
+    dataframe.to_excel(os.path.join(str(tmpdir), "summary.xlsx"), index=False)
     dc.BackboneChoice.write_final_records(choices, str(tmpdir))
 
 def test_swap_donor_vector_part():
