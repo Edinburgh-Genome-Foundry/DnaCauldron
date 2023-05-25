@@ -5,12 +5,12 @@
     <br /><br />
     </p>
 
-.. image:: https://app.travis-ci.com/Edinburgh-Genome-Foundry/DnaCauldron.svg?branch=master
-    :target: https://app.travis-ci.com/Edinburgh-Genome-Foundry/DnaCauldron
-    :alt: Travis CI build status
+.. image:: https://github.com/Edinburgh-Genome-Foundry/DnaCauldron/actions/workflows/build.yml/badge.svg
+    :target: https://github.com/Edinburgh-Genome-Foundry/DnaCauldron/actions/workflows/build.yml
+    :alt: GitHub CI build status
 
 .. image:: https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/DnaCauldron/badge.svg?branch=master
-  :target: https://coveralls.io/github/Edinburgh-Genome-Foundry/DnaCauldron?branch=master
+    :target: https://coveralls.io/github/Edinburgh-Genome-Foundry/DnaCauldron?branch=master
 
 
 DNA Cauldron
