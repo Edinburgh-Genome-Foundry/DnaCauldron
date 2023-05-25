@@ -12,15 +12,18 @@ from ...Fragment.StickyEndFragment import (
 
 class OligoPairAnnealing(Assembly):
     """Represent and simulate oligo pair annealing
-    
+
+    This class is used for BASIC assembly simulation.
+
+
     Parameters
     ----------
-    
+
     parts
       A list of parts names corresponding to records in a repository.
       The parts should be exactly two, corresponding oligo sequences in
       direct sense (5'3').
-    
+
     homology_checker
       An HomologyChecker instance defining which oligo homology sizes and
       melting temperatures are valid. WARNING: DEPRECATED. Open an issue if
@@ -75,7 +78,7 @@ class OligoPairAnnealing(Assembly):
             p1_copy.is_reversed = False
             p2_copy.is_reversed = True
             result.fragments = [p1_copy, p2_copy]
-            result.annotations['topology'] = 'linear'
+            result.annotations["topology"] = "linear"
             return result
 
         products = []
@@ -83,8 +86,7 @@ class OligoPairAnnealing(Assembly):
         p2_fwd = str(p2.seq)
         p2_rv = str(p2.seq.reverse_complement())
         p1_rv = str(p1.seq.reverse_complement())
-        
-        
+
         if p2_rv in p1_fwd:
             products.append(internal_annealing(p1_fwd, p2_rv))
         if p1_rv in p2_fwd:
@@ -99,5 +101,5 @@ class OligoPairAnnealing(Assembly):
             assembly=self,
             sequence_repository=sequence_repository,
             construct_records=products,
-            errors=errors
+            errors=errors,
         )
