@@ -182,5 +182,5 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
                 assembly_simulation, report_root, error_type="warnings"
             )
 
-        if hasattr(report_root, "_close"):
+        if (target == "@memory") or str(target).endswith(".zip"):
             return report_root._close()
