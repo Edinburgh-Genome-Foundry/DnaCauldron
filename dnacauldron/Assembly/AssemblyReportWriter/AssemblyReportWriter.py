@@ -182,5 +182,5 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
                 assembly_simulation, report_root, error_type="warnings"
             )
 
-        if target == "@memory":
+        if hasattr(report_root, "_close"):
             return report_root._close()
