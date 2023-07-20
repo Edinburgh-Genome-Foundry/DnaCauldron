@@ -33,7 +33,10 @@ class StickyEndFragment(Fragment):
         )
 
     def circularized(
-        self, annotate_homology=False, annotation_type="homology", qualifiers=None,
+        self,
+        annotate_homology=False,
+        annotation_type="homology",
+        qualifiers=None,
     ):
         """Return the Biopython record obtained by cirularizing the result.
 
@@ -61,7 +64,10 @@ class StickyEndFragment(Fragment):
         else:
             label = str(connector.seq)
         feature = self.create_homology_annotation(
-            start=0, end=len(connector), annotation_type=annotation_type, label=label,
+            start=0,
+            end=len(connector),
+            annotation_type=annotation_type,
+            label=label,
         )
         connector.features = [feature]
 
@@ -139,7 +145,7 @@ class StickyEndFragment(Fragment):
         )
         record_fragments = []
         for fragment in fragments:
-            index = record.seq.find(fragment)
+            index = record.seq.upper().find(fragment)
             if index == -1:
                 continue
 
@@ -167,8 +173,7 @@ class StickyEndFragment(Fragment):
         return "%s%s%s" % (self.seq.left_end, self.seq, self.seq.right_end)
 
     def text_representation_in_plots(self):
-        """Plot a fragment as left//PART_NAME//right (where // is a new line)
-        """
+        """Plot a fragment as left//PART_NAME//right (where // is a new line)"""
         lines = [
             str(self.seq.left_end),
             r"$\bf{%s}$" % self.original_part.id,
