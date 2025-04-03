@@ -1,6 +1,6 @@
 [project]
 name = "dnacauldron"
-version = "2.0.10"
+version = "2.0.11"
 license = "MIT"
 authors = [{ name = "Zulko" }]
 description = "Cloning simulation for DNA assembly (Golden Gate, Gibson...)"
