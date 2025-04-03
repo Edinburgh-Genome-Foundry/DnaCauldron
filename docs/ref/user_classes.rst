@@ -7,17 +7,20 @@ SequenceRepository
 .. autoclass:: dnacauldron.SequenceRepository
    :members:
 
+
 Assembly Plan
 ~~~~~~~~~~~~~
 
 .. autoclass:: dnacauldron.AssemblyPlan
    :members:
 
+
 Assembly Plan Simulation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. autoclass:: dnacauldron.AssemblyPlan.AssemblyPlanSimulation
    :members:
+
 
 Assembly Classes
 ~~~~~~~~~~~~~~~~
@@ -37,14 +40,16 @@ Assembly Classes
 .. autoclass:: dnacauldron.LigaseCyclingReactionAssembly
    :members:
 
+
 Assembly Simulation
-~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 .. autoclass:: dnacauldron.Assembly.AssemblySimulation
    :members:
 
+
 Report Writer
-~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 .. autoclass:: dnacauldron.AssemblyReportWriter
    :members:

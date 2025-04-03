@@ -15,7 +15,7 @@ class LigaseCyclingReactionAssembly(Assembly):
     parts
       A list of parts names corresponding to records in a repository. bridging
       oligo names can also be provided in this part list, however in that case
-      ``bridging_olios`` should be an empty list and an ``oligo_indicator``
+      ``bridging_oligos`` should be an empty list and an ``oligo_indicator``
       string should be provided.
 
     homology_checker
@@ -29,7 +29,7 @@ class LigaseCyclingReactionAssembly(Assembly):
     oligos_indicator
       String to use to identify bridging oligos when these are provided mixed
       with the other parts. The string should be common to all oligo names
-      but should not appear in any part name. For instance "BO_".
+      but should not appear in any part name. For instance ``"BO_"``.
 
     name
       Name of the assembly as it will appear in reports.
