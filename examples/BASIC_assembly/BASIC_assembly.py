@@ -7,4 +7,4 @@ plan = dc.AssemblyPlan.from_spreadsheet(
 )
 simulation = plan.simulate(repo)
 simulation.write_report("output")
-print ("Done! see output/ folder for the results.")
+print("Done! see output/ folder for the results.")

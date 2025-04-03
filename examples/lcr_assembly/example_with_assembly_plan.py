@@ -9,4 +9,4 @@ simulation = plan.simulate(repo)
 stats = simulation.compute_stats()
 
 simulation.write_report("output/")
-print ("Done! see output/ folder for the results.")
+print("Done! see output/ folder for the results.")

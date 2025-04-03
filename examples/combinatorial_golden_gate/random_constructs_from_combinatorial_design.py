@@ -12,7 +12,9 @@ assembly = dc.Type2sRestrictionAssembly(
     max_constructs=2,
 )
 
-simulation = assembly.simulate(sequence_repository=repository,)
+simulation = assembly.simulate(
+    sequence_repository=repository,
+)
 output_path = os.path.join("output", "randomized_combinatorial")
 simulation.write_report(target=output_path)
 print("Done! see output/randomized_combinatorial folder for the results.")

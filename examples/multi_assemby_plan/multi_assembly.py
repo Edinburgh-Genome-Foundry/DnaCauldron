@@ -25,14 +25,10 @@ sequence_repository = dc.SequenceRepository()
 sequence_repository.import_records(folder=sequences_path)
 for subfolder_name in os.listdir(connectors_path):
     subfolder_path = os.path.join(connectors_path, subfolder_name)
-    sequence_repository.import_records(
-        folder=subfolder_path, collection=subfolder_name
-    )
+    sequence_repository.import_records(folder=subfolder_path, collection=subfolder_name)
 
 logger(message="Simulating the assembly plan...")
-assembly_plan = dc.AssemblyPlan.from_spreadsheet(
-    assembly_plan_path, logger=logger
-)
+assembly_plan = dc.AssemblyPlan.from_spreadsheet(assembly_plan_path, logger=logger)
 simulation = assembly_plan.simulate(sequence_repository=sequence_repository)
 
 logger(message="Simulation finished. Here are the stats:")

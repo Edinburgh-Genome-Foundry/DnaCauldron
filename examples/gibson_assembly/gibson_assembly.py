@@ -14,6 +14,4 @@ report_writer = dc.AssemblyReportWriter(
     show_overhangs_in_graph=True,
     annotate_parts_homologies=True,
 )
-plan_simulation.write_report(
-    target="output", assembly_report_writer=report_writer
-)
+plan_simulation.write_report(target="output", assembly_report_writer=report_writer)
