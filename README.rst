@@ -123,7 +123,7 @@ An assembly plan is simply defined by a list of assemblies:
    
    # Or import an assembly plan from spreadsheets:
    assembly_plan = dc.AssemblyPlan.from_spreadsheet(
-       spreadsheet="batch_1.csv", # could also be an xls(x) file
+       path="batch_1.csv", # could also be an xls(x) file
        assembly_class=dc.Type2sRestrictionAssembly
    )
 
