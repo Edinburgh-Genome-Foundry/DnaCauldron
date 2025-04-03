@@ -10,7 +10,7 @@ def test_autoselect_connectors():
         collection="parts",
         folder=os.path.join(this_directory, "parts"),
         use_file_names_as_ids=True,
-        topology="circular"
+        topology="circular",
     )
     repo.import_records(
         collection="emma_connectors",

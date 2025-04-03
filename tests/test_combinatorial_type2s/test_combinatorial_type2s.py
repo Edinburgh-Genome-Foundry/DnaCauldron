@@ -51,4 +51,3 @@ def test_combinatorial_type2s():
     assert len(simulation.errors) == 0
     assert len(simulation.warnings) == 1  # Max constructs reached warning
     assert len(simulation.construct_records) == 2
-

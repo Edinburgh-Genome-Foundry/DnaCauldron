@@ -58,4 +58,3 @@ def test_assembling_into_new_enzyme_site():
     assert len(simulation.construct_records) == 1
     assert len(simulation.errors) == 1
     assert simulation.errors[0].message == "Assembly creates a new enzyme site"
-

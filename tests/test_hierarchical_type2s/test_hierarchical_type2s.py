@@ -28,7 +28,7 @@ def test_type2s_hierarchical_flawed():
     assert sorted(assembly_plan.levels) == [1, 2]
     plan_simulation = assembly_plan.simulate(sequence_repository=repository)
     stats = plan_simulation.compute_stats()
-    assert stats["valid_assemblies"] == 2 # Construct 1 and its dependant
+    assert stats["valid_assemblies"] == 2  # Construct 1 and its dependant
     assert stats["errored_assemblies"] == 1
     assert stats["cancelled_assemblies"] == 1
 
@@ -40,6 +40,4 @@ def test_type2s_hierarchical_flawed():
         show_overhangs_in_graph=True,
         annotate_parts_homologies=True,
     )
-    plan_simulation.write_report(
-        target="@memory", assembly_report_writer=report_writer
-    )
+    plan_simulation.write_report(target="@memory", assembly_report_writer=report_writer)

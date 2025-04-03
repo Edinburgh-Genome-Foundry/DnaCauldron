@@ -16,6 +16,4 @@ def test_hierarchical_biobrick():
     stats = plan_simulation.compute_stats()
     assert stats["valid_assemblies"] == 3
     report_writer = dc.AssemblyReportWriter(include_mix_graphs=True)
-    plan_simulation.write_report(
-        "@memory", assembly_report_writer=report_writer
-    )
+    plan_simulation.write_report("@memory", assembly_report_writer=report_writer)

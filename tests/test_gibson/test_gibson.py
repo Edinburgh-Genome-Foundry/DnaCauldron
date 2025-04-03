@@ -23,9 +23,7 @@ def test_gibson_assembly_plan():
         show_overhangs_in_graph=True,
         annotate_parts_homologies=True,
     )
-    plan_simulation.write_report(
-        target="@memory", assembly_report_writer=report_writer
-    )
+    plan_simulation.write_report(target="@memory", assembly_report_writer=report_writer)
 
 
 def test_single_gibson():
@@ -38,6 +36,7 @@ def test_single_gibson():
     assert len(simulation.construct_records) == 1
     simulated_record = simulation.construct_records[0]
     assert sequences_are_circularly_equal([simulated_record, expected_record])
+
 
 def test_single_gibson_using_tm_homology_check():
     repository = dc.SequenceRepository()

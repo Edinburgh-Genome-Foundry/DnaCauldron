@@ -44,12 +44,13 @@ def test_ids_of_multifile_import_are_set_correctly():
     # single-file genbank. The other records from the multi-record fasta
     # still use the in-fasta identifier
     assert sorted([r.id.lower() for r in records]) == [
-        "circular_record", 
+        "circular_record",
         "expected_construct",
         "frag_0",
         "frag_1",
         "frag_2",
     ]
+
 
 def test_load_records_from_zip_file():
     zip_path = os.path.join(this_directory, "records.zip")
