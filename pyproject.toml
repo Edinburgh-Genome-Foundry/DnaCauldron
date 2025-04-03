@@ -1,0 +1,44 @@
+[project]
+name = "dnacauldron"
+version = "2.0.9"
+license = "MIT"
+authors = [{ name = "Zulko" }]
+description = "Cloning simulation for DNA assembly (Golden Gate, Gibson...)"
+readme = "pypi-readme.rst"
+keywords = ["DNA", "assembly", "cloning", "simulator", "synthetic biology"]
+dependencies = [
+  "Biopython",
+  "numpy",
+  "matplotlib",
+  "fuzzywuzzy",
+  "pandas",
+  "scipy",
+  "networkx",
+  "dna_features_viewer",
+  "flametree",
+  "snapgene_reader",
+  "proglog",
+  "xlwt",
+  "openpyxl",
+  "python-Levenshtein",
+  "xlrd",
+]
+
+[project.optional-dependencies]
+reports = ["pdf_reports"]
+
+[project.scripts]
+dnacauldron = "dnacauldron.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Edinburgh-Genome-Foundry/dnacauldron"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+exclude = ["docs"]

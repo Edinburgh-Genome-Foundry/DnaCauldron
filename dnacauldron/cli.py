@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-DnaChisel Command Line Interface
+DNA Cauldron Command Line Interface
 
 Usage:
   dnacauldron <assembly_plan> <sequences> <target> [--connectors=path]
@@ -25,16 +25,14 @@ Note: this CLI will be developed on a per-request basis, so don't hesitate to
 ask for more handles and options on Github
 (https://github.com/Edinburgh-Genome-Foundry/DnaCauldron/issues)
 
-
 """
 
-import os
-from docopt import docopt
-import proglog
-import dnacauldron as dc
 
-
-if __name__ == "__main__":
+def main():
+    import os
+    from docopt import docopt
+    import proglog
+    import dnacauldron as dc
 
     params = docopt(__doc__)
     connectors_path = params["--connectors"]
@@ -64,3 +62,7 @@ if __name__ == "__main__":
     simulation.write_report(target_path, logger=logger)
 
     logger(message="All done! See %s for the report" % target_path)
+
+
+if __name__ == "__main__":
+    main()
