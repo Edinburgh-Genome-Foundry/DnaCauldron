@@ -1,5 +1,5 @@
 DNA Cauldron
-===================
+============
 
 DNA Cauldron provides a generic cloning simulation framework to predict
 constructs sequences and detect assembly flaws.
@@ -19,19 +19,16 @@ Infos
 
   pip install dnacauldron
 
-**Web documentation:**
+**Web documentation:** `<https://edinburgh-genome-foundry.github.io/DnaCauldron/>`_
 
-`<https://edinburgh-genome-foundry.github.io/DnaCauldron/>`_
+**Github Page:** `<https://github.com/Edinburgh-Genome-Foundry/DnaCauldron>`_
 
-**Github Page:**
+**Live demo:** `<http://cuba.genomefoundry.org/simulate_gg_assemblies>`_
 
-`<https://github.com/Edinburgh-Genome-Foundry/DnaCauldron>`_
+**License:** MIT
 
-**Live demo:**
+Copyright 2020 Edinburgh Genome Foundry, University of Edinburgh
 
-`<http://cuba.genomefoundry.org/simulate_gg_assemblies>`_
-
-**License:** MIT, Copyright Edinburgh Genome Foundry
 
 More biology software
 ---------------------
