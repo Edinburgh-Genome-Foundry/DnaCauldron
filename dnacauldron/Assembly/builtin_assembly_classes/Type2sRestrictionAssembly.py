@@ -152,7 +152,9 @@ class Type2sRestrictionAssembly(Assembly):
         has_site = False
         for construct in construct_records:
             analysis = Bio.Restriction.Analysis(
-                restriction_batch, sequence=construct.seq, linear=False,
+                restriction_batch,
+                sequence=construct.seq,
+                linear=False,
             )
             analysis_results = analysis.full(linear=False)
             for enzyme, sites in analysis_results.items():

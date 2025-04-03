@@ -6,7 +6,6 @@ import numpy as np
 class PlotsMixin:
     """Mixin for AssemblyMix"""
 
-
     def plot_connections_graph(self, ax=None, figsize=(20, 20)):
         """Plot the mix's graph of connections between fragments."""
 
@@ -15,9 +14,7 @@ class PlotsMixin:
         def fragment_label(i):
             fragment = self.fragments_dict[i]
             return "\n".join(
-                [
-                    fragment.text_representation_in_plots().replace("_", "-")
-                ]
+                [fragment.text_representation_in_plots().replace("_", "-")]
             )
 
         labels = {i: fragment_label(i) for i in graph}
@@ -33,11 +30,11 @@ class PlotsMixin:
                 node_color="w",
                 node_size=3000,
             )
-        
+
         if self.name is not None:
             ax.set_title(self.name, loc="left")
         return ax
-    
+
     def plot_fragments(self, report_root):
         """Plot schemas of the different fragments in the mix."""
         fragments_dir = report_root._dir("fragments_in_" + self.name)
@@ -55,7 +52,7 @@ class PlotsMixin:
                 bbox_inches="tight",
             )
             plt.close(ax.figure)
-    
+
     # def plot_graphs(self, report_root, assembly, with_overhangs=True):
     #     file_prefix = assembly.name + "_"
     #     ax = self.plot_connections_graph()

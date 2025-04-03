@@ -11,5 +11,5 @@ __all__ = [
     "GibsonAssembly",
     "BASICAssembly",
     "OligoPairAnnealing",
-    "LigaseCyclingReactionAssembly"
+    "LigaseCyclingReactionAssembly",
 ]

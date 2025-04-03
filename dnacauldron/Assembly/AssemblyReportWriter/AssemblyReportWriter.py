@@ -123,7 +123,13 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
         if len(errors) > 0:
             columns = ";".join(["assembly_name", "message", "suggestion", "data"])
             all_error_rows = [
-                ";".join([err.assembly.name, err.message, err.data_as_string(),])
+                ";".join(
+                    [
+                        err.assembly.name,
+                        err.message,
+                        err.data_as_string(),
+                    ]
+                )
                 for err in errors
             ]
             filename = "%s.csv" % error_type
@@ -159,7 +165,9 @@ class AssemblyReportWriter(AssemblyReportPlotsMixin):
         if plot_options["parts_plots"]:
             enzymes = assembly.enzymes if hasattr(assembly, "enzymes") else []
             self.plot_provided_parts(
-                report_root=report_root, parts_records=part_records, enzymes=enzymes,
+                report_root=report_root,
+                parts_records=part_records,
+                enzymes=enzymes,
             )
         if plot_options["fragment_plots"]:
             for mix in assembly_simulation.mixes:

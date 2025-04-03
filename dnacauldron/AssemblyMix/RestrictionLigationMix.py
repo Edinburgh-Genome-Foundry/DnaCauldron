@@ -1,5 +1,4 @@
-"""
-"""
+""" """
 
 from copy import copy
 
@@ -26,7 +25,7 @@ class RestrictionLigationMix(StickyEndAssemblyMix):
       assembled toghether via sticky-end homologies.
 
     enzymes
-      List of names of the enzyme to be used for the restriction 
+      List of names of the enzyme to be used for the restriction
 
     fragments
       A list of StickyEndFragment instances, which will assemble together based
@@ -93,7 +92,7 @@ class RestrictionLigationMix(StickyEndAssemblyMix):
 
 def generate_type2s_restriction_mix(parts, enzyme="auto", name="type2s_mix"):
     """Return a Type-2S compatible RestrictionLigationMix.
-    
+
     If enzyme is "auto", it will be autoselected among BsmBI, BsaI, etc.
     """
     if enzyme == "auto":

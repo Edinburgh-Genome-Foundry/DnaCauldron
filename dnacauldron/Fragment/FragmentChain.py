@@ -97,8 +97,7 @@ class FragmentChain:
                 )
             else:
                 std_fragments = (
-                    self.fragments[backbone_index:]
-                    + self.fragments[:backbone_index]
+                    self.fragments[backbone_index:] + self.fragments[:backbone_index]
                 )
                 return FragmentChain(
                     std_fragments, is_standardized=True, is_cycle=self.is_cycle

@@ -5,6 +5,7 @@ import numpy as np
 
 class PlotsMixin:
     """Mixin for StickyEndAssemblyMix"""
+
     def plot_slots_graph(
         self,
         ax=None,
@@ -26,12 +27,8 @@ class PlotsMixin:
         If true, the overhangs appear in the graph
         """
         slots = self.compute_slots()
-        highlighted_parts = set(
-            [] if highlighted_parts is None else highlighted_parts
-        )
-        graph = self.slots_graph(
-            with_overhangs=with_overhangs, directed=directed
-        )
+        highlighted_parts = set([] if highlighted_parts is None else highlighted_parts)
+        graph = self.slots_graph(with_overhangs=with_overhangs, directed=directed)
 
         # Positioning - a bit complex to deal with multi-components graphs
         pos = {}
@@ -47,9 +44,7 @@ class PlotsMixin:
         for i, g in enumerate(components):
             g = undirected_graph.subgraph(g)
             pos.update(
-                nx.layout.kamada_kawai_layout(
-                    g, center=(0, -i), scale=len(g) / max_len
-                )
+                nx.layout.kamada_kawai_layout(g, center=(0, -i), scale=len(g) / max_len)
             )
 
         parts = [n for n in graph.nodes() if n in slots]
@@ -66,9 +61,7 @@ class PlotsMixin:
 
         # Draw a "highlights graph" above the other graph
         def highlight_slot(slot):
-            return any(
-                [part in highlighted_parts for part in slots.get(slot, [])]
-            )
+            return any([part in highlighted_parts for part in slots.get(slot, [])])
 
         highlighted_nodes = [n for n in graph.nodes() if highlight_slot(n)]
         if len(highlighted_nodes):
@@ -85,7 +78,7 @@ class PlotsMixin:
 
         def polar(xy):
             x, y = xy - np.array([0.05, 0.05])
-            return (np.arctan2(x, -y), -np.sqrt(x ** 2 + y ** 2))
+            return (np.arctan2(x, -y), -np.sqrt(x**2 + y**2))
 
         sorted_pos = sorted(pos.items(), key=lambda c: polar(c[1]))
         for i, (n, (x, y)) in enumerate(sorted_pos):
@@ -118,16 +111,11 @@ class PlotsMixin:
                 )
         text = "\n".join(
             ["Parts:"]
-            + [
-                "%2s - %s" % (str(i + 1), name)
-                for i, name in enumerate(legend)
-            ]
+            + ["%2s - %s" % (str(i + 1), name) for i, name in enumerate(legend)]
         )
         if show_missing:
             all_mix_parts = set([f.original_part.id for f in self.fragments])
-            all_slots_parts = set(
-                [p for plist in slots.values() for p in plist]
-            )
+            all_slots_parts = set([p for plist in slots.values() for p in plist])
             missing_parts = all_mix_parts.difference(all_slots_parts)
             if len(missing_parts):
                 text += "\n!!! Missing parts: " + ", ".join(missing_parts)
@@ -144,7 +132,7 @@ class PlotsMixin:
         if self.name is not None:
             ax.set_title(self.name, loc="left")
         return ax
-    
+
     def plot_graphs(self, report_root, assembly, with_overhangs=True):
         file_prefix = assembly.name + "_" + self.name + "_"
 
@@ -161,7 +149,7 @@ class PlotsMixin:
                 show_missing=True,
                 highlighted_parts=highlighted_parts,
             )
-            
+
             f = report_root._file(file_prefix + "parts_graph.pdf")
             ax.figure.savefig(f.open("wb"), format="pdf", bbox_inches="tight")
             plt.close(ax.figure)
@@ -171,4 +159,3 @@ class PlotsMixin:
         f = report_root._file(file_prefix + "connections_graph.pdf")
         ax.figure.savefig(f.open("wb"), format="pdf", bbox_inches="tight")
         plt.close(ax.figure)
-    

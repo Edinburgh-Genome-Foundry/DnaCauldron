@@ -87,8 +87,7 @@ class LigaseCyclingReactionMix(AssemblyMix):
         return result
 
     def find_oligo_homology(self, fragment1, fragment2):
-        """Return (oligo, (start, end)), or None if no bridging oligo is found.
-        """
+        """Return (oligo, (start, end)), or None if no bridging oligo is found."""
         sequence = str((fragment1 + fragment2).seq)
         L1 = len(fragment1)
         for oligo in self.reversed_bridging_oligos:

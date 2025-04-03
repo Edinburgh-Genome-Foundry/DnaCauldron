@@ -4,7 +4,7 @@ from ..AssemblyMixError import AssemblyMixError
 
 class ConnectorsMixin:
     """Mixin for AssemblyMix"""
-    
+
     def autoselect_connectors(self, connectors_records):
         """Select connectors necessary for circular assemblie(s) in this mix.
 
@@ -24,13 +24,10 @@ class ConnectorsMixin:
         """
         original_parts = self.parts
         all_part_ids = [c.id for c in original_parts]
-        connectors_records = [
-            c for c in connectors_records if c.id not in all_part_ids
-        ]
+        connectors_records = [c for c in connectors_records if c.id not in all_part_ids]
 
         slotted_parts_records = [
-            self.parts_dict[list(parts)[0]]
-            for parts in self.compute_slots().values()
+            self.parts_dict[list(parts)[0]] for parts in self.compute_slots().values()
         ]
         self.parts = slotted_parts_records + connectors_records
         self.compute_fragments()
@@ -44,9 +41,7 @@ class ConnectorsMixin:
         for component in components:
 
             newgraph = graph.copy()  # deepcopy(graph)
-            newgraph.remove_nodes_from(
-                set(newgraph.nodes()).difference(component)
-            )
+            newgraph.remove_nodes_from(set(newgraph.nodes()).difference(component))
             all_paths = dict(nx.all_pairs_shortest_path(graph))
             parts_ids = set([rec.id for rec in slotted_parts_records])
             parts_nodes = [
@@ -62,8 +57,7 @@ class ConnectorsMixin:
                     for other_node, path in all_paths[node].items()
                     if (other_node != node)
                     and (other_node in parts_nodes)
-                    and len(set(path[1:-1]).intersection(set(parts_nodes)))
-                    == 0
+                    and len(set(path[1:-1]).intersection(set(parts_nodes))) == 0
                 ]
             )
             cycle = []

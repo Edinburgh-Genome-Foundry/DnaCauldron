@@ -6,9 +6,7 @@ class HomologyChecker:
 
     tm_dict = {"A": 2, "T": 2, "G": 4, "C": 4}
 
-    def __init__(
-        self, min_size=15, max_size=80, min_tm=0, max_tm=None, max_distance=0
-    ):
+    def __init__(self, min_size=15, max_size=80, min_tm=0, max_tm=None, max_distance=0):
         """Class to define which homologies are acceptable.
 
         This class is for instance used to detect and validate end-homologies
@@ -23,13 +21,13 @@ class HomologyChecker:
         min_size, max_size
           Acceptable size, in nucleotides, for an homology. The upper bound
           helps reduce computational times
-        
+
         min_tm, max_tm
           Acceptable melting temperature range in Celsius for the homology.
 
         max_distance
           If >0, small 1-, or 2- nucleotide differences (edits, deletion) can
-          be accepted in homologies. 
+          be accepted in homologies.
         """
         self.min_size = min_size
         self.max_size = max_size
@@ -50,7 +48,7 @@ class HomologyChecker:
 
     def find_end_homologies(self, seq1, seq2):
         """Finds an homology between seq1's end and seq2's start.
-        
+
         Return the size of the homology, or 0 if no homologies found.
         """
         seq1 = self.sequence_to_string(seq1)
@@ -97,4 +95,3 @@ class HomologyChecker:
             self.min_tm,
             "+" if (self.max_tm is None) else ("%.1f" % self.max_tm),
         )
-

@@ -8,5 +8,5 @@ __all__ = [
     "StickyEndFragment",
     "HomologousFragment",
     "HomologyChecker",
-    "Fragment"
+    "Fragment",
 ]

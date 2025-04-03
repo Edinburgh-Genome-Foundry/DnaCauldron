@@ -2,8 +2,7 @@ from dna_features_viewer import BiopythonTranslator
 
 
 class AssemblyPlotTranslator(BiopythonTranslator):
-    """Custom theme for plotting GENBANK assemblies with DNA Features Viewer.
-    """
+    """Custom theme for plotting GENBANK assemblies with DNA Features Viewer."""
 
     def is_source(self, feature):
         return (feature.type == "misc_feature") and feature.qualifiers.get(

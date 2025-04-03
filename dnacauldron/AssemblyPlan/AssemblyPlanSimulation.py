@@ -250,7 +250,8 @@ class AssemblyPlanSimulation:
             # TODO: skip cancelled assemblies!
             assembly_folder = report_root._dir(simulation.assembly.name)
             simulation.write_report(
-                target=assembly_folder, report_writer=report_writer,
+                target=assembly_folder,
+                report_writer=report_writer,
             )
             for record in simulation.construct_records:
                 target = all_records_folder._file(record.id + ".gb")

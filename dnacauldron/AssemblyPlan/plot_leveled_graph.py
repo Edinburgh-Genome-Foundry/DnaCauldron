@@ -47,9 +47,7 @@ def plot_leveled_graph(
         )
     """
     levels_dict = {
-        element: level
-        for level, elements in enumerate(levels)
-        for element in elements
+        element: level for level, elements in enumerate(levels) for element in elements
     }
     if elements_positions is None:
         elements_positions = {}

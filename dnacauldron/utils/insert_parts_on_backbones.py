@@ -178,9 +178,7 @@ def record_contains_backbone(record, enzyme="BsmBI", min_backbone_length=500):
     has a total size above the given ``min_backbone_length``.
     """
     mix = generate_type2s_restriction_mix(parts=[record], enzyme="BsmBI")
-    fragments = [
-        frag for frag in mix.filtered_fragments if not frag.is_reversed
-    ]
+    fragments = [frag for frag in mix.filtered_fragments if not frag.is_reversed]
     if fragments == []:
         raise AssemblyMixError(
             "No site-less fragment found digesting record " + record.id,
@@ -190,9 +188,7 @@ def record_contains_backbone(record, enzyme="BsmBI", min_backbone_length=500):
     return (len(record) - len(insert)) > min_backbone_length
 
 
-def swap_donor_vector_part(
-    donor_vector, insert, enzyme, allow_overhangs_edits=False
-):
+def swap_donor_vector_part(donor_vector, insert, enzyme, allow_overhangs_edits=False):
     """Return the records obtained by cloning inserts into a donor vector.
 
     Meant for Type-2S assembly standards only (Golden Gate, etc.)

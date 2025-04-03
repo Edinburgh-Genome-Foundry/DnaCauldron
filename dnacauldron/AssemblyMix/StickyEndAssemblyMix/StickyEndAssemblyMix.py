@@ -3,6 +3,7 @@ from ..AssemblyMix import AssemblyMix
 from .SlotsMixin import SlotsMixin
 from .PlotsMixin import PlotsMixin
 
+
 class StickyEndAssemblyMix(AssemblyMix, SlotsMixin, PlotsMixin):
     """Class to represent and simulate the assembly of sticky-ended fragments.
 
@@ -16,7 +17,7 @@ class StickyEndAssemblyMix(AssemblyMix, SlotsMixin, PlotsMixin):
     fragments
       A list of StickyEndFragment instances, which will assemble together based
       of sticky ends perfect homologies.
-    
+
     fragment_filters
       List of functions of the form fragment=>True/False. If a fragment
       generates a "False" by at least one filter, it is taken out of the mix
@@ -25,16 +26,16 @@ class StickyEndAssemblyMix(AssemblyMix, SlotsMixin, PlotsMixin):
 
     name
       Name of the mix as it will appear in reports
-    
+
 
     """
-    
-    def __init__(self, fragments, fragment_filters=(), name='sticky_ends_mix'):
+
+    def __init__(self, fragments, fragment_filters=(), name="sticky_ends_mix"):
         self.fragments = fragments
         self.fragment_filters = fragment_filters
         self.name = name
         self.initialize()
-    
+
     @staticmethod
     def assemble(fragments, circularize=False, annotate_homologies=False):
         """Assemble sticky-end fragments into a single one (sticky or not).

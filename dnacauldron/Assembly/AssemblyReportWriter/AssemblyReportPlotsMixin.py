@@ -11,6 +11,7 @@ class AssemblyReportPlotsMixin:
     def _get_plots_options(self, errors_detected):
         """Compute whether the plots should be generated, depending on assembly
         success or failure."""
+
         def evaluate(condition):
             return errors_detected if condition == "on_error" else condition
 
@@ -31,8 +32,7 @@ class AssemblyReportPlotsMixin:
         plt.close(ax.figure)
 
     def plot_provided_parts(self, report_root, parts_records, enzymes):
-        """Plot schemas of the parts provided, with relevant restriction sites.
-        """
+        """Plot schemas of the parts provided, with relevant restriction sites."""
         provided_parts_dir = report_root._dir("provided_parts_plots")
         for part in parts_records:
             linear = record_is_linear(part, default=False)

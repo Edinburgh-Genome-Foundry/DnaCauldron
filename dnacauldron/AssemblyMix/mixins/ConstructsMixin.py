@@ -71,12 +71,8 @@ class ConstructsMixin:
                 counter = 0
                 for cycle in nx.simple_cycles(new_graph):
                     cycle = [antipermutation[i] for i in cycle]
-                    fragments = [
-                        self.fragments_dict[graph_nodes[i]] for i in cycle
-                    ]
-                    cycle = FragmentChain(
-                        fragments, is_cycle=True
-                    ).standardized()
+                    fragments = [self.fragments_dict[graph_nodes[i]] for i in cycle]
+                    cycle = FragmentChain(fragments, is_cycle=True).standardized()
                     cycle_hash = hash(cycle)
                     if cycle_hash in seen_hashes:
                         counter += 1
@@ -87,9 +83,7 @@ class ConstructsMixin:
                             )
                         continue
                     seen_hashes.add(cycle_hash)
-                    if all(
-                        fl(cycle.fragments) for fl in fragments_sets_filters
-                    ):
+                    if all(fl(cycle.fragments) for fl in fragments_sets_filters):
                         yield cycle.fragments
                         break
                 else:

@@ -2,6 +2,7 @@ import itertools as itt
 import networkx as nx
 from ...biotools import reverse_complement
 
+
 class SlotsMixin:
     """Mixin for StickyEndAssemblyMix"""
 
@@ -71,9 +72,7 @@ class SlotsMixin:
                         edges.append(edge)
                     return edges
 
-                edges = [
-                    edge for slot in slots_list for edge in slot_to_edges(slot)
-                ]
+                edges = [edge for slot in slots_list for edge in slot_to_edges(slot)]
             else:
                 edges = [
                     (slot, std_overhang(e))

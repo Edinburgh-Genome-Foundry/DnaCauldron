@@ -3,7 +3,7 @@ class AssemblyMixError(Exception):
 
     These have a mix attribute!
     """
-    
+
     def __init__(self, message, mix):
         super().__init__(message)
         self.mix = mix

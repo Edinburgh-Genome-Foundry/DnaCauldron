@@ -1,14 +1,12 @@
 """Useful functions built on top of the DnaCauldron classes to simplify the
 most common operations."""
+
 import os
 
 from Bio import Restriction
 
 
-from ..AssemblyMix import (
-    RestrictionLigationMix,
-    generate_type2s_restriction_mix
-)
+from ..AssemblyMix import RestrictionLigationMix, generate_type2s_restriction_mix
 from ..Filter import FragmentSetContainsPartsFilter, NoRestrictionSiteFilter
 from ..Fragment.StickyEndFragment import StickyEnd
 from ..biotools import (
@@ -18,9 +16,9 @@ from ..biotools import (
     autoselect_enzyme,
 )
 
+
 def list_overhangs_from_record_annotations(rec, with_locations=False):
-    """Return a least of the (probable) overhangs used building the construct
-    """
+    """Return a least of the (probable) overhangs used building the construct"""
 
     def is_overhang(h):
         return (len(h) == 4) and (set(h) <= set("ATGC"))
@@ -44,14 +42,11 @@ def list_overhangs_from_record_annotations(rec, with_locations=False):
             if f.type == "misc_feature":
                 note = "".join(f.qualifiers.get("note", ""))
                 if note.startswith("From "):
-                    part_locs.append(
-                        (int(f.location.start), int(f.location.end))
-                    )
+                    part_locs.append((int(f.location.start), int(f.location.end)))
         part_locs = [(0, 0)] + sorted(part_locs) + [(len(rec), len(rec))]
         seq = str(rec.seq)
         inter_parts = [
-            (f1[1], seq[f1[1] : f2[0]])
-            for f1, f2 in zip(part_locs, part_locs[1:])
+            (f1[1], seq[f1[1] : f2[0]]) for f1, f2 in zip(part_locs, part_locs[1:])
         ]
         overhangs = [(start, o) for start, o in inter_parts if is_overhang(o)]
     if with_locations:
@@ -78,10 +73,10 @@ def substitute_overhangs(
 
     record
       A Biopython record whose internal sequence needs to be replaced
-    
+
     substitutions
       A dict {overhang: new_overhang} of which overhangs must be replaced
-    
+
     enzyme
       Either 'BsmBI', 'BsaI', etc. or just "auto" for automatic selection.
     """
@@ -102,9 +97,7 @@ def substitute_overhangs(
         fragments=fragments, enzymes=[enzyme], fragment_filters=()
     )
     if return_linear_parts:
-        fragment = [f for f in new_mix.filtered_fragments if not f.is_reversed][
-            0
-        ]
+        fragment = [f for f in new_mix.filtered_fragments if not f.is_reversed][0]
         site = sequence_to_biopython_record(mix.enzymes[0].site)
         annotate_record(site, label="%s" % enzyme)
         rev_site = site.reverse_complement()
@@ -120,7 +113,7 @@ def substitute_overhangs(
 
 def list_digestion_overhangs(records, enzyme="auto", parts_only=True):
     """List all overhangs created by restriction in the provided records.
-    
+
     Warning: only overhangs on non-reversed fragments are returned, not
     their reverse-complement.
 
@@ -129,10 +122,10 @@ def list_digestion_overhangs(records, enzyme="auto", parts_only=True):
 
     records
       List of records
-    
+
     enzyme
       Either 'BsmBI', 'BsaI', etc. or just "auto" for automatic selection.
-    
+
     parts_only
       If true, overhangs created by restriction which are not on a part
       (so for instance inside a backbone) will be ignored.

@@ -15,5 +15,5 @@ __all__ = [
     "RestrictionLigationMix",
     "generate_type2s_restriction_mix",
     "StickyEndAssemblyMix",
-    "HomologousAssemblyMix"
+    "HomologousAssemblyMix",
 ]

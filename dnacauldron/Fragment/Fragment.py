@@ -10,8 +10,7 @@ class Fragment(SeqRecord):
 
     @staticmethod
     def from_biopython_record(biopython_record):
-        """Convert a biopython record into a HomologousFragment (class change).
-        """
+        """Convert a biopython record into a HomologousFragment (class change)."""
         new_record = deepcopy(biopython_record)
         new_record.original_part = biopython_record
         new_record.__class__ = Fragment
@@ -53,7 +52,9 @@ class Fragment(SeqRecord):
             "ApEinfo_fwdcolor": color,
         }
         return SeqFeature(
-            FeatureLocation(start, end), type=annotation_type, qualifiers=qualifiers,
+            FeatureLocation(start, end),
+            type=annotation_type,
+            qualifiers=qualifiers,
         )
 
     def text_representation_in_plots(self):

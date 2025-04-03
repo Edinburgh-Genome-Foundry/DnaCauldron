@@ -9,16 +9,16 @@ from ..Assembly import ASSEMBLY_CLASS_DICT
 class AssemblyPlan:
     def __init__(self, assemblies, name="plan", logger="bar"):
         """Class to represent, analyze and simulate assembly plans
-        
+
         Parameters
         ----------
 
         assemblies
           List of Assembly instances.
-        
+
         name
           Assembly plan name as it will appear in reports.
-        
+
         logger
           Either "bar" for a progress bar, or None, or any Proglog logger.
         """
@@ -38,8 +38,7 @@ class AssemblyPlan:
         if any(len(indices) > 1 for indices in names_indices.values()):
             duplicates = ", ".join(
                 [
-                    "%s (lines %s)"
-                    % (name, "-".join([str(i) for i in indices]))
+                    "%s (lines %s)" % (name, "-".join([str(i) for i in indices]))
                     for name, indices in sorted(names_indices.items())
                     if len(indices) > 1
                 ]
@@ -84,9 +83,7 @@ class AssemblyPlan:
         levels = sorted(set(a.dependencies["level"] for a in self.assemblies))
         self.levels = {
             level: [
-                asm
-                for asm in self.assemblies
-                if asm.dependencies["level"] == level
+                asm for asm in self.assemblies if asm.dependencies["level"] == level
             ]
             for level in levels
         }
@@ -114,13 +111,13 @@ class AssemblyPlan:
 
         Parameters
         ----------
-        
+
         path
           Path to a spreadsheet file (a dataframe can be used instead).
-        
+
         dataframe
           A pandas dataframe, possibly obtained from a spreadsheet.
-        
+
         sheet_name
           Name of the spreadsheet's sheet on which the assembly plan is
           defined. Use "all" to load assemblies from all the sheets.
@@ -135,7 +132,7 @@ class AssemblyPlan:
 
         logger
           Logger of the created assembly plan. Either "bar" for a progress bar
-          or None for none, or any Proglog logger. 
+          or None for none, or any Proglog logger.
 
         assembly_params
           Extra keyword parameters which will be fed to each assembly.
@@ -240,13 +237,10 @@ class AssemblyPlan:
         )
 
     def simulate(self, sequence_repository):
-        """Simulate the whole assembly plan, return an AssemblyPlanSimulation.
-        """
+        """Simulate the whole assembly plan, return an AssemblyPlanSimulation."""
 
         ordered_assemblies = [
-            assembly
-            for level in sorted(self.levels)
-            for assembly in self.levels[level]
+            assembly for level in sorted(self.levels) for assembly in self.levels[level]
         ]
         self.logger(message="Simulating assembly plan %s..." % self.name)
         simulation_results = []

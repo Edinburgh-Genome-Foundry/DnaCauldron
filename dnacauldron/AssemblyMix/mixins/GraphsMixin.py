@@ -26,7 +26,7 @@ class GraphsMixin:
 
     def list_overhangs(self, filtered_fragments_only=False):
         """Return a list of overhangs in the mix.
-    
+
         Warning: only overhangs on non-reversed fragments are returned, not
         their reverse-complement.
 
@@ -37,9 +37,7 @@ class GraphsMixin:
           If true, only overhangs from filtered fragments are returned
         """
         fragments = (
-            self.filtered_fragments
-            if filtered_fragments_only
-            else self.fragments
+            self.filtered_fragments if filtered_fragments_only else self.fragments
         )
         overhangs = [
             str(end)
@@ -63,10 +61,7 @@ class GraphsMixin:
                 node
                 for node in graph.nodes()
                 if not all(
-                    [
-                        fl(self.fragments_dict[node])
-                        for fl in self.fragment_filters
-                    ]
+                    [fl(self.fragments_dict[node]) for fl in self.fragment_filters]
                 )
             ]
         )
@@ -85,10 +80,7 @@ class GraphsMixin:
         def graph_with_transformed_nodes(graph, transformation):
             transformations = {n: transformation(n) for n in graph}
             new_graph = graph.__class__(
-                [
-                    (transformations[n1], transformations[n2])
-                    for n1, n2 in graph.edges()
-                ]
+                [(transformations[n1], transformations[n2]) for n1, n2 in graph.edges()]
             )
             for n in transformations.values():
                 if n not in new_graph:
@@ -110,4 +102,3 @@ class GraphsMixin:
             nodes_by_hash[component_hash] = nodes
         kept_nodes = set().union(*nodes_by_hash.values())
         return graph.subgraph(kept_nodes)
-

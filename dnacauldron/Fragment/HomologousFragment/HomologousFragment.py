@@ -17,15 +17,17 @@ from ...biotools import set_record_topology, crop_record_with_saddling_features
 class HomologousFragment(Fragment):
     @staticmethod
     def from_biopython_record(biopython_record):
-        """Convert a Biopython record into a HomologousFragment (class change).
-        """
+        """Convert a Biopython record into a HomologousFragment (class change)."""
         new_record = deepcopy(biopython_record)
         new_record.original_part = biopython_record
         new_record.__class__ = HomologousFragment
         return new_record
 
     def circularized(
-        self, homology_checker, annotate_homology=False, annotation_type="homology",
+        self,
+        homology_checker,
+        annotate_homology=False,
+        annotation_type="homology",
     ):
         """Return the Biopython record obtained by cirularizing the result.
 
@@ -136,7 +138,10 @@ class HomologousFragment(Fragment):
 
     @staticmethod
     def assemble(
-        fragments, homology_checker, circularize=False, annotate_homologies=False,
+        fragments,
+        homology_checker,
+        circularize=False,
+        annotate_homologies=False,
     ):
         """Return the record obtained by assembling the fragments.
 

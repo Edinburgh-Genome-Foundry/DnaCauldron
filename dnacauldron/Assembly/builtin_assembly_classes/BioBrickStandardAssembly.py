@@ -39,6 +39,7 @@ class BioBrickStandardAssembly(Assembly):
       (do not use). Metadata indicating which assemblies depend on this
       assembly, or are depended on by it.
     """
+
     def __init__(
         self,
         parts,
@@ -117,8 +118,7 @@ class BioBrickStandardAssembly(Assembly):
         backbones = [
             fragment
             for fragment in mix_2.fragments + mix_2.reverse_fragments
-            if fragment.seq.ends_tuple() == ("CTAG", "AATT")
-            and len(fragment) > 100
+            if fragment.seq.ends_tuple() == ("CTAG", "AATT") and len(fragment) > 100
         ]
         if len(backbones) != 1:
             prefix = "No" if len(backbones) == 0 else "Multiple"
@@ -143,9 +143,7 @@ class BioBrickStandardAssembly(Assembly):
         insert = inserts[0]
         backbone = backbones[0]
 
-        mix = RestrictionLigationMix(
-            fragments=[insert, backbone], name="assembly_mix"
-        )
+        mix = RestrictionLigationMix(fragments=[insert, backbone], name="assembly_mix")
         mixes.append(mix)
         final_record = insert.assemble_with(backbone).circularized()
         final_record.id = self.name

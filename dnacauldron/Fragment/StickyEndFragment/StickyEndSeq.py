@@ -33,30 +33,37 @@ class StickyEndSeq(Seq):
         if has_dna_alphabet:  # Biopython <1.78
             sticky_end_seq = StickyEndSeq(
                 str(Seq.reverse_complement(self)),
-                left_end=None
-                if self.right_end is None
-                else self.right_end.reverse_complement(),
-                right_end=None
-                if self.left_end is None
-                else self.left_end.reverse_complement(),
+                left_end=(
+                    None
+                    if self.right_end is None
+                    else self.right_end.reverse_complement()
+                ),
+                right_end=(
+                    None
+                    if self.left_end is None
+                    else self.left_end.reverse_complement()
+                ),
                 alphabet=self.alphabet,
             )
         else:
             sticky_end_seq = StickyEndSeq(
                 str(Seq(self).reverse_complement()),
-                left_end=None
-                if self.right_end is None
-                else self.right_end.reverse_complement(),
-                right_end=None
-                if self.left_end is None
-                else self.left_end.reverse_complement(),
+                left_end=(
+                    None
+                    if self.right_end is None
+                    else self.right_end.reverse_complement()
+                ),
+                right_end=(
+                    None
+                    if self.left_end is None
+                    else self.left_end.reverse_complement()
+                ),
             )
 
         return sticky_end_seq
 
     def will_clip_in_this_order_with(self, other):
-        """Return whether this sequence will clip in this order with another.
-        """
+        """Return whether this sequence will clip in this order with another."""
         return (self.right_end is not None) and self.right_end.will_clip_directly_with(
             other.left_end
         )
@@ -67,7 +74,11 @@ class StickyEndSeq(Seq):
             content = (
                 content[:5].lower() + ("(%d)" % len(content)) + content[-5:].lower()
             )
-        return "(%s-%s-%s)" % (repr(self.left_end), content, repr(self.right_end),)
+        return "(%s-%s-%s)" % (
+            repr(self.left_end),
+            content,
+            repr(self.right_end),
+        )
 
     def __add__(self, other):
         assert self.will_clip_in_this_order_with(other)
@@ -91,13 +102,13 @@ class StickyEndSeq(Seq):
         """Slice the StickyEndSeq and return another instance.
 
         This function replaces the original sticky[start:end] approach.
-        
+
         Parameters
         ----------
 
         start
             Start index (zero-based). Default None slices from start.
-        
+
         end
             End index. Default None slices to the end.
         """
@@ -186,7 +197,8 @@ class StickyEndSeq(Seq):
                     overhang_bit, new_fragment_seq = f[:overhang], f[overhang:]
                 sticky_fragments[-1].right_end = StickyEnd(overhang_bit, right_end_sign)
                 new_fragment = StickyEndSeq(
-                    new_fragment_seq, left_end=StickyEnd(overhang_bit, -right_end_sign),
+                    new_fragment_seq,
+                    left_end=StickyEnd(overhang_bit, -right_end_sign),
                 )
                 sticky_fragments.append(new_fragment)
             if not linear:
@@ -221,7 +233,9 @@ class StickyEndSeq(Seq):
                 sticky_fragments[0].left_end = first_left_end
                 sticky_fragments = [
                     StickyEndSeq(
-                        new_fragment_seq, left_end=left_end, right_end=last_right_end,
+                        new_fragment_seq,
+                        left_end=left_end,
+                        right_end=last_right_end,
                     )
                 ]
             else:

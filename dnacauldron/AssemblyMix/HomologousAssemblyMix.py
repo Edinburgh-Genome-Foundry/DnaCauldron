@@ -7,7 +7,7 @@ from ..Fragment.HomologousFragment import HomologousFragment
 
 class HomologousAssemblyMix(AssemblyMix):
     """Mix to represent and simulate long-homology-based reactions.
-    
+
     Such as Gibson Assembly.
 
     Parameters
@@ -16,7 +16,7 @@ class HomologousAssemblyMix(AssemblyMix):
     parts
       List of Biopython records representing blunt-end linear DNA fragments
       which will be assembled toghether via end-homologies.
-    
+
     homology_checker
       An HomologyChecker instance determining which size ranges and melting
       temperatures define an acceptable homology.
@@ -49,10 +49,7 @@ class HomologousAssemblyMix(AssemblyMix):
             self.annotate_fragment_with_part(fragment)
             self.fragments.append(fragment)
 
-
-    def assemble(
-        self, fragments, circularize=False, annotate_homologies=False
-    ):
+    def assemble(self, fragments, circularize=False, annotate_homologies=False):
         return HomologousFragment.assemble(
             fragments,
             homology_checker=self.homology_checker,

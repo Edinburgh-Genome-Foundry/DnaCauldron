@@ -52,6 +52,7 @@ class BASICAssembly(Assembly):
       assembly, or are depended on by it.
 
     """
+
     def simulate_adapters_assembly(self, records, sequence_repository):
         original_part = records[1]
         mix = RestrictionLigationMix(
@@ -69,7 +70,7 @@ class BASICAssembly(Assembly):
             error = AssemblyFlaw(
                 message="Two many fragments have a long overhang",
                 data={"parts": [r.id for r in records]},
-                assembly=self
+                assembly=self,
             )
             return mix, error
         graph = mix.connections_graph
@@ -81,9 +82,7 @@ class BASICAssembly(Assembly):
                 path = nx.shortest_path(graph, start, end)
                 fragments = [mix.fragments_dict[i] for i in path]
                 score = sum([f.is_reversed for f in fragments])
-                construct = StickyEndFragment.assemble(
-                    fragments, circularize=False
-                )
+                construct = StickyEndFragment.assemble(fragments, circularize=False)
                 constructs.append((score, construct))
         if len(constructs) != 2:  # A linear assembly and its complement
             error = AssemblyFlaw(
@@ -161,4 +160,3 @@ class BASICAssembly(Assembly):
             errors=errors,
             sequence_repository=sequence_repository,
         )
-

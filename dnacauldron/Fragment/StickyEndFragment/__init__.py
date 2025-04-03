@@ -1,4 +1,4 @@
-""" StickyEndSeq contains classes representing sequences with sticky ends.
+"""StickyEndSeq contains classes representing sequences with sticky ends.
 
 These are useful for the representation, annotation, assembly simulation of
 fragments from enzymatic restriction.

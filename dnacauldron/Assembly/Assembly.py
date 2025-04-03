@@ -106,7 +106,7 @@ class Assembly:
     def _detect_constructs_number_error(self, found, flaws_list):
         """Add a new flaw to the list if unexpected constructs_number"""
         expected = self.expected_constructs
-        if (expected != 'any_number') and (expected != found):
+        if (expected != "any_number") and (expected != found):
             flaw = AssemblyFlaw(
                 assembly=self,
                 message="Wrong number of constructs",

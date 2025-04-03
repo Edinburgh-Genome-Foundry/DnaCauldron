@@ -3,6 +3,7 @@ from .record_operations import record_is_linear
 
 type2S_enzymes = ("BsmBI", "BsaI", "BbsI", "AarI", "SapI")
 
+
 def autoselect_enzyme(parts, enzymes=type2S_enzymes):
     """Finds the enzyme that the parts were probably meant to be assembled with
 
@@ -18,6 +19,7 @@ def autoselect_enzyme(parts, enzymes=type2S_enzymes):
     The enzyme that has as near as possible as exactly 2 sites in the different
     constructs.
     """
+
     def number_of_sites(enzyme, part):
         linear = record_is_linear(part, default=False)
         return len(enzyme.search(part.seq, linear=linear))

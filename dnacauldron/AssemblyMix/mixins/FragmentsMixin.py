@@ -4,7 +4,6 @@ from ...biotools import annotate_record
 class FragmentsMixin:
     """Mixin for AssemblyMix"""
 
-
     fragment_annotation_color = "white"
 
     @property

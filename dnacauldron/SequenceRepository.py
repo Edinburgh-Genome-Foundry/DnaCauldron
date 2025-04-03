@@ -14,13 +14,12 @@ class NotInRepositoryError(Exception):
         # CREATE THE MESSAGE AND INITIALIZE THE EXCEPTION:
 
         suggestions = [
-            self.create_part_suggestion_string(part_name)
-            for part_name in parts
+            self.create_part_suggestion_string(part_name) for part_name in parts
         ]
         suggestions = ", ".join(suggestions)
         message = "Parts not found in %s: %s" % (repository.name, suggestions)
         super().__init__(message)
-    
+
     def create_part_suggestion_string(self, part_name):
         suggestions = self.repository.suggest_part_names(part_name)
         if len(suggestions) == 0:
@@ -55,14 +54,14 @@ class SequenceRepository:
     >>> repository.import_records(files=['part.fa', 'records.zip', etc.])
 
 
-    
+
     Parameters
     ----------
 
     collections
       A dict {'collection_name': {'record_id': record, ...}, ...} giving for
       each collection a dict of Biopython records.
-    
+
     name
       The name of the repository as it may appear in error messages and other
       reports.
@@ -74,7 +73,7 @@ class SequenceRepository:
 
     def add_record(self, record, collection="parts"):
         """Add one record to a collection, using its record.id as key.
-        
+
         The collection is created if it doesn't exist.
 
         The record can also be a pair (id, "ATGTGCC...").
@@ -89,7 +88,7 @@ class SequenceRepository:
         self.collections[collection][record.id] = record
 
     def add_records(self, records, collection="parts"):
-        """Add """
+        """Add"""
 
         if len(records) == 0:
             return
@@ -97,8 +96,7 @@ class SequenceRepository:
             self.add_record(record, collection=collection)
 
     def contains_record(self, record_id):
-        """Return whether the repo has a record corresponding to the given id
-        """
+        """Return whether the repo has a record corresponding to the given id"""
         collections = self.collections.values()
         return any(record_id in collection for collection in collections)
 
@@ -138,18 +136,18 @@ class SequenceRepository:
         files
           A list of file paths, either Genbank, Fasta, Snapgene (.dna), or zips
           containing any of these formats.
-        
+
         folder
           Path to a folder which can be provided instead of ``files``.
-        
+
         collection
           Name of the collection under which to import the new records.
-        
+
         use_file_names_as_ids
           If True, the file name will be used as ID for any record obtained
           from a single-record file (fasta files with many records will still
           use the internal ID).
-        
+
         topology
           Can be "circular", "linear", "default_to_circular" (will default
           to circular if ``annotations['topology']`` is not already set) or
@@ -161,7 +159,8 @@ class SequenceRepository:
             )
         elif files is not None:
             records = load_records_from_files(
-                files=files, use_file_names_as_ids=use_file_names_as_ids,
+                files=files,
+                use_file_names_as_ids=use_file_names_as_ids,
             )
         else:
             raise ValueError("Provide either ``files`` or ``folder``")
@@ -172,7 +171,7 @@ class SequenceRepository:
 
     def get_part_names_by_collection(self, format="dict"):
         """Return a dictionnary or a string representing the repo's content.
-        
+
         Format: "dict" or "string"
         """
         result = {
@@ -190,12 +189,10 @@ class SequenceRepository:
     def get_all_part_names(self):
         """Return the list of all part names"""
         parts = [
-            part
-            for collection in self.collections.values()
-            for part in collection
+            part for collection in self.collections.values() for part in collection
         ]
         return sorted(parts)
-    
+
     def suggest_part_names(self, query, cutoff=90, limit=3):
         """Suggest part names in the repo close to the given query."""
         search = process.extract(query, self.get_all_part_names())

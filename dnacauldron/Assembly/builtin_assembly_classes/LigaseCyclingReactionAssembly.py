@@ -5,6 +5,7 @@ from ..AssemblySimulation import AssemblySimulation
 from ..AssemblyFlaw import AssemblyFlaw
 from ..Assembly import Assembly
 
+
 class LigaseCyclingReactionAssembly(Assembly):
     """Representation and simulation of Gibson Assembly
 
@@ -20,11 +21,11 @@ class LigaseCyclingReactionAssembly(Assembly):
     homology_checker
       An HomologyChecker instance defining which homology sizes and melting
       temperatures are valid between one bridging oligo and one part.
-    
+
     bridging_oligos
       A list of the name of bridging oligos if they are not included in the
       part names
-    
+
     oligos_indicator
       String to use to identify bridging oligos when these are provided mixed
       with the other parts. The string should be common to all oligo names
@@ -41,7 +42,7 @@ class LigaseCyclingReactionAssembly(Assembly):
       Either a number or a string ``'any_number'``. If the number of constructs
       doesn't match this value, the assembly will be considered invalid in
       reports and summaries
-    
+
     expect_no_unused_parts
       If True and some parts are unused, this will be considered an invalid
       assembly in summaries and reports.
@@ -56,7 +57,7 @@ class LigaseCyclingReactionAssembly(Assembly):
         "expected_constructs",
         "expect_no_unused_parts",
         "connectors_collection",
-        "oligo_indicator"
+        "oligo_indicator",
     )
 
     def __init__(
@@ -74,9 +75,7 @@ class LigaseCyclingReactionAssembly(Assembly):
     ):
         self.oligo_indicator = oligo_indicator
         if oligo_indicator is not None:
-            bridging_oligos = [
-                name for name in parts if oligo_indicator in name
-            ]
+            bridging_oligos = [name for name in parts if oligo_indicator in name]
             parts = [name for name in parts if oligo_indicator not in name]
         self.parts = parts
         self.bridging_oligos = bridging_oligos

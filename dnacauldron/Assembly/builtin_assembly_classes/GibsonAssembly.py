@@ -4,6 +4,7 @@ from ..AssemblySimulation import AssemblySimulation
 from ..AssemblyFlaw import AssemblyFlaw
 from ..Assembly import Assembly
 
+
 class GibsonAssembly(Assembly):
     """Representation and simulation of Gibson Assembly
 
@@ -14,7 +15,7 @@ class GibsonAssembly(Assembly):
       A list of parts names corresponding to records in a repository.
       The parts will be considered as assembling together if they
       have end homologies, as checked by the homology_checker.
-    
+
     homology_checker
       An HomologyChecker instance defining which homology sizes and melting
       temperatures are valid.
@@ -34,7 +35,7 @@ class GibsonAssembly(Assembly):
     connectors_collection
       Name of a collection in the repository from which to get candidates for
       connector autocompletion.
-    
+
     expect_no_unused_parts
       If True and some parts are unused, this will be considered an invalid
       assembly in summaries and reports.
