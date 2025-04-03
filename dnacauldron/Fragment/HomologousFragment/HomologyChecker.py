@@ -41,10 +41,10 @@ class HomologyChecker:
 
     def sequence_to_string(self, seq):
         if isinstance(seq, str):
-            return seq
-        if hasattr(seq, "seq"):
-            return str(seq.seq)
-        return str(seq)
+            return seq.upper()
+        if hasattr(seq, "seq"):  # SeqRecord
+            return str(seq.seq).upper()
+        return str(seq).upper()  # Seq
 
     def find_end_homologies(self, seq1, seq2):
         """Finds an homology between seq1's end and seq2's start.
