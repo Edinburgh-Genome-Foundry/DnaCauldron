@@ -1,4 +1,0 @@
-include pypi-readme.rst
-include *.txt
-recursive-include examples *.txt *.py
-recursive-include dnacauldron/report_assets *
